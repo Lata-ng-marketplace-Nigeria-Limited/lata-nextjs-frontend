@@ -17,7 +17,7 @@ export default async function Page() {
     redirect("/auth");
   }
 
-  if (session.role !== "SELLER") {
+  if (session.role === "BUYER") {
     redirect("/");
   }
 
