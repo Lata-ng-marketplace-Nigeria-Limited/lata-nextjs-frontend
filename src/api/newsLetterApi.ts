@@ -1,4 +1,4 @@
-import { $http } from "../services/axios";
+import { $http } from "@/service/axios";
 
 export const joinNewsLetterApi = async (
   email: string,
