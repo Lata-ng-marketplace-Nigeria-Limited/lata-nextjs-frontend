@@ -51,7 +51,7 @@ const Input = React.forwardRef(
           {
             "border-primary hover:border-primary focus:border-primary active:border-primary ":
               (!!props.value || focused) && !ignoreBorderDefaultStyle,
-            "pt-1.5 sm:pt-3": label && !hideLabel && (!!props.value || focused),
+            "pt-4 sm:pt-6": label && !hideLabel && (!!props.value || focused),
           },
           props.className,
         )}

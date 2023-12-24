@@ -5,13 +5,14 @@ import { redirect } from "next/navigation";
 import { SalesAgreement } from "@components/sales-agreement/SalesAgreement";
 import { SalesMessageUs } from "@components/sales-agreement/SalesMessageUs";
 import { Suspense } from "react";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Sales Agreement",
 };
 
 export default async function Page() {
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {
     redirect("/auth/login");

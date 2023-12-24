@@ -5,13 +5,14 @@ import { redirect } from "next/navigation";
 import { SubscriptionListSkeleton } from "@components/skeleton/SubscriptionListSkeleton";
 import { Suspense } from "react";
 import { SubscriptionsWrapper } from "@components/subscription/SubscriptionsWrapper";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Subscriptions",
 };
 
 export default async function Page() {
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {
     redirect("/auth/login");

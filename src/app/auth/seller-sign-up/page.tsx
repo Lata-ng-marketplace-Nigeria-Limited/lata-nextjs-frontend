@@ -4,6 +4,7 @@ import { SellerSignUpForm } from "@components/forms/SellerSignUpForm";
 import AuthImageArea from "@components/auth/AuthImageArea";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Seller Sign Up",
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export default async function Page({ searchParams }: Props) {
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
   const isUpgradingToSeller = searchParams?.isUpgradingToSeller === "true";
   if (session && session.user && !isUpgradingToSeller) {
     redirect("/");

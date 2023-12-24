@@ -7,6 +7,7 @@ import { MyShop } from "@components/shop/MyShop";
 import { Suspense } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { unstable_noStore } from "next/cache";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "My Shop",
@@ -20,7 +21,7 @@ export default async function Page({
   };
 }) {
   unstable_noStore();
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";
 
   if (!session || !session.user) {
