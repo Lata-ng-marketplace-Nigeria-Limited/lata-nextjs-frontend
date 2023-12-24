@@ -45,11 +45,11 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
   '@react-oauth/google':
-    specifier: ^0.11.1
-    version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.12.1
+    version: 0.12.1(react-dom@18.2.0)(react@18.2.0)
   '@tanstack/react-virtual':
-    specifier: 3.0.0-beta.68
-    version: 3.0.0-beta.68(react-dom@18.2.0)(react@18.2.0)
+    specifier: 3.0.1
+    version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
   '@tiptap/extension-link':
     specifier: ^2.1.13
     version: 2.1.13(@tiptap/core@2.1.13)(@tiptap/pm@2.1.13)
@@ -87,8 +87,8 @@ dependencies:
     specifier: ^4.17.21
     version: 4.17.21
   lucide-react:
-    specifier: ^0.292.0
-    version: 0.292.0(react@18.2.0)
+    specifier: ^0.301.0
+    version: 0.301.0(react@18.2.0)
   luxon:
     specifier: ^3.4.4
     version: 3.4.4
@@ -158,8 +158,8 @@ devDependencies:
     specifier: ^1.69.5
     version: 1.69.5
   tailwind-merge:
-    specifier: ^2.1.0
-    version: 2.1.0
+    specifier: ^2.2.0
+    version: 2.2.0
   tailwindcss:
     specifier: ^3.4.0
     version: 3.4.0
@@ -1169,8 +1169,8 @@ packages:
       '@babel/runtime': 7.23.6
     dev: false
 
-  /@react-oauth/google@0.11.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-tywZisXbsdaRBVbEu0VX6dRbOSL2I6DgY97woq5NMOOOz+xtDsm418vqq+Vx10KMtra3kdHMRMf0hXLWrk2RMg==}
+  /@react-oauth/google@0.12.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-qagsy22t+7UdkYAiT5ZhfM4StXi9PPNvw0zuwNmabrWyMKddczMtBIOARflbaIj+wHiQjnMAsZmzsUYuXeyoSg==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -1221,19 +1221,19 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/react-virtual@3.0.0-beta.68(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-YEFNCf+N3ZlNou2r4qnh+GscMe24foYEjTL05RS0ZHvah2RoUDPGuhnuedTv0z66dO2vIq6+Bl4TXatht5T7GQ==}
+  /@tanstack/react-virtual@3.0.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-IFOFuRUTaiM/yibty9qQ9BfycQnYXIDHGP2+cU+0LrFFGNhVxCXSQnaY6wkX8uJVteFEBjUondX0Hmpp7TNcag==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@tanstack/virtual-core': 3.0.0-beta.68
+      '@tanstack/virtual-core': 3.0.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@tanstack/virtual-core@3.0.0-beta.68:
-    resolution: {integrity: sha512-CnvsEJWK7cugigckt13AeY80FMzH+OMdEP0j0bS3/zjs44NiRe49x8FZC6R9suRXGMVMXtUHet0zbTp/Ec9Wfg==}
+  /@tanstack/virtual-core@3.0.0:
+    resolution: {integrity: sha512-SYXOBTjJb05rXa2vl55TTwO40A6wKu0R5i1qQwhJYNDIqaIGF7D0HsLw+pJAyi2OvntlEIVusx3xtbbgSUi6zg==}
     dev: false
 
   /@tiptap/core@2.1.13(@tiptap/pm@2.1.13):
@@ -3169,8 +3169,8 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lucide-react@0.292.0(react@18.2.0):
-    resolution: {integrity: sha512-rRgUkpEHWpa5VCT66YscInCQmQuPCB1RFRzkkxMxg4b+jaL0V12E3riWWR2Sh5OIiUhCwGW/ZExuEO4Az32E6Q==}
+  /lucide-react@0.301.0(react@18.2.0):
+    resolution: {integrity: sha512-ZMbsXSv8qg3u0wqGngW+dG2Tu20fBqQAu3e0MikjGIx6KUN+4TrL2j3XwWZCcpHEfH9Tw+gqnQXRhHVne5DzJQ==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -4207,8 +4207,8 @@ packages:
     resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}
     dev: false
 
-  /tailwind-merge@2.1.0:
-    resolution: {integrity: sha512-l11VvI4nSwW7MtLSLYT4ldidDEUwQAMWuSHk7l4zcXZDgnCRa0V3OdCwFfM7DCzakVXMNRwAeje9maFFXT71dQ==}
+  /tailwind-merge@2.2.0:
+    resolution: {integrity: sha512-SqqhhaL0T06SW59+JVNfAqKdqLs0497esifRrZ7jOaefP3o64fdFNDMrAQWZFMxTLJPiHVjRLUywT8uFz1xNWQ==}
     dependencies:
       '@babel/runtime': 7.23.6
     dev: true
