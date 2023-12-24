@@ -5,21 +5,16 @@ interface Props {
   page: string;
 }
 export const SavedProducts = async ({ page }: Props) => {
-  const data = await findMySavedProductsApi({
+  const res = await findMySavedProductsApi({
     page,
   });
 
-  // const products: Product[] =
-  //   data?.data?.map((savedProduct) => {
-  //     return savedProduct.product;
-  //   }) || [];
-
   return (
     <SavedProductList
-      key={data?.data?.length}
-      savedProducts={data.data}
-      meta={data.meta}
-      hideIsEmpty={!data.isEmpty}
+      key={res?.data?.length}
+      savedProducts={res.data}
+      meta={res.meta}
+      hideIsEmpty={(res.data.length || 0) > 0}
     />
   );
 };

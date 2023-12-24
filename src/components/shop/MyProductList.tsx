@@ -27,7 +27,7 @@ export const MyProductList = ({ products, meta, isEmpty }: Props) => {
         products={products}
         offset={4}
         showLimit={4}
-        hideFallback={!isEmpty}
+        hideFallback={products.length > 0}
       />
       {meta?.last_page > 1 ? (
         <>
