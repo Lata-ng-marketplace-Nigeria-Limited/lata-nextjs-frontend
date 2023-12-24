@@ -1,0 +1,406 @@
+import React, { SetStateAction, useEffect, useState } from "react";
+import ImageUploader, {
+  SelectedImagePreview,
+} from "@components/input/ImageUploader";
+import { createProductSchema } from "@/store/schemas/createProductSchema";
+import { Product } from "@/interface/products";
+import { Controller, useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn, getFormErrorObject } from "@/utils";
+import { useRouter } from "next/navigation";
+import TextInput from "@components/input/TextInput";
+import { SelectInput } from "@components/input/SelectInput";
+import { nigerianStates } from "@/store/data/location";
+import TextAreaInput from "@components/input/TextAreaInput";
+import Button from "@atom/Button";
+import { ProductFormProductInfo } from "@components/product/NewProductPreview";
+import {
+  createAProductApi,
+  CreateProductApiInput,
+  updateAProductApi,
+} from "@/api/productClientApi";
+import { useToast } from "@components/ui/use-toast";
+import {
+  DASHBOARD_PRODUCT_ROUTE,
+  DASHBOARD_SUBSCRIPTIONS_ROUTE,
+} from "@/constants/routes";
+import { ApiErrorResponse } from "@/interface/general";
+import { ToastAction } from "@components/ui/toast";
+import { useCategory } from "@hooks/useCategory";
+import { revalidatePath } from "next/cache";
+
+interface Props {
+  product?: Product;
+  setSelectedPhotos: React.Dispatch<
+    SetStateAction<SelectedImagePreview | undefined>
+  >;
+  selectedPhotos?: SelectedImagePreview;
+  setProductInfo: React.Dispatch<SetStateAction<ProductFormProductInfo>>;
+}
+
+export default function ProductForm({
+  product,
+  setProductInfo,
+  setSelectedPhotos,
+  selectedPhotos,
+}: Props) {
+  const [files, setFiles] = useState<FileList>();
+  const [loading, setLoading] = useState(true);
+  const [imagesError, setImagesError] = useState("");
+  const [imageHasError, setImageHasError] = useState(false);
+  const [deletedFiles, setDeletedFiles] = useState<string[]>([]);
+  const [hasSetFormValue, setHasSetFormValue] = useState(false);
+
+  const {
+    formState: { errors },
+    handleSubmit,
+    control,
+    setError,
+    watch,
+    setValue,
+  } = useForm<z.infer<typeof createProductSchema>>({
+    resolver: zodResolver(createProductSchema),
+    defaultValues: {
+      name: "",
+      price: "",
+      categoryId: "",
+      location: "",
+      description: "",
+    },
+  });
+  const { push: nav, back } = useRouter();
+  const { toast } = useToast();
+  const { categoriesSelectData, categories } = useCategory();
+
+  useEffect(() => {
+    if (!product) {
+      setLoading(false);
+      return;
+    }
+    if (hasSetFormValue) {
+      setLoading(false);
+      return;
+    }
+    setSelectedPhotos({
+      fileName: product.files?.[0]?.id,
+      image: {
+        name: product.files?.[0]?.meta?.clientName || "",
+        url: product.files?.[0]?.url,
+      },
+    });
+    setValue("name", product.name);
+    setValue("price", product.price.toString());
+    setValue("categoryId", product.categoryId);
+    setValue("location", product.location);
+    setValue("description", product.description);
+    setHasSetFormValue(true);
+  }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
+
+  useEffect(() => {
+    setProductInfo({
+      price: watch("price"),
+      name: watch("name"),
+      categoryId: watch("categoryId"),
+      description: watch("description"),
+      location: watch("location"),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    setProductInfo,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("price"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("name"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("categoryId"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("description"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("location"),
+  ]);
+
+  const onSubmit = async (values: z.infer<typeof createProductSchema>) => {
+    if (
+      (!product && (!files || !files?.length)) ||
+      (product &&
+        !files?.length &&
+        deletedFiles?.length === product?.files?.length)
+    ) {
+      return setImagesError("Please select at least one image");
+    }
+
+    if (!selectedPhotos?.fileName) {
+      return setImagesError("Please select a cover image");
+    }
+
+    if (imageHasError) return;
+    setLoading(true);
+
+    const payload: CreateProductApiInput = {
+      ...values,
+      files: files!,
+      price: Number(values.price),
+      selectedImage: selectedPhotos?.fileName,
+      selectedCategory: categories.find(
+        (category) => category.id === values.categoryId,
+      )?.name,
+      ...(deletedFiles.length
+        ? { deleteImages: JSON.stringify(deletedFiles) }
+        : {}),
+    };
+
+    try {
+      let productData = product;
+      if (product) {
+        await updateAProductApi(product.id, payload);
+      } else {
+        const res = await createAProductApi(payload);
+        productData = res.product;
+
+        if (res.msg) {
+          toast({
+            title: "Product created successfully",
+            description: res.msg,
+            variant: "success",
+            duration: 15000,
+          });
+        }
+      }
+      setTimeout(() => {
+        nav(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id);
+      }, 800);
+    } catch (error: any) {
+      setLoading(false);
+      console.log(error);
+      const errorResponse: ApiErrorResponse<
+        z.infer<typeof createProductSchema>
+      > = error;
+      const errorObj = getFormErrorObject(errorResponse);
+      if (errorObj) {
+        if (errorObj.file) setImagesError(errorObj.file);
+        const errorArray = Object.entries(errorObj);
+        errorArray.forEach(([key, value]) => {
+          setError(key as keyof z.infer<typeof createProductSchema>, {
+            type: "manual",
+            message: value,
+          });
+        });
+        return;
+      }
+
+      if (errorResponse.status === 403) {
+        if (errorResponse.data?.planName === "Free") {
+          toast({
+            title: "Product limit reached",
+            description: "Upgrade to a paid plan to add more products",
+            variant: "destructive",
+            duration: 25000,
+            action: (
+              <ToastAction
+                altText="Goto subscribtions to upgrade"
+                onClick={() => {
+                  window.open(DASHBOARD_SUBSCRIPTIONS_ROUTE, "_blank");
+                }}
+              >
+                Upgrade
+              </ToastAction>
+            ),
+          });
+          return;
+        } else {
+          if (errorResponse.data?.notSubCategory) {
+            toast({
+              title: "Product limit reached",
+              description: `You have reached the limit of products you can create for this category. Try creating a product in your current plan category (${errorResponse.data?.allowedCategoriesName?.join(
+                ", ",
+              )}), or upgrade to a paid plan that covers this category`,
+              variant: "destructive",
+              duration: 25000,
+            });
+            return;
+          } else {
+            toast({
+              title: "Product limit reached",
+              description: `You have reached the limit of products you can create on your current plan. Upgrade to a higher plan to create more products`,
+              variant: "destructive",
+              duration: 25000,
+              action: (
+                <ToastAction
+                  altText="Goto subscribtions to upgrade"
+                  onClick={() => {
+                    window.open(DASHBOARD_SUBSCRIPTIONS_ROUTE, "_blank");
+                  }}
+                >
+                  Upgrade
+                </ToastAction>
+              ),
+            });
+            return;
+          }
+        }
+      }
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const flexInputs = cn(
+    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]",
+  );
+
+  return (
+    <div
+      className={
+        "w-full sm:max-w-[300px] md:max-w-[350px] tablet:max-w-[400px]  sl:max-w-[500px] lg:max-w-[580px] xlg:max-w-[600px] xl:max-w-[700px]"
+      }
+    >
+      <h2 className={"text-md sm:text-[1.5rem] font-semibold mb-2 sm:mb-3 "}>
+        {product ? "Edit product" : "Post product"}
+      </h2>
+
+      <p className={"text-xs sm:text-md text-grey6 mb-4 sm:mb-10"}>
+        Add your products details below
+      </p>
+
+      <ImageUploader
+        format={"product"}
+        name={"product"}
+        file={files}
+        setValue={setFiles}
+        disabled={loading}
+        productTopDescription={"Add at least one photo of your product"}
+        productBottomDescription={[
+          "Each picture must not exceed 5MB",
+          "Supported formats are JPEG and PNG",
+        ]}
+        setSelectedPhotos={setSelectedPhotos}
+        errorMessage={imagesError}
+        setErrorMessage={setImagesError}
+        setHasError={setImageHasError}
+        selectedPhotos={selectedPhotos}
+        files={product?.files}
+        setDeletedFiles={setDeletedFiles}
+        deletedFiles={deletedFiles}
+      />
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={"w-full mt-6 flex flex-col gap-y-6"}
+      >
+        <div className={flexInputs}>
+          <Controller
+            control={control}
+            name="name"
+            render={({ field }) => (
+              <TextInput
+                {...field}
+                wrapperClass={"w-full"}
+                placeholder={"Product name"}
+                label={"Product name"}
+                name={field.name}
+                disabled={loading}
+                value={field.value || ""}
+                errorMessage={errors.name?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="price"
+            render={({ field }) => (
+              <TextInput
+                {...field}
+                wrapperClass={"w-full"}
+                placeholder={"Price"}
+                label={"Price"}
+                name={field.name}
+                disabled={loading}
+                value={field.value || ""}
+                errorMessage={errors.price?.message}
+              />
+            )}
+          />
+        </div>
+
+        <div className={flexInputs}>
+          <Controller
+            control={control}
+            name="categoryId"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"Select category"}
+                options={categoriesSelectData}
+                name={field.name}
+                disabled={loading}
+                value={field.value || ""}
+                emptyMessage={"No category"}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                }}
+                errorMessage={errors.categoryId?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="location"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"Select location"}
+                options={nigerianStates}
+                // defaultValue={field.value || ""}
+                name={field.name}
+                disabled={loading}
+                value={field.value || ""}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                }}
+                emptyMessage={"No category"}
+                errorMessage={errors.location?.message}
+              />
+            )}
+          />
+        </div>
+
+        <Controller
+          control={control}
+          name="description"
+          render={({ field }) => (
+            <TextAreaInput
+              {...field}
+              wrapperClass={"w-full"}
+              placeholder={"Product description"}
+              inputClass={cn(`h-[9.375rem] sm:h-[12.5rem]`)}
+              name={field.name}
+              disabled={loading}
+              value={field.value || ""}
+              errorMessage={errors.description?.message}
+            />
+          )}
+        />
+
+        <div className={"flex justify-end gap-x-2 sm:gap-x-3.5"}>
+          <Button
+            format={"tertiary"}
+            disabled={loading}
+            type={"button"}
+            onClick={back}
+          >
+            Cancel
+          </Button>
+          <Button format={"primary"} disabled={loading} type={"submit"}>
+            {product ? "Update product" : "Post product"}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}

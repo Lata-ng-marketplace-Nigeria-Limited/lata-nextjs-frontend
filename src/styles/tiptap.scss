@@ -1,0 +1,67 @@
+.tiptap {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: theme("colors.grey10");
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: theme("colors.grey10");
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: theme("colors.grey8");
+  }
+
+  a {
+    color: #47A4FA;
+  }
+
+  ul {
+    list-style: disc;
+    padding-left: 1rem;
+    li {
+      font-size: 0.875rem;
+      color: theme("colors.grey8");
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  ol {
+    list-style: decimal;
+    padding-left: 1rem;
+    li {
+      font-size: 0.875rem;
+      color: theme("colors.grey8");
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  @media (min-width: 800px) {
+    row-gap: 1.5rem;
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    h2 {
+      font-size: 1.4rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+
+    ul {
+      li {
+        font-size: 1rem;
+      }
+    }
+  }
+}

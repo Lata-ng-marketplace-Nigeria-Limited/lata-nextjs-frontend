@@ -1,0 +1,33 @@
+.nav-link {
+  .nav-link-icon-stroke {
+    svg {
+      path {
+        stroke: theme("colors.grey9");
+      }
+    }
+
+    &.active {
+      svg {
+        path {
+          stroke: theme("colors.primary");
+        }
+      }
+    }
+  }
+
+  .nav-link-icon-fill {
+    svg {
+      path {
+        fill: theme("colors.grey9");
+      }
+    }
+
+    &.active {
+      svg {
+        path {
+          fill: theme("colors.primary");
+        }
+      }
+    }
+  }
+}
