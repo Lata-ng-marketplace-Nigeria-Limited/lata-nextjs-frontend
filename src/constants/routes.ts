@@ -22,6 +22,7 @@ export const DASHBOARD_PRODUCT_ROUTE = "/product";
 export const DASHBOARD_PRODUCT_CREATE_ROUTE = "/create-product";
 export const DASHBOARD_PRODUCT_EDIT_ROUTE = "/edit-product";
 export const DASHBOARD_ABOUT_US_ROUTE = "/about-us";
+export const DASHBOARD_ANALYTICS_ROUTE = "/analytics";
 export const LEGAL_AGENT_ACQUISITION_EXPERT_ROUTE = "/agent-acquisition-expert";
 export const LEGAL_TERMS_AND_CONDITIONS_ROUTE = "/terms-and-conditions";
 export const LEGAL_PRIVACY_POLICY_ROUTE = "/privacy-policy";

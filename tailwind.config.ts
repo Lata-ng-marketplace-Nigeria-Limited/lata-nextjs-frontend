@@ -64,6 +64,13 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      gridTemplateColumns: {
+        "4": "repeat(auto-fit, minmax(261px, 1fr))",
+        'smaller4': "repeat(auto-fit, minmax(161px, 1fr))",
+      },
+      gridTemplateRows: {
+        "4": "repeat(auto-fit, minmax(10.625rem, 1fr))",
+      },
     },
     keyframes: {
       shimmer: {

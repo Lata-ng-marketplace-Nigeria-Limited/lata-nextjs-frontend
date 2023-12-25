@@ -30,7 +30,10 @@ export const authConfig: NextAuthOptions = {
         }
 
         if (publicToken) {
-          return await authCallbackApi(publicToken);
+          console.log("credentials");
+          const hh = await authCallbackApi(publicToken);
+          console.log("hh", hh);
+          return hh;
         }
       },
     }),

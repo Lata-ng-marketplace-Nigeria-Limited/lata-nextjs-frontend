@@ -18,6 +18,7 @@ import {
   ADMIN_REVIEW_PRODUCTS_ROUTE,
   ADMIN_RIDER_REQUESTS_ROUTE,
   ADMIN_VERIFY_TRANSFERS_ROUTE,
+  DASHBOARD_ANALYTICS_ROUTE,
   DASHBOARD_BALANCE_ROUTE,
   DASHBOARD_CALL_MANAGER_ROUTE,
   DASHBOARD_FEEDBACK_ROUTE,
@@ -42,6 +43,7 @@ import {
   LockKeyhole,
   Pencil,
 } from "lucide-react";
+import AnalyticsIcon from "@/components/atom/icons/Analytics";
 
 export const sideMenu: {
   title: string;
@@ -246,6 +248,18 @@ export const sideMenu: {
     hideFromStaff: false,
     fill: false,
     href: DASHBOARD_SUBSCRIPTIONS_ROUTE,
+  },
+  {
+    title: "Analytics",
+    icon: <AnalyticsIcon />,
+    isSeller: true,
+    isAuth: true,
+    isAdmin: false,
+    isStaff: false,
+    hideFromAdmin: true,
+    hideFromStaff: false,
+    fill: false,
+    href: DASHBOARD_ANALYTICS_ROUTE,
   },
   {
     title: "Settings",
