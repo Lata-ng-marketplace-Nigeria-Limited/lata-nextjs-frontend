@@ -8,13 +8,14 @@ import HeaderText from "@atom/HeaderText";
 import HeaderSubText from "@atom/HeaderSubText";
 import { CallManagerButton } from "@components/call-manager/CallManagerButton";
 import { Suspense } from "react";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Call Manager",
 };
 
 export default async function Page() {
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {
     redirect("/auth/login");

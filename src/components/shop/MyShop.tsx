@@ -8,6 +8,7 @@ export const MyShop = async ({ page }: Props) => {
   const products = await findAllMyProductsApi({
     page,
   });
+
   return (
     <div className={"mt-[0.4375rem]"}>
       <MyProductList

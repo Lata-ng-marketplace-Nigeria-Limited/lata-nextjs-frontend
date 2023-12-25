@@ -6,6 +6,7 @@ import { findAProductApi } from "@/api/product";
 import { Suspense } from "react";
 import { CreateOrEditProduct } from "@components/product/CreateOrEditProduct";
 import EditProduct from "@components/product/EditProduct";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Edit Product",
@@ -18,13 +19,13 @@ export default async function Page({
     id: string;
   };
 }) {
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {
-    redirect("/auth/login");
+    redirect("/auth");
   }
 
-  if (session.role !== "SELLER") {
+  if (session.role === "BUYER") {
     redirect("/");
   }
 

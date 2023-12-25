@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { SavedProducts } from "@components/saved/SavedProducts";
 import { unstable_noStore } from "next/cache";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Saved Products",
@@ -20,7 +21,7 @@ export default async function Page({
   };
 }) {
   unstable_noStore();
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";
   if (!session || !session.user) {
     redirect("/auth/login");

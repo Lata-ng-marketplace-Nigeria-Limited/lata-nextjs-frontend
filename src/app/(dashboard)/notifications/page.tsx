@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { NotificationWrapper } from "@components/notifications/NotificationWrapper";
 import { unstable_noStore } from "next/cache";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Notifications",
@@ -18,7 +19,7 @@ export default async function Page({
   };
 }) {
   unstable_noStore();
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";
   if (!session || !session.user) {
     redirect("/auth/login");
