@@ -13,6 +13,7 @@ import {
   organizationStructuredData,
   websiteStructuredData,
 } from "@/store/seo/structuredData";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -76,6 +77,7 @@ export default async function RootLayout({
       <body className={cn(inter.className, "antialiased h-full")}>
         <NextAuthProvider session={session as any}>{children}</NextAuthProvider>
         <Toaster />
+        <SpeedInsights />
       </body>
       <Script src={"https://js.paystack.co/v2/inline.js"}></Script>
       <Script

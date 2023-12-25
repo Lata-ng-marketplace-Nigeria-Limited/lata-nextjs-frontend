@@ -30,6 +30,7 @@
     "@tiptap/pm": "^2.1.13",
     "@tiptap/react": "^2.1.13",
     "@tiptap/starter-kit": "^2.1.13",
+    "@vercel/speed-insights": "^1.0.2",
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.0",
@@ -51,7 +52,7 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
-    "@types/chartjs": "^0.0.31",
+    "@types/chart.js": "^2.9.41",
     "@types/lodash": "^4.14.202",
     "@types/luxon": "^3.3.7",
     "@types/node": "^20.10.5",
