@@ -6,6 +6,9 @@ import { authConfig } from "@authConfig";
 import AnalyticsCardsWrapper from "@/components/analytics/AnalyticsCardsWrapper";
 import AnalyticsChartArea from "@/components/analytics/AnalyticsChartArea";
 import ProductInsights from "@/components/analytics/ProductInsights";
+import AnalyticsTopCardSkeleton from "@/components/skeleton/AnalyticsTopCardSkeleton";
+import AnalyticsChartAreaSkeleton from "@/components/skeleton/AnalyticsChartAreaSkeleton";
+import ProductInsightsLoadingSkeleton from "@/components/skeleton/AnaltyicsProductInsightsSkeleton";
 
 const page = async ({
   searchParams,
@@ -27,22 +30,22 @@ const page = async ({
   const session = await getServerSession(authConfig);
   const query = searchParams?.month || getMonthInGMTPlus1().toString();
 
-  console.log("query", query)
+  console.log("query", query);
 
   return (
     <div>
       <HeaderText title>Seller Analytics</HeaderText>
       <HeaderSubText>HI {session?.user?.name}, Welcome back!</HeaderSubText>
 
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<AnalyticsTopCardSkeleton />}>
         <AnalyticsCardsWrapper />
       </Suspense>
 
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<ProductInsightsLoadingSkeleton />}>
         <ProductInsights selectedMonth={query} />
       </Suspense>
 
-      <Suspense key={query} fallback={<div>Loading</div>}>
+      <Suspense key={query} fallback={<AnalyticsChartAreaSkeleton />}>
         <AnalyticsChartArea selectedMonth={query} />
       </Suspense>
     </div>
