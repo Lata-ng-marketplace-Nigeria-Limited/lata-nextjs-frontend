@@ -14,6 +14,7 @@ const ProductInsights = ({ selectedMonth }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
 
+
   const handleMonthChange = (month: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("month", month);

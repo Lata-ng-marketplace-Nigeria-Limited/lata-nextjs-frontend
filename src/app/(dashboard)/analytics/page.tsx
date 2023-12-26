@@ -27,6 +27,8 @@ const page = async ({
   const session = await getServerSession(authConfig);
   const query = searchParams?.month || getMonthInGMTPlus1().toString();
 
+  console.log("query", query)
+
   return (
     <div>
       <HeaderText title>Seller Analytics</HeaderText>

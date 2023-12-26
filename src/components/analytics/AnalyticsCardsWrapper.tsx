@@ -4,7 +4,6 @@ import AnalyticsTopCards from "./AnalyticsTopCards";
 
 const AnalyticsCardsWrapper = async () => {
   const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi();
-  console.log("response", response);
 
   return (
     <div>
@@ -18,17 +17,17 @@ const AnalyticsCardsWrapper = async () => {
           />
           <AnalyticsTopCards
             title="Total product clicks"
-            number={response?.data?.product?.clicks ?? 0}
+            number={response?.product?.clicks ?? 0}
             description="Total product clicks"
           />
           <AnalyticsTopCards
             title="Total phone clicks"
-            number={response?.data?.phone?.clicks ?? 0}
+            number={response?.phone?.clicks ?? 0}
             description="Total phone clicks"
           />
           <AnalyticsTopCards
             title="Total message clicks"
-            number={response?.data?.message?.clicks ?? 0}
+            number={response?.message?.clicks ?? 0}
             description="Total message clicks"
           />
         </div>

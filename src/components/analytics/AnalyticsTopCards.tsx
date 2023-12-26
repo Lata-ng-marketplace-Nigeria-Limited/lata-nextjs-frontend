@@ -3,21 +3,18 @@ import React, { Suspense } from "react";
 import AnalyticsTopCardSkeleton from "../skeleton/AnalyticsTopCardSkeleton";
 
 interface Props {
-  className?: string;
   isTotalViews?: boolean;
   number: number | string;
   title: string;
   description: string;
 }
 const AnalyticsTopCards = ({
-  className,
   isTotalViews,
   number,
   title,
   description,
 }: Props) => {
   return (
-    
     <div
       className={cn(
         { "border-0 bg-primary text-white shadow-none": isTotalViews },

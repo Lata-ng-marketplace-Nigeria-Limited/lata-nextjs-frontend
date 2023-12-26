@@ -8,13 +8,11 @@ interface AnalyticsClicksData {
 }
 export interface GetSellerAnalyticsResponse {
   isError?: boolean;
-  message?: string;
-  data: {
-    phone: AnalyticsClicksData;
-    product: AnalyticsClicksData;
-    message: AnalyticsClicksData;
-    month?: string;
-  };
+  sucess?: boolean;
+  phone: AnalyticsClicksData;
+  product: AnalyticsClicksData;
+  message: AnalyticsClicksData;
+  month?: string;
 }
 
 export const getSellerAnalyticsApi = async (

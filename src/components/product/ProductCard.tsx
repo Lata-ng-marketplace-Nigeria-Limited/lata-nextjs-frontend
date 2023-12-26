@@ -18,6 +18,7 @@ import { useUser } from "@hooks/useUser";
 import { useToast } from "@components/ui/use-toast";
 import Link from "next/link";
 import { IMAGE_BLUR_URL } from "@/constants/others";
+import { createViewApi } from "@/service/views";
 
 // import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 
@@ -64,7 +65,7 @@ export default function ProductCard(props: Props) {
       if (returnImage) return image;
       setImage(meta?.selectedImage || props?.imageSrc);
     },
-    [props.product?.meta, props?.imageSrc],
+    [props.product?.meta, props?.imageSrc]
   );
 
   useEffect(() => {
@@ -84,7 +85,7 @@ export default function ProductCard(props: Props) {
   useEffect(() => {
     if (user?.id && !hasSetSaved) {
       const isProductSaved = user?.savedProducts?.find(
-        (savedProduct: any) => savedProduct?.productId === props.product?.id,
+        (savedProduct: any) => savedProduct?.productId === props.product?.id
       );
       setHasSetSaved(true);
       setSaved(!!isProductSaved);
@@ -121,9 +122,12 @@ export default function ProductCard(props: Props) {
   //   console.log({ planName  });
   // }, [planName]);
 
-  const handleProductClick = () => {
-    if (props.createProductPreview) return;
-    nav.push(`${DASHBOARD_PRODUCT_ROUTE}/${props?.product?.id}`);
+  const handleProductClick = async () => {
+    // if (props.createProductPreview) return;
+    // nav.push(`${DASHBOARD_PRODUCT_ROUTE}/${props?.product?.id}`);
+
+    if (!user?.id) return;
+    await createViewApi("PRODUCT", props.product?.id || "", user?.id || "");
   };
 
   const handleSaveProduct = async () => {
@@ -139,12 +143,12 @@ export default function ProductCard(props: Props) {
     try {
       if (isSaved) {
         const { userData: userInfo } = await saveAProductApi(
-          props.product?.id || "",
+          props.product?.id || ""
         );
         await updateUser(userInfo);
       } else {
         const { userData: userInfo } = await unSaveAProductApi(
-          props.product?.id || "",
+          props.product?.id || ""
         );
         props.onUnSave?.(props.product?.id || "");
         await updateUser(userInfo);
@@ -178,9 +182,10 @@ export default function ProductCard(props: Props) {
         {
           "sm:w-screen py-3 px-2.5 sm:p-3 max-w-[350px] sm:max-w-[305px] tablet:max-w-[380px] xlg:max-w-[500px]":
             props.createProductPreview,
-        },
+        }
       )}
       ref={ref}
+      onClick={handleProductClick}
     >
       <div
         className={cn(
@@ -196,7 +201,7 @@ export default function ProductCard(props: Props) {
               props.createProductPreview,
             "flex justify-center items-center":
               !props.imageSrc && props.createProductPreview,
-          },
+          }
         )}
       >
         {props.product?.status === "INACTIVE" && (
