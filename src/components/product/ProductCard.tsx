@@ -72,6 +72,7 @@ export default function ProductCard(props: Props) {
     if (!isVisible) return;
     if (image) return;
     handleImage();
+    console.log("visible product", { image: props?.imageSrc, isVisible });
   }, [isVisible, image, handleImage]);
 
   // useEffect(() => {

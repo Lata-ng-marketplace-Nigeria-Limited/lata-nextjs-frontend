@@ -14,11 +14,11 @@ const ProductInsights = ({ selectedMonth }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
 
-
   const handleMonthChange = (month: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("month", month);
-
+    // console.log("month", { param: params.get("month"), month });
+    // return;
     router.replace(`${pathname}?${params.toString()}`);
   };
 
@@ -33,6 +33,7 @@ const ProductInsights = ({ selectedMonth }: Props) => {
         options={months}
         onValueChange={handleMonthChange}
         value={selectedMonth}
+        // disabled={!selectedMonth}
       />
     </div>
   );
