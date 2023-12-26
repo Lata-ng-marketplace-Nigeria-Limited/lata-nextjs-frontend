@@ -1,13 +1,18 @@
 "use client";
-import { Product } from "@/interface/products";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Product } from "@/interface/products";
 import { FileData } from "@/interface/file";
 import { cn } from "@/utils";
-import CarouselItem from "@molecule/CarouselItem";
 import CarouselPinButton from "@components/product/CarouselPinButton";
-import CarouselPrevBtn from "@molecule/CarouselPrevBtn";
-import CarouselNextBtn from "@molecule/CarouselNextBtn";
-import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselNext,
+  CarouselPrevious,
+  CarouselItem,
+  type CarouselApi,
+} from "@components/ui/carousel";
 
 interface Props {
   product: Product;
@@ -15,6 +20,9 @@ interface Props {
 
 export default function ProductCarousel(props: Props) {
   const [images, setImages] = useState<FileData[]>([]);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (props.product) {
@@ -22,8 +30,20 @@ export default function ProductCarousel(props: Props) {
     }
   }, [props.product]);
 
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   return (
-    <div
+    <Carousel
       className={cn(`
           w-full
           rounded-[12px]
@@ -37,54 +57,65 @@ export default function ProductCarousel(props: Props) {
           lg:h-[320px]
           xlg:h-[350px]
           xl:h-[390px]
-          relative 
+          relative
           bg-white
       `)}
-      id="animation-carousel"
-      data-carousel="static"
+      setApi={setApi}
+      opts={{
+        loop: true,
+      }}
     >
+      <CarouselContent>
+        {images.map((image, index) => (
+          <CarouselItem
+            className={cn(`
+              w-full
+              rounded-[12px]
+              h-[200px]
+              xms:h-[250px]
+              xs:h-[300px]
+              sm:h-[250px]
+              md:h-[300px]
+              tablet:h-[250px]
+              sl:h-[300px]
+              lg:h-[320px]
+              xlg:h-[350px]
+              xl:h-[390px]
+              relative
+              bg-white
+          `)}
+            key={index}
+          >
+            <Image
+              className={"w-full rounded-[12px] h-full object-contain"}
+              src={image.url}
+              alt={props.product.name}
+              layout={"fill"}
+              objectFit={"contain"}
+              style={{
+                objectFit: "contain",
+              }}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+
       {images.length > 1 ? (
         <>
-          <div className="relative w-full h-full overflow-hidden rounded-lg">
-            {images.map((image, index) => (
-              <CarouselItem
-                key={index}
-                src={image.url}
-                alt={props.product.name}
-              />
-            ))}
-          </div>
-
-          <div className="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-2 left-1/2  p-1">
+          <CarouselPrevious />
+          <CarouselNext />
+          <div className="absolute z-[10000px] flex space-x-3 -translate-x-1/2 bottom-2 left-1/2  p-1">
             {images.map((_, index) => (
               <CarouselPinButton
                 key={index}
                 index={index}
-                total={images.length}
+                current={current}
+                total={count}
               />
             ))}
           </div>
-
-          <CarouselPrevBtn />
-          <CarouselNextBtn />
         </>
       ) : null}
-
-      {images.length === 1 ? (
-        <img
-          className={"w-full rounded-[12px] h-full object-contain"}
-          src={images[0].url}
-          alt={props.product.name}
-          // width={0}
-          // height={0}
-          // objectFit={"contain"}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-          }}
-        />
-      ) : null}
-    </div>
+    </Carousel>
   );
 }
