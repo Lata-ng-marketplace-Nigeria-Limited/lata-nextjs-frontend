@@ -17,8 +17,8 @@ export function encodeUnicode(str: string) {
       function toSolidBytes(match, p1) {
         // @ts-ignore
         return String.fromCharCode("0x" + p1);
-      },
-    ),
+      }
+    )
   );
 }
 
@@ -170,5 +170,5 @@ export function copyPrevLocalStore(prev: any) {
 }
 
 export const getApiUrl = (path: string) => {
-  return process.env.NEXT_PUBLIC_LATA_API_URL + path;
+  return process.env.NEXT_PUBLIC_LATA_API_URL  + path;
 };

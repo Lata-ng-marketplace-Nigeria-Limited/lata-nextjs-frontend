@@ -1,4 +1,4 @@
-import { months } from "./ProductInsights";
+import { months } from "@/store/data/analytics";
 
 const labels = months.map((month) => month.label);
 
