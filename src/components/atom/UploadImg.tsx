@@ -169,14 +169,13 @@ export default function UploadImg({
         </Button>
       </div>
 
-      <Image
+      <img
         {...props}
         src={preview.url}
         alt={preview.name}
         title={preview.name}
-        layout="fill"
-        width={format === "profile" ? 0 : isSm ? 130 : 70}
-        height={format === "profile" ? 0 : isSm ? 120 : 61}
+        // width={format === "profile" ? 0 : isSm ? 130 : 70}
+        // height={format === "profile" ? 0 : isSm ? 120 : 61}
         style={{
           width: format === "profile" ? "100%" : isSm ? 130 : 70,
           height: format === "profile" ? "100%" : isSm ? 120 : 61,
@@ -214,8 +213,6 @@ export default function UploadImg({
           props.className,
         )}
         onClick={handleImgClick}
-        placeholder={"blur"}
-        blurDataURL={IMAGE_BLUR_URL}
       />
     </div>
   );
