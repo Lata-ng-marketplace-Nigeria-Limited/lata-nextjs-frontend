@@ -8,7 +8,7 @@ import MobileBorderArea from "@atom/MobileBorderArea";
 import AppAvatar from "@molecule/Avatar";
 import Button from "@atom/Button";
 import SendSellerMessage from "@components/input/SendSellerMessage";
-import { createViewApi } from "@/service/views";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 interface Props {
   type: "compact" | "expanded";
@@ -49,13 +49,21 @@ export default function SellerContact(props: Props) {
     }
 
     if (type === "whatsApp") {
-      await createViewApi("MESSAGE", props.productId!, props.user?.id);
+      await generateSellerAnalyticsApi(
+        "MESSAGE",
+        props.productId!,
+        props.user?.id
+      );
       window.open(
         `https://wa.me/${formatNo}?text=${window.location.origin}/product/${props.productId}%0A%0A%0AHi, I'm interested in this product on Lata.ng!`,
         "_blank"
       );
     } else {
-      await createViewApi("PHONE", props.productId!, props.user?.id);
+      await generateSellerAnalyticsApi(
+        "PHONE",
+        props.productId!,
+        props.user?.id
+      );
       makePhoneCall(formatNo);
     }
   };

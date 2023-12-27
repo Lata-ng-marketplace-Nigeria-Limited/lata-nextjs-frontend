@@ -2,10 +2,32 @@ import { getApiUrl } from "@/utils";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
 import { unstable_noStore } from "next/cache";
+import { CreateViewTypes, ViewTypes } from "@/interface/views";
+import { $http } from "@/service/axios";
 import {
   GetSellerAnalyticsResponse,
   MonthlyAnalyticsResponse,
 } from "@/interface/views";
+
+
+
+export async function generateSellerAnalyticsApi(
+  type: ViewTypes,
+  productId: string,
+  userId: string
+) {
+  try {
+    const viewDetails: CreateViewTypes = {
+      type,
+      productId,
+      userId,
+    };
+    const res = await $http.post("views", viewDetails);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export const getSellerAnalyticsApi = async (
   month?: string

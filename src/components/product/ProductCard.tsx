@@ -18,7 +18,7 @@ import { useUser } from "@hooks/useUser";
 import { useToast } from "@components/ui/use-toast";
 import Link from "next/link";
 import { IMAGE_BLUR_URL } from "@/constants/others";
-import { createViewApi } from "@/service/views";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 // import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 
@@ -70,7 +70,7 @@ export default function ProductCard(props: Props) {
 
   const registerView = async () => {
     try {
-      const res = await createViewApi(
+      const res = await generateSellerAnalyticsApi(
         "VIEW",
         props.product?.id || "",
         user?.id || ""
@@ -142,7 +142,7 @@ export default function ProductCard(props: Props) {
     // nav.push(`${DASHBOARD_PRODUCT_ROUTE}/${props?.product?.id}`);
 
     if (!user?.id) return;
-    await createViewApi("PRODUCT", props.product?.id || "", user?.id || "");
+    await generateSellerAnalyticsApi("PRODUCT", props.product?.id || "", user?.id || "");
   };
 
   const handleSaveProduct = async () => {
