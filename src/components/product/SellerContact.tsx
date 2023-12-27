@@ -15,7 +15,7 @@ interface Props {
   sellerInfo?: User | null;
   productName?: string;
   productId?: string;
-  user?: any;
+  userId?: string;
 }
 
 export default function SellerContact(props: Props) {
@@ -51,8 +51,8 @@ export default function SellerContact(props: Props) {
     if (type === "whatsApp") {
       await generateSellerAnalyticsApi(
         "MESSAGE",
-        props.productId!,
-        props.user?.id
+        props.productId || "",
+        props.userId || ""
       );
       window.open(
         `https://wa.me/${formatNo}?text=${window.location.origin}/product/${props.productId}%0A%0A%0AHi, I'm interested in this product on Lata.ng!`,
@@ -61,8 +61,8 @@ export default function SellerContact(props: Props) {
     } else {
       await generateSellerAnalyticsApi(
         "PHONE",
-        props.productId!,
-        props.user?.id
+        props.productId || "",
+        props.userId || ""
       );
       makePhoneCall(formatNo);
     }

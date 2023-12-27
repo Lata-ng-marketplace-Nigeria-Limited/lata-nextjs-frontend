@@ -2,10 +2,25 @@
 
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import { Chart, CategoryScale, LinearScale, BarElement } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { MonthlyAnalyticsResponse } from "@/interface/views";
 import { chartConfig } from "./chartConfiguration";
-Chart.register(CategoryScale, LinearScale, BarElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface Props {
   chartsData: MonthlyAnalyticsResponse;
@@ -23,8 +38,18 @@ const AnalyticsChart = ({ chartsData }: Props) => {
 
   return (
     <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full">
-      <Bar data={data} options={options} className="min-hfull" />
+      <Bar
+        datasetIdKey="datasetIdKey"
+        data={data}
+        // plugins={[ChartDataLabels]}
+        options={options}
+        className="min-hfull"
+      />
     </div>
+    // <ExperimentalChart
+    //   productClicks={productClicks}
+    //   productViews={productViews}
+    // />
   );
 };
 

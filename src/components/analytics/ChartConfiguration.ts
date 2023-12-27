@@ -12,7 +12,7 @@ export const chartConfig = (
     datasets: [
       {
         label: "Views",
-        data: productClicks,
+        data: productViews,
         backgroundColor: "#5113A1",
         borderColor: "#fff",
         borderWidth: 2,
@@ -20,7 +20,7 @@ export const chartConfig = (
       },
       {
         label: "Clicks",
-        data: productViews,
+        data: productClicks,
         backgroundColor: "#AE8CD0",
         borderColor: "#fff",
         borderWidth: 2,
@@ -29,30 +29,24 @@ export const chartConfig = (
     ],
   };
 
-  const config = {
-    type: "bar",
-    data,
-    options: {
-      legend: { position: "bottom" },
-      plugins: {
-        legend: {
-          display: true,
-          // position: "bottom",
-        },
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
       },
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-        x: {
-          grid: {
-            display: false,
-          },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+      x: {
+        grid: {
+          display: false,
         },
       },
     },
   };
 
-  return { data: config.data, options: config.options };
+  return { data, options };
 };

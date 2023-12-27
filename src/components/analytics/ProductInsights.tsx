@@ -22,7 +22,7 @@ const ProductInsights = ({ selectedMonth }: Props) => {
 
   return (
     <div className="flex justify-between items-center flex-auto mb-6">
-      <h1 className="text-2xl font-semibold whitespace-nowrap basis-1/2">
+      <h1 className="text-base tablet:text-2xl font-semibold whitespace-nowrap basis-1/2">
         Products Insight
       </h1>
       <SelectInput

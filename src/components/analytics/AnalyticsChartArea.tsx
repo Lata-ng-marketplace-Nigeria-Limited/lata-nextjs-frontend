@@ -15,7 +15,7 @@ const AnalyticsChartArea = async ({ selectedMonth }: Props) => {
   const monthInFull = months[Number(response?.month) - 1]?.extra ?? "";
 
   return (
-    <div className="flex border-solid border-[1px] items-center gap-6 lg:justify-between border-grey2 py-6 px-10 flex-col lg:flex-row">
+    <div className="flex border-solid border-[1px] tablet:py-4 items-center gap-6 lg:justify-between border-grey2 lg:py-6  py-2 px-2 tablet:px-10 flex-col lg:flex-row">
       <AnalyticsChart chartsData={chartsData} />
 
       <div className="xl:basis-[20%] lg:basis-[30%] lg:flex lg:flex-col gap-2 tablet:gap-6 grid grid-cols-smaller4 w-full mt-4 tablet:mt-8 lg:mt-0">
