@@ -19,7 +19,7 @@ import {
   createAProductApi,
   CreateProductApiInput,
   updateAProductApi,
-} from "@/api/productClientApi";
+} from "@/api/product.client";
 import { useToast } from "@components/ui/use-toast";
 import {
   DASHBOARD_PRODUCT_ROUTE,

@@ -12,10 +12,11 @@ import Button from "@atom/Button";
 import ALink from "@atom/ALink";
 import { LANDING_ROUTE } from "@/constants/routes";
 import Alert from "@atom/Alert";
-import { forgetPasswordApi, resendOtpApi } from "@/api/auth";
+import { resendOtpApi } from "@/api/auth";
 import ResendEmail from "@molecule/ResendEmail";
 import { ApiErrorResponse } from "@/interface/general";
 import { useToast } from "@components/ui/use-toast";
+import { forgetPasswordApi } from "@/api/auth.client";
 
 export const ForgotPasswordForm = () => {
   const [view, setView] = useState<"enter-email" | "resend-email">(
