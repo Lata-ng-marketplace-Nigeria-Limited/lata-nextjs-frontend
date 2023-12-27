@@ -68,11 +68,25 @@ export default function ProductCard(props: Props) {
     [props.product?.meta, props?.imageSrc]
   );
 
+  const registerView = async () => {
+    try {
+      const res = await createViewApi(
+        "VIEW",
+        props.product?.id || "",
+        user?.id || ""
+      );
+      console.log(res);
+    } catch (error) {
+      console.log("Error registering view", error);
+    }
+  };
+
   useEffect(() => {
     if (!isVisible) return;
     if (image) return;
     handleImage();
-    console.log("visible product", { image: props?.imageSrc, isVisible });
+
+    registerView();
   }, [isVisible, image, handleImage]);
 
   // useEffect(() => {

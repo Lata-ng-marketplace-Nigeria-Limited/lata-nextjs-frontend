@@ -1,6 +1,7 @@
-import { GetSellerAnalyticsResponse, getSellerAnalyticsApi } from "@/api/view";
+import { getSellerAnalyticsApi } from "@/api/view";
 import React from "react";
 import AnalyticsTopCards from "./AnalyticsTopCards";
+import { GetSellerAnalyticsResponse } from "@/interface/views";
 
 const AnalyticsCardsWrapper = async () => {
   const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi();
@@ -13,21 +14,21 @@ const AnalyticsCardsWrapper = async () => {
             isTotalViews
             title="Total Views"
             description="Total view of all products"
-            number={"25,000"}
+            number={response?.productViews?.views ?? 0}
           />
           <AnalyticsTopCards
             title="Total product clicks"
-            number={response?.product?.clicks ?? 0}
+            number={response?.productClicks?.clicks ?? 0}
             description="Total product clicks"
           />
           <AnalyticsTopCards
             title="Total phone clicks"
-            number={response?.phone?.clicks ?? 0}
+            number={response?.phoneClicks?.clicks ?? 0}
             description="Total phone clicks"
           />
           <AnalyticsTopCards
             title="Total message clicks"
-            number={response?.message?.clicks ?? 0}
+            number={response?.messageClicks?.clicks ?? 0}
             description="Total message clicks"
           />
         </div>

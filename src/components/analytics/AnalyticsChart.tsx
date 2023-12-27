@@ -2,14 +2,28 @@
 
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import { config } from "./chartConfiguration";
 import { Chart, CategoryScale, LinearScale, BarElement } from "chart.js";
+import { MonthlyAnalyticsResponse } from "@/interface/views";
+import { chartConfig } from "./chartConfiguration";
 Chart.register(CategoryScale, LinearScale, BarElement);
 
-const AnalyticsChart = () => {
+interface Props {
+  chartsData: MonthlyAnalyticsResponse;
+}
+const AnalyticsChart = ({ chartsData }: Props) => {
+  const productClicks = chartsData?.productClicksForAllMonths?.map(
+    (product) => product.clicks
+  );
+
+  const productViews = chartsData?.productViewsForAllMonths?.map(
+    (product) => product.views
+  );
+
+  const { data, options } = chartConfig(productClicks, productViews);
+
   return (
     <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full">
-      <Bar data={config.data} options={config.options} className="min-hfull" />
+      <Bar data={data} options={options} className="min-hfull" />
     </div>
   );
 };
