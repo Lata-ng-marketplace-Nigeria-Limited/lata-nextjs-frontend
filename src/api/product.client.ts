@@ -28,7 +28,6 @@ export const createAProductApi = async (
   payload: CreateProductApiInput,
 ): Promise<CreateProductApiOutput> => {
   try {
-    console.log("payload", payload);
     const formData = createFormData(payload);
     const res = await $httpFile.post(`products`, formData);
     return res.data;
