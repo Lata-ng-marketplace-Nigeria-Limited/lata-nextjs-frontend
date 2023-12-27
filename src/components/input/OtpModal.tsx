@@ -5,11 +5,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import {
-  getChangePhoneOtpApi,
-  UpdateUserProfileInput,
-  verifyChangePhoneOtpApi,
-} from "@/api/auth";
 import { cn, formatNigerianPhoneNumber } from "@/utils";
 import { useToast } from "@components/ui/use-toast";
 import { ApiErrorResponse } from "@/interface/general";
@@ -17,6 +12,11 @@ import HeaderText from "@atom/HeaderText";
 import TextInput from "@components/input/TextInput";
 import ResendEmail from "@molecule/ResendEmail";
 import Button from "@atom/Button";
+import {
+  getChangePhoneOtpApi,
+  UpdateUserProfileInput,
+  verifyChangePhoneOtpApi,
+} from "@/api/auth.client";
 
 interface OtpModalProps {
   setIsShown: React.Dispatch<SetStateAction<boolean>>;

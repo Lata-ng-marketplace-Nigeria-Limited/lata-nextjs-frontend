@@ -23,30 +23,6 @@ export async function authenticate(
   }
 }
 
-export async function buyerSignUpAction(
-  prevState: string | undefined,
-  formData: FormData,
-) {
-  try {
-    const validate = buyerSignUpSchema.safeParse(
-      Object.fromEntries(formData.entries()),
-    );
-
-    if (!validate.success) {
-      return {
-        errors: validate.error.flatten().fieldErrors,
-        message: "Missing Fields. Failed to Create Invoice.",
-      };
-    }
-    const { email, password, name, phoneNumber } = validate.data;
-  } catch (error) {
-    if ((error as Error).message.includes("CredentialsSignin")) {
-      return "CredentialSignin";
-    }
-    throw error;
-  }
-}
-
 interface VerifyEmailApiInput {
   token?: string;
   email?: string;
