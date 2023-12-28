@@ -12,15 +12,14 @@ import {
   Legend,
 } from "chart.js";
 import { MonthlyAnalyticsResponse } from "@/interface/views";
-import { chartConfig } from "./chartConfiguration";
+import { chartConfig } from "@/components/analytics/chartConfiguration";
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   Title,
   Tooltip,
-  Legend,
-  
+  Legend
 );
 
 interface Props {

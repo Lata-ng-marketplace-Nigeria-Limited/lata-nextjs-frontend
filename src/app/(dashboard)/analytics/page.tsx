@@ -32,7 +32,7 @@ const page = async ({
 
   return (
     <div>
-      <HeaderText title>Seller's Analytics</HeaderText>
+      <HeaderText title>{`Seller's`} Analytics</HeaderText>
       <HeaderSubText>Hi {session?.user?.name}, Welcome back!</HeaderSubText>
 
       <Suspense fallback={<AnalyticsTopCardSkeleton />}>

@@ -68,7 +68,7 @@ export default function ProductCard(props: Props) {
     [props.product?.meta, props?.imageSrc]
   );
 
-  const registerView = async () => {
+  const registerView = useCallback(async () => {
     try {
       const res = await generateSellerAnalyticsApi(
         "VIEW",
@@ -79,7 +79,7 @@ export default function ProductCard(props: Props) {
     } catch (error) {
       console.log("Error registering view", error);
     }
-  };
+  }, [props.product?.id, user?.id]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -87,7 +87,7 @@ export default function ProductCard(props: Props) {
     handleImage();
 
     registerView();
-  }, [isVisible, image, handleImage]);
+  }, [isVisible, image, handleImage, registerView]);
 
   // useEffect(() => {
   //   (async () => {
@@ -142,7 +142,11 @@ export default function ProductCard(props: Props) {
     // nav.push(`${DASHBOARD_PRODUCT_ROUTE}/${props?.product?.id}`);
 
     if (!user?.id) return;
-    await generateSellerAnalyticsApi("PRODUCT", props.product?.id || "", user?.id || "");
+    await generateSellerAnalyticsApi(
+      "PRODUCT",
+      props.product?.id || "",
+      user?.id || ""
+    );
   };
 
   const handleSaveProduct = async () => {
