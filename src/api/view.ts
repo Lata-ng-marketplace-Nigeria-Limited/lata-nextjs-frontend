@@ -35,6 +35,8 @@ export const getSellerAnalyticsApi = async (
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
+
+    await new Promise((resolve) => setTimeout(resolve, 3000))
     const res = await fetch(
       getApiUrl(month ? `/views/month/${month}` : "/views"),
       {

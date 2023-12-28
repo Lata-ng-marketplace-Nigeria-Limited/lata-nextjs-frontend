@@ -32,8 +32,8 @@ const page = async ({
 
   return (
     <div>
-      <HeaderText title>Seller Analytics</HeaderText>
-      <HeaderSubText>HI {session?.user?.name}, Welcome back!</HeaderSubText>
+      <HeaderText title>Seller's Analytics</HeaderText>
+      <HeaderSubText>Hi {session?.user?.name}, Welcome back!</HeaderSubText>
 
       <Suspense fallback={<AnalyticsTopCardSkeleton />}>
         <AnalyticsCardsWrapper />

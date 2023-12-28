@@ -1,4 +1,3 @@
-import { MonthlyAnalyticsResponse } from "@/interface/views";
 import { months } from "@/store/data/analytics";
 
 const labels = months.map((month) => month.label);
@@ -19,7 +18,7 @@ export const chartConfig = (
         maxBarThickness: 40,
       },
       {
-        label: "Clicks",
+        label: "Product clicks",
         data: productClicks,
         backgroundColor: "#AE8CD0",
         borderColor: "#fff",
