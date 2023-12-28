@@ -1,6 +1,6 @@
 import { getSellerAnalyticsApi } from "@/api/view";
 import React from "react";
-import AnalyticsTopCards from "./AnalyticsTopCards";
+import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import { GetSellerAnalyticsResponse } from "@/interface/views";
 
 const AnalyticsCardsWrapper = async () => {
