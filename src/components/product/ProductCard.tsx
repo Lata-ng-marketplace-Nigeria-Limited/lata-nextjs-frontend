@@ -140,13 +140,6 @@ export default function ProductCard(props: Props) {
   const handleProductClick = async () => {
     // if (props.createProductPreview) return;
     // nav.push(`${DASHBOARD_PRODUCT_ROUTE}/${props?.product?.id}`);
-
-    if (!user?.id) return;
-    await generateSellerAnalyticsApi(
-      "PRODUCT",
-      props.product?.id || "",
-      user?.id || ""
-    );
   };
 
   const handleSaveProduct = async () => {
@@ -204,7 +197,6 @@ export default function ProductCard(props: Props) {
         }
       )}
       ref={ref}
-      onClick={handleProductClick}
     >
       <div
         className={cn(
