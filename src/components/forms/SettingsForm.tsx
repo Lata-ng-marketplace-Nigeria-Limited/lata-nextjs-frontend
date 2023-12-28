@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { settingsSchema } from "@/store/schemas/settingsSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUserProfileApi, UpdateUserProfileInput } from "@/api/auth";
 import {
   cn,
   formatNigerianPhoneNumber,
@@ -28,6 +27,10 @@ import { USER_VERIFIED_PHONE } from "@/constants/others";
 import { useToast } from "@components/ui/use-toast";
 import { ApiErrorResponse } from "@/interface/general";
 import OtpModal from "@components/input/OtpModal";
+import {
+  updateUserProfileApi,
+  UpdateUserProfileInput,
+} from "@/api/auth.client";
 
 interface Props {
   image?: string;

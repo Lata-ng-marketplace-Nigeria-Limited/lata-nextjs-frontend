@@ -11,11 +11,11 @@ import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { buyerSignUpSchema } from "@/store/schemas/buyerSignUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerApi } from "@/api/auth";
 import { ApiErrorResponse } from "@/interface/general";
 import { getFormErrorObject } from "@/utils";
 import { useUser } from "@/hooks/useUser";
 import { useToast } from "@components/ui/use-toast";
+import { registerApi } from "@/api/auth.client";
 
 export const BuyerSignUpForm = () => {
   const [loading, setLoading] = useState(false);

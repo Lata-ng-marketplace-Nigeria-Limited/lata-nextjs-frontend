@@ -4,6 +4,7 @@ import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { SearchProducts } from "@components/product/SearchProducts";
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
+import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Search Products",
@@ -18,7 +19,7 @@ export default async function Page({
     page?: string;
   };
 }) {
-  const session = await getServerSession();
+  const session = await getServerSession(authConfig);
 
   const search = searchParams?.q || "";
   const location = searchParams?.loc || "";

@@ -15,7 +15,8 @@ import ResendEmail from "@molecule/ResendEmail";
 export const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [emailData, setEmailData] = useState("");
+  const [email, setEmailData] = useState("");
+  const [password, setPassword] = useState("");
   const [shouldVerifyEmail, setShouldVerifyEmail] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendError, setResendError] = useState("");
@@ -29,13 +30,9 @@ export const LoginForm = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
-    setEmailData("");
     setShouldVerifyEmail(false);
     setLoading(true);
     try {
-      const email = (e.target as HTMLFormElement)["email"].value;
-      const password = (e.target as HTMLFormElement)["password"].value;
-
       const loginRes = await loginApi({
         email,
         password,
@@ -77,10 +74,10 @@ export const LoginForm = () => {
   ) => {
     setResendError("");
     setResendLoading(true);
-    if (!emailData) return;
+    if (!email) return;
     try {
       await resendOtpApi({
-        email: emailData,
+        email,
         type: "verify-email",
       });
       setRestart(true);
@@ -98,6 +95,8 @@ export const LoginForm = () => {
         type="email"
         label={"Email"}
         name={"email"}
+        value={email}
+        setValue={setEmailData}
         onChange={() => {
           setErrorMessage("");
         }}
@@ -110,6 +109,8 @@ export const LoginForm = () => {
           label={"Password"}
           isPassword
           name={"password"}
+          value={password}
+          setValue={setPassword}
           onChange={() => {
             setErrorMessage("");
           }}
@@ -136,13 +137,13 @@ export const LoginForm = () => {
               {" "}
               <Alert type="info">
                 Please verify your email address! A verification link has been
-                sent to {emailData}{" "}
+                sent to {email}{" "}
                 <ResendEmail
                   onCountDownEnd={() => {}}
                   startCountDown={true}
                   buttonClass={"text-blue-100 font-medium"}
                   spanTextClass={"text-slate-50"}
-                  initialCount={30}
+                  initialCount={15}
                   disabledBtn={resendLoading}
                   onResendEmail={handleResendEmail}
                 />

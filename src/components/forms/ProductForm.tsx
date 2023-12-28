@@ -7,7 +7,7 @@ import { Product } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn, getFormErrorObject } from "@/utils";
+import { cn, convertBytesToMB, getFormErrorObject } from "@/utils";
 import { useRouter } from "next/navigation";
 import TextInput from "@components/input/TextInput";
 import { SelectInput } from "@components/input/SelectInput";
@@ -19,7 +19,7 @@ import {
   createAProductApi,
   CreateProductApiInput,
   updateAProductApi,
-} from "@/api/productClientApi";
+} from "@/api/product.client";
 import { useToast } from "@components/ui/use-toast";
 import {
   DASHBOARD_PRODUCT_ROUTE,
@@ -28,7 +28,6 @@ import {
 import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
-import { revalidatePath } from "next/cache";
 
 interface Props {
   product?: Product;
@@ -149,6 +148,19 @@ export default function ProductForm({
         ? { deleteImages: JSON.stringify(deletedFiles) }
         : {}),
     };
+
+    const totalFIleSize = convertBytesToMB(
+      Array.from(files!).reduce((acc, file) => acc + file.size, 0),
+    );
+
+    if (totalFIleSize > 10) {
+      toast({
+        title: `Uploading... (${totalFIleSize}MB)`,
+        description: "This may take a while, please wait",
+        variant: "info",
+        duration: 9000,
+      });
+    }
 
     try {
       let productData = product;

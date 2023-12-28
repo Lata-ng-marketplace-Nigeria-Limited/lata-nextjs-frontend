@@ -62,30 +62,31 @@ const Header = ({ recentSearches, noSideMenu }: Props) => {
         <SearchProductForm recentSearches={recentSearches} />
       </div>
 
-      <Button
-        type={"submit"}
-        as={"link"}
-        href={DASHBOARD_PRODUCT_CREATE_ROUTE}
-        format={"primary"}
-        onClick={(e) => {
-          if (role === "BUYER") {
-            e.preventDefault();
+      {role === "ADMIN" ? null : (
+        <Button
+          type={"submit"}
+          as={"link"}
+          href={DASHBOARD_PRODUCT_CREATE_ROUTE}
+          format={"primary"}
+          onClick={(e) => {
+            if (role === "BUYER") {
+              e.preventDefault();
 
-            toast({
-              title: "Only sellers can sell products",
-              variant: "info",
-              action: (
-                <ToastAction
-                  altText={"Switch to seller account"}
-                  onClick={handleSwitchToSeller}
-                >
-                  Become a seller
-                </ToastAction>
-              ),
-            });
-          }
-        }}
-        className={cn(`
+              toast({
+                title: "Only sellers can sell products",
+                variant: "info",
+                action: (
+                  <ToastAction
+                    altText={"Switch to seller account"}
+                    onClick={handleSwitchToSeller}
+                  >
+                    Become a seller
+                  </ToastAction>
+                ),
+              });
+            }
+          }}
+          className={cn(`
           px-[8px]
           py-[4px]
           
@@ -96,9 +97,10 @@ const Header = ({ recentSearches, noSideMenu }: Props) => {
           text-xs
           sm:text-base     
         `)}
-      >
-        SELL
-      </Button>
+        >
+          SELL
+        </Button>
+      )}
     </header>
   );
 };

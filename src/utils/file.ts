@@ -1,5 +1,3 @@
-
-
 export const getFileUrlFromFile = async (file: File): Promise<string> => {
   return await new Promise((resolved) => {
     let fileURL = "";
@@ -22,11 +20,11 @@ export function isFileSizeGreaterThan(file: File, sizeInMB: number): boolean {
 }
 
 export const convertBytesToMB = (bytes: number): number => {
-  return Math.ceil(bytes / (1024 * 1024));
+  return Number((bytes / (1024 * 1024)).toFixed(2));
 };
 
 export const convertFileArrayToFileList = (
-  files: Array<File | undefined> | undefined
+  files: Array<File | undefined> | undefined,
 ): FileList => {
   if (!files) return new DataTransfer().files;
   const fileList = new DataTransfer();

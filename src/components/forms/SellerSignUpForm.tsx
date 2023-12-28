@@ -19,7 +19,6 @@ import AuthParagraph from "@atom/AuthParagraph";
 import { LOGIN_ROUTE } from "@/constants/routes";
 import ALink from "@atom/ALink";
 import Button from "@atom/Button";
-import { registerApi } from "@/api/auth";
 import { useUser } from "@/hooks/useUser";
 import { ApiErrorResponse } from "@/interface/general";
 import { useToast } from "@components/ui/use-toast";
@@ -29,6 +28,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useFastLocalStore } from "@/store/states/localStore";
 import { useRegistrationFormStore } from "@/store/states/userState";
 import { signOut } from "next-auth/react";
+import { registerApi } from "@/api/auth.client";
 
 export const SellerSignUpForm = () => {
   const [loading, setLoading] = useState(false);
