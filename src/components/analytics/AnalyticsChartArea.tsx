@@ -1,7 +1,7 @@
 import React from "react";
-import AnalyticsSideCard from "./AnalyticsSideCard";
+import AnalyticsSideCard from "@components/analytics/AnalyticsSideCard";
 import { getAnalyticsClicksAndViews, getSellerAnalyticsApi } from "@/api/view";
-import AnalyticsChart from "./AnalyticsChart";
+import AnalyticsChart from "@components/analytics/AnalyticsChart";
 import { months } from "@/store/data/analytics";
 
 interface Props {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SelectInput } from "../input/SelectInput";
+import { SelectInput } from "@components/input/SelectInput"; 
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { months } from "@/store/data/analytics";
 
