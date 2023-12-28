@@ -70,12 +70,11 @@ export default function ProductCard(props: Props) {
 
   const registerView = useCallback(async () => {
     try {
-      const res = await generateSellerAnalyticsApi(
+      await generateSellerAnalyticsApi(
         "VIEW",
         props.product?.id || "",
         user?.id || ""
       );
-      console.log(res);
     } catch (error) {
       console.log("Error registering view", error);
     }
@@ -88,14 +87,6 @@ export default function ProductCard(props: Props) {
 
     registerView();
   }, [isVisible, image, handleImage, registerView]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const url = await getBase24Image(handleImage(true));
-  //     if (!url) return;
-  //     setPlaceHolderUrl(url);
-  //   })();
-  // }, [props.product]);
 
   useEffect(() => {
     if (user?.id && !hasSetSaved) {
@@ -132,15 +123,6 @@ export default function ProductCard(props: Props) {
     handleImage,
     props?.product?.id,
   ]);
-
-  // useEffect(() => {
-  //   console.log({ planName  });
-  // }, [planName]);
-
-  const handleProductClick = async () => {
-    // if (props.createProductPreview) return;
-    // nav.push(`${DASHBOARD_PRODUCT_ROUTE}/${props?.product?.id}`);
-  };
 
   const handleSaveProduct = async () => {
     if (!user?.id) {
