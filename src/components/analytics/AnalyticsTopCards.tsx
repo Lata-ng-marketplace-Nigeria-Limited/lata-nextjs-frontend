@@ -20,9 +20,9 @@ const AnalyticsTopCards = ({
         "px-2 tablet:px-4 lg:px-6 lg:pb-[1.12rem] pb-[0.85rem] lg:pt-[1.81rem] pt-[1.5rem] rounded-lg border-solid shadow-black/10 border-[1px] border-grey2"
       )}
     >
-      <p className="tablet:mb-4 mb-2 text-xs tablet:text-base">{title}</p>
-      <p className="tablet:mb-4 mb-2 lg:text-2xl tablet:text-xl text-lg">{number}</p>
-      <p className="text-xs tablet:text-base">{description}</p>
+      <p className="tablet:mb-4 mb-2 text-sm font-normal">{title}</p>
+      <p className="tablet:mb-4 mb-2 font-semibold lg:text-2xl tablet:text-xl text-lg">{number}</p>
+      <p className="text-xs font-normal">{description}</p>
     </div>
   );
 };

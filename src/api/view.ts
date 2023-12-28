@@ -9,8 +9,6 @@ import {
   MonthlyAnalyticsResponse,
 } from "@/interface/views";
 
-
-
 export async function generateSellerAnalyticsApi(
   type: ViewTypes,
   productId: string,
@@ -36,7 +34,6 @@ export const getSellerAnalyticsApi = async (
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
-    await new Promise((resolve) => setTimeout(resolve, 3000))
     const res = await fetch(
       getApiUrl(month ? `/views/month/${month}` : "/views"),
       {
