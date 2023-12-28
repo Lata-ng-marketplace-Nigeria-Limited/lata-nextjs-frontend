@@ -12,7 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import { MonthlyAnalyticsResponse } from "@/interface/views";
-import { chartConfig } from "@/components/analytics/chartConfiguration";
+import { chartConfig } from "@components/analytics/chartConfiguration";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -38,18 +38,8 @@ const AnalyticsChart = ({ chartsData }: Props) => {
 
   return (
     <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full">
-      <Bar
-        datasetIdKey="datasetIdKey"
-        data={data}
-        // plugins={[ChartDataLabels]}
-        options={options}
-        className="min-hfull"
-      />
+      <Bar datasetIdKey="datasetIdKey" data={data} options={options} />
     </div>
-    // <ExperimentalChart
-    //   productClicks={productClicks}
-    //   productViews={productViews}
-    // />
   );
 };
 
