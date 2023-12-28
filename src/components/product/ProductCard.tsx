@@ -69,11 +69,12 @@ export default function ProductCard(props: Props) {
   );
 
   const registerView = useCallback(async () => {
+    if(user?.id === props.product?.userId) return;
     try {
       await generateSellerAnalyticsApi(
         "VIEW",
         props.product?.id || "",
-        user?.id || ""
+        props.product?.userId || ""
       );
     } catch (error) {
       console.log("Error registering view", error);

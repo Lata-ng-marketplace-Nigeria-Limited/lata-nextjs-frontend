@@ -15,7 +15,7 @@ interface Props {
   sellerInfo?: User | null;
   productName?: string;
   productId?: string;
-  userId?: string;
+  productOwnerId?: string;
 }
 
 export default function SellerContact(props: Props) {
@@ -52,7 +52,7 @@ export default function SellerContact(props: Props) {
       await generateSellerAnalyticsApi(
         "MESSAGE",
         props.productId || "",
-        props.userId || ""
+        props.productOwnerId || ""
       );
       window.open(
         `https://wa.me/${formatNo}?text=${window.location.origin}/product/${props.productId}%0A%0A%0AHi, I'm interested in this product on Lata.ng!`,
@@ -62,7 +62,7 @@ export default function SellerContact(props: Props) {
       await generateSellerAnalyticsApi(
         "PHONE",
         props.productId || "",
-        props.userId || ""
+        props.productOwnerId || ""
       );
       makePhoneCall(formatNo);
     }
