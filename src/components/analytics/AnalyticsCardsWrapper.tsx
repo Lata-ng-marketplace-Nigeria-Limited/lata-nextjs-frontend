@@ -1,62 +1,47 @@
+import { getSellerAnalyticsApi } from "@/api/view";
 import React from "react";
-import AnalyticsTopCards from "./AnalyticsTopCards";
-import { getViewsApi } from "@/service/views";
+import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
+import { GetSellerAnalyticsResponse } from "@/interface/views";
 
-interface Props {}
-
-const AnalyticsCardsWrapper = ({}: Props) => {
-  const [phoneClicks, setPhoneClicks] = React.useState(0);
-  const [productClicks, setProductClicks] = React.useState(0);
-  const [messageClicks, setMessageClicks] = React.useState(0);
+const AnalyticsCardsWrapper = async () => {
+  const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi();
 
   const formatNumber = (number: number) => {
     return Number(new Intl.NumberFormat("en-US").format(number));
   };
-
-  const itemViewsAndClicks = async () => {
-    const [phone, products, message] = await Promise.all([
-      await getViewsApi("PHONE"),
-      await getViewsApi("PRODUCT"),
-      await getViewsApi("MESSAGE"),
-    ]);
-
-    console.log({ phone, products, message });
-
-    setPhoneClicks(formatNumber(phone.noOfClicks));
-    setProductClicks(formatNumber(products.noOfClicks));
-    setMessageClicks(formatNumber(message.noOfClicks));
-  };
-
-  React.useEffect(() => {
-    itemViewsAndClicks();
-  }, []);
+  const productClicks = formatNumber(response?.productClicks?.clicks ?? 0);
+  const productViews = formatNumber(response?.productViews?.views ?? 0);
+  const phoneClicks = formatNumber(response?.phoneClicks?.clicks ?? 0);
+  const messageClicks = formatNumber(response?.messageClicks?.clicks ?? 0);
 
   return (
-    <section className="border-grey2 border-[1px] border-solid rounded-xl py-[2.1875rem] px-[1.4375rem] mb-8 mt-6">
-      <div className="grid grid-cols-4 gap-4">
-        <AnalyticsTopCards
-          isTotalViews
-          title="Total Views"
-          description="Total view of all products"
-          number={"25,000"}
-        />
-        <AnalyticsTopCards
-          title="Total product clicks"
-          number={productClicks}
-          description="Total product clicks"
-        />
-        <AnalyticsTopCards
-          title="Total phone clicks"
-          number={phoneClicks}
-          description="Total phone clicks"
-        />
-        <AnalyticsTopCards
-          title="Total message clicks"
-          number={messageClicks}
-          description="Total message clicks"
-        />
-      </div>
-    </section>
+    <div>
+      <section className="border-grey2 border-[1px] border-solid rounded-xl py-2 tablet:py-4 lg:py-[2.1875rem] px-2 tablet:px-[1.4375rem] mb-8 mt-6">
+        <div className="grid grid-cols-autoFit gap-2 tablet:gap-4">
+          <AnalyticsTopCards
+            isTotalViews
+            title="Total Views"
+            description="Total view of all products"
+            number={productViews}
+          />
+          <AnalyticsTopCards
+            title="Total product clicks"
+            number={productClicks}
+            description="Total product clicks"
+          />
+          <AnalyticsTopCards
+            title="Total phone clicks"
+            number={phoneClicks}
+            description="Total phone clicks"
+          />
+          <AnalyticsTopCards
+            title="Total message clicks"
+            number={messageClicks}
+            description="Total message clicks"
+          />
+        </div>
+      </section>
+    </div>
   );
 };
 

@@ -8,14 +8,14 @@ import MobileBorderArea from "@atom/MobileBorderArea";
 import AppAvatar from "@molecule/Avatar";
 import Button from "@atom/Button";
 import SendSellerMessage from "@components/input/SendSellerMessage";
-import { $http } from "@/service/axios";
-import { createViewApi } from "@/service/views";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 interface Props {
   type: "compact" | "expanded";
   sellerInfo?: User | null;
   productName?: string;
   productId?: string;
+  productOwnerId?: string;
 }
 
 export default function SellerContact(props: Props) {
@@ -49,14 +49,21 @@ export default function SellerContact(props: Props) {
     }
 
     if (type === "whatsApp") {
-      await createViewApi("MESSAGE", props.productId!, props.sellerInfo?.id!);
-      console.log("whatsapp", props.sellerInfo?.id!)
+      await generateSellerAnalyticsApi(
+        "MESSAGE",
+        props.productId || "",
+        props.productOwnerId || ""
+      );
       window.open(
         `https://wa.me/${formatNo}?text=${window.location.origin}/product/${props.productId}%0A%0A%0AHi, I'm interested in this product on Lata.ng!`,
         "_blank"
       );
     } else {
-      await createViewApi("PHONE", props.productId!, props.sellerInfo?.id!);
+      await generateSellerAnalyticsApi(
+        "PHONE",
+        props.productId || "",
+        props.productOwnerId || ""
+      );
       makePhoneCall(formatNo);
     }
   };

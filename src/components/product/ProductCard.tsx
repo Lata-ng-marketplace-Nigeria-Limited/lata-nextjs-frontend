@@ -18,6 +18,7 @@ import { useUser } from "@hooks/useUser";
 import { useToast } from "@components/ui/use-toast";
 import Link from "next/link";
 import { IMAGE_BLUR_URL } from "@/constants/others";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 // import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 
@@ -64,27 +65,34 @@ export default function ProductCard(props: Props) {
       if (returnImage) return image;
       setImage(meta?.selectedImage || props?.imageSrc);
     },
-    [props.product?.meta, props?.imageSrc],
+    [props.product?.meta, props?.imageSrc]
   );
+
+  const registerView = useCallback(async () => {
+    if(user?.id === props.product?.userId) return;
+    try {
+      await generateSellerAnalyticsApi(
+        "VIEW",
+        props.product?.id || "",
+        props.product?.userId || ""
+      );
+    } catch (error) {
+      console.log("Error registering view", error);
+    }
+  }, [props.product?.id, user?.id]);
 
   useEffect(() => {
     if (!isVisible) return;
     if (image) return;
     handleImage();
-  }, [isVisible, image, handleImage]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const url = await getBase24Image(handleImage(true));
-  //     if (!url) return;
-  //     setPlaceHolderUrl(url);
-  //   })();
-  // }, [props.product]);
+    registerView();
+  }, [isVisible, image, handleImage, registerView]);
 
   useEffect(() => {
     if (user?.id && !hasSetSaved) {
       const isProductSaved = user?.savedProducts?.find(
-        (savedProduct: any) => savedProduct?.productId === props.product?.id,
+        (savedProduct: any) => savedProduct?.productId === props.product?.id
       );
       setHasSetSaved(true);
       setSaved(!!isProductSaved);
@@ -117,15 +125,6 @@ export default function ProductCard(props: Props) {
     props?.product?.id,
   ]);
 
-  // useEffect(() => {
-  //   console.log({ planName  });
-  // }, [planName]);
-
-  const handleProductClick = () => {
-    if (props.createProductPreview) return;
-    nav.push(`${DASHBOARD_PRODUCT_ROUTE}/${props?.product?.id}`);
-  };
-
   const handleSaveProduct = async () => {
     if (!user?.id) {
       toast({
@@ -139,12 +138,12 @@ export default function ProductCard(props: Props) {
     try {
       if (isSaved) {
         const { userData: userInfo } = await saveAProductApi(
-          props.product?.id || "",
+          props.product?.id || ""
         );
         await updateUser(userInfo);
       } else {
         const { userData: userInfo } = await unSaveAProductApi(
-          props.product?.id || "",
+          props.product?.id || ""
         );
         props.onUnSave?.(props.product?.id || "");
         await updateUser(userInfo);
@@ -178,7 +177,7 @@ export default function ProductCard(props: Props) {
         {
           "sm:w-screen py-3 px-2.5 sm:p-3 max-w-[350px] sm:max-w-[305px] tablet:max-w-[380px] xlg:max-w-[500px]":
             props.createProductPreview,
-        },
+        }
       )}
       ref={ref}
     >
@@ -196,7 +195,7 @@ export default function ProductCard(props: Props) {
               props.createProductPreview,
             "flex justify-center items-center":
               !props.imageSrc && props.createProductPreview,
-          },
+          }
         )}
       >
         {props.product?.status === "INACTIVE" && (

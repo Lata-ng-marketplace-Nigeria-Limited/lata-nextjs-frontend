@@ -26,7 +26,8 @@ export const metadata: Metadata = {
     template: "%s | Lata.ng",
     default: "Lata.ng",
   },
-  description: "GET 100% VALUE WITH GUARANTY. Buy, sell, or rent vehicles of all types, Real estate,  motorcycles, trucks, electronics, gadgets, home and office accessories, constructions, medicals, agric and food, fashion, buses and search for your dream job on Lata.ng.  Explore a diverse range of products and connect with a vibrant community of sellers and buyers.",
+  description:
+    "GET 100% VALUE WITH GUARANTY. Buy, sell, or rent vehicles of all types, Real estate,  motorcycles, trucks, electronics, gadgets, home and office accessories, constructions, medicals, agric and food, fashion, buses and search for your dream job on Lata.ng.  Explore a diverse range of products and connect with a vibrant community of sellers and buyers.",
   metadataBase: new URL("https://res.cloudinary.com"),
   alternates: {
     canonical: "/",
@@ -74,7 +75,9 @@ export default async function RootLayout({
         }}
         id={"website-structured-data"}
       />
-      <body className={cn(inter.className, "antialiased h-full")}>
+      <body
+        className={cn(inter.className, "antialiased h-full")}
+      >
         <NextAuthProvider session={session as any}>{children}</NextAuthProvider>
         <Toaster />
         <SpeedInsights />

@@ -2,14 +2,12 @@ import { cn } from "@/utils";
 import React from "react";
 
 interface Props {
-  className?: string;
   isTotalViews?: boolean;
   number: number | string;
   title: string;
   description: string;
 }
 const AnalyticsTopCards = ({
-  className,
   isTotalViews,
   number,
   title,
@@ -19,12 +17,12 @@ const AnalyticsTopCards = ({
     <div
       className={cn(
         { "border-0 bg-primary text-white shadow-none": isTotalViews },
-        "px-6 pb-[1.12rem] pt-[1.81rem] rounded-lg border-solid shadow-black/10 border-[1px] border-grey2",
+        "px-2 tablet:px-4 lg:px-6 lg:pb-[1.12rem] pb-[0.85rem] lg:pt-[1.81rem] pt-[1.5rem] rounded-lg border-solid shadow-black/10 border-[1px] border-grey2"
       )}
     >
-      <p className="mb-4">{title}</p>
-      <p className="mb-4 text-2xl">{number}</p>
-      <p>{description}</p>
+      <p className="tablet:mb-4 mb-2 text-sm font-normal">{title}</p>
+      <p className="tablet:mb-4 mb-2 font-semibold lg:text-2xl tablet:text-xl text-lg">{number}</p>
+      <p className="text-xs font-normal">{description}</p>
     </div>
   );
 };

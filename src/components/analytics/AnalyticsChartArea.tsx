@@ -1,66 +1,51 @@
-"use client";
-
 import React from "react";
-import { Bar } from "react-chartjs-2";
-import { Chart, CategoryScale, LinearScale, BarElement } from "chart.js";
-import { config, data } from "./ChartConfiguration";
-import AnalyticsSideCard from "./AnalyticsSideCard";
-import { getViewsApi } from "@/service/views";
-import { months } from "./ProductInsights";
-Chart.register(CategoryScale, LinearScale, BarElement);
+import AnalyticsSideCard from "@components/analytics/AnalyticsSideCard";
+import { getAnalyticsClicksAndViews, getSellerAnalyticsApi } from "@/api/view";
+import AnalyticsChart from "@components/analytics/AnalyticsChart";
+import { months } from "@/store/data/analytics";
 
 interface Props {
   selectedMonth: string;
 }
 
-const AnalyticsChartArea = ({ selectedMonth }: Props) => {
-  const [monthlyPhoneClicks, setMonthlyPhoneClicks] = React.useState(0);
-  const [monthlyProductClicks, setMonthlyProductClicks] = React.useState(0);
-  const [monthlyMessageClicks, setMonthlyMessageClicks] = React.useState(0);
-  const [month, setMonth] = React.useState("");
+const AnalyticsChartArea = async ({ selectedMonth }: Props) => {
+  const response = await getSellerAnalyticsApi(selectedMonth);
+  const chartsData = await getAnalyticsClicksAndViews();
 
-  const clicksByMonth = async () => {
-    const [phone, products, message] = await Promise.all([
-      await getViewsApi("PHONE", selectedMonth),
-      await getViewsApi("PRODUCT", selectedMonth),
-      await getViewsApi("MESSAGE", selectedMonth),
-    ]);
+  const monthInFull = months[Number(response?.month) - 1]?.extra ?? "";
 
-    setMonthlyPhoneClicks(phone.noOfClicksThisMonth);
-    setMonthlyProductClicks(products.noOfClicksThisMonth);
-    setMonthlyMessageClicks(message.noOfClicksThisMonth);
+  const formatNumber = (number: number) => {
+    return Number(new Intl.NumberFormat("en-US").format(number));
   };
-
-  React.useEffect(() => {
-    clicksByMonth();
-    const currentMonth = new Date().getMonth();
-    months?.[currentMonth].extra;
-    setMonth(months[currentMonth].extra as string);
-    console.log({ selectedMonth: months[currentMonth].extra });
-  }, [selectedMonth]);
+  const productClicks = formatNumber(response?.productClicks?.clicks ?? 0);
+  const productViews = formatNumber(response?.productViews?.views ?? 0);
+  const phoneClicks = formatNumber(response?.phoneClicks?.clicks ?? 0);
+  const messageClicks = formatNumber(response?.messageClicks?.clicks ?? 0);
 
   return (
-    <div className="flex border-solid border-[1px] items-center gap-6 lg:justify-between border-grey2 py-6 px-10 flex-col lg:flex-row">
-      <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full">
-        <Bar data={data} options={config.options} className="min-hfull" />
-      </div>
+    <div className="flex border-solid border-[1px] tablet:py-4 items-center gap-6 lg:justify-between border-grey2 lg:py-6  py-2 px-2 tablet:px-10 flex-col lg:flex-row">
+      <AnalyticsChart chartsData={chartsData} />
 
-      <div className="xl:basis-[20%] lg:basis-[30%] lg:flex lg:flex-col gap-6 grid grid-cols-smaller4 w-full mt-8 lg:mt-0">
-        <AnalyticsSideCard title="Views" number={"1,200"} description={month} />
+      <div className="xl:basis-[20%] lg:basis-[30%] lg:flex lg:flex-col gap-2 tablet:gap-6 grid grid-cols-smaller4 w-full mt-4 tablet:mt-8 lg:mt-0">
+        <AnalyticsSideCard
+          title="Views"
+          clicksCount={productViews}
+          description={monthInFull}
+        />
         <AnalyticsSideCard
           title="Product Clicks"
-          number={monthlyProductClicks}
-          description={month}
+          clicksCount={productClicks}
+          description={monthInFull}
         />
         <AnalyticsSideCard
           title="Phone Clicks"
-          number={monthlyPhoneClicks}
-          description={month}
+          clicksCount={phoneClicks}
+          description={monthInFull}
         />
         <AnalyticsSideCard
           title="Message Clicks"
-          number={monthlyMessageClicks}
-          description={month}
+          clicksCount={messageClicks}
+          description={monthInFull}
         />
       </div>
     </div>
