@@ -68,6 +68,9 @@ const config: Config = {
         "autoFit": "repeat(auto-fit, minmax(171px, 1fr))",
         'smaller4': "repeat(auto-fit, minmax(161px, 1fr))",
       },
+      fontFamily: {
+        niramit: ["Niramit", "sans-serif"],
+      }
     },
     keyframes: {
       shimmer: {
