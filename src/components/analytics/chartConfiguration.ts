@@ -1,13 +1,15 @@
+import { MonthNamesType } from "@/interface/views";
 import { months } from "@/store/data/analytics";
 
 const labels = months.map((month) => month.label);
 
 export const chartConfig = (
   productClicks: number[],
-  productViews: number[]
+  productViews: number[],
+  months: string[]
 ) => {
   const data = {
-    labels,
+    labels: months,
     datasets: [
       {
         label: "Views",

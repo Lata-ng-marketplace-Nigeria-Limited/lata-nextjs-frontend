@@ -27,14 +27,18 @@ interface Props {
 }
 const AnalyticsChart = ({ chartsData }: Props) => {
   const productClicks = chartsData?.productClicksForAllMonths?.map(
-    (product) => product.clicks
+    (product) => product?.clicks
   );
 
   const productViews = chartsData?.productViewsForAllMonths?.map(
-    (product) => product.views
+    (product) => product?.views
   );
 
-  const { data, options } = chartConfig(productClicks, productViews);
+  const months = chartsData?.productClicksForAllMonths?.map(
+    (product) => product?.month.split(" ")[0]?.slice(0, 3)
+  );
+
+  const { data, options } = chartConfig(productClicks, productViews, months);
 
   return (
     <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full">

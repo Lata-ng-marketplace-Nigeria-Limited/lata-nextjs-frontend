@@ -25,17 +25,30 @@ export interface GetSellerAnalyticsResponse {
   month?: string;
 }
 
-export interface ChartAnalyticsMonthlyDataResponse{
+export interface ChartAnalyticsMonthlyDataResponse {
   month: string;
   views: number;
   clicks: number;
 }
 
-export interface MonthlyAnalyticsResponse{
+export interface MonthlyAnalyticsResponse {
   success: boolean;
   productClicksForAllMonths: Omit<ChartAnalyticsMonthlyDataResponse, "views">[];
   productViewsForAllMonths: Omit<ChartAnalyticsMonthlyDataResponse, "clicks">[];
+  monthsInOrder: MonthNamesType;
 }
 
-export type MonthNamesType = 'January' | 'February' | 'March' | 'April' | 'May' | 'June' | 'July' | 'August' | 'September' | 'October' | 'November' | 'December';
-
+export type MonthNamesType = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
