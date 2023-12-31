@@ -65,7 +65,7 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       gridTemplateColumns: {
-        "autoFit": "repeat(auto-fit, minmax(171px, 1fr))",
+        "autoFit": "repeat(auto-fit, minmax(200px, 1fr))",
         'smaller4': "repeat(auto-fit, minmax(161px, 1fr))",
       },
       fontFamily: {

@@ -41,8 +41,8 @@ const AnalyticsChart = ({ chartsData }: Props) => {
   const { data, options } = chartConfig(productClicks, productViews, months);
 
   return (
-    <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full">
-      <Bar datasetIdKey="datasetIdKey" data={data} options={options} />
+    <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full h-full border rounded lg:rounded-none lg:border-0 p-6 lg:p-0">
+      <Bar datasetIdKey="datasetIdKey" data={data} options={options}/>
     </div>
   );
 };

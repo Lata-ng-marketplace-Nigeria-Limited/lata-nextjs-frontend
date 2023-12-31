@@ -8,12 +8,12 @@ interface Props {
 
 const AnalyticsSideCard = ({ clicksCount, title, description }: Props) => {
   return (
-    <div className="px-2 tablet:px-6 py-2 tablet:py-3 rounded-lg border-solid shadow-black/10 border-[1px] border-grey2">
-      <p className="text-grey6 tablet:mb-3 mb-2 font-medium text-xs tablet:text-base">
+    <div className="px-6 py-3 rounded-xl border-solid border border-grey2">
+      <p className="text-grey6 mb-3 font-medium text-base">
         {title}
       </p>
-      <p className="tablet:mb-3 font-semibold mb-2 tablet:text-xl text-lg">{clicksCount}</p>
-      <p className="text-grey6 text-xs tablet:text-base">{description}</p>
+      <p className="mb-3 font-semibold text-xl">{clicksCount}</p>
+      <p className="text-grey6 font-normal text-sm tablet:text-base">{description}</p>
     </div>
   );
 };
