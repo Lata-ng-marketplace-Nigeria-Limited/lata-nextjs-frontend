@@ -17,11 +17,11 @@ const AnalyticsTopCards = ({
     <div
       className={cn(
         { "border-0 bg-primary text-white shadow-none": isTotalViews },
-        "px-2 tablet:px-4 lg:px-6 lg:pb-[1.12rem] pb-[0.85rem] lg:pt-[1.81rem] pt-[1.5rem] rounded-lg border-solid shadow-black/10 border-[1px] border-grey2"
+        "px-6 pb-7 pt-[1.81rem] rounded-lg border-solid shadow-black/10 border border-grey2"
       )}
     >
       <p className="tablet:mb-4 mb-2 text-sm font-normal">{title}</p>
-      <p className="tablet:mb-4 mb-2 font-semibold lg:text-2xl tablet:text-xl text-lg">{number}</p>
+      <p className="tablet:mb-4 mb-2 font-semibold text-2xl tablet:text-xl">{number}</p>
       <p className="text-xs font-normal">{description}</p>
     </div>
   );

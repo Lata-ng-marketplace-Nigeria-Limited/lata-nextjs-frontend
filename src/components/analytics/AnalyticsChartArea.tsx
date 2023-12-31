@@ -23,10 +23,10 @@ const AnalyticsChartArea = async ({ selectedMonth }: Props) => {
   const messageClicks = formatNumber(response?.messageClicks?.clicks ?? 0);
 
   return (
-    <div className="flex border-solid border-[1px] tablet:py-4 items-center gap-6 lg:justify-between border-grey2 lg:py-6  py-2 px-2 tablet:px-10 flex-col lg:flex-row">
+    <div className="flex border-solid lg:border items-center gap-6 lg:justify-between border-grey2 lg:p-6  py-2  flex-col lg:flex-row">
       <AnalyticsChart chartsData={chartsData} />
 
-      <div className="xl:basis-[20%] lg:basis-[30%] lg:flex lg:flex-col gap-2 tablet:gap-6 grid grid-cols-smaller4 w-full mt-4 tablet:mt-8 lg:mt-0">
+      <div className="lg:basis-[20%] lg:flex lg:flex-col gap-6 grid p-6 lg:p-0 grid-cols-1 xs:grid-cols-2 w-full mt-4 tablet:mt-8 lg:mt-0 border lg:border-0 rounded">
         <AnalyticsSideCard
           title="Views"
           clicksCount={productViews}
