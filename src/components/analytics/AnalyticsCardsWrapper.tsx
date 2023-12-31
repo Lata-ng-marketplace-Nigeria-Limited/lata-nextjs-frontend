@@ -17,7 +17,7 @@ const AnalyticsCardsWrapper = async () => {
   return (
     <div>
       <section className="border-grey2 border border-solid rounded-[0.625rem] py-6 lg:py-[2.19rem] px-6 mb-8 mt-6">
-        <div className="grid grid-cols-autoFit gap-6">
+        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4  gap-6">
           <AnalyticsTopCards
             isTotalViews
             title="Total Views"

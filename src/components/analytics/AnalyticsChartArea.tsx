@@ -26,7 +26,7 @@ const AnalyticsChartArea = async ({ selectedMonth }: Props) => {
     <div className="flex border-solid lg:border items-center gap-6 lg:justify-between border-grey2 lg:p-6  py-2  flex-col lg:flex-row">
       <AnalyticsChart chartsData={chartsData} />
 
-      <div className="lg:basis-[20%] lg:flex lg:flex-col gap-6 grid p-6 lg:p-0 grid-cols-smaller4 w-full mt-4 tablet:mt-8 lg:mt-0 border lg:border-0 rounded">
+      <div className="lg:basis-[20%] lg:flex lg:flex-col gap-6 grid p-6 lg:p-0 grid-cols-1 xs:grid-cols-2 w-full mt-4 tablet:mt-8 lg:mt-0 border lg:border-0 rounded">
         <AnalyticsSideCard
           title="Views"
           clicksCount={productViews}
