@@ -34,15 +34,29 @@ const AnalyticsChart = ({ chartsData }: Props) => {
     (product) => product?.views
   );
 
+  const phoneClicks = chartsData?.phoneClicksForAllMonths?.map(
+    (phone) => phone?.clicks
+  );
+
+  const messageClicks = chartsData?.messageClicksForAllMonths?.map(
+    (message) => message?.clicks
+  );
+
   const months = chartsData?.productClicksForAllMonths?.map(
     (product) => product?.month.split(" ")[0]?.slice(0, 3)
   );
 
-  const { data, options } = chartConfig(productClicks, productViews, months);
+  const { data, options } = chartConfig(
+    productClicks,
+    productViews,
+    phoneClicks,
+    messageClicks,
+    months
+  );
 
   return (
     <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full h-full border rounded lg:rounded-none lg:border-0 p-6 lg:p-0">
-      <Bar datasetIdKey="datasetIdKey" data={data} options={options}/>
+      <Bar datasetIdKey="datasetIdKey" data={data} options={options} />
     </div>
   );
 };

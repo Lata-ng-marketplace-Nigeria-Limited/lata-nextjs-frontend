@@ -69,7 +69,7 @@ export default function ProductCard(props: Props) {
   );
 
   const registerView = useCallback(async () => {
-    if(user?.id === props.product?.userId) return;
+    if (user?.id === props.product?.userId) return;
     try {
       await generateSellerAnalyticsApi(
         "VIEW",
@@ -83,10 +83,9 @@ export default function ProductCard(props: Props) {
 
   useEffect(() => {
     if (!isVisible) return;
+    registerView();
     if (image) return;
     handleImage();
-
-    registerView();
   }, [isVisible, image, handleImage, registerView]);
 
   useEffect(() => {

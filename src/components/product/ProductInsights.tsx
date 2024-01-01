@@ -88,6 +88,11 @@ export default function ProductInsights(props: Props) {
             title={"Profile visit"}
             count={user?.profileViews || 0}
           />
+          <ProductInsightInfo
+            icon={<ProfileIcon />}
+            title={"Product clicks"}
+            count={user?.profileViews || 0}
+          />
         </div>
       </MobileBorderArea>
 
