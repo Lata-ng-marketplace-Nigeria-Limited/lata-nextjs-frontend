@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  webpack: (config, { isServer }) => {
+    config.optimization.minimize = false;
+    return config;
+  },
+  transpilePackages: ["react-hook-form", "next"],
   experimental: {
     swcPlugins: [],
   },
