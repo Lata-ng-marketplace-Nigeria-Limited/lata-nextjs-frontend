@@ -19,6 +19,7 @@ import ProductInsightInfo from "@components/product/ProductInsightInfo";
 import { EyeIcon } from "@atom/icons/Eye";
 import { SavedIcon } from "@atom/icons/Saved";
 import { ProfileIcon } from "@atom/icons/Profile";
+import { CallIcon } from "../atom/icons/Call";
 
 interface Props {
   product?: Product;
@@ -49,6 +50,8 @@ export default function ProductInsights(props: Props) {
     }
   };
 
+  console.log({ product: props.product });
+
   return (
     <ProductAsideArea>
       <MobileBorderArea
@@ -58,7 +61,7 @@ export default function ProductInsights(props: Props) {
             py-6
             sm:px-[43px]
             h-max
-          `,
+          `
         )}
         showBorderInDesktop
       >
@@ -82,6 +85,11 @@ export default function ProductInsights(props: Props) {
             }
             title={"Saved"}
             count={props.product?.saved || 0}
+          />
+          <ProductInsightInfo
+            icon={<CallIcon />}
+            title={"Call clicks"}
+            count={props?.product?.phoneClicks || 0}
           />
           <ProductInsightInfo
             icon={<ProfileIcon />}

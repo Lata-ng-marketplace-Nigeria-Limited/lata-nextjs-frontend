@@ -32,6 +32,7 @@ export interface Product {
   category: Category;
   views?: number;
   saved?: number;
+  phoneClicks?: number;
   planName?: string;
 }
 

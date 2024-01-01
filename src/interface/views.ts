@@ -34,6 +34,8 @@ export interface ChartAnalyticsMonthlyDataResponse {
 export interface MonthlyAnalyticsResponse {
   success: boolean;
   productClicksForAllMonths: Omit<ChartAnalyticsMonthlyDataResponse, "views">[];
+  phoneClicksForAllMonths: Omit<ChartAnalyticsMonthlyDataResponse, "views">[];
+  messageClicksForAllMonths: Omit<ChartAnalyticsMonthlyDataResponse, "views">[];
   productViewsForAllMonths: Omit<ChartAnalyticsMonthlyDataResponse, "clicks">[];
   monthsInOrder: MonthNamesType;
 }
