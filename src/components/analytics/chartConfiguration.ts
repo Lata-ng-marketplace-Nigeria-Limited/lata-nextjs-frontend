@@ -18,7 +18,7 @@ export const chartConfig = (
         backgroundColor: "#5113A1",
         borderColor: "#fff",
         maxBarThickness: 40,
-        minBarthickness: 20,
+        minBarThickness: 30,
       },
       {
         label: "Product clicks",
@@ -26,7 +26,7 @@ export const chartConfig = (
         backgroundColor: "#AE8CD0",
         borderColor: "#fff",
         maxBarThickness: 40,
-        minBarthickness: 20,
+        minBarThickness: 30,
       },
       {
         label: "Phone clicks",
@@ -34,15 +34,15 @@ export const chartConfig = (
         backgroundColor: "#7A109E",
         borderColor: "#fff",
         maxBarThickness: 40,
-        minBarthickness: 20,
+        minBarThickness: 30,
       },
       {
         label: "Message clicks",
         data: messageClicks,
-        backgroundColor: "#8F59CC",
+        backgroundColor: "#8F59FC",
         borderColor: "#fff",
         maxBarThickness: 40,
-        minBarthickness: 20,
+        minBarThickness: 30,
       },
     ],
   };
@@ -59,6 +59,8 @@ export const chartConfig = (
         beginAtZero: true,
       },
       x: {
+        barPercentage: 1.9,
+        categoryPercentage: 0.5,
         grid: {
           display: false,
         },
