@@ -8,12 +8,14 @@ import MobileBorderArea from "@atom/MobileBorderArea";
 import AppAvatar from "@molecule/Avatar";
 import Button from "@atom/Button";
 import SendSellerMessage from "@components/input/SendSellerMessage";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 interface Props {
   type: "compact" | "expanded";
   sellerInfo?: User | null;
   productName?: string;
   productId?: string;
+  productOwnerId?: string;
 }
 
 export default function SellerContact(props: Props) {
@@ -29,14 +31,14 @@ export default function SellerContact(props: Props) {
   const handleGoToProfile = () => {
     if (props.type === "compact") {
       nav(
-        `${DASHBOARD_SELLER_PROFILE_ROUTE}/${props.sellerInfo?.id}?pid=${props.productId}`,
+        `${DASHBOARD_SELLER_PROFILE_ROUTE}/${props.sellerInfo?.id}?pid=${props.productId}`
       );
     }
   };
 
-  const handleOtherContactMethod = (type: "whatsApp" | "phone") => {
+  const handleOtherContactMethod = async (type: "whatsApp" | "phone") => {
     const formatNo = formatNigerianPhoneNumber(
-      props.sellerInfo?.phoneNumber || "0",
+      props.sellerInfo?.phoneNumber || "0"
     );
     if (!formatNo) {
       return toast({
@@ -47,11 +49,21 @@ export default function SellerContact(props: Props) {
     }
 
     if (type === "whatsApp") {
+      await generateSellerAnalyticsApi(
+        "MESSAGE",
+        props.productId || "",
+        props.productOwnerId || ""
+      );
       window.open(
         `https://wa.me/${formatNo}?text=${window.location.origin}/product/${props.productId}%0A%0A%0AHi, I'm interested in this product on Lata.ng!`,
-        "_blank",
+        "_blank"
       );
     } else {
+      await generateSellerAnalyticsApi(
+        "PHONE",
+        props.productId || "",
+        props.productOwnerId || ""
+      );
       makePhoneCall(formatNo);
     }
   };
@@ -70,7 +82,7 @@ export default function SellerContact(props: Props) {
         {
           "tablet:py-8 tablet:px-[20px]  lg:px-[30px] xlg:px-[60px]":
             props.type === "expanded",
-        },
+        }
       )}
       showBorderInDesktop
     >
@@ -102,7 +114,7 @@ export default function SellerContact(props: Props) {
                 tablet:h-[9.375rem]
                 
               `]: props.type === "expanded",
-            },
+            }
           )}
         />
 
@@ -144,6 +156,7 @@ export default function SellerContact(props: Props) {
             setTypeMessage={setTypeMessage}
             productId={props.productId}
             setMessageSent={setMessageSent}
+            productOwnerId={props.productOwnerId}
           />
         )}
       </div>

@@ -19,6 +19,10 @@ export const ViewProductArea = ({ data }: Props) => {
   const [productNotFound, setProductNotFound] = useState(false);
 
   useEffect(() => {
+    console.log({ data });
+  }, [product]);
+
+  useEffect(() => {
     if (!data) {
       setProductNotFound(true);
     } else {

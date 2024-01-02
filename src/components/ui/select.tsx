@@ -144,7 +144,7 @@ const SelectItem = React.forwardRef<
     className={cn(
       `
       px-2
-      py-1.5
+      py-4
       text-xs
       text-grey7  
       sm:px-4

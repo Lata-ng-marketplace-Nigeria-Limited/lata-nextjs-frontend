@@ -11,6 +11,7 @@ import { ApiErrorResponse } from "@/interface/general";
 import { cn, getFormErrorObject } from "@/utils";
 import TextAreaInput from "@components/input/TextAreaInput";
 import Button from "@atom/Button";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 interface Props {
   setTypeMessage?: React.Dispatch<SetStateAction<boolean>>;
@@ -19,10 +20,23 @@ interface Props {
   setMessageSent?: React.Dispatch<SetStateAction<boolean>>;
   buyerId?: string;
   hideCancel?: boolean;
+  productOwnerId?: string;
 }
 export default function SendSellerMessage(props: Props) {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const handleCountMessageClick = async () => {
+    try {
+      await generateSellerAnalyticsApi(
+        "MESSAGE",
+        props.productId || "",
+        props.productOwnerId || ""
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const {
     handleSubmit,
@@ -76,6 +90,7 @@ export default function SendSellerMessage(props: Props) {
 
     setLoading(true);
     try {
+      await handleCountMessageClick();
       await createChatApi({
         productId: props.productId,
         message: values.message,

@@ -109,6 +109,7 @@ export default function ViewNotOwnProduct(props: Props) {
             productName={props.product?.name}
             sellerInfo={props.product?.user}
             productId={props.product?.id}
+            productOwnerId={props.product?.userId}
             type={"compact"}
           />
           <SafetyTips />
