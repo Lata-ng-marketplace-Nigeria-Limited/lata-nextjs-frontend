@@ -156,6 +156,7 @@ export default function SellerContact(props: Props) {
             setTypeMessage={setTypeMessage}
             productId={props.productId}
             setMessageSent={setMessageSent}
+            productOwnerId={props.productOwnerId}
           />
         )}
       </div>
