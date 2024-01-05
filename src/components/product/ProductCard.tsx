@@ -79,7 +79,7 @@ export default function ProductCard(props: Props) {
     } catch (error) {
       console.log("Error registering view", error);
     }
-  }, [props.product?.id, user?.id]);
+  }, [props.product?.id, user?.id, props.product?.userId]);
 
   useEffect(() => {
     if (!isVisible) return;

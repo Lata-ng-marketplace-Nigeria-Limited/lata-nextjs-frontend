@@ -13,7 +13,8 @@ import {
   organizationStructuredData,
   websiteStructuredData,
 } from "@/store/seo/structuredData";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import GoogleAnalytics from "../analytics/GoogleAnalytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,6 +62,8 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig);
   return (
     <html lang="en">
+      <GoogleAnalytics GA_TRACKING_ID={process.env.GOOGLE_ANALYTICS || ''} />
+
       <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
