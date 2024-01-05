@@ -13,7 +13,7 @@ import {
   organizationStructuredData,
   websiteStructuredData,
 } from "@/store/seo/structuredData";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -62,6 +62,18 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <Script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_ANALYTICS}`}
+      ></Script>
+      <Script>
+        {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', ${process.env.GOOGLE_ANALYTICS});`}
+      </Script>
+
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(organizationStructuredData),
@@ -75,9 +87,7 @@ export default async function RootLayout({
         }}
         id={"website-structured-data"}
       />
-      <body
-        className={cn(inter.className, "antialiased h-full")}
-      >
+      <body className={cn(inter.className, "antialiased h-full")}>
         <NextAuthProvider session={session as any}>{children}</NextAuthProvider>
         <Toaster />
         <SpeedInsights />
