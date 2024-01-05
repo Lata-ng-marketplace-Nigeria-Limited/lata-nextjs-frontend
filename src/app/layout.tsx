@@ -62,7 +62,7 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig);
   return (
     <html lang="en">
-      <GoogleAnalytics GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />
+      <GoogleAnalytics GA_TRACKING_ID={"G-P9QD54CXVN"} />
 
       <Script
         type="application/ld+json"
