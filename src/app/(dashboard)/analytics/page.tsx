@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";
 import React, { Suspense } from "react";
@@ -9,6 +10,11 @@ import ProductInsights from "@/components/analytics/ProductInsights";
 import AnalyticsTopCardSkeleton from "@/components/skeleton/AnalyticsTopCardSkeleton";
 import AnalyticsChartAreaSkeleton from "@/components/skeleton/AnalyticsChartAreaSkeleton";
 import ProductInsightsLoadingSkeleton from "@/components/skeleton/AnaltyicsProductInsightsSkeleton";
+
+
+export const metadata: Metadata = {
+  title: "Analytics",
+};
 
 const page = async ({
   searchParams,

@@ -14,6 +14,7 @@ import {
   websiteStructuredData,
 } from "@/store/seo/structuredData";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import GoogleAnalytics from "../analytics/GoogleAnalytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,17 +62,7 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig);
   return (
     <html lang="en">
-      <Script
-        async
-        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_ANALYTICS}`}
-      ></Script>
-      <Script>
-        {`window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', ${process.env.GOOGLE_ANALYTICS});`}
-      </Script>
+      <GoogleAnalytics GA_TRACKING_ID={process.env.GOOGLE_ANALYTICS || ''} />
 
       <Script
         type="application/ld+json"
@@ -87,7 +78,9 @@ export default async function RootLayout({
         }}
         id={"website-structured-data"}
       />
-      <body className={cn(inter.className, "antialiased h-full")}>
+      <body
+        className={cn(inter.className, "antialiased h-full")}
+      >
         <NextAuthProvider session={session as any}>{children}</NextAuthProvider>
         <Toaster />
         <SpeedInsights />
