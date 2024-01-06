@@ -50,7 +50,6 @@ export default function ProductInsights(props: Props) {
     }
   };
 
-  console.log({ product: props.product });
 
   return (
     <ProductAsideArea>

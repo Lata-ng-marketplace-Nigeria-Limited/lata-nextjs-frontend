@@ -142,24 +142,27 @@ export default function ProductForm({
       price: Number(values.price),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
-        (category) => category.id === values.categoryId,
+        (category) => category.id === values.categoryId
       )?.name,
       ...(deletedFiles.length
         ? { deleteImages: JSON.stringify(deletedFiles) }
         : {}),
     };
 
-    const totalFIleSize = convertBytesToMB(
-      Array.from(files!).reduce((acc, file) => acc + file.size, 0),
-    );
+    if (files) {
+      const totalFIleSize = convertBytesToMB(
+        Array.from(files).reduce((acc, file) => acc + file.size, 0)
+      );
 
-    if (totalFIleSize > 10) {
-      toast({
-        title: `Uploading... (${totalFIleSize}MB)`,
-        description: "This may take a while, please wait",
-        variant: "info",
-        duration: 9000,
-      });
+
+      if (totalFIleSize > 10) {
+        toast({
+          title: `Uploading... (${totalFIleSize}MB)`,
+          description: "This may take a while, please wait",
+          variant: "info",
+          duration: 9000,
+        });
+      }
     }
 
     try {
@@ -225,7 +228,7 @@ export default function ProductForm({
             toast({
               title: "Product limit reached",
               description: `You have reached the limit of products you can create for this category. Try creating a product in your current plan category (${errorResponse.data?.allowedCategoriesName?.join(
-                ", ",
+                ", "
               )}), or upgrade to a paid plan that covers this category`,
               variant: "destructive",
               duration: 25000,
@@ -261,7 +264,7 @@ export default function ProductForm({
   };
 
   const flexInputs = cn(
-    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]",
+    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]"
   );
 
   return (
