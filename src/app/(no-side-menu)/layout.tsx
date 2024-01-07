@@ -10,25 +10,25 @@ export default async function Dashboard({
   children: React.ReactNode;
 }) {
   return (
-    <main className={"bg-white h-full"}>
+    <main className={"h-full bg-white"}>
       <Suspense>
         <GetUser />
       </Suspense>
-      <Header recentSearches={[]} />
+      <Header />
       <div
         className={cn(`       
-           h-full
-           px-1 
-           xs:px-2.5 
-           sm:px-4 
-           md:px-6 
-           py-[40px] 
-           w-full 
-           mx-auto 
-           max-w-[1440px]
-           
+           mx-auto
+           h-full 
            min-h-[calc(100vh-50px-200px)] 
-           md:min-h-[calc(100vh-60px-200px)]
+           w-full 
+           max-w-[1440px] 
+           px-1 
+           py-[40px] 
+           xs:px-2.5 
+           sm:px-4
+           
+           md:min-h-[calc(100vh-60px-200px)] 
+           md:px-6
         `)}
       >
         {children}
