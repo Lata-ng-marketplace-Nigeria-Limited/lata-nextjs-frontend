@@ -13,20 +13,29 @@ import { SearchProductForm } from "@components/forms/SearchProductForm";
 import { useUser } from "@hooks/useUser";
 import { useToast } from "@components/ui/use-toast";
 import { ToastAction } from "@components/ui/toast";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRegistrationFormStore } from "@/store/states/userState";
 import { useRouter } from "next/navigation";
+import { getRecentSearchesApi } from "@/api/product";
 
 interface Props {
   noSideMenu?: boolean;
-  recentSearches?: string[];
 }
 
-const Header = ({ recentSearches, noSideMenu }: Props) => {
+const Header = ({ noSideMenu }: Props) => {
   const { role, user } = useUser();
   const { toast } = useToast();
   const { setRegistrationForm } = useRegistrationFormStore();
   const { push } = useRouter();
+
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getRecentSearchesApi();
+      setRecentSearches(data);
+    })();
+  }, []);
 
   const handleSwitchToSeller = useCallback(() => {
     if (!user) return;
@@ -41,10 +50,10 @@ const Header = ({ recentSearches, noSideMenu }: Props) => {
   }, [push, setRegistrationForm, user]);
 
   return (
-    <header className="bg-white z-30 sticky top-0 h-[50px] md:h-[60px] flex px-1 xs:px-2.5 sm:px-4 md:px-6  gap-x-1 justify-between items-center shadow-header">
+    <header className="shadow-header sticky top-0 z-30 flex h-[50px] items-center justify-between gap-x-1 bg-white px-1  xs:px-2.5 sm:px-4 md:h-[60px] md:px-6">
       <div
         className={
-          "flex w-full gap-x-[6px] xls:gap-x-[20px] xs:gap-x-[50px] md:gap-x-[100px] lg:gap-x-[190px] justify-between items-center"
+          "flex w-full items-center justify-between gap-x-[6px] xls:gap-x-[20px] xs:gap-x-[50px] md:gap-x-[100px] lg:gap-x-[190px]"
         }
       >
         <div className={"flex items-center"}>
@@ -53,7 +62,7 @@ const Header = ({ recentSearches, noSideMenu }: Props) => {
           <Link href={"/"}>
             <LataLogo
               className={
-                "w-[33px] h-[9px] sm:-[46px] sm:h-[13px] tablet:w-[60px] tablet:h-[20px] cursor-pointer"
+                "sm:-[46px] h-[9px] w-[33px] cursor-pointer sm:h-[13px] tablet:h-[20px] tablet:w-[60px]"
               }
             />
           </Link>
@@ -90,12 +99,12 @@ const Header = ({ recentSearches, noSideMenu }: Props) => {
           px-[8px]
           py-[4px]
           
+          text-xs
           sm:px-4
           sm:py-1.5
+          sm:text-base
           tablet:px-6
-          tablet:py-3
-          text-xs
-          sm:text-base     
+          tablet:py-3     
         `)}
         >
           SELL

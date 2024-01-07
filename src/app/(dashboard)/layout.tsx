@@ -6,7 +6,6 @@ import Footer from "@/components/organism/Footer";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
 import { GetUser } from "@atom/GetUser";
-import { getRecentSearchesApi } from "@/api/product";
 
 export default async function Dashboard({
   children,
@@ -14,13 +13,12 @@ export default async function Dashboard({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authConfig);
-  const recentSearches = await getRecentSearchesApi();
   return (
     <main className={"h-full bg-white"}>
       <Suspense>
         <GetUser />
       </Suspense>
-      <Header recentSearches={recentSearches} />
+      <Header />
       <div
         className={cn(`
            flex
