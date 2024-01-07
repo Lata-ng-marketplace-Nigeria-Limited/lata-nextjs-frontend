@@ -3,11 +3,6 @@ const nextConfig = {
   experimental: {
     swcPlugins: [],
   },
-  webpack: (config, { isServer }) => {
-    config.optimization.minimize = false;
-    return config;
-  },
-  transpilePackages: ["react-hook-form", "next"],
   images: {
     remotePatterns: [
       {
