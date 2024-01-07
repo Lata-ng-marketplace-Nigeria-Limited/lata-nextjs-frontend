@@ -17,13 +17,15 @@ import { useCallback, useEffect, useState } from "react";
 import { useRegistrationFormStore } from "@/store/states/userState";
 import { useRouter } from "next/navigation";
 import { getRecentSearchesApi } from "@/api/product";
+import { UserRole } from "@/interface/user";
 
 interface Props {
   noSideMenu?: boolean;
+  role?: UserRole;
 }
 
-const Header = ({ noSideMenu }: Props) => {
-  const { role, user } = useUser();
+const Header = ({ noSideMenu, role }: Props) => {
+  const { user } = useUser();
   const { toast } = useToast();
   const { setRegistrationForm } = useRegistrationFormStore();
   const { push } = useRouter();

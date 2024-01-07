@@ -13,12 +13,13 @@ export default async function Dashboard({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authConfig);
+
   return (
     <main className={"h-full bg-white"}>
       <Suspense>
         <GetUser />
       </Suspense>
-      <Header />
+      <Header role={session?.role} />
       <div
         className={cn(`
            flex

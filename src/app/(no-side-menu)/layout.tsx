@@ -3,18 +3,21 @@ import { cn } from "@/utils";
 import Header from "@/components/organism/Header";
 import Footer from "@/components/organism/Footer";
 import { GetUser } from "@atom/GetUser";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@authConfig";
 
 export default async function Dashboard({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authConfig);
   return (
     <main className={"h-full bg-white"}>
       <Suspense>
         <GetUser />
       </Suspense>
-      <Header />
+      <Header role={session?.role} />
       <div
         className={cn(`       
            mx-auto
