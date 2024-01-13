@@ -17,6 +17,8 @@ const GoogleAdSense = ({ ...props }: Props) => {
           {}
         );
         setLoaded(true);
+      }else{
+        setLoaded(false);
       }
     } catch (err) {
       console.log(err);
