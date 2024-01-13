@@ -1,6 +1,7 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
 import HeroImage from "@molecule/HeroImage";
+import GoogleAdSense from "@/app/external-services/GoogleAdSense";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -19,12 +20,13 @@ export default async function Page() {
         Welcome to Lata
       </h1>
 
-      <HeroImage
+      {/* <HeroImage
         src={
           "https://res.cloudinary.com/dg9by7oca/image/upload/v1691381515/About_latae_458_qqdcht.webp"
         }
         alt={`Hero`}
-      />
+      /> */}
+      <GoogleAdSense />
 
       <article className={"mt-[60px] flex flex-col gap-y-6"}>
         <h2
