@@ -63,7 +63,15 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig);
   return (
     <html lang="en">
-      <GoogleAnalytics GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS as IEnv} />
+      <GoogleAnalytics
+        GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS as IEnv}
+      />
+      <Script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
+        crossOrigin="anonymous"
+        strategy="lazyOnload"
+      />
 
       <Script
         type="application/ld+json"
