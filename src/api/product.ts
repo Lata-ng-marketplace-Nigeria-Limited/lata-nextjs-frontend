@@ -102,7 +102,7 @@ export const searchProductsApi = async ({
     if (!resp.ok) {
       return null;
     }
-
+    revalidateTag("get_recent_searches_api");
     return await resp.json();
   } catch (error: any) {
     throw error.response || error;
@@ -277,10 +277,22 @@ export const unSaveAProductApi = async (
 
 export const getRecentSearchesApi = async (): Promise<Array<string>> => {
   try {
-    const res = await $http.get(`products/searches`);
-    return res.data;
+    const session = await getServerSession(authConfig);
+    const res = await fetch(getApiUrl(`products/searches`), {
+      headers: {
+        Authorization: "Bearer " + session?.token,
+      },
+      next: {
+        tags: ["get_recent_searches_api"],
+      },
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+    return await res.json();
   } catch (error: any) {
-    throw error.response || error;
+    return [];
   }
 };
 

@@ -17,7 +17,6 @@ export const EditorArea = ({ dontEdit, id, ...props }: Props) => {
   const { toast } = useToast();
 
   const onSave = useCallback(async () => {
-    console.log("saving", { id, docJson: docHtml });
     if (!id) return;
     try {
       setLoading(true);
@@ -33,7 +32,6 @@ export const EditorArea = ({ dontEdit, id, ...props }: Props) => {
         variant: "destructive",
         description: "Document could not be saved",
       });
-      console.log(e);
     } finally {
       setLoading(false);
     }
@@ -42,7 +40,7 @@ export const EditorArea = ({ dontEdit, id, ...props }: Props) => {
   return (
     <div>
       {!dontEdit ? (
-        <div className={"flex gap-x-6 mb-16"}>
+        <div className={"mb-16 flex gap-x-6"}>
           <Toggle
             data-state={!preview ? "on" : "off"}
             variant={"outline"}

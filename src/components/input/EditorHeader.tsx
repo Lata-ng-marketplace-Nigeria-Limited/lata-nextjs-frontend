@@ -68,7 +68,7 @@ export const EditorHeader = ({ onSaveDocument, saving }: Props) => {
   return (
     <div
       className={
-        "flex gap-x-2 absolute -top-10 left-0 bg-white overflow-x-auto max-w-full w-full"
+        "absolute -top-10 left-0 flex w-full max-w-full gap-x-2 overflow-x-auto bg-white"
       }
     >
       <div className={clusterClass}>
@@ -78,7 +78,7 @@ export const EditorHeader = ({ onSaveDocument, saving }: Props) => {
             data-state={editor.isActive("paragraph") ? "on" : "off"}
             aria-label="Toggle paragraph"
           >
-            <span className="w-4 h-4 leading-tight text-base font-normal">
+            <span className="h-4 w-4 text-base font-normal leading-tight">
               P
             </span>
           </Toggle>
@@ -137,7 +137,6 @@ export const EditorHeader = ({ onSaveDocument, saving }: Props) => {
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             data-state={editor.isActive("underline") ? "on" : "off"}
             aria-label="Toggle underline"
-            title={"Underline"}
           >
             <Underline className="h-4 w-4" />
           </Toggle>
@@ -210,7 +209,7 @@ export const EditorHeader = ({ onSaveDocument, saving }: Props) => {
         </AppTooltip>
 
         <AppTooltip title={"Indent"}>
-          <Toggle aria-label="Toggle align right" title={"Indent"}>
+          <Toggle aria-label="Toggle align right">
             <Indent className="h-4 w-4" />
           </Toggle>
         </AppTooltip>
@@ -264,7 +263,7 @@ export const EditorHeader = ({ onSaveDocument, saving }: Props) => {
           onClick={onSaveDocument}
           disabled={saving}
           format={"primary"}
-          className={" py-0 sm:py-0 px-2 md:px-3"}
+          className={" px-2 py-0 sm:py-0 md:px-3"}
           aria-label={"Save changes"}
         >
           <Save className="h-5 w-5" />
