@@ -68,7 +68,7 @@ export default async function RootLayout({
       />
       <Script
         async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1883018077316617`}
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
         crossOrigin="anonymous"
         strategy="lazyOnload"
       />

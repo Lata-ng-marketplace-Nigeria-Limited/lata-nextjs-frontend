@@ -32,7 +32,7 @@ const GoogleAdSense = ({ ...props }: Props) => {
           <ins
             className="adsbygoogle adbanner-customize"
             style={{ display: "block", width: "100%" }}
-            data-ad-client="ca-pub-1883018077316617"
+            data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
             data-ad-slot="2711689551"
             data-ad-format="auto"
             data-full-width-responsive="true"
