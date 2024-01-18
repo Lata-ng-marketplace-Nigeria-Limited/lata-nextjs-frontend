@@ -6,13 +6,21 @@ import { cn } from "@/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { revalidateTag } from "next/cache";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Button from "@atom/Button";
+import Modal from "./Modal";
+import Category from "../product/Category";
 
 export const DashboardSelectCategories = () => {
-  const { categoriesSelectData } = useCategory();
+  const { categoriesSelectData, categories } = useCategory();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShowModal = () => {
+    setShowModal((prev) => !prev);
+  };
 
   const { data, status } = useSession({
     required: true,
@@ -36,7 +44,7 @@ export const DashboardSelectCategories = () => {
   };
 
   return (
-    <div className={"my-4"}>
+    <div className={"my-4 flex items-center justify-between"}>
       <SelectInput
         options={[
           {
@@ -53,6 +61,22 @@ export const DashboardSelectCategories = () => {
         onValueChange={handleCategoryChange}
         defaultValue={searchParams.get("category")?.toString()}
       />
+
+      <Button
+        format="primary"
+        className="min-w-[150px] sm:min-w-[174px]"
+        onClick={handleShowModal}
+      >
+        BUY HERE
+      </Button>
+
+      <Modal isShown={showModal} setIsShown={setShowModal}>
+        <div className="grid grid-cols-2 gap-16 bg-white px-6 py-10 md:grid-cols-3 lg:grid-cols-4">
+          {categories
+            ?.filter((category) => category.name.toLowerCase() !== "others")
+            .map((category) => <Category key={category.id} data={category} onModalClose={handleShowModal}/>)}
+        </div>
+      </Modal>
     </div>
   );
 };

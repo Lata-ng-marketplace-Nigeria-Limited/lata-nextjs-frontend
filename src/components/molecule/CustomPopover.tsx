@@ -20,6 +20,7 @@ interface Props {
   preventAutoFocus?: boolean;
   disabled?: boolean;
   triggerClass?: string;
+  side?: "top" | "bottom" | "left" | "right";
 }
 
 export default function CustomPopover(props: Props) {
@@ -68,6 +69,7 @@ export default function CustomPopover(props: Props) {
           onPointerDownOutside={handleClickOutside}
           onOpenAutoFocus={handleAutoFocus}
           onEscapeKeyDown={handleClickOutside}
+          side={props.side || "bottom"}
           className={cn(`
             rounded-[6px]
           `)}

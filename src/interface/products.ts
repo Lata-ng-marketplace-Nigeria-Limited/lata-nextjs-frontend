@@ -36,9 +36,19 @@ export interface Product {
   planName?: string;
 }
 
+export interface SubCategory {
+  id: string;
+  category_id: string;
+  category_name: string;
+  display_name: string;
+  items: string;
+}
+
 export interface Category {
   id: string;
   name: string;
+  image: string;
+  subcategories: SubCategory[];
   description: null | string;
   meta: null | Record<string, any>;
   status: string;
