@@ -25,6 +25,7 @@ export interface Product {
   userId: string;
   status: Status;
   categoryId: string;
+  subCategoryId: string;
   createdAt: string;
   updatedAt: string;
   files: FileData[];
@@ -36,11 +37,16 @@ export interface Product {
   planName?: string;
 }
 
+export interface SubCategoryItems {
+  label: string;
+  value: string;
+}
+
 export interface SubCategory {
   id: string;
-  category_id: string;
-  category_name: string;
-  display_name: string;
+  categoryId: string;
+  categoryName: string;
+  displayName: string;
   items: string;
 }
 

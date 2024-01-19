@@ -21,6 +21,8 @@ interface Props {
   disabled?: boolean;
   triggerClass?: string;
   side?: "top" | "bottom" | "left" | "right";
+  contentClass?: string;
+  isModalMode?: boolean;
 }
 
 export default function CustomPopover(props: Props) {
@@ -51,7 +53,7 @@ export default function CustomPopover(props: Props) {
     return <>{props.content}</>;
   };
   return (
-    <Popover open={isOpen}>
+    <Popover modal={props.isModalMode || false} open={isOpen}>
       <PopoverTrigger
         onClick={(e) => {
           props.onTriggerClick?.(e);
@@ -70,9 +72,7 @@ export default function CustomPopover(props: Props) {
           onOpenAutoFocus={handleAutoFocus}
           onEscapeKeyDown={handleClickOutside}
           side={props.side || "bottom"}
-          className={cn(`
-            rounded-[6px]
-          `)}
+          className={cn(props.contentClass, "rounded-[6px]")}
         >
           {renderContent()}
         </PopoverContent>

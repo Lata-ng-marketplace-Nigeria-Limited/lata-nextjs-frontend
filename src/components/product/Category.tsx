@@ -9,7 +9,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   data: Category;
-  // setShowModal: React.SetStateAction<boolean>;
   onModalClose?: () => void;
 }
 
@@ -18,8 +17,8 @@ const Category = ({ data, onModalClose }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+
   const handleSubcategoryChange = () => {
-    console.log({ data });
     const subCategoryId = data?.subcategories?.[0]?.id;
     const params = new URLSearchParams(searchParams);
     if (data?.id) {
@@ -37,25 +36,29 @@ const Category = ({ data, onModalClose }: Props) => {
   return (
     <CustomPopover
       side="left"
+      contentClass={'w-fit'}
+      isModalMode
       content={
         <Subcategory
-          subcategory={data?.subcategories?.[0]?.items}
+          subcategory={data?.subcategories?.[0]}
           handleClick={handleSubcategoryChange}
         />
       }
     >
       <div className="cursor-pointer">
-        <div className="mb-3 flex items-center justify-center rounded-lg bg-purp1 px-2 py-5">
+        <div className="mb-3 flex items-center justify-center rounded-lg bg-purp1 px-2 py-5 min-h-[4.375rem] min-w-[4.375rem]">
           <Image
             src={data?.image}
             width={58}
             height={31}
-            alt={`${data?.subcategories?.[0]?.display_name} image`}
+            alt={`${data?.subcategories?.[0]?.displayName} image`}
           />
         </div>
-        <p className="text-center text-sm font-semibold">
-          {data?.subcategories?.[0]?.display_name}
+        <div className="flex justify-center">
+        <p className="text-sm font-semibold text-grey9">
+          {data?.subcategories?.[0]?.displayName}
         </p>
+        </div>
       </div>
     </CustomPopover>
   );

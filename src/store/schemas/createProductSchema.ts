@@ -13,4 +13,5 @@ export const createProductSchema = z.object({
     .min(1, "Please enter a description.")
     .min(6, "Please enter a description of at least 6 characters."),
   categoryId: z.string().min(1, "Please select a category."),
+  subCategoryId: z.string().min(1, "Please select a subcategory."),
 });

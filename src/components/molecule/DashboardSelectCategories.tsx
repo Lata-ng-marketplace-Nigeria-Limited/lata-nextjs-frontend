@@ -71,7 +71,7 @@ export const DashboardSelectCategories = () => {
       </Button>
 
       <Modal isShown={showModal} setIsShown={setShowModal}>
-        <div className="grid grid-cols-2 gap-16 bg-white px-6 py-10 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 xls:grid-cols-2 gap-8 md:gap-14 bg-white py-4 md:grid-cols-3 lg:grid-cols-4">
           {categories
             ?.filter((category) => category.name.toLowerCase() !== "others")
             .map((category) => <Category key={category.id} data={category} onModalClose={handleShowModal}/>)}

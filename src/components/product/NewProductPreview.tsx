@@ -8,6 +8,7 @@ export interface ProductFormProductInfo {
   price: string;
   location: string;
   categoryId: string;
+  subCategoryId?: string;
 }
 
 interface Props {

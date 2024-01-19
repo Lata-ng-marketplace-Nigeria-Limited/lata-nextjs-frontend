@@ -3,7 +3,7 @@ import ImageUploader, {
   SelectedImagePreview,
 } from "@components/input/ImageUploader";
 import { createProductSchema } from "@/store/schemas/createProductSchema";
-import { Product } from "@/interface/products";
+import { Product, SubCategory, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,6 +50,10 @@ export default function ProductForm({
   const [imageHasError, setImageHasError] = useState(false);
   const [deletedFiles, setDeletedFiles] = useState<string[]>([]);
   const [hasSetFormValue, setHasSetFormValue] = useState(false);
+  const [subCategoriesSelectData, setSubCategoriesSelectData] = useState<
+    SubCategoryItems[]
+  >([]);
+  const [hasChosenCategory, setHasChosenCategory] = useState(false);
 
   const {
     formState: { errors },
@@ -66,6 +70,7 @@ export default function ProductForm({
       categoryId: "",
       location: "",
       description: "",
+      subCategoryId: "",
     },
   });
   const { push: nav, back } = useRouter();
@@ -91,6 +96,7 @@ export default function ProductForm({
     setValue("name", product.name);
     setValue("price", product.price.toString());
     setValue("categoryId", product.categoryId);
+    setValue("subCategoryId", product.subCategoryId);
     setValue("location", product.location);
     setValue("description", product.description);
     setHasSetFormValue(true);
@@ -101,6 +107,7 @@ export default function ProductForm({
       price: watch("price"),
       name: watch("name"),
       categoryId: watch("categoryId"),
+      subCategoryId: watch("subCategoryId"),
       description: watch("description"),
       location: watch("location"),
     });
@@ -113,6 +120,8 @@ export default function ProductForm({
     watch("name"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("categoryId"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("subCategoryId"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("description"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,7 +151,7 @@ export default function ProductForm({
       price: Number(values.price),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
-        (category) => category.id === values.categoryId,
+        (category) => category.id === values.categoryId
       )?.name,
       ...(deletedFiles.length
         ? { deleteImages: JSON.stringify(deletedFiles) }
@@ -150,7 +159,7 @@ export default function ProductForm({
     };
 
     const totalFIleSize = convertBytesToMB(
-      Array.from(files!).reduce((acc, file) => acc + file.size, 0),
+      Array.from(files!).reduce((acc, file) => acc + file.size, 0)
     );
 
     if (totalFIleSize > 10) {
@@ -179,6 +188,7 @@ export default function ProductForm({
           });
         }
       }
+      // return;
       setTimeout(() => {
         nav(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id);
       }, 800);
@@ -225,7 +235,7 @@ export default function ProductForm({
             toast({
               title: "Product limit reached",
               description: `You have reached the limit of products you can create for this category. Try creating a product in your current plan category (${errorResponse.data?.allowedCategoriesName?.join(
-                ", ",
+                ", "
               )}), or upgrade to a paid plan that covers this category`,
               variant: "destructive",
               duration: 25000,
@@ -260,8 +270,28 @@ export default function ProductForm({
     }
   };
 
+  const handleSubcategory = (item: string) => {
+    const subcategoryOptions = categories.find((category) => {
+      return category?.subcategories?.[0]?.categoryId === item;
+    });
+
+    if (!subcategoryOptions) return;
+
+    const options = JSON.parse(subcategoryOptions?.subcategories?.[0]?.items);
+
+    const subcategoryItems = options.map((item: SubCategoryItems) => {
+      return {
+        ...item,
+        id: subcategoryOptions?.subcategories?.[0]?.id,
+      };
+    });
+
+    console.log("subcategoryItems", subcategoryItems);
+    setSubCategoriesSelectData(subcategoryItems);
+  };
+
   const flexInputs = cn(
-    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]",
+    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]"
   );
 
   return (
@@ -354,6 +384,8 @@ export default function ProductForm({
                 emptyMessage={"No category"}
                 onValueChange={(value) => {
                   field.onChange(value);
+                  setHasChosenCategory(true);
+                  handleSubcategory(value);
                 }}
                 errorMessage={errors.categoryId?.message}
               />
@@ -362,11 +394,34 @@ export default function ProductForm({
 
           <Controller
             control={control}
+            name="subCategoryId"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"Select Subcategory"}
+                options={subCategoriesSelectData}
+                name={field.name}
+                disabled={loading || !hasChosenCategory}
+                value={field.value || ""}
+                emptyMessage={"No Subcategory"}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  console.log({ value, field });
+                }}
+                errorMessage={errors.subCategoryId?.message}
+              />
+            )}
+          />
+        </div>
+
+        {/* <div className={flexInputs}>
+          <Controller
+            control={control}
             name="location"
             render={({ field }) => (
               <SelectInput
                 inputProps={{ ...field }}
-                placeholder={"Select location"}
+                placeholder={"Product type"}
                 options={nigerianStates}
                 // defaultValue={field.value || ""}
                 name={field.name}
@@ -380,7 +435,68 @@ export default function ProductForm({
               />
             )}
           />
-        </div>
+          <Controller
+            control={control}
+            name="location"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"Select state"}
+                options={nigerianStates}
+                // defaultValue={field.value || ""}
+                name={field.name}
+                disabled={loading}
+                value={field.value || ""}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                }}
+                emptyMessage={"No category"}
+                errorMessage={errors.location?.message}
+              />
+            )}
+          />
+        </div> */}
+
+        <Controller
+          control={control}
+          name="location"
+          render={({ field }) => (
+            <SelectInput
+              inputProps={{ ...field }}
+              placeholder={"Location"}
+              options={nigerianStates}
+              // defaultValue={field.value || ""}
+              name={field.name}
+              disabled={loading}
+              value={field.value || ""}
+              onValueChange={(value) => {
+                field.onChange(value);
+              }}
+              emptyMessage={"No category"}
+              errorMessage={errors.location?.message}
+            />
+          )}
+        />
+        {/* <Controller
+          control={control}
+          name="location"
+          render={({ field }) => (
+            <SelectInput
+              inputProps={{ ...field }}
+              placeholder={"Give discount"}
+              options={nigerianStates}
+              // defaultValue={field.value || ""}
+              name={field.name}
+              disabled={loading}
+              value={field.value || ""}
+              onValueChange={(value) => {
+                field.onChange(value);
+              }}
+              emptyMessage={"No category"}
+              errorMessage={errors.location?.message}
+            />
+          )}
+        /> */}
 
         <Controller
           control={control}
