@@ -6,7 +6,7 @@ import { DASHBOARD_PRODUCT_ROUTE } from "@/constants/routes";
 
 export interface CreateProductApiInput {
   name: string;
-  location: string;
+  state: string;
   price: number;
   description: string;
   categoryId: string;

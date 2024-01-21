@@ -39,7 +39,8 @@ export const DashboardSelectCategories = () => {
       params.set("category", id);
     } else {
       params.delete("category");
-    }
+    };
+    params.delete("subcategory")
     replace(`${pathname}?${params.toString()}`);
   };
 

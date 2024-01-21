@@ -27,7 +27,7 @@ type Props = {
   price?: string | number;
   productName?: string;
   description?: string;
-  location?: string;
+  state?: string;
   onUnSave?: (productId: string) => void;
   trending?: boolean;
 } & (
@@ -291,9 +291,9 @@ export default function ProductCard(props: Props) {
             }
           >
             <MapPinIcon className="w-1.5 h-1.5 sm:w-3 sm:h-3" />
-            {!props?.location && props.createProductPreview
+            {!props?.state && props.createProductPreview
               ? "Location"
-              : props?.location}
+              : props?.state}
           </p>
         </Link>
 

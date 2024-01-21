@@ -6,7 +6,9 @@ export interface ProductFormProductInfo {
   name: string;
   description: string;
   price: string;
-  location: string;
+  state: string;
+  city: string;
+  discount?: string;
   categoryId: string;
   subCategoryId?: string;
 }
@@ -30,7 +32,7 @@ export default function NewProductPreview(props: Props) {
         imageSrc={props.selectedPhotos?.image.url}
         createProductPreview={true}
         description={props.productInfo?.description}
-        location={props.productInfo?.location}
+        state={props.productInfo?.state}
         price={
           props.productInfo?.price
             ? isNaN(Number(props.productInfo?.price))

@@ -1,7 +1,7 @@
 import localForage from "localforage";
 import { User, UserRole } from "@/interface/user";
 import { Chat } from "@/interface/chat";
-import { Category } from "@/interface/products";
+import { Category, SubCategory } from "@/interface/products";
 import { Subscription } from "@/interface/payment";
 import { create } from "zustand";
 import { persist, createJSONStorage as createStore } from "zustand/middleware";
@@ -55,8 +55,8 @@ export const useLocalStore = create(
     {
       name: "lata.ng-async-store",
       storage: createStore(() => localForage as any),
-    },
-  ),
+    }
+  )
 );
 
 interface IFastLocalStore {
@@ -83,6 +83,63 @@ export const useFastLocalStore = create(
     {
       name: "lata.ng-fast-store",
       storage: createStore(() => localStorage),
-    },
-  ),
+    }
+  )
+);
+
+type ISelectedSubcategoryState = {
+  selectedCategory: string;
+  selectedSubcategory: string;
+};
+
+type ISelectedSubcategoryAction = {
+  setSelectedCategory: (
+    selectedCategory: ISelectedSubcategoryState["selectedCategory"]
+  ) => void;
+  setSelectedSubategory: (
+    setSelectedSubategory: ISelectedSubcategoryState["selectedSubcategory"]
+  ) => void;
+};
+
+export const useSelectedSubcategory = create(
+  persist<ISelectedSubcategoryState & ISelectedSubcategoryAction>(
+    (set) => ({
+      selectedCategory: "",
+      selectedSubcategory: "",
+      setSelectedCategory: (selectedCategory) =>
+        set(() => ({ selectedCategory })),
+      setSelectedSubategory: (selectedSubcategory) =>
+        set(() => ({ selectedSubcategory })),
+    }),
+    {
+      name: "selected-subcategory-store",
+      storage: createStore(() => localStorage),
+    }
+  )
+);
+
+type IStateAndCitiesState = {
+  selectedState: string;
+  selectedCity: string;
+};
+
+type IStateAndCitiesAction = {
+  setSelectedState: (
+    selectedState: IStateAndCitiesState["selectedState"]
+  ) => void;
+  setSelectedCity: (selectedCity: IStateAndCitiesState["selectedCity"]) => void;
+};
+
+export const useStateAndCities = create(
+  persist<IStateAndCitiesState & IStateAndCitiesAction>(
+    (set) => ({
+      selectedState: "",
+      selectedCity: "",
+      setSelectedState: (selectedState) => set(() => ({ selectedState })),
+      setSelectedCity: (selectedCity) => set(() => ({ selectedCity })),
+    }),
+    {
+      name: "selected-state-and-cities",
+    }
+  )
 );

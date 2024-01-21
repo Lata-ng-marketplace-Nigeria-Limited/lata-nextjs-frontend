@@ -14,7 +14,8 @@ export interface FindAProductData {
 export interface Product {
   id: string;
   name: string;
-  location: string;
+  state: string;
+  city: string;
   price: number;
   description: string;
   meta: {
@@ -35,6 +36,7 @@ export interface Product {
   saved?: number;
   phoneClicks?: number;
   planName?: string;
+  discount?: string
 }
 
 export interface SubCategoryItems {

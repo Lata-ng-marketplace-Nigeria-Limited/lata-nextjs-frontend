@@ -3,15 +3,14 @@ import ImageUploader, {
   SelectedImagePreview,
 } from "@components/input/ImageUploader";
 import { createProductSchema } from "@/store/schemas/createProductSchema";
-import { Product, SubCategory, SubCategoryItems } from "@/interface/products";
+import { Product, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn, convertBytesToMB, getFormErrorObject } from "@/utils";
+import { cn, convertBytesToMB, getFormErrorObject, sortArray } from "@/utils";
 import { useRouter } from "next/navigation";
 import TextInput from "@components/input/TextInput";
 import { SelectInput } from "@components/input/SelectInput";
-import { nigerianStates } from "@/store/data/location";
 import TextAreaInput from "@components/input/TextAreaInput";
 import Button from "@atom/Button";
 import { ProductFormProductInfo } from "@components/product/NewProductPreview";
@@ -28,6 +27,12 @@ import {
 import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
+import {
+  getCitiesByStateCodeAndCountryCode,
+  getStatesByCountryCode,
+} from "@/api/location";
+import { ICitiesData, IStatesData } from "@/interface/location";
+import { useStateAndCities } from "@/store/states/localStore";
 
 interface Props {
   product?: Product;
@@ -54,6 +59,8 @@ export default function ProductForm({
     SubCategoryItems[]
   >([]);
   const [hasChosenCategory, setHasChosenCategory] = useState(false);
+  const [states, setStates] = useState<IStatesData[]>([]);
+  const [cities, setCities] = useState<ICitiesData[]>([]);
 
   const {
     formState: { errors },
@@ -68,14 +75,19 @@ export default function ProductForm({
       name: "",
       price: "",
       categoryId: "",
-      location: "",
+      state: "",
+      city: "",
       description: "",
       subCategoryId: "",
+      productType: "",
+      discount: "",
     },
   });
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
+  const { selectedState, setSelectedState } = useStateAndCities();
+  const [hasSelectedState, setHasSelectedState] = useState(false);
 
   useEffect(() => {
     if (!product) {
@@ -97,8 +109,10 @@ export default function ProductForm({
     setValue("price", product.price.toString());
     setValue("categoryId", product.categoryId);
     setValue("subCategoryId", product.subCategoryId);
-    setValue("location", product.location);
+    setValue("state", product.state);
+    setValue("city", product.city);
     setValue("description", product.description);
+    setValue("discount", product.discount);
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
@@ -109,7 +123,9 @@ export default function ProductForm({
       categoryId: watch("categoryId"),
       subCategoryId: watch("subCategoryId"),
       description: watch("description"),
-      location: watch("location"),
+      state: watch("state"),
+      city: watch("city"),
+      discount: watch("discount"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -125,7 +141,11 @@ export default function ProductForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("description"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    watch("location"),
+    watch("state"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("city"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("discount"),
   ]);
 
   const onSubmit = async (values: z.infer<typeof createProductSchema>) => {
@@ -286,9 +306,24 @@ export default function ProductForm({
       };
     });
 
-    console.log("subcategoryItems", subcategoryItems);
     setSubCategoriesSelectData(subcategoryItems);
   };
+
+  useEffect(() => {
+    if (states.length) return;
+    (async () => {
+      const data = await getStatesByCountryCode();
+      setStates(sortArray(data, "name"));
+    })();
+  }, [states]);
+
+  useEffect(() => {
+    if (!selectedState) return;
+    (async () => {
+      const data = await getCitiesByStateCodeAndCountryCode(selectedState);
+      setCities(sortArray(data, "name"));
+    })();
+  }, [selectedState]);
 
   const flexInputs = cn(
     "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]"
@@ -414,15 +449,24 @@ export default function ProductForm({
           />
         </div>
 
-        {/* <div className={flexInputs}>
+        <div className={flexInputs}>
           <Controller
             control={control}
-            name="location"
+            name="productType"
             render={({ field }) => (
               <SelectInput
                 inputProps={{ ...field }}
                 placeholder={"Product type"}
-                options={nigerianStates}
+                options={[
+                  {
+                    label: "New",
+                    value: "New",
+                  },
+                  {
+                    label: "Used",
+                    value: "Used",
+                  },
+                ]}
                 // defaultValue={field.value || ""}
                 name={field.name}
                 disabled={loading}
@@ -430,61 +474,74 @@ export default function ProductForm({
                 onValueChange={(value) => {
                   field.onChange(value);
                 }}
-                emptyMessage={"No category"}
-                errorMessage={errors.location?.message}
+                errorMessage={errors.productType?.message}
               />
             )}
           />
+
           <Controller
             control={control}
-            name="location"
+            name="state"
             render={({ field }) => (
               <SelectInput
                 inputProps={{ ...field }}
-                placeholder={"Select state"}
-                options={nigerianStates}
+                placeholder={"State"}
+                options={states.map((state) => ({
+                  label: state.name,
+                  value: state.iso2,
+                }))}
                 // defaultValue={field.value || ""}
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
+                  setSelectedState(value);
+                  setHasSelectedState(true);
+                  console.log({ value });
                 }}
-                emptyMessage={"No category"}
-                errorMessage={errors.location?.message}
+                emptyMessage={"No States"}
+                errorMessage={errors.state?.message}
               />
             )}
           />
-        </div> */}
+        </div>
 
         <Controller
           control={control}
-          name="location"
+          name="city"
           render={({ field }) => (
             <SelectInput
               inputProps={{ ...field }}
-              placeholder={"Location"}
-              options={nigerianStates}
+              placeholder={"City"}
+              options={cities.map((city) => ({
+                label: city.name,
+                value: city.name,
+              }))}
               // defaultValue={field.value || ""}
               name={field.name}
-              disabled={loading}
+              disabled={loading || !hasSelectedState}
               value={field.value || ""}
               onValueChange={(value) => {
                 field.onChange(value);
               }}
-              emptyMessage={"No category"}
-              errorMessage={errors.location?.message}
+              emptyMessage={"No Cities"}
+              errorMessage={errors.city?.message}
             />
           )}
         />
-        {/* <Controller
+
+        <Controller
           control={control}
-          name="location"
+          name="discount"
           render={({ field }) => (
             <SelectInput
               inputProps={{ ...field }}
-              placeholder={"Give discount"}
-              options={nigerianStates}
+              placeholder={"Discount"}
+              options={Array.from({ length: 90 }, (_, index) => ({
+                label: `${index + 1}%`,
+                value: `${index + 1}`,
+              }))}
               // defaultValue={field.value || ""}
               name={field.name}
               disabled={loading}
@@ -492,11 +549,11 @@ export default function ProductForm({
               onValueChange={(value) => {
                 field.onChange(value);
               }}
-              emptyMessage={"No category"}
-              errorMessage={errors.location?.message}
+              emptyMessage={"No Discount"}
+              errorMessage={errors.discount?.message}
             />
           )}
-        /> */}
+        />
 
         <Controller
           control={control}
