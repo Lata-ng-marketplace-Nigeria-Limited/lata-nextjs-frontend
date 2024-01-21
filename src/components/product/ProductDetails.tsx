@@ -48,7 +48,7 @@ export default function ProductDetails(props: Props) {
           <p className={"flex items-center gap-x-[0.125rem] shrink-0"}>
             <MapPinIcon className={cn(`w-4 h-4 `)} pathClass={"stroke-grey5"} />
             <span className={cn(`text-grey5 text-sm`)}>
-              {props.product?.location}
+              {props.product?.state}
             </span>
           </p>
         </div>
@@ -102,6 +102,31 @@ export default function ProductDetails(props: Props) {
             `)}
           >
             {props.product?.category?.name}
+          </p>
+        </div>
+
+        <div className={"sm:mt-[0.25rem] mb-[2px] sm:mb-3"}>
+          <p
+            className={cn(`
+                text-sm 
+                font-semibold 
+                text-grey8 
+                sm:text-base 
+                sm:font-medium
+            `)}
+          >
+            Product Subcategory
+          </p>
+
+          <p
+            className={cn(`
+                text-grey6
+                text-sm
+                mt-2
+                mb-3
+            `)}
+          >
+            {props.product?.subCategoryId}
           </p>
         </div>
       </div>

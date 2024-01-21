@@ -37,6 +37,7 @@ export interface Product {
   phoneClicks?: number;
   planName?: string;
   discount?: string
+  productType: string;
 }
 
 export interface SubCategoryItems {

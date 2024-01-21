@@ -86,8 +86,8 @@ export default function ProductForm({
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
-  const { selectedState, setSelectedState } = useStateAndCities();
   const [hasSelectedState, setHasSelectedState] = useState(false);
+  const [selectedState, setSelectedState] = useState("");
 
   useEffect(() => {
     if (!product) {
@@ -109,10 +109,11 @@ export default function ProductForm({
     setValue("price", product.price.toString());
     setValue("categoryId", product.categoryId);
     setValue("subCategoryId", product.subCategoryId);
-    setValue("state", product.state);
+    setValue("state", selectedState || product.state);
     setValue("city", product.city);
     setValue("description", product.description);
     setValue("discount", product.discount);
+    setValue("productType", product.productType);
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
@@ -208,7 +209,6 @@ export default function ProductForm({
           });
         }
       }
-      // return;
       setTimeout(() => {
         nav(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id);
       }, 800);
@@ -324,6 +324,11 @@ export default function ProductForm({
       setCities(sortArray(data, "name"));
     })();
   }, [selectedState]);
+
+  const handleStateCode = (value: string) => {
+    const selectedStateInfo = states.find((state) => state.name === value);
+    setSelectedState(selectedStateInfo?.iso2 as string);
+  };
 
   const flexInputs = cn(
     "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]"
@@ -485,10 +490,10 @@ export default function ProductForm({
             render={({ field }) => (
               <SelectInput
                 inputProps={{ ...field }}
-                placeholder={"State"}
+                placeholder={"Select state"}
                 options={states.map((state) => ({
-                  label: state.name,
-                  value: state.iso2,
+                  label: state.iso2 === "FC" ? "Abuja" : state.name,
+                  value: state.name,
                 }))}
                 // defaultValue={field.value || ""}
                 name={field.name}
@@ -496,9 +501,8 @@ export default function ProductForm({
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  setSelectedState(value);
+                  handleStateCode(value);
                   setHasSelectedState(true);
-                  console.log({ value });
                 }}
                 emptyMessage={"No States"}
                 errorMessage={errors.state?.message}
@@ -513,7 +517,7 @@ export default function ProductForm({
           render={({ field }) => (
             <SelectInput
               inputProps={{ ...field }}
-              placeholder={"City"}
+              placeholder={"Select city"}
               options={cities.map((city) => ({
                 label: city.name,
                 value: city.name,

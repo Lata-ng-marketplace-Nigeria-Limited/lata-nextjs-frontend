@@ -28,6 +28,7 @@ type Props = {
   productName?: string;
   description?: string;
   state?: string;
+  city: string;
   onUnSave?: (productId: string) => void;
   trending?: boolean;
 } & (
@@ -154,6 +155,18 @@ export default function ProductCard(props: Props) {
         variant: "destructive",
       });
       setSaved((prev) => !prev);
+    }
+  };
+
+  const handleLocationDisplay = () => {
+    const stateName =
+      props.state === "Abuja Federal Capital Territory" ? "Abuja" : props.state;
+    if (!props?.state && props.createProductPreview) {
+      return "Location";
+    } else if (!props.city) {
+      return stateName;
+    } else {
+      return `${props?.city} ${stateName}`;
     }
   };
 
@@ -291,9 +304,7 @@ export default function ProductCard(props: Props) {
             }
           >
             <MapPinIcon className="w-1.5 h-1.5 sm:w-3 sm:h-3" />
-            {!props?.state && props.createProductPreview
-              ? "Location"
-              : props?.state}
+            {handleLocationDisplay()}
           </p>
         </Link>
 

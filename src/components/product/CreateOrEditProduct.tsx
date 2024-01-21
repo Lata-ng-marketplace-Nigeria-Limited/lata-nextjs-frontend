@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { SelectedImagePreview } from "@components/input/ImageUploader";
 import { cn } from "@/utils";
-import NewProductPreview from "@components/product/NewProductPreview";
+import NewProductPreview, {
+  ProductFormProductInfo,
+} from "@components/product/NewProductPreview";
 import ProductForm from "@components/forms/ProductForm";
 import { FindAProductData } from "@/interface/products";
 
@@ -12,7 +14,7 @@ interface Props {
 }
 
 export const CreateOrEditProduct = ({ data }: Props) => {
-  const [productInfo, setProductInfo] = useState({
+  const [productInfo, setProductInfo] = useState<ProductFormProductInfo>({
     name: "",
     description: "",
     price: "",
@@ -20,6 +22,7 @@ export const CreateOrEditProduct = ({ data }: Props) => {
     city: "",
     categoryId: "",
     discount: "",
+    subCategoryId: "",
   });
   const [selectedPhotos, setSelectedPhotos] = useState<SelectedImagePreview>();
 

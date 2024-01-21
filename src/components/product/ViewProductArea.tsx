@@ -11,16 +11,11 @@ interface Props {
 }
 export const ViewProductArea = ({ data }: Props) => {
   const { updateUser } = useUser();
-  const [productId, setProductId] = useState<string>();
   const [product, setProduct] = useState<Product>();
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(true);
   const [productNotFound, setProductNotFound] = useState(false);
-
-  useEffect(() => {
-    console.log({ data });
-  }, [product]);
 
   useEffect(() => {
     if (!data) {

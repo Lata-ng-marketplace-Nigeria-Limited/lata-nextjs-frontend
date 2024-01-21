@@ -33,6 +33,7 @@ export default function NewProductPreview(props: Props) {
         createProductPreview={true}
         description={props.productInfo?.description}
         state={props.productInfo?.state}
+        city={props.productInfo?.city}
         price={
           props.productInfo?.price
             ? isNaN(Number(props.productInfo?.price))
