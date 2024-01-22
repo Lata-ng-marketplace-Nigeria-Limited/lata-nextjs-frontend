@@ -39,8 +39,8 @@ export const DashboardSelectCategories = () => {
       params.set("category", id);
     } else {
       params.delete("category");
-    };
-    params.delete("subcategory")
+    }
+    params.delete("subcategory");
     replace(`${pathname}?${params.toString()}`);
   };
 
@@ -56,7 +56,7 @@ export const DashboardSelectCategories = () => {
         ]}
         placeholder={"Select category"}
         inputClass={cn(
-          `min-w-[150px] sm:min-w-[174px] w-fit text-xs sm:text-sm rounded-[12px] border-primary hover:border-primary text-primary`,
+          `min-w-[150px] sm:min-w-[174px] w-fit text-xs sm:text-sm rounded-[12px] border-primary hover:border-primary text-primary`
         )}
         value={searchParams.get("category")?.toString()}
         onValueChange={handleCategoryChange}
@@ -71,11 +71,22 @@ export const DashboardSelectCategories = () => {
         BUY HERE
       </Button>
 
-      <Modal isShown={showModal} setIsShown={setShowModal}>
+      <Modal
+        isShown={showModal}
+        setIsShown={setShowModal}
+        // maxWidth="calc(100vw - 30%)"
+        contentClass="max-h-[calc(100vh-50px)] !max-w-screen"
+      >
         <div className="grid grid-cols-1 xls:grid-cols-2 gap-8 md:gap-14 bg-white py-4 md:grid-cols-3 lg:grid-cols-4">
           {categories
             ?.filter((category) => category.name.toLowerCase() !== "others")
-            .map((category) => <Category key={category.id} data={category} onModalClose={handleShowModal}/>)}
+            .map((category) => (
+              <Category
+                key={category.id}
+                data={category}
+                onModalClose={handleShowModal}
+              />
+            ))}
         </div>
       </Modal>
     </div>

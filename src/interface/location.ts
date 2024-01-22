@@ -6,9 +6,9 @@ export interface ICountriesData {
 }
 
 export interface IStatesData {
-  name: string;
-  iso2: string;
-  id: number;
+  label: string;
+  value: string;
+  cities: ICitiesData[];
 }
 export interface ICitiesData {
   name: string;

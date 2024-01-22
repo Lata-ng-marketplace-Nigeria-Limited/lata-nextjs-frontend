@@ -29,6 +29,7 @@ type Props = {
   description?: string;
   state?: string;
   city: string;
+  discount?: number;
   onUnSave?: (productId: string) => void;
   trending?: boolean;
 } & (
@@ -71,6 +72,7 @@ export default function ProductCard(props: Props) {
 
   const registerView = useCallback(async () => {
     if (user?.id === props.product?.userId) return;
+    if (!props.product?.userId) return;
     try {
       await generateSellerAnalyticsApi(
         "VIEW",

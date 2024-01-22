@@ -118,28 +118,3 @@ export const useSelectedSubcategory = create(
   )
 );
 
-type IStateAndCitiesState = {
-  selectedState: string;
-  selectedCity: string;
-};
-
-type IStateAndCitiesAction = {
-  setSelectedState: (
-    selectedState: IStateAndCitiesState["selectedState"]
-  ) => void;
-  setSelectedCity: (selectedCity: IStateAndCitiesState["selectedCity"]) => void;
-};
-
-export const useStateAndCities = create(
-  persist<IStateAndCitiesState & IStateAndCitiesAction>(
-    (set) => ({
-      selectedState: "",
-      selectedCity: "",
-      setSelectedState: (selectedState) => set(() => ({ selectedState })),
-      setSelectedCity: (selectedCity) => set(() => ({ selectedCity })),
-    }),
-    {
-      name: "selected-state-and-cities",
-    }
-  )
-);

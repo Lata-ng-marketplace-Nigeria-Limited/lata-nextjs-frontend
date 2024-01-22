@@ -7,7 +7,12 @@ import { Product, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn, convertBytesToMB, getFormErrorObject, sortArray } from "@/utils";
+import {
+  cn,
+  convertBytesToMB,
+  getFormErrorObject,
+  safeParseJSON,
+} from "@/utils";
 import { useRouter } from "next/navigation";
 import TextInput from "@components/input/TextInput";
 import { SelectInput } from "@components/input/SelectInput";
@@ -27,12 +32,8 @@ import {
 import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
-import {
-  getCitiesByStateCodeAndCountryCode,
-  getStatesByCountryCode,
-} from "@/api/location";
-import { ICitiesData, IStatesData } from "@/interface/location";
-import { useStateAndCities } from "@/store/states/localStore";
+import { nigerianStatesAndCities } from "@/store/data/location";
+import { set } from "lodash";
 
 interface Props {
   product?: Product;
@@ -59,8 +60,6 @@ export default function ProductForm({
     SubCategoryItems[]
   >([]);
   const [hasChosenCategory, setHasChosenCategory] = useState(false);
-  const [states, setStates] = useState<IStatesData[]>([]);
-  const [cities, setCities] = useState<ICitiesData[]>([]);
 
   const {
     formState: { errors },
@@ -80,13 +79,13 @@ export default function ProductForm({
       description: "",
       subCategoryId: "",
       productType: "",
-      discount: "",
+      discount: 0,
     },
   });
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
-  const [hasSelectedState, setHasSelectedState] = useState(false);
+  const [hasSelectedState, setHasSelectedState] = useState("");
   const [selectedState, setSelectedState] = useState("");
 
   useEffect(() => {
@@ -109,15 +108,23 @@ export default function ProductForm({
     setValue("price", product.price.toString());
     setValue("categoryId", product.categoryId);
     setValue("subCategoryId", product.subCategoryId);
-    setValue("state", selectedState || product.state);
+    setValue("state", product.state);
     setValue("city", product.city);
     setValue("description", product.description);
-    setValue("discount", product.discount);
+    setValue("discount", product.discount || 0);
     setValue("productType", product.productType);
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
   useEffect(() => {
+    if (product?.city) {
+      setHasSelectedState(product?.state);
+    }
+
+    if (product?.subCategoryId) {
+      handleSubcategory(product?.categoryId);
+    }
+
     setProductInfo({
       price: watch("price"),
       name: watch("name"),
@@ -297,7 +304,9 @@ export default function ProductForm({
 
     if (!subcategoryOptions) return;
 
-    const options = JSON.parse(subcategoryOptions?.subcategories?.[0]?.items);
+    const options = safeParseJSON(
+      subcategoryOptions?.subcategories?.[0]?.items
+    );
 
     const subcategoryItems = options.map((item: SubCategoryItems) => {
       return {
@@ -309,25 +318,22 @@ export default function ProductForm({
     setSubCategoriesSelectData(subcategoryItems);
   };
 
-  useEffect(() => {
-    if (states.length) return;
-    (async () => {
-      const data = await getStatesByCountryCode();
-      setStates(sortArray(data, "name"));
-    })();
-  }, [states]);
-
-  useEffect(() => {
-    if (!selectedState) return;
-    (async () => {
-      const data = await getCitiesByStateCodeAndCountryCode(selectedState);
-      setCities(sortArray(data, "name"));
-    })();
-  }, [selectedState]);
-
   const handleStateCode = (value: string) => {
-    const selectedStateInfo = states.find((state) => state.name === value);
-    setSelectedState(selectedStateInfo?.iso2 as string);
+    const selectedStateInfo = nigerianStatesAndCities.find(
+      (state) => state.value === value
+    );
+    setSelectedState(selectedStateInfo?.value || "");
+  };
+
+  const cities = () => {
+    const citiesInState = nigerianStatesAndCities
+      .find((state) => state.value === selectedState)
+      ?.cities?.map((city) => ({
+        label: city.name,
+        value: city.name,
+      }));
+
+    return citiesInState;
   };
 
   const flexInputs = cn(
@@ -472,7 +478,6 @@ export default function ProductForm({
                     value: "Used",
                   },
                 ]}
-                // defaultValue={field.value || ""}
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
@@ -491,18 +496,17 @@ export default function ProductForm({
               <SelectInput
                 inputProps={{ ...field }}
                 placeholder={"Select state"}
-                options={states.map((state) => ({
-                  label: state.iso2 === "FC" ? "Abuja" : state.name,
-                  value: state.name,
+                options={nigerianStatesAndCities.map((state) => ({
+                  label: state.label,
+                  value: state.value,
                 }))}
-                // defaultValue={field.value || ""}
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
                   handleStateCode(value);
-                  setHasSelectedState(true);
+                  setHasSelectedState(value);
                 }}
                 emptyMessage={"No States"}
                 errorMessage={errors.state?.message}
@@ -518,11 +522,7 @@ export default function ProductForm({
             <SelectInput
               inputProps={{ ...field }}
               placeholder={"Select city"}
-              options={cities.map((city) => ({
-                label: city.name,
-                value: city.name,
-              }))}
-              // defaultValue={field.value || ""}
+              options={cities()}
               name={field.name}
               disabled={loading || !hasSelectedState}
               value={field.value || ""}
@@ -543,13 +543,12 @@ export default function ProductForm({
               inputProps={{ ...field }}
               placeholder={"Discount"}
               options={Array.from({ length: 90 }, (_, index) => ({
-                label: `${index + 1}%`,
-                value: `${index + 1}`,
+                label: `${index}%`,
+                value: `${index}`,
               }))}
-              // defaultValue={field.value || ""}
               name={field.name}
               disabled={loading}
-              value={field.value || ""}
+              value={String(field.value || 0)}
               onValueChange={(value) => {
                 field.onChange(value);
               }}

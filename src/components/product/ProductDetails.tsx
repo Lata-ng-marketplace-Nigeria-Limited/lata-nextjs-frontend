@@ -4,12 +4,21 @@ import { cn, formatPrice, getTimeFromNow } from "@/utils";
 import { ClockIcon } from "@atom/icons/Clock";
 import { MapPinIcon } from "@atom/icons/MapPin";
 import Hr from "@atom/Hr";
+import { useDiscount } from "@/hooks/useDiscount";
+import PercentageOff from "../atom/PercentageOff";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductDetails(props: Props) {
+  const priceDetails = {
+    amount: props.product?.price,
+    discount: props.product?.discount || 0,
+  };
+
+  const { initialAmount, discountedAmount } = useDiscount(priceDetails);
+
   return (
     <div
       className={cn(`
@@ -19,7 +28,6 @@ export default function ProductDetails(props: Props) {
         p-2.5
         sm:p-0
         w-full
-        
         flex
         flex-col
         gap-y-3
@@ -28,8 +36,21 @@ export default function ProductDetails(props: Props) {
       <ProductCarousel product={props.product} />
 
       <div className={cn(`flex flex-col gap-y-2.5 sm:px-3`)}>
+        {props.product?.discount ? (
+          <div className="flex items-center gap-4">
+            <p className={cn(`font-semibold line-through text-grey4`)}>
+              {formatPrice(initialAmount)}
+            </p>
+            <PercentageOff
+              discount={props.product.discount}
+              className="mr-0 ml-0 mt-0"
+            />
+          </div>
+        ) : (
+          ""
+        )}
         <p className={cn(`text-primary font-semibold`)}>
-          {formatPrice(props.product?.price)}
+          {formatPrice(discountedAmount)}
         </p>
         <p className={cn(`text-grey10 font-medium`)}>{props.product?.name}</p>
 

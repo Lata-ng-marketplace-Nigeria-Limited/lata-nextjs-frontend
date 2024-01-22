@@ -36,7 +36,7 @@ export interface Product {
   saved?: number;
   phoneClicks?: number;
   planName?: string;
-  discount?: string
+  discount?: number
   productType: string;
 }
 
