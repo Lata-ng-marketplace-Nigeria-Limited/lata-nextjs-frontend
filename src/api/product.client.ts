@@ -10,7 +10,7 @@ export interface CreateProductApiInput {
   city: string;
   price: number;
   description: string;
-  discount?: number;
+  discount?: string;
   categoryId: string;
   subCategoryId: string;
   files: FileList;

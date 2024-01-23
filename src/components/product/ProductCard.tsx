@@ -31,7 +31,7 @@ type Props = {
   description?: string;
   state?: string;
   city: string;
-  discount?: number;
+  discount?: string | number;
   onUnSave?: (productId: string) => void;
   trending?: boolean;
 } & (
@@ -176,7 +176,7 @@ export default function ProductCard(props: Props) {
 
   const priceDetails = {
     amount: props.product?.price || 0,
-    discount: props.product?.discount || 0,
+    discount: Number(props.product?.discount) || Number("0"),
   };
 
   const { initialAmount, discountedAmount } = useDiscount(priceDetails);
@@ -296,7 +296,7 @@ export default function ProductCard(props: Props) {
                 {formatPrice(initialAmount)}
               </p>
               <PercentageOff
-                discount={props.product.discount}
+                discount={Number(props.product.discount)}
                 className="mr-0 ml-0 mt-0"
               />
             </div>

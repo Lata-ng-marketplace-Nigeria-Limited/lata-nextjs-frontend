@@ -79,7 +79,7 @@ export default function ProductForm({
       description: "",
       subCategoryId: "",
       productType: "",
-      discount: 0,
+      discount: "0",
     },
   });
   const { push: nav, back } = useRouter();
@@ -111,7 +111,7 @@ export default function ProductForm({
     setValue("state", product.state);
     setValue("city", product.city);
     setValue("description", product.description);
-    setValue("discount", product.discount || 0);
+    setValue("discount", product.discount || "0");
     setValue("productType", product.productType);
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
@@ -124,6 +124,8 @@ export default function ProductForm({
     if (product?.subCategoryId) {
       handleSubcategory(product?.categoryId);
     }
+
+    console.log("watch", watch("discount"), product);
 
     setProductInfo({
       price: watch("price"),
@@ -549,7 +551,7 @@ export default function ProductForm({
               }))}
               name={field.name}
               disabled={loading}
-              value={String(field.value || 0)}
+              value={field.value || "0"}
               onValueChange={(value) => {
                 field.onChange(value);
               }}
