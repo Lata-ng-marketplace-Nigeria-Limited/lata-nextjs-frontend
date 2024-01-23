@@ -53,7 +53,6 @@ export const DashboardSelectCategories = () => {
   // }, [data, status]);
 
   const handleCategoryChange = (id: string) => {
-    return
     const params = new URLSearchParams(searchParams);
     if (id && id !== "all") {
       params.set("category", id);
@@ -89,7 +88,7 @@ export const DashboardSelectCategories = () => {
 
       <Button
         format="primary"
-        className="min-w-[150px] sm:min-w-[174px] opacity-0 pointer-events-none"
+        className="min-w-[150px] sm:min-w-[174px]"
         onClick={handleShowModal}
       >
         BUY HERE
