@@ -179,7 +179,7 @@ export default function ProductForm({
       price: Number(values.price),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
-        (category) => category.id === values.categoryId
+        (category) => category.id === values.categoryId,
       )?.name,
       ...(deletedFiles.length
         ? { deleteImages: JSON.stringify(deletedFiles) }
@@ -188,9 +188,8 @@ export default function ProductForm({
 
     if (files) {
       const totalFIleSize = convertBytesToMB(
-        Array.from(files).reduce((acc, file) => acc + file.size, 0)
+        Array.from(files).reduce((acc, file) => acc + file.size, 0),
       );
-
 
       if (totalFIleSize > 10) {
         toast({
@@ -265,7 +264,7 @@ export default function ProductForm({
             toast({
               title: "Product limit reached",
               description: `You have reached the limit of products you can create for this category. Try creating a product in your current plan category (${errorResponse.data?.allowedCategoriesName?.join(
-                ", "
+                ", ",
               )}), or upgrade to a paid plan that covers this category`,
               variant: "destructive",
               duration: 25000,
@@ -308,7 +307,7 @@ export default function ProductForm({
     if (!subcategoryOptions) return;
 
     const options = safeParseJSON(
-      subcategoryOptions?.subcategories?.[0]?.items
+      subcategoryOptions?.subcategories?.[0]?.items,
     );
 
     const subcategoryItems = options.map((item: SubCategoryItems) => {
@@ -323,7 +322,7 @@ export default function ProductForm({
 
   const handleStateCode = (value: string) => {
     const selectedStateInfo = nigerianStatesAndCities.find(
-      (state) => state.value === value
+      (state) => state.value === value,
     );
     setSelectedState(selectedStateInfo?.value || "");
   };
@@ -340,7 +339,7 @@ export default function ProductForm({
   };
 
   const flexInputs = cn(
-    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]"
+    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]",
   );
 
   return (
@@ -349,11 +348,11 @@ export default function ProductForm({
         "w-full sm:max-w-[300px] md:max-w-[350px] tablet:max-w-[400px]  sl:max-w-[500px] lg:max-w-[580px] xlg:max-w-[600px] xl:max-w-[700px]"
       }
     >
-      <h2 className={"text-md sm:text-[1.5rem] font-semibold mb-2 sm:mb-3 "}>
+      <h2 className={"text-md mb-2 font-semibold sm:mb-3 sm:text-[1.5rem] "}>
         {product ? "Edit product" : "Post product"}
       </h2>
 
-      <p className={"text-xs sm:text-md text-grey6 mb-4 sm:mb-10"}>
+      <p className={"sm:text-md mb-4 text-xs text-grey6 sm:mb-10"}>
         Add your products details below
       </p>
 
@@ -380,7 +379,7 @@ export default function ProductForm({
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={"w-full mt-6 flex flex-col gap-y-6"}
+        className={"mt-6 flex w-full flex-col gap-y-6"}
       >
         <div className={flexInputs}>
           <Controller
@@ -455,7 +454,6 @@ export default function ProductForm({
                 emptyMessage={"No Subcategory"}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  console.log({ value, field });
                 }}
                 errorMessage={errors.subCategoryId?.message}
               />
