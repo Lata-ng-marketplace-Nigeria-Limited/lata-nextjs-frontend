@@ -31,7 +31,7 @@ type Props = {
   description?: string;
   state?: string;
   city: string;
-  discount?: number;
+  discount?: string | number;
   onUnSave?: (productId: string) => void;
   trending?: boolean;
 } & (
@@ -69,7 +69,7 @@ export default function ProductCard(props: Props) {
       if (returnImage) return image;
       setImage(meta?.selectedImage || props?.imageSrc);
     },
-    [props.product?.meta, props?.imageSrc]
+    [props.product?.meta, props?.imageSrc],
   );
 
   const registerView = useCallback(async () => {
@@ -79,7 +79,7 @@ export default function ProductCard(props: Props) {
       await generateSellerAnalyticsApi(
         "VIEW",
         props.product?.id || "",
-        props.product?.userId || ""
+        props.product?.userId || "",
       );
     } catch (error) {
       console.log("Error registering view", error);
@@ -96,7 +96,7 @@ export default function ProductCard(props: Props) {
   useEffect(() => {
     if (user?.id && !hasSetSaved) {
       const isProductSaved = user?.savedProducts?.find(
-        (savedProduct: any) => savedProduct?.productId === props.product?.id
+        (savedProduct: any) => savedProduct?.productId === props.product?.id,
       );
       setHasSetSaved(true);
       setSaved(!!isProductSaved);
@@ -142,12 +142,12 @@ export default function ProductCard(props: Props) {
     try {
       if (isSaved) {
         const { userData: userInfo } = await saveAProductApi(
-          props.product?.id || ""
+          props.product?.id || "",
         );
         await updateUser(userInfo);
       } else {
         const { userData: userInfo } = await unSaveAProductApi(
-          props.product?.id || ""
+          props.product?.id || "",
         );
         props.onUnSave?.(props.product?.id || "");
         await updateUser(userInfo);
@@ -176,49 +176,57 @@ export default function ProductCard(props: Props) {
 
   const priceDetails = {
     amount: props.product?.price || 0,
-    discount: props.product?.discount || 0,
+    discount: Number(props.product?.discount) || Number("0"),
   };
 
   const { initialAmount, discountedAmount } = useDiscount(priceDetails);
+
+  const handlDisplayedPrice = () => {
+    if (props.createProductPreview) {
+      return !props?.price ? "Product price" : props?.price;
+    } else {
+      return discountedAmount;
+    }
+  };
 
   return (
     <div
       className={cn(
         `
+        mx-auto
+        w-full
+        max-w-[17rem]
+        shrink-0
+        rounded-[0.625rem]
         border
         border-grey3
         p-2
+        xms:mx-0
         sm:px-2.5
         sm:py-3
-        shrink-0
-        w-full
-        max-w-[17rem]
-        rounded-[0.625rem]
-        mx-auto
-        xms:mx-0
       `,
         {
-          "sm:w-screen py-3 px-2.5 sm:p-3 max-w-[350px] sm:max-w-[305px] tablet:max-w-[380px] xlg:max-w-[500px]":
+          "max-w-[350px] px-2.5 py-3 sm:w-screen sm:max-w-[305px] sm:p-3 tablet:max-w-[380px] xlg:max-w-[500px]":
             props.createProductPreview,
-        }
+        },
       )}
       ref={ref}
     >
       <div
         className={cn(
           `
+            relative
             h-[7.6rem]
             w-full
-            sm:h-[10rem]
-            relative
             rounded-[0.625rem]
+            sm:h-[10rem]
         `,
           {
-            "h-[200px] sm:h-[220px] tablet:h-[300px] xlg:h-[335px]  bg-purp3":
+            "h-[200px] bg-purp3 sm:h-[220px] tablet:h-[300px]  xlg:h-[335px]":
               props.createProductPreview,
-            "flex justify-center items-center":
+            "flex items-center justify-center":
               !props.imageSrc && props.createProductPreview,
-          }
+          },
         )}
       >
         {props.product?.status === "INACTIVE" && (
@@ -227,15 +235,15 @@ export default function ProductCard(props: Props) {
               absolute
               bottom-0
               right-0
-              text-xs
-              bg-white
-              px-1
-              py-1
               rounded-[3px]
               border
               border-primary
-              text-primary
+              bg-white
+              px-1
+              py-1
+              text-xs
               font-medium
+              text-primary
             `)}
           >
             Under Review
@@ -245,7 +253,7 @@ export default function ProductCard(props: Props) {
         {planName && (
           <div
             className={
-              "px-4 py-[7px] bg-primary text-white rounded-[3px] absolute top-0 left-0"
+              "absolute left-0 top-0 rounded-[3px] bg-primary px-4 py-[7px] text-white"
             }
           >
             {planName}
@@ -255,7 +263,7 @@ export default function ProductCard(props: Props) {
         {(!!props?.imageSrc || !props.createProductPreview) && image && (
           <Image
             src={image}
-            className={cn("w-full h-full  rounded-[0.625rem]", {
+            className={cn("h-full w-full  rounded-[0.625rem]", {
               "object-cover": !props?.createProductPreview,
             })}
             alt={props?.product?.name || ""}
@@ -270,7 +278,7 @@ export default function ProductCard(props: Props) {
         {!props?.imageSrc && props.createProductPreview && (
           <p
             className={
-              "text-sm sm:text-[0.9375rem] tablet:text-[1rem] sl:text-[1.25rem] font-medium text-grey8"
+              "text-sm font-medium text-grey8 sm:text-[0.9375rem] tablet:text-[1rem] sl:text-[1.25rem]"
             }
           >
             Product Photo
@@ -278,10 +286,10 @@ export default function ProductCard(props: Props) {
         )}
       </div>
 
-      <div className={"mt-2 sm:mt-3 flex justify-between"}>
+      <div className={"mt-2 flex justify-between sm:mt-3"}>
         <Link
           className={cn("flex flex-col gap-y-2", {
-            "gap-y-4 mb-4": props.createProductPreview,
+            "mb-4 gap-y-4": props.createProductPreview,
             "cursor-pointer": !props.createProductPreview,
           })}
           href={`${DASHBOARD_PRODUCT_ROUTE}/${props.product?.id}`}
@@ -292,29 +300,27 @@ export default function ProductCard(props: Props) {
         >
           {props.product?.discount ? (
             <div className="flex items-center gap-4">
-              <p className={cn(`font-semibold line-through text-grey4`)}>
+              <p className={cn(`font-semibold text-grey4 line-through`)}>
                 {formatPrice(initialAmount)}
               </p>
               <PercentageOff
-                discount={props.product.discount}
-                className="mr-0 ml-0 mt-0"
+                discount={Number(props.product.discount)}
+                className="ml-0 mr-0 mt-0"
               />
             </div>
           ) : (
             ""
           )}
-          <p className={"text-primary font-bold text-sm sm:text-base"}>
-            {!props?.price && props.createProductPreview
-              ? "Product price"
-              : discountedAmount}
+          <p className={"text-sm font-bold text-primary sm:text-base"}>
+            {handlDisplayedPrice()}
           </p>
-          <p className={"text-xs sm:text-sm text-grey9 max-w-[24ch]"}>
+          <p className={"max-w-[24ch] text-xs text-grey9 sm:text-sm"}>
             {!props?.productName && props.createProductPreview
               ? "Product name"
               : props?.productName}
           </p>
           <p
-            className={cn("text-[10px] sm:text-xs text-grey6  max-w-[24ch]", {
+            className={cn("max-w-[24ch] text-[10px] text-grey6  sm:text-xs", {
               "max-w-full": props.createProductPreview,
             })}
           >
@@ -324,30 +330,30 @@ export default function ProductCard(props: Props) {
           </p>
           <p
             className={
-              "flex gap-x-1 items-center text-[10px] sm:text-xs text-grey5 mt-auto"
+              "mt-auto flex items-center gap-x-1 text-[10px] text-grey5 sm:text-xs"
             }
           >
-            <MapPinIcon className="w-1.5 h-1.5 sm:w-3 sm:h-3" />
+            <MapPinIcon className="h-1.5 w-1.5 sm:h-3 sm:w-3" />
             {handleLocationDisplay()}
           </p>
         </Link>
 
         <div
-          className={cn("flex justify-end items-end", {
+          className={cn("flex items-end justify-end", {
             hidden: props.createProductPreview || !showSaved,
           })}
         >
           <Button
             format={"icon"}
             className={
-              "w-6 h-6 sm:w-8 sm:h-8 rounded-full after:hidden bg-offwhite hover:bg-offwhite grid place-items-center"
+              "grid h-6 w-6 place-items-center rounded-full bg-offwhite after:hidden hover:bg-offwhite sm:h-8 sm:w-8"
             }
             onClick={handleSaveProduct}
             disabled={loading}
             aria-label={saved ? "un save product" : "save product"}
           >
             <SavedIcon
-              className={"w-4 h-4 sm:w-6 sm:h-6"}
+              className={"h-4 w-4 sm:h-6 sm:w-6"}
               pathClass={cn("stroke-primary", {
                 "fill-primary": saved,
               })}

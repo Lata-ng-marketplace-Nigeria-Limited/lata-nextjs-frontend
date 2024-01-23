@@ -33,7 +33,6 @@ import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
 import { nigerianStatesAndCities } from "@/store/data/location";
-import { set } from "lodash";
 
 interface Props {
   product?: Product;
@@ -79,7 +78,7 @@ export default function ProductForm({
       description: "",
       subCategoryId: "",
       productType: "",
-      discount: 0,
+      discount: "",
     },
   });
   const { push: nav, back } = useRouter();
@@ -111,15 +110,15 @@ export default function ProductForm({
     setValue("state", product.state);
     setValue("city", product.city);
     setValue("description", product.description);
-    setValue("discount", product.discount || 0);
+    setValue("discount", product.discount?.toString());
     setValue("productType", product.productType);
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
   useEffect(() => {
-    if (product?.city) {
-      setHasSelectedState(product?.state);
-    }
+    // if (product?.city) {
+    //   setHasSelectedState(product?.state);
+    // }
 
     if (product?.subCategoryId) {
       handleSubcategory(product?.categoryId);
@@ -177,6 +176,7 @@ export default function ProductForm({
       ...values,
       files: files!,
       price: Number(values.price),
+      discount: Number(values.discount),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
         (category) => category.id === values.categoryId,
@@ -320,7 +320,7 @@ export default function ProductForm({
     setSubCategoriesSelectData(subcategoryItems);
   };
 
-  const handleStateCode = (value: string) => {
+  const handleSelectedState = (value: string) => {
     const selectedStateInfo = nigerianStatesAndCities.find(
       (state) => state.value === value,
     );
@@ -506,7 +506,7 @@ export default function ProductForm({
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  handleStateCode(value);
+                  handleSelectedState(value);
                   setHasSelectedState(value);
                 }}
                 emptyMessage={"No States"}
@@ -549,7 +549,7 @@ export default function ProductForm({
               }))}
               name={field.name}
               disabled={loading}
-              value={String(field.value || 0)}
+              value={field.value || "0"}
               onValueChange={(value) => {
                 field.onChange(value);
               }}
