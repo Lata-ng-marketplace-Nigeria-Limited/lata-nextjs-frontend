@@ -117,9 +117,9 @@ export default function ProductForm({
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
   useEffect(() => {
-    if (product?.city) {
-      setHasSelectedState(product?.state);
-    }
+    // if (product?.city) {
+    //   setHasSelectedState(product?.state);
+    // }
 
     if (product?.subCategoryId) {
       handleSubcategory(product?.categoryId);
@@ -179,6 +179,7 @@ export default function ProductForm({
       ...values,
       files: files!,
       price: Number(values.price),
+      discount: Number(values.discount),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
         (category) => category.id === values.categoryId,
@@ -322,7 +323,7 @@ export default function ProductForm({
     setSubCategoriesSelectData(subcategoryItems);
   };
 
-  const handleStateCode = (value: string) => {
+  const handleSelectedState = (value: string) => {
     const selectedStateInfo = nigerianStatesAndCities.find(
       (state) => state.value === value,
     );
@@ -508,7 +509,7 @@ export default function ProductForm({
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  handleStateCode(value);
+                  handleSelectedState(value);
                   setHasSelectedState(value);
                 }}
                 emptyMessage={"No States"}
