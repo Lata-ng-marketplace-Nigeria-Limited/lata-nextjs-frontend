@@ -1,16 +1,12 @@
-import { Category, SubCategory, SubCategoryItems } from "@/interface/products";
-import React, { useEffect } from "react";
+import { Category, SubCategoryItems } from "@/interface/products";
+import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useSelectedSubcategory } from "@/store/states/localStore";
 import { cn, safeParseJSON } from "@/utils";
-import Modal from "../molecule/Modal";
 
 interface Props {
   category: Category;
   onModalClose?: () => void;
   selectedSubcategory: string | null;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
-  setSelectedSubcategory: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const Subcategory = (props: Props) => {
@@ -30,7 +26,6 @@ const Subcategory = (props: Props) => {
       params.delete("subcategory");
     }
     replace(`${pathname}?${params.toString()}`);
-    props.setSelectedCategory(props.category.name);
     props.onModalClose?.();
   };
 
@@ -39,28 +34,35 @@ const Subcategory = (props: Props) => {
   };
 
   return (
-      <div
-        className="overflow-y-auto bg-white rounded-md shadow-black/15 max-w-max"
-        onClick={handleSubcategoryChange}
-      >
-        {safeParseJSON(props.category?.subcategories?.[0]?.items).map(
-          (item: SubCategoryItems, index: number) => (
-            <div
-              className={cn(
-                { "bg-blue-400": props.selectedSubcategory === item.label },
-                "cursor-pointer border-b border-grey2 p-3 hover:bg-purp1"
-              )}
-              key={index}
-              onClick={() => {
-                onSelectSubCategory(item);
-                props.setSelectedSubcategory(item.value);
-              }}
+    <div
+      className="max-w-max overflow-y-auto rounded-md bg-white shadow-black/15"
+      onClick={handleSubcategoryChange}
+    >
+      {safeParseJSON(props.category?.subcategories?.[0]?.items).map(
+        (item: SubCategoryItems, index: number) => (
+          <div
+            className={cn(
+              {
+                "border-primary bg-primary hover:!bg-primary":
+                  props.selectedSubcategory === item.label,
+              },
+              "cursor-pointer border-b border-grey2 p-3 hover:bg-purp1",
+            )}
+            key={index}
+            onClick={() => onSelectSubCategory(item)}
+          >
+            <p
+              className={cn({
+                "text-white hover:text-white":
+                  props.selectedSubcategory === item.label,
+              })}
             >
-              <p>{item?.label}</p>
-            </div>
-          )
-        )}
-      </div>
+              {item?.label}
+            </p>
+          </div>
+        ),
+      )}
+    </div>
   );
 };
 

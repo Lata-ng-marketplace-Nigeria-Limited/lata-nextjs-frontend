@@ -1,7 +1,7 @@
 import localForage from "localforage";
 import { User, UserRole } from "@/interface/user";
 import { Chat } from "@/interface/chat";
-import { Category, SubCategory } from "@/interface/products";
+import { Category } from "@/interface/products";
 import { Subscription } from "@/interface/payment";
 import { create } from "zustand";
 import { persist, createJSONStorage as createStore } from "zustand/middleware";
@@ -82,37 +82,6 @@ export const useFastLocalStore = create(
     }),
     {
       name: "lata.ng-fast-store",
-      storage: createStore(() => localStorage),
-    }
-  )
-);
-
-type ISelectedSubcategoryState = {
-  selectedCategory: string;
-  selectedSubcategory: string;
-};
-
-type ISelectedSubcategoryAction = {
-  setSelectedCategory: (
-    selectedCategory: ISelectedSubcategoryState["selectedCategory"]
-  ) => void;
-  setSelectedSubategory: (
-    setSelectedSubategory: ISelectedSubcategoryState["selectedSubcategory"]
-  ) => void;
-};
-
-export const useSelectedSubcategory = create(
-  persist<ISelectedSubcategoryState & ISelectedSubcategoryAction>(
-    (set) => ({
-      selectedCategory: "",
-      selectedSubcategory: "",
-      setSelectedCategory: (selectedCategory) =>
-        set(() => ({ selectedCategory })),
-      setSelectedSubategory: (selectedSubcategory) =>
-        set(() => ({ selectedSubcategory })),
-    }),
-    {
-      name: "selected-subcategory-store",
       storage: createStore(() => localStorage),
     }
   )
