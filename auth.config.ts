@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { authCallbackApi } from "@/api/auth";
 import z from "zod";
 import type { NextAuthOptions } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 export const authConfig: NextAuthOptions = {
   providers: [
@@ -26,14 +27,13 @@ export const authConfig: NextAuthOptions = {
         const { user, publicToken } = parsedCredentials.data;
 
         if (user) {
+          revalidatePath("/");
           return JSON.parse(user);
         }
 
         if (publicToken) {
-          console.log("credentials");
-          const hh = await authCallbackApi(publicToken);
-          console.log("hh", hh);
-          return hh;
+          revalidatePath("/");
+          return await authCallbackApi(publicToken);
         }
       },
     }),

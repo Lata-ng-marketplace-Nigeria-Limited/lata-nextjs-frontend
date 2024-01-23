@@ -186,17 +186,20 @@ export default function ProductForm({
         : {}),
     };
 
-    const totalFIleSize = convertBytesToMB(
-      Array.from(files!).reduce((acc, file) => acc + file.size, 0)
-    );
+    if (files) {
+      const totalFIleSize = convertBytesToMB(
+        Array.from(files).reduce((acc, file) => acc + file.size, 0)
+      );
 
-    if (totalFIleSize > 10) {
-      toast({
-        title: `Uploading... (${totalFIleSize}MB)`,
-        description: "This may take a while, please wait",
-        variant: "info",
-        duration: 9000,
-      });
+
+      if (totalFIleSize > 10) {
+        toast({
+          title: `Uploading... (${totalFIleSize}MB)`,
+          description: "This may take a while, please wait",
+          variant: "info",
+          duration: 9000,
+        });
+      }
     }
 
     try {

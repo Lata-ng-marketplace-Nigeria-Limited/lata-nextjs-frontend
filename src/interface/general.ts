@@ -2,7 +2,8 @@ export type IEnv =
   | "NEXT_PUBLIC_LATA_API_URL"
   | "NEXT_PUBLIC_IP_DATA_API_KEY"
   | "NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY"
-  | "NEXT_PUBLIC_CHAT_API_URL";
+  | "NEXT_PUBLIC_CHAT_API_URL"
+  | "NEXT_PUBLIC_GOOGLE_ANALYTICS"
 
 export type ICookies = "token" | "role";
 
