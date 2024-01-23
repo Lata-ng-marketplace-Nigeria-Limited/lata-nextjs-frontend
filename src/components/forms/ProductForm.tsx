@@ -33,7 +33,6 @@ import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
 import { nigerianStatesAndCities } from "@/store/data/location";
-import { set } from "lodash";
 
 interface Props {
   product?: Product;
@@ -79,7 +78,7 @@ export default function ProductForm({
       description: "",
       subCategoryId: "",
       productType: "",
-      discount: "0",
+      discount: "",
     },
   });
   const { push: nav, back } = useRouter();
@@ -111,7 +110,7 @@ export default function ProductForm({
     setValue("state", product.state);
     setValue("city", product.city);
     setValue("description", product.description);
-    setValue("discount", product.discount || "0");
+    setValue("discount", product.discount?.toString());
     setValue("productType", product.productType);
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
@@ -124,8 +123,6 @@ export default function ProductForm({
     if (product?.subCategoryId) {
       handleSubcategory(product?.categoryId);
     }
-
-    console.log("watch", watch("discount"), product);
 
     setProductInfo({
       price: watch("price"),
