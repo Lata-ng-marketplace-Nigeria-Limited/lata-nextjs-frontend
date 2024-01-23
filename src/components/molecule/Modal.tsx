@@ -14,7 +14,6 @@ interface Props {
   preventOverlayClose?: boolean;
   openModal?: boolean;
   contentClass?: string;
-  maxWidth?: string;
 }
 
 export default function Modal(props: Props) {
@@ -67,7 +66,7 @@ export default function Modal(props: Props) {
           props.contentClass
         )}
         style={{
-          maxWidth: props.maxWidth ?? "fit-content",
+          maxWidth: "fit-content",
         }}
       >
         {props.children}

@@ -56,8 +56,6 @@ const Category = ({
         >
           <Subcategory
             selectedSubcategory={selectedSubcategory}
-            // setSelectedCategory={setSelectedCategory}
-            // setSelectedSubcategory={setSelectedSubcategory}
             category={data}
             onModalClose={onModalClose}
           />
