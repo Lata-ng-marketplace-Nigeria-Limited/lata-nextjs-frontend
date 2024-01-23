@@ -1,6 +1,6 @@
 "use client";
 
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { Ref, SetStateAction, useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/utils";
 
@@ -63,7 +63,7 @@ export default function Modal(props: Props) {
         onEscapeKeyDown={handleEscapeClick}
         className={cn(
           "rounded-[6px] overflow-y-auto max-w-fit max-h-[calc(100vh-16px)] px-[16px] py-[12px] sm:px-[40px] sm:py-[24px] w-fit",
-          props.contentClass,
+          props.contentClass
         )}
         style={{
           maxWidth: "fit-content",

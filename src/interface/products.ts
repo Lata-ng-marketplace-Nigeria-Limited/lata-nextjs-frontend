@@ -14,7 +14,8 @@ export interface FindAProductData {
 export interface Product {
   id: string;
   name: string;
-  location: string;
+  state: string;
+  city: string;
   price: number;
   description: string;
   meta: {
@@ -25,6 +26,7 @@ export interface Product {
   userId: string;
   status: Status;
   categoryId: string;
+  subCategoryId: string;
   createdAt: string;
   updatedAt: string;
   files: FileData[];
@@ -34,11 +36,28 @@ export interface Product {
   saved?: number;
   phoneClicks?: number;
   planName?: string;
+  discount?: number
+  productType: string;
+}
+
+export interface SubCategoryItems {
+  label: string;
+  value: string;
+}
+
+export interface SubCategory {
+  id: string;
+  categoryId: string;
+  categoryName: string;
+  displayName: string;
+  items: string;
 }
 
 export interface Category {
   id: string;
   name: string;
+  image: string;
+  subcategories: SubCategory[];
   description: null | string;
   meta: null | Record<string, any>;
   status: string;

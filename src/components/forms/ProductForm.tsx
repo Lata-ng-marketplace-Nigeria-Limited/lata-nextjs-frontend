@@ -3,15 +3,19 @@ import ImageUploader, {
   SelectedImagePreview,
 } from "@components/input/ImageUploader";
 import { createProductSchema } from "@/store/schemas/createProductSchema";
-import { Product } from "@/interface/products";
+import { Product, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn, convertBytesToMB, getFormErrorObject } from "@/utils";
+import {
+  cn,
+  convertBytesToMB,
+  getFormErrorObject,
+  safeParseJSON,
+} from "@/utils";
 import { useRouter } from "next/navigation";
 import TextInput from "@components/input/TextInput";
 import { SelectInput } from "@components/input/SelectInput";
-import { nigerianStates } from "@/store/data/location";
 import TextAreaInput from "@components/input/TextAreaInput";
 import Button from "@atom/Button";
 import { ProductFormProductInfo } from "@components/product/NewProductPreview";
@@ -28,6 +32,8 @@ import {
 import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
+import { nigerianStatesAndCities } from "@/store/data/location";
+import { set } from "lodash";
 
 interface Props {
   product?: Product;
@@ -50,6 +56,10 @@ export default function ProductForm({
   const [imageHasError, setImageHasError] = useState(false);
   const [deletedFiles, setDeletedFiles] = useState<string[]>([]);
   const [hasSetFormValue, setHasSetFormValue] = useState(false);
+  const [subCategoriesSelectData, setSubCategoriesSelectData] = useState<
+    SubCategoryItems[]
+  >([]);
+  const [hasChosenCategory, setHasChosenCategory] = useState(false);
 
   const {
     formState: { errors },
@@ -64,13 +74,19 @@ export default function ProductForm({
       name: "",
       price: "",
       categoryId: "",
-      location: "",
+      state: "",
+      city: "",
       description: "",
+      subCategoryId: "",
+      productType: "",
+      discount: 0,
     },
   });
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
+  const [hasSelectedState, setHasSelectedState] = useState("");
+  const [selectedState, setSelectedState] = useState("");
 
   useEffect(() => {
     if (!product) {
@@ -91,18 +107,33 @@ export default function ProductForm({
     setValue("name", product.name);
     setValue("price", product.price.toString());
     setValue("categoryId", product.categoryId);
-    setValue("location", product.location);
+    setValue("subCategoryId", product.subCategoryId);
+    setValue("state", product.state);
+    setValue("city", product.city);
     setValue("description", product.description);
+    setValue("discount", product.discount || 0);
+    setValue("productType", product.productType);
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
   useEffect(() => {
+    if (product?.city) {
+      setHasSelectedState(product?.state);
+    }
+
+    if (product?.subCategoryId) {
+      handleSubcategory(product?.categoryId);
+    }
+
     setProductInfo({
       price: watch("price"),
       name: watch("name"),
       categoryId: watch("categoryId"),
+      subCategoryId: watch("subCategoryId"),
       description: watch("description"),
-      location: watch("location"),
+      state: watch("state"),
+      city: watch("city"),
+      discount: watch("discount"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -114,9 +145,15 @@ export default function ProductForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("categoryId"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("subCategoryId"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("description"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    watch("location"),
+    watch("state"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("city"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    watch("discount"),
   ]);
 
   const onSubmit = async (values: z.infer<typeof createProductSchema>) => {
@@ -142,7 +179,7 @@ export default function ProductForm({
       price: Number(values.price),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
-        (category) => category.id === values.categoryId
+        (category) => category.id === values.categoryId,
       )?.name,
       ...(deletedFiles.length
         ? { deleteImages: JSON.stringify(deletedFiles) }
@@ -151,9 +188,8 @@ export default function ProductForm({
 
     if (files) {
       const totalFIleSize = convertBytesToMB(
-        Array.from(files).reduce((acc, file) => acc + file.size, 0)
+        Array.from(files).reduce((acc, file) => acc + file.size, 0),
       );
-
 
       if (totalFIleSize > 10) {
         toast({
@@ -228,7 +264,7 @@ export default function ProductForm({
             toast({
               title: "Product limit reached",
               description: `You have reached the limit of products you can create for this category. Try creating a product in your current plan category (${errorResponse.data?.allowedCategoriesName?.join(
-                ", "
+                ", ",
               )}), or upgrade to a paid plan that covers this category`,
               variant: "destructive",
               duration: 25000,
@@ -263,8 +299,47 @@ export default function ProductForm({
     }
   };
 
+  const handleSubcategory = (item: string) => {
+    const subcategoryOptions = categories.find((category) => {
+      return category?.subcategories?.[0]?.categoryId === item;
+    });
+
+    if (!subcategoryOptions) return;
+
+    const options = safeParseJSON(
+      subcategoryOptions?.subcategories?.[0]?.items,
+    );
+
+    const subcategoryItems = options.map((item: SubCategoryItems) => {
+      return {
+        ...item,
+        id: subcategoryOptions?.subcategories?.[0]?.id,
+      };
+    });
+
+    setSubCategoriesSelectData(subcategoryItems);
+  };
+
+  const handleStateCode = (value: string) => {
+    const selectedStateInfo = nigerianStatesAndCities.find(
+      (state) => state.value === value,
+    );
+    setSelectedState(selectedStateInfo?.value || "");
+  };
+
+  const cities = () => {
+    const citiesInState = nigerianStatesAndCities
+      .find((state) => state.value === selectedState)
+      ?.cities?.map((city) => ({
+        label: city.name,
+        value: city.name,
+      }));
+
+    return citiesInState;
+  };
+
   const flexInputs = cn(
-    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]"
+    "flex sm:flex-col md:flex-row gap-y-6 gap-x-[0.625rem] tablet:gap-x-[1.25rem]",
   );
 
   return (
@@ -273,11 +348,11 @@ export default function ProductForm({
         "w-full sm:max-w-[300px] md:max-w-[350px] tablet:max-w-[400px]  sl:max-w-[500px] lg:max-w-[580px] xlg:max-w-[600px] xl:max-w-[700px]"
       }
     >
-      <h2 className={"text-md sm:text-[1.5rem] font-semibold mb-2 sm:mb-3 "}>
+      <h2 className={"text-md mb-2 font-semibold sm:mb-3 sm:text-[1.5rem] "}>
         {product ? "Edit product" : "Post product"}
       </h2>
 
-      <p className={"text-xs sm:text-md text-grey6 mb-4 sm:mb-10"}>
+      <p className={"sm:text-md mb-4 text-xs text-grey6 sm:mb-10"}>
         Add your products details below
       </p>
 
@@ -304,7 +379,7 @@ export default function ProductForm({
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={"w-full mt-6 flex flex-col gap-y-6"}
+        className={"mt-6 flex w-full flex-col gap-y-6"}
       >
         <div className={flexInputs}>
           <Controller
@@ -357,6 +432,8 @@ export default function ProductForm({
                 emptyMessage={"No category"}
                 onValueChange={(value) => {
                   field.onChange(value);
+                  setHasChosenCategory(true);
+                  handleSubcategory(value);
                 }}
                 errorMessage={errors.categoryId?.message}
               />
@@ -365,25 +442,122 @@ export default function ProductForm({
 
           <Controller
             control={control}
-            name="location"
+            name="subCategoryId"
             render={({ field }) => (
               <SelectInput
                 inputProps={{ ...field }}
-                placeholder={"Select location"}
-                options={nigerianStates}
-                // defaultValue={field.value || ""}
+                placeholder={"Select Subcategory"}
+                options={subCategoriesSelectData}
+                name={field.name}
+                disabled={loading || !hasChosenCategory}
+                value={field.value || ""}
+                emptyMessage={"No Subcategory"}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                }}
+                errorMessage={errors.subCategoryId?.message}
+              />
+            )}
+          />
+        </div>
+
+        <div className={flexInputs}>
+          <Controller
+            control={control}
+            name="productType"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"Product type"}
+                options={[
+                  {
+                    label: "New",
+                    value: "New",
+                  },
+                  {
+                    label: "Used",
+                    value: "Used",
+                  },
+                ]}
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
                 }}
-                emptyMessage={"No category"}
-                errorMessage={errors.location?.message}
+                errorMessage={errors.productType?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="state"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"Select state"}
+                options={nigerianStatesAndCities.map((state) => ({
+                  label: state.label,
+                  value: state.value,
+                }))}
+                name={field.name}
+                disabled={loading}
+                value={field.value || ""}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  handleStateCode(value);
+                  setHasSelectedState(value);
+                }}
+                emptyMessage={"No States"}
+                errorMessage={errors.state?.message}
               />
             )}
           />
         </div>
+
+        <Controller
+          control={control}
+          name="city"
+          render={({ field }) => (
+            <SelectInput
+              inputProps={{ ...field }}
+              placeholder={"Select city"}
+              options={cities()}
+              name={field.name}
+              disabled={loading || !hasSelectedState}
+              value={field.value || ""}
+              onValueChange={(value) => {
+                field.onChange(value);
+              }}
+              emptyMessage={"No Cities"}
+              errorMessage={errors.city?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="discount"
+          render={({ field }) => (
+            <SelectInput
+              inputProps={{ ...field }}
+              placeholder={"Discount"}
+              options={Array.from({ length: 90 }, (_, index) => ({
+                label: `${index}%`,
+                value: `${index}`,
+              }))}
+              name={field.name}
+              disabled={loading}
+              value={String(field.value || 0)}
+              onValueChange={(value) => {
+                field.onChange(value);
+              }}
+              emptyMessage={"No Discount"}
+              errorMessage={errors.discount?.message}
+            />
+          )}
+        />
 
         <Controller
           control={control}

@@ -156,7 +156,8 @@ export default function ViewNotOwnProduct(props: Props) {
                 price={formatPrice(products.price)}
                 productName={products.name}
                 description={products.description}
-                location={products.location}
+                state={products.state}
+                city={products.city}
                 imageSrc={products.files?.[0]?.url}
                 product={products}
                 createProductPreview={false}

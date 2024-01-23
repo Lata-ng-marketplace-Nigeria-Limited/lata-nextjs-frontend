@@ -50,7 +50,6 @@ export default function ProductInsights(props: Props) {
     }
   };
 
-
   return (
     <ProductAsideArea>
       <MobileBorderArea

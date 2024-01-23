@@ -1,5 +1,5 @@
 "use client";
-import { cn, safeParseJSON, truncateText } from "@/utils";
+import { cn, formatPrice, safeParseJSON, truncateText } from "@/utils";
 import { MapPinIcon } from "@atom/icons/MapPin";
 import { SavedIcon } from "@atom/icons/Saved";
 import Button from "@atom/Button";
@@ -19,6 +19,8 @@ import { useToast } from "@components/ui/use-toast";
 import Link from "next/link";
 import { IMAGE_BLUR_URL } from "@/constants/others";
 import { generateSellerAnalyticsApi } from "@/api/view";
+import PercentageOff from "../atom/PercentageOff";
+import { useDiscount } from "@/hooks/useDiscount";
 
 // import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 
@@ -27,7 +29,9 @@ type Props = {
   price?: string | number;
   productName?: string;
   description?: string;
-  location?: string;
+  state?: string;
+  city: string;
+  discount?: number;
   onUnSave?: (productId: string) => void;
   trending?: boolean;
 } & (
@@ -70,6 +74,7 @@ export default function ProductCard(props: Props) {
 
   const registerView = useCallback(async () => {
     if (user?.id === props.product?.userId) return;
+    if (!props.product?.userId) return;
     try {
       await generateSellerAnalyticsApi(
         "VIEW",
@@ -156,6 +161,25 @@ export default function ProductCard(props: Props) {
       setSaved((prev) => !prev);
     }
   };
+
+  const handleLocationDisplay = () => {
+    const stateName =
+      props.state === "Abuja Federal Capital Territory" ? "Abuja" : props.state;
+    if (!props?.state && props.createProductPreview) {
+      return "Location";
+    } else if (!props.city) {
+      return stateName;
+    } else {
+      return `${props?.city} ${stateName}`;
+    }
+  };
+
+  const priceDetails = {
+    amount: props.product?.price || 0,
+    discount: props.product?.discount || 0,
+  };
+
+  const { initialAmount, discountedAmount } = useDiscount(priceDetails);
 
   return (
     <div
@@ -266,10 +290,23 @@ export default function ProductCard(props: Props) {
             e.preventDefault();
           }}
         >
+          {props.product?.discount ? (
+            <div className="flex items-center gap-4">
+              <p className={cn(`font-semibold line-through text-grey4`)}>
+                {formatPrice(initialAmount)}
+              </p>
+              <PercentageOff
+                discount={props.product.discount}
+                className="mr-0 ml-0 mt-0"
+              />
+            </div>
+          ) : (
+            ""
+          )}
           <p className={"text-primary font-bold text-sm sm:text-base"}>
             {!props?.price && props.createProductPreview
               ? "Product price"
-              : props?.price}
+              : discountedAmount}
           </p>
           <p className={"text-xs sm:text-sm text-grey9 max-w-[24ch]"}>
             {!props?.productName && props.createProductPreview
@@ -291,9 +328,7 @@ export default function ProductCard(props: Props) {
             }
           >
             <MapPinIcon className="w-1.5 h-1.5 sm:w-3 sm:h-3" />
-            {!props?.location && props.createProductPreview
-              ? "Location"
-              : props?.location}
+            {handleLocationDisplay()}
           </p>
         </Link>
 

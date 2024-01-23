@@ -26,11 +26,13 @@ export default async function Home({
 }: {
   searchParams?: {
     category?: string;
+    subcategory?: string;
     page?: string;
   };
 }) {
   // const session = await getServerSession(authConfig);
   const query = searchParams?.category || "";
+  const subcategory = searchParams?.subcategory || "";
   return (
     <main className="">
       <HeroImage
@@ -41,7 +43,7 @@ export default async function Home({
       />
       <DashboardSelectCategories />
       <Suspense key={query} fallback={<ProductListSkeleton />}>
-        <HomeProducts query={query} />
+        <HomeProducts query={query} subcategory={subcategory} />
       </Suspense>
     </main>
   );
