@@ -172,3 +172,15 @@ export function copyPrevLocalStore(prev: any) {
 export const getApiUrl = (path: string) => {
   return process.env.NEXT_PUBLIC_LATA_API_URL  + path;
 };
+
+export const sortArray = (arr: any[], key: string, order: 'asc' | 'desc' = 'asc') => {
+  return arr.sort((a: any, b: any) => {
+    if (a[key] < b[key]) {
+      return order === 'asc' ? -1 : 1;
+    }
+    if (a[key] > b[key]) {
+      return order === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+};

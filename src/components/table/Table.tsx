@@ -37,7 +37,7 @@ export const Table = (props: Props) => {
       ),
     ];
     setKeys(value);
-    console.log(props.meta);
+    // console.log(props.meta);
   }, [
     props.compactData,
     props.format,

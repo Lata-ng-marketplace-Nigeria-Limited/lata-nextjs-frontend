@@ -55,8 +55,8 @@ export const useLocalStore = create(
     {
       name: "lata.ng-async-store",
       storage: createStore(() => localForage as any),
-    },
-  ),
+    }
+  )
 );
 
 interface IFastLocalStore {
@@ -83,6 +83,7 @@ export const useFastLocalStore = create(
     {
       name: "lata.ng-fast-store",
       storage: createStore(() => localStorage),
-    },
-  ),
+    }
+  )
 );
+

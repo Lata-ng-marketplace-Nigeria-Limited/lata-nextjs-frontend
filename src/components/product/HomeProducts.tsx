@@ -4,11 +4,12 @@ import LazyLoadProducts from "@components/product/LazyLoadProducts";
 
 interface Props {
   query: string;
+  subcategory?: string;
 }
-export default async function HomeProducts({ query }: Props) {
-  const products = await getDashboardProductsApi(query);
+export default async function HomeProducts({ query, subcategory }: Props) {
+  const products = await getDashboardProductsApi(query, subcategory);
   const headerClass = cn(
-    `text-sm xs:text-base tablet:text-[20px] text-grey9 font-medium`,
+    `text-sm xs:text-base tablet:text-[20px] text-grey9 font-medium`
   );
   return (
     <div
@@ -21,7 +22,7 @@ export default async function HomeProducts({ query }: Props) {
           `,
         {
           "flex-col-reverse": !!query,
-        },
+        }
       )}
     >
       {products?.trendingProducts?.length ? (

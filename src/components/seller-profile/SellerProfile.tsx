@@ -67,7 +67,8 @@ export const SellerProfile = ({ seller, productId }: Props) => {
                   price={formatPrice(product.price)}
                   productName={product.name}
                   description={product.description}
-                  location={product.location}
+                  state={product.state}
+                  city={product.city}
                   imageSrc={product.files?.[0]?.url}
                   product={product}
                   createProductPreview={false}

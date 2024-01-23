@@ -1,6 +1,7 @@
 import Button, { ButtonProp } from "@atom/Button";
 import React, { SetStateAction, useEffect, useState } from "react";
 import { cn, formatPrice } from "@/utils";
+import PercentageOff from "../atom/PercentageOff";
 
 type DiscountBtnProp = {
   discount: number;
@@ -40,7 +41,7 @@ export const DiscountButton = ({ discount, amount, text, ...props }: Props) => {
         {...(props as any)}
         className={cn(
           "w-full relative flex gap-x-3 justify-center",
-          props.className,
+          props.className
         )}
       >
         {text || (
@@ -54,24 +55,7 @@ export const DiscountButton = ({ discount, amount, text, ...props }: Props) => {
           </>
         )}
       </Button>
-
-      <div
-        className={cn(`
-        text-xs 
-        text-white 
-        bg-danger 
-        rounded-[3px]
-        px-3
-        py-[5px]
-        w-max
-        empty:hidden
-        ml-auto
-        mr-[25px]
-        -mt-[3px]
-      `)}
-      >
-        {discount ? `${discount}% OFF` : ""}
-      </div>
+      <PercentageOff discount={discount as number} />{" "}
     </div>
   );
 };

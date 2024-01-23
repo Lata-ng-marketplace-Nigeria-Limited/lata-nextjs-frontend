@@ -15,12 +15,12 @@ export const Subscriptions = ({ subscriptions }: Props) => {
   const [hasSetActiveSub, setHasSetActiveSub] = useState(false);
   const { activePlan, user } = useUser();
 
-  useEffect(() => {
-    console.log({
-      activePlan,
-      user,
-    });
-  }, [activePlan, user]);
+  // useEffect(() => {
+  //   console.log({
+  //     activePlan,
+  //     user,
+  //   });
+  // }, [activePlan, user]);
 
   useEffect(() => {
     if (selectedSubscription) {

@@ -20,6 +20,9 @@ interface Props {
   preventAutoFocus?: boolean;
   disabled?: boolean;
   triggerClass?: string;
+  side?: "top" | "bottom" | "left" | "right";
+  contentClass?: string;
+  isModalMode?: boolean;
 }
 
 export default function CustomPopover(props: Props) {
@@ -50,7 +53,7 @@ export default function CustomPopover(props: Props) {
     return <>{props.content}</>;
   };
   return (
-    <Popover open={isOpen}>
+    <Popover modal={props.isModalMode || false} open={isOpen}>
       <PopoverTrigger
         onClick={(e) => {
           props.onTriggerClick?.(e);
@@ -68,9 +71,8 @@ export default function CustomPopover(props: Props) {
           onPointerDownOutside={handleClickOutside}
           onOpenAutoFocus={handleAutoFocus}
           onEscapeKeyDown={handleClickOutside}
-          className={cn(`
-            rounded-[6px]
-          `)}
+          side={props.side || "bottom"}
+          className={cn(props.contentClass, "rounded-[6px]")}
         >
           {renderContent()}
         </PopoverContent>

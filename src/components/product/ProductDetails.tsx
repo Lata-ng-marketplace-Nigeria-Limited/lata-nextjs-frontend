@@ -4,58 +4,77 @@ import { cn, formatPrice, getTimeFromNow } from "@/utils";
 import { ClockIcon } from "@atom/icons/Clock";
 import { MapPinIcon } from "@atom/icons/MapPin";
 import Hr from "@atom/Hr";
+import { useDiscount } from "@/hooks/useDiscount";
+import PercentageOff from "../atom/PercentageOff";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductDetails(props: Props) {
+  const priceDetails = {
+    amount: props.product?.price,
+    discount: props.product?.discount || 0,
+  };
+
+  const { initialAmount, discountedAmount } = useDiscount(priceDetails);
+
   return (
     <div
       className={cn(`
-        border
+        flex
+        w-full
+        flex-col
+        gap-y-3
         rounded-[12px]
+        border
         border-grey2
         p-2.5
         sm:p-0
-        w-full
-        
-        flex
-        flex-col
-        gap-y-3
      `)}
     >
       <ProductCarousel product={props.product} />
 
       <div className={cn(`flex flex-col gap-y-2.5 sm:px-3`)}>
-        <p className={cn(`text-primary font-semibold`)}>
-          {formatPrice(props.product?.price)}
-        </p>
-        <p className={cn(`text-grey10 font-medium`)}>{props.product?.name}</p>
+        {props.product?.discount ? (
+          <div className="flex items-center gap-4">
+            <p className={cn(`font-semibold text-grey4 line-through`)}>
+              {formatPrice(initialAmount)}
+            </p>
+            <PercentageOff
+              discount={props.product.discount}
+              className="ml-0 mr-0 mt-0"
+            />
+          </div>
+        ) : (
+          ""
+        )}
+        <p className={cn(`font-semibold text-primary`)}>{discountedAmount}</p>
+        <p className={cn(`font-medium text-grey10`)}>{props.product?.name}</p>
 
         <div
           className={
-            "flex gap-x-3 gap-y-2 items-center flex-wrap sm:mt-[0.25rem]"
+            "flex flex-wrap items-center gap-x-3 gap-y-2 sm:mt-[0.25rem]"
           }
         >
-          <p className={"flex items-center gap-x-[0.125rem] shrink-0"}>
-            <ClockIcon className={cn(`w-4 h-4 `)} />
-            <span className={cn(`text-grey5 text-sm`)}>
+          <p className={"flex shrink-0 items-center gap-x-[0.125rem]"}>
+            <ClockIcon className={cn(`h-4 w-4 `)} />
+            <span className={cn(`text-sm text-grey5`)}>
               Posted {getTimeFromNow(props.product?.createdAt)}
             </span>
           </p>
 
-          <p className={"flex items-center gap-x-[0.125rem] shrink-0"}>
-            <MapPinIcon className={cn(`w-4 h-4 `)} pathClass={"stroke-grey5"} />
-            <span className={cn(`text-grey5 text-sm`)}>
-              {props.product?.location}
+          <p className={"flex shrink-0 items-center gap-x-[0.125rem]"}>
+            <MapPinIcon className={cn(`h-4 w-4 `)} pathClass={"stroke-grey5"} />
+            <span className={cn(`text-sm text-grey5`)}>
+              {props.product?.state}
             </span>
           </p>
         </div>
 
         <Hr className={"border-grey1"} />
 
-        <div className={"sm:mt-[0.25rem] mb-[2px] sm:mb-3"}>
+        <div className={"mb-[2px] sm:mb-3 sm:mt-[0.25rem]"}>
           <p
             className={cn(`
                 text-sm 
@@ -70,17 +89,17 @@ export default function ProductDetails(props: Props) {
 
           <p
             className={cn(`
-                text-grey6
-                text-sm
-                mt-2
                 mb-3
+                mt-2
+                text-sm
+                text-grey6
             `)}
           >
             {props.product?.description}
           </p>
         </div>
 
-        <div className={"sm:mt-[0.25rem] mb-[2px] sm:mb-3"}>
+        <div className={"mb-[2px] sm:mb-3 sm:mt-[0.25rem]"}>
           <p
             className={cn(`
                 text-sm 
@@ -95,13 +114,75 @@ export default function ProductDetails(props: Props) {
 
           <p
             className={cn(`
-                text-grey6
-                text-sm
-                mt-2
                 mb-3
+                mt-2
+                text-sm
+                text-grey6
             `)}
           >
             {props.product?.category?.name}
+          </p>
+        </div>
+
+        <div
+          className={cn(
+            { hidden: !props?.product?.subCategoryId },
+            "mb-[2px] sm:mb-3 sm:mt-[0.25rem]",
+          )}
+        >
+          <p
+            className={cn(
+              `
+                text-sm 
+                font-semibold 
+                text-grey8 
+                sm:text-base 
+                sm:font-medium
+            `,
+            )}
+          >
+            Product subcategory
+          </p>
+
+          <p
+            className={cn(`
+                mb-3
+                mt-2
+                text-sm
+                text-grey6
+            `)}
+          >
+            {props.product?.subCategoryId}
+          </p>
+        </div>
+
+        <div
+          className={cn(
+            { hidden: !props?.product?.productType },
+            "mb-[2px] sm:mb-3 sm:mt-[0.25rem]",
+          )}
+        >
+          <p
+            className={cn(`
+                text-sm 
+                font-semibold 
+                text-grey8 
+                sm:text-base 
+                sm:font-medium
+            `)}
+          >
+            Product type
+          </p>
+
+          <p
+            className={cn(`
+                mb-3
+                mt-2
+                text-sm
+                text-grey6
+            `)}
+          >
+            {props.product?.productType}
           </p>
         </div>
       </div>
