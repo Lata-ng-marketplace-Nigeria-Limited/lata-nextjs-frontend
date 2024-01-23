@@ -77,7 +77,7 @@ export const DashboardSelectCategories = () => {
         // maxWidth="calc(100vw - 30%)"
         contentClass="max-h-[calc(100vh-50px)] !max-w-screen"
       >
-        <div className="grid grid-cols-1 xls:grid-cols-2 gap-8 md:gap-14 bg-white py-4 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 xls:grid-cols-2 gap-8 md:gap-14 bg-white py-4 md:grid-cols-3 lg:grid-cols-5">
           {categories
             ?.filter((category) => category.name.toLowerCase() !== "others")
             .map((category) => (

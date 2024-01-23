@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils";
 import { useEffect, useState } from "react";
 
 interface IDiscount {
@@ -21,5 +22,5 @@ export const useDiscount = (discountDetails: IDiscount) => {
     }
   }, [discount, amount]);
 
-  return { initialAmount, discountedAmount };
+  return { initialAmount, discountedAmount: formatPrice(discountedAmount) };
 };

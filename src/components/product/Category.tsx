@@ -55,7 +55,7 @@ const Category = ({ data, onModalClose }: Props) => {
           <Modal
             isShown={showInnerModal}
             setIsShown={setShowInnerModal}
-            contentClass="max-h-[calc(100vh-20px)] w-screen max-w-lg"
+            contentClass="max-h-[calc(100vh-20px)] w-screen max-w-lg !px-6"
           >
             <Subcategory
               selectedSubcategory={selectedSubcategory}

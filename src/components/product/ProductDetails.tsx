@@ -49,9 +49,7 @@ export default function ProductDetails(props: Props) {
         ) : (
           ""
         )}
-        <p className={cn(`text-primary font-semibold`)}>
-          {formatPrice(discountedAmount)}
-        </p>
+        <p className={cn(`text-primary font-semibold`)}>{discountedAmount}</p>
         <p className={cn(`text-grey10 font-medium`)}>{props.product?.name}</p>
 
         <div
