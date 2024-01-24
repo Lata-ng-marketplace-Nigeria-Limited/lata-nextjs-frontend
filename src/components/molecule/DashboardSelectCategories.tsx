@@ -66,7 +66,7 @@ export const DashboardSelectCategories = () => {
   return (
     <div
       className={
-        "my-4 flex flex-col items-start justify-between gap-4 xls:flex-row xls:items-center"
+        "xxss:items-center xxss:flex-row my-4 flex flex-col items-start justify-between gap-4"
       }
     >
       <SelectInput
@@ -79,7 +79,7 @@ export const DashboardSelectCategories = () => {
         ]}
         placeholder={"Select category"}
         inputClass={cn(
-          `min-w-[150px] sm:min-w-[174px] w-fit text-xs sm:text-sm rounded-[12px] border-primary hover:border-primary text-primary`,
+          `min-w-[120px] xms:min-w-[130px] xls:min-w-[150px] px-4 py-1 xs:py-2 sm:min-w-[174px] w-fit text-xs sm:text-sm rounded-[12px] border-primary hover:border-primary text-primary`,
         )}
         value={searchParams.get("category")?.toString()}
         onValueChange={handleCategoryChange}
@@ -88,7 +88,7 @@ export const DashboardSelectCategories = () => {
 
       <Button
         format="primary"
-        className="min-w-[150px] sm:min-w-[174px]"
+        className="min-w-[120px] px-4 py-1 text-base font-normal xms:min-w-[140px] xls:min-w-[150px] xs:text-base xs:font-semibold sm:min-w-[174px]"
         onClick={handleShowModal}
       >
         BUY HERE
