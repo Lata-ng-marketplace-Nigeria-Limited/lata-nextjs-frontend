@@ -59,6 +59,7 @@ export default function ProductForm({
     SubCategoryItems[]
   >([]);
   const [hasChosenCategory, setHasChosenCategory] = useState(false);
+  const [cities, setCities] = useState<any[]>([]);
 
   const {
     formState: { errors },
@@ -84,8 +85,7 @@ export default function ProductForm({
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
-  const [hasSelectedState, setHasSelectedState] = useState("");
-  const [selectedState, setSelectedState] = useState("");
+  const [hasSelectedState, setHasSelectedState] = useState(false);
 
   useEffect(() => {
     if (!product) {
@@ -116,9 +116,9 @@ export default function ProductForm({
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
   useEffect(() => {
-    // if (product?.city) {
-    //   setHasSelectedState(product?.state);
-    // }
+    if (product?.city) {
+      handleCities(product?.state);
+    }
 
     if (product?.subCategoryId) {
       handleSubcategory(product?.categoryId);
@@ -305,6 +305,7 @@ export default function ProductForm({
     });
 
     if (!subcategoryOptions) return;
+    setHasChosenCategory(true);
 
     const options = safeParseJSON(
       subcategoryOptions?.subcategories?.[0]?.items,
@@ -320,22 +321,20 @@ export default function ProductForm({
     setSubCategoriesSelectData(subcategoryItems);
   };
 
-  const handleSelectedState = (value: string) => {
-    const selectedStateInfo = nigerianStatesAndCities.find(
-      (state) => state.value === value,
+  const handleCities = (selectedState: string) => {
+    const getSelectedState = nigerianStatesAndCities.find(
+      (state) => state.value === selectedState,
     );
-    setSelectedState(selectedStateInfo?.value || "");
-  };
 
-  const cities = () => {
-    const citiesInState = nigerianStatesAndCities
-      .find((state) => state.value === selectedState)
-      ?.cities?.map((city) => ({
-        label: city.name,
-        value: city.name,
-      }));
+    if (!getSelectedState) return;
+    setHasSelectedState(true);
 
-    return citiesInState;
+    const citiesInState = getSelectedState?.cities?.map((city) => ({
+      label: city.name,
+      value: city.name,
+    }));
+
+    setCities(citiesInState);
   };
 
   const flexInputs = cn(
@@ -432,7 +431,6 @@ export default function ProductForm({
                 emptyMessage={"No category"}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  setHasChosenCategory(true);
                   handleSubcategory(value);
                 }}
                 errorMessage={errors.categoryId?.message}
@@ -506,8 +504,7 @@ export default function ProductForm({
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  handleSelectedState(value);
-                  setHasSelectedState(value);
+                  handleCities(value);
                 }}
                 emptyMessage={"No States"}
                 errorMessage={errors.state?.message}
@@ -523,7 +520,7 @@ export default function ProductForm({
             <SelectInput
               inputProps={{ ...field }}
               placeholder={"Select city"}
-              options={cities()}
+              options={cities}
               name={field.name}
               disabled={loading || !hasSelectedState}
               value={field.value || ""}
