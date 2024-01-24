@@ -8,6 +8,8 @@ const config: Config = {
   darkMode: "class",
   theme: {
     screens: {
+      xxss: "280px",
+      // => @media (min-width: 280px) { ... }
       xxs: "300px",
       // => @media (min-width: 300px) { ... }
       xms: "320px",
@@ -33,6 +35,7 @@ const config: Config = {
       "2xl": "1536px",
       // => @media (min-width: 1536px) { ... }
     },
+
     extend: {
       colors: {
         primary: "#5113A1",

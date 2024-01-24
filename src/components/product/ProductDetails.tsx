@@ -14,7 +14,7 @@ interface Props {
 export default function ProductDetails(props: Props) {
   const priceDetails = {
     amount: props.product?.price,
-    discount: props.product?.discount || 0,
+    discount: Number(props.product?.discount) || Number("0"),
   };
 
   const { initialAmount, discountedAmount } = useDiscount(priceDetails);
@@ -42,7 +42,7 @@ export default function ProductDetails(props: Props) {
               {formatPrice(initialAmount)}
             </p>
             <PercentageOff
-              discount={props.product.discount}
+              discount={Number(props.product.discount)}
               className="ml-0 mr-0 mt-0"
             />
           </div>

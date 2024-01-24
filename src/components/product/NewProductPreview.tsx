@@ -8,7 +8,7 @@ export interface ProductFormProductInfo {
   price: string;
   state: string;
   city: string;
-  discount?: number;
+  discount?: string;
   categoryId: string;
   subCategoryId?: string;
 }
