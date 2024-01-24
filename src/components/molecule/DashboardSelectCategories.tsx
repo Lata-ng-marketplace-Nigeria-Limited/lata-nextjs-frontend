@@ -88,7 +88,7 @@ export const DashboardSelectCategories = () => {
 
       <Button
         format="primary"
-        className="min-w-[120px] px-4 py-1 text-base font-normal xms:min-w-[140px] xls:min-w-[150px] xs:text-base xs:font-semibold sm:min-w-[174px]"
+        className="min-w-[120px] px-4 py-1 text-base font-normal xms:min-w-[140px] xls:min-w-[150px] xs:text-base xs:font-semibold sm:min-w-[174px] opacity-0 pointer-events-none"
         onClick={handleShowModal}
       >
         BUY HERE
