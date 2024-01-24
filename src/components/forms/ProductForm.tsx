@@ -533,7 +533,7 @@ export default function ProductForm({
           )}
         />
 
-        <Controller
+        {/* <Controller
           control={control}
           name="discount"
           render={({ field }) => (
@@ -554,7 +554,7 @@ export default function ProductForm({
               errorMessage={errors.discount?.message}
             />
           )}
-        />
+        /> */}
 
         <Controller
           control={control}
