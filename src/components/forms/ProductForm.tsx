@@ -116,11 +116,11 @@ export default function ProductForm({
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
   useEffect(() => {
-    if (product?.city) {
+    if (product?.city || product?.state) {
       handleCities(product?.state);
     }
 
-    if (product?.subCategoryId) {
+    if (product?.subCategoryId || product?.categoryId) {
       handleSubcategory(product?.categoryId);
     }
 
