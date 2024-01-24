@@ -299,14 +299,15 @@ export default function ProductCard(props: Props) {
           }}
         >
           {props.product?.discount ? (
-            <div className="flex items-center gap-4">
-              <p className={cn(`font-semibold text-grey4 line-through`)}>
-                {formatPrice(initialAmount)}
-              </p>
+            <div className="flex flex-col items-start gap-1">
               <PercentageOff
                 discount={Number(props.product.discount)}
                 className="ml-0 mr-0 mt-0"
               />
+
+              <p className={cn(`font-semibold text-grey4 line-through`)}>
+                {formatPrice(initialAmount)}
+              </p>
             </div>
           ) : (
             ""

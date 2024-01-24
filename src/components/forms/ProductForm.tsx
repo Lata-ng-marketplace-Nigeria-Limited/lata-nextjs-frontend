@@ -132,7 +132,7 @@ export default function ProductForm({
       description: watch("description"),
       state: watch("state"),
       city: watch("city"),
-      discount: watch("discount"),
+      discount: watch("discount") || "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -176,7 +176,7 @@ export default function ProductForm({
       ...values,
       files: files!,
       price: Number(values.price),
-      discount: Number(values.discount),
+      discount: Number(values.discount || 0),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
         (category) => category.id === values.categoryId,
@@ -533,20 +533,20 @@ export default function ProductForm({
           )}
         />
 
-        {/* <Controller
+        <Controller
           control={control}
           name="discount"
           render={({ field }) => (
             <SelectInput
-              inputProps={{ ...field }}
-              placeholder={"Discount"}
+              inputProps={{ ...field, value: field.value || "" }}
+              placeholder={"Give Discount"}
               options={Array.from({ length: 90 }, (_, index) => ({
                 label: `${index}%`,
                 value: `${index}`,
               }))}
               name={field.name}
               disabled={loading}
-              value={field.value || "0"}
+              value={field.value || ""}
               onValueChange={(value) => {
                 field.onChange(value);
               }}
@@ -554,7 +554,7 @@ export default function ProductForm({
               errorMessage={errors.discount?.message}
             />
           )}
-        /> */}
+        />
 
         <Controller
           control={control}

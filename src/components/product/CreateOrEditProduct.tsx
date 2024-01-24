@@ -21,7 +21,7 @@ export const CreateOrEditProduct = ({ data }: Props) => {
     state: "",
     city: "",
     categoryId: "",
-    discount: "0",
+    discount: "",
     subCategoryId: "",
   });
   const [selectedPhotos, setSelectedPhotos] = useState<SelectedImagePreview>();
