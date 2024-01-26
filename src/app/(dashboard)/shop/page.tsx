@@ -8,6 +8,8 @@ import { Suspense } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
+import { findAllMyProductsApi } from "@/api/product";
+import ProductStatusList from "@/components/shop/ProductStatus";
 
 export const metadata: Metadata = {
   title: "My Shop",
@@ -18,23 +20,41 @@ export default async function Page({
 }: {
   searchParams?: {
     page?: string;
+    status?: string;
   };
 }) {
   unstable_noStore();
   const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";
+  const status = searchParams?.status || "";
+
+  const products = await findAllMyProductsApi({
+    page,
+    status,
+  });
 
   if (!session || !session.user) {
     redirect("/auth/login");
   }
+
   return (
     <div>
       <Suspense>
         <GetUser />
       </Suspense>
-      <HeaderText title>My Shop</HeaderText>
+      <div className="flex items-center justify-between">
+        <HeaderText title>My Shop</HeaderText>
+        <ProductStatusList
+          status={status}
+          statusCounts={products?.statusCounts}
+        />
+      </div>
       <Suspense key={page} fallback={<ProductListSkeleton />}>
-        <MyShop page={page} />
+        <MyShop
+          products={products.data}
+          meta={products?.meta}
+          isEmpty={products?.isEmpty}
+        />
       </Suspense>
     </div>
   );

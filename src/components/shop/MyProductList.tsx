@@ -25,8 +25,8 @@ export const MyProductList = ({ products, meta, isEmpty }: Props) => {
     <>
       <LazyLoadProducts
         products={products}
-        offset={4}
-        showLimit={4}
+        // offset={4}
+        // showLimit={4}
         hideFallback={products.length > 0}
       />
       {meta?.last_page > 1 ? (
