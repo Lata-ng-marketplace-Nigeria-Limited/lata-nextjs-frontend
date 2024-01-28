@@ -15,8 +15,8 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
   const pathname = usePathname();
   const router = useRouter();
 
+  const params = new URLSearchParams(searchParams);
   const handleClick = (status: IProductStatusType) => {
-    const params = new URLSearchParams(searchParams);
     if (status) {
       params.set("status", status);
     } else {
@@ -30,6 +30,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
       <BadgeWithCount
         status="active"
         count={props?.statusCounts?.active}
+        activeStatus={params.get("status") as IProductStatusType}
         className={`${
           props?.status === "active" || !props?.status
             ? "bg-primary text-white"
@@ -40,6 +41,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
       <BadgeWithCount
         status="reviewing"
         count={props?.statusCounts?.reviewing}
+        activeStatus={params.get("status") as IProductStatusType}
         className={`${
           props?.status === "reviewing"
             ? "bg-warning text-white"
@@ -50,6 +52,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
       <BadgeWithCount
         status="denied"
         count={props?.statusCounts?.denied}
+        activeStatus={params.get("status") as IProductStatusType}
         className={`${
           props?.status === "denied" ? "bg-danger text-white" : "text-danger"
         }`}
@@ -58,6 +61,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
       <BadgeWithCount
         status="draft"
         count={props?.statusCounts?.draft}
+        activeStatus={params.get("status") as IProductStatusType}
         className={`${
           props.status === "draft" ? "bg-grey9 text-white" : "text-grey9"
         }`}
