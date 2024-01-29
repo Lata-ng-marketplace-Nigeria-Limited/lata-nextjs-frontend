@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
-import BadgeWithCount, { IProductStatusType } from "../atom/BadgeWithCount";
+import BadgeWithCount, {
+  IBadgeWithCountVariants,
+} from "../atom/BadgeWithCount";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IProductStatusCount } from "@/interface/products";
 
@@ -9,6 +11,8 @@ interface IProductStatusList {
   status?: string;
   statusCounts: IProductStatusCount;
 }
+
+export type IProductStatusType = "active" | "reviewing" | "denied" | "draft";
 
 const ProductStatusList: React.FC<IProductStatusList> = (props) => {
   const searchParams = useSearchParams();
@@ -25,46 +29,53 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
     router.replace(`${pathname}?${params.toString()}`);
   };
 
+  const activeButtonVariant = (): IBadgeWithCountVariants => {
+    switch (params.get("status")) {
+      case "active":
+        return "primary";
+
+      case "reviewing":
+        return "warning";
+
+      case "denied":
+        return "danger";
+
+      case "draft":
+        return "normal";
+
+      default:
+        return "primary";
+    }
+  };
+
   return (
     <div className="flex items-center gap-1  lg:gap-6">
       <BadgeWithCount
-        status="active"
         count={props?.statusCounts?.active}
-        activeStatus={params.get("status") as IProductStatusType}
-        className={`${
-          props?.status === "active" || !props?.status
-            ? "bg-primary text-white"
-            : "text-primary"
-        }`}
+        activeVariant={activeButtonVariant()}
+        variant="primary"
+        text="active"
         onClick={() => handleClick("active")}
       />
       <BadgeWithCount
-        status="reviewing"
         count={props?.statusCounts?.reviewing}
-        activeStatus={params.get("status") as IProductStatusType}
-        className={`${
-          props?.status === "reviewing"
-            ? "bg-warning text-white"
-            : "text-warning"
-        }`}
+        activeVariant={activeButtonVariant()}
+        text="reviewing"
+        variant="warning"
         onClick={() => handleClick("reviewing")}
       />
       <BadgeWithCount
-        status="denied"
         count={props?.statusCounts?.denied}
-        activeStatus={params.get("status") as IProductStatusType}
-        className={`${
-          props?.status === "denied" ? "bg-danger text-white" : "text-danger"
-        }`}
+        activeVariant={activeButtonVariant()}
+        text="denied"
+        variant="danger"
         onClick={() => handleClick("denied")}
       />
       <BadgeWithCount
-        status="draft"
         count={props?.statusCounts?.draft}
-        activeStatus={params.get("status") as IProductStatusType}
-        className={`${
-          props.status === "draft" ? "bg-grey9 text-white" : "text-grey9"
-        }`}
+        activeVariant={activeButtonVariant()}
+        text="draft"
+        variant="normal"
         onClick={() => handleClick("draft")}
       />
     </div>

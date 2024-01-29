@@ -18,6 +18,7 @@ import {
 import { saveCustomerFeedback } from "@/api/feedback";
 import { ICustomerFeedback } from "@/interface/feedback";
 import { toast } from "../ui/use-toast";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   openFeedbackModal: boolean;
@@ -28,6 +29,7 @@ interface Props {
 const FeedbackModal = (props: Props) => {
   const [loading, setLoading] = React.useState(false);
   const [productRating, setProductRating] = React.useState<3 | 2 | 1 | 0>(0);
+  const user = useUser();
 
   const createFeedbackSchema = z.object({
     description: z
@@ -62,6 +64,7 @@ const FeedbackModal = (props: Props) => {
         productId: props.product?.id,
         rating: productRating,
         type: "PRODUCT",
+        meta: JSON.stringify({ sender: user?.user?.name }),
       };
 
       const res = await saveCustomerFeedback(payload);
@@ -73,6 +76,7 @@ const FeedbackModal = (props: Props) => {
           variant: "success",
           duration: 15000,
         });
+        props.setOpenFeedbackModal(false);
       }
       setLoading(false);
     } catch (error) {

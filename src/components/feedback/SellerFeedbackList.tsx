@@ -1,17 +1,17 @@
 "use client";
 
-import { Product } from "@/interface/products";
-import LazyLoadProducts from "@components/product/LazyLoadProducts";
-import Paginate from "@components/input/Paginate";
+import { IFeedback } from "@/interface/feedback";
 import { FetchMeta } from "@/interface/general";
+import React from "react";
+import FeedbackContent from "./FeedbackContent";
+import Paginate from "../input/Paginate";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
-  products: Product[];
+  feedbacks: IFeedback[];
   meta: FetchMeta;
-  isEmpty?: boolean;
 }
-export const MyProductList = ({ products, meta, isEmpty }: Props) => {
+const SellerFeedbackList = (props: Props) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -19,24 +19,28 @@ export const MyProductList = ({ products, meta, isEmpty }: Props) => {
   const handlePageChange = (toPage: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", toPage + "");
+    params.set("limit", "10" + "");
     replace(`${pathname}?${params.toString()}`);
   };
+
   return (
     <>
-      <LazyLoadProducts
-        products={products}
-        hideFallback={products.length > 0}
-      />
-      {meta?.last_page > 1 ? (
+      {props.feedbacks.map((feedback) => (
+        <FeedbackContent feedback={feedback} key={feedback.id} />
+      ))}
+
+      {props.meta?.last_page > 1 ? (
         <>
-          <div className={"mt-[1rem]"} />
+          <div className={"mt-4"} />
           <Paginate
-            meta={meta}
+            meta={props.meta}
             onPageChange={handlePageChange}
-            currentPage={Number(searchParams.get("page") || 1)}
+            currentPage={Number(searchParams.get("page"))}
           />
         </>
       ) : null}
     </>
   );
 };
+
+export default SellerFeedbackList;

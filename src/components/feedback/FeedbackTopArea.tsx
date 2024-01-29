@@ -25,7 +25,7 @@ const FeedbackTopArea = (props: Props) => {
           Leave Feedback
         </Button>
       </div>
-      <FeedbackContent product={props.product} />
+      <FeedbackContent />
       <FeedbackModal
         openFeedbackModal={openFeedbackModal}
         setOpenFeedbackModal={setOpenFeedbackModal}
