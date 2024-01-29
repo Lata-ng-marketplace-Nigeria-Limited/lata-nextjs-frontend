@@ -26,7 +26,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
   };
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-1  lg:gap-6">
       <BadgeWithCount
         status="active"
         count={props?.statusCounts?.active}

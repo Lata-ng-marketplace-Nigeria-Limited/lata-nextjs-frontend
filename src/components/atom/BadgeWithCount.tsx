@@ -1,4 +1,5 @@
 import { cn } from "@/utils";
+import Button from "./Button";
 
 export type IProductStatusType = "active" | "reviewing" | "denied" | "draft";
 
@@ -11,14 +12,15 @@ interface Props {
 }
 const BadgeWithCount = (props: Props) => {
   return (
-    <p
+    <Button
+      format="none"
       className={cn(
         props.className,
-        { "hover:bg-purp1": props.status !== props.activeStatus},
-        "cursor-pointer rounded-xl px-6 py-2 text-base font-semibold capitalize",
+        { "hover:bg-purp1": props.status !== props.activeStatus },
+        "cursor-pointer rounded-xl px-2 py-1 text-xs font-semibold capitalize sm:px-4 sm:py-1.5 sm:text-base tablet:px-6 tablet:py-3",
       )}
       onClick={props.onClick}
-    >{`${props.status}(${props.count || "0"})`}</p>
+    >{`${props.status}(${props.count || "0"})`}</Button>
   );
 };
 

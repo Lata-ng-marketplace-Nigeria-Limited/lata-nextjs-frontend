@@ -10,6 +10,7 @@ import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
 import { findAllMyProductsApi } from "@/api/product";
 import ProductStatusList from "@/components/shop/ProductStatus";
+import FeedbackTopArea from "@/components/feedback/FeedbackTopArea";
 
 export const metadata: Metadata = {
   title: "My Shop",
@@ -42,7 +43,7 @@ export default async function Page({
       <Suspense>
         <GetUser />
       </Suspense>
-      <div className="flex items-center justify-between">
+      <div className="items-center justify-between sl:flex">
         <HeaderText title>My Shop</HeaderText>
         <ProductStatusList
           status={status}
