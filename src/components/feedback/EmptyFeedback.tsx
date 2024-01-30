@@ -4,7 +4,11 @@ import Button from "@/components/atom/Button";
 import { SimleyXEyesIcon } from "@/components/atom/icons/SimleyXEyes";
 import { toast } from "../ui/use-toast";
 
-const EmptyFeedback = () => {
+interface Props {
+  param?: string;
+}
+
+const EmptyFeedback = (props: Props) => {
   const onCopyToClipboard = () => {
     toast({
       title: "Your profile link has been copied to the clipboard",
@@ -18,17 +22,22 @@ const EmptyFeedback = () => {
         <SimleyXEyesIcon />
       </div>
       <p className="mb-3.5 text-center text-sm font-normal text-grey8">
-        You have no Feedback yet.
+        You have not {props.param === "sent" ? "sent" : "received"} any Feedback
+        yet.
       </p>
       <p className="mb-3.5 text-center text-sm font-normal text-grey8">
-        Ask your customers to drop a feedback for you.
+        Ask your customers to drop feedbacks for you.
       </p>
-      <p className="mb-3.5 text-center text-sm font-normal text-grey8">
+      {/* <p className="mb-3.5  text-center text-sm font-normal text-grey8">
         Copy and send the below link to them.
       </p>
-      <Button format="primary" className="w-full" onClick={onCopyToClipboard}>
+      <Button
+        format="primary"
+        className=" w-full"
+        onClick={onCopyToClipboard}
+      >
         Copy my link
-      </Button>
+      </Button> */}
     </div>
   );
 };

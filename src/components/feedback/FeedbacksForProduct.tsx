@@ -8,6 +8,8 @@ import { cn } from "@/utils";
 interface Props {
   page?: string;
   product: Product;
+  isOwnProduct?: boolean;
+  hideLink?: boolean;
 }
 
 const FeedbacksForProduct = async (props: Props) => {
@@ -15,11 +17,15 @@ const FeedbacksForProduct = async (props: Props) => {
 
   return (
     <>
-      <CreateFeedback product={props.product} className="mb-3" />
+      <CreateFeedback
+        product={props.product}
+        className="mb-3"
+        isOwnProduct={props.isOwnProduct}
+      />
 
       <div className={cn({ " hidden ": productFeedback.isEmpty })}>
         {productFeedback.data.map((feedback) => (
-          <FeedbackContent key={feedback.id} feedback={feedback} />
+          <FeedbackContent key={feedback.id} feedback={feedback} hideLink />
         ))}
       </div>
     </>

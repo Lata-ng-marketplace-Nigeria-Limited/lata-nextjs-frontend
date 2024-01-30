@@ -6,11 +6,12 @@ import FeedbackModal from "@components/feedback/FeedbackModal";
 import { Product } from "@/interface/products";
 import { useUser } from "@/hooks/useUser";
 import { toast } from "@components/ui/use-toast";
-
+import { cn } from "@/utils";
 
 interface Props {
   product: Product;
   className?: string;
+  isOwnProduct?: boolean;
 }
 
 const CreateFeedback = (props: Props) => {
@@ -33,7 +34,14 @@ const CreateFeedback = (props: Props) => {
     <div className={props.className}>
       <div className="flex items-center justify-between">
         <p className="text-base font-medium text-grey9">Feedbacks</p>
-        <Button type="button" format="primary" onClick={handleModal}>
+        <Button
+          type="button"
+          format="primary"
+          onClick={handleModal}
+          className={cn({
+            "pointer-events-none opacity-0": props.isOwnProduct,
+          })}
+        >
           Leave Feedback
         </Button>
       </div>

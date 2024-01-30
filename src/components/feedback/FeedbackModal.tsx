@@ -116,6 +116,7 @@ const FeedbackModal = (props: Props) => {
       <DialogContent
         onPointerDownOutside={handleClickOutside}
         onEscapeKeyDown={handleEscapeClick}
+        className="px-2 xls:px-4 xs:px-6"
       >
         <div>
           <p className="mb-2 font-semibold">
@@ -124,7 +125,7 @@ const FeedbackModal = (props: Props) => {
           </p>
           <p className="mb-6 text-xs font-normal">How was your experience?</p>
         </div>
-        <div className="flex items-center justify-between gap-6">
+        <div className="flex items-center justify-between gap-1 max-xms:flex-wrap max-xms:gap-y-0 xls:gap-3 xs:gap-6">
           <FeedbackButton
             type="positive"
             isActive={productRating === POSITIVE_FEEDBACK_RATING}

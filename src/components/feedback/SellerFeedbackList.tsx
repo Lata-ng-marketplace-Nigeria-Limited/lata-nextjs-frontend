@@ -18,8 +18,9 @@ const SellerFeedbackList = (props: Props) => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const params = new URLSearchParams(searchParams);
+
   const handlePageChange = (toPage: number) => {
-    const params = new URLSearchParams(searchParams);
     params.set("page", toPage + "");
     params.set("limit", "10" + "");
     replace(`${pathname}?${params.toString()}`);
@@ -28,7 +29,7 @@ const SellerFeedbackList = (props: Props) => {
   return (
     <>
       {props.isEmpty ? (
-        <EmptyFeedback />
+        <EmptyFeedback param={params.get("viewing") || ""} />
       ) : (
         props.feedbacks.map((feedback) => (
           <FeedbackContent feedback={feedback} key={feedback.id} />

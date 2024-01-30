@@ -13,8 +13,8 @@ export const ViewProduct = async ({ id }: Props) => {
     <>
       <ViewProductArea data={data} />
       <div className="mt-8">
-        {data?.product && !data?.isOwner ? (
-          <FeedbacksForProduct product={data.product} />
+        {data?.product  ? (
+          <FeedbacksForProduct product={data.product} isOwnProduct={data?.isOwner}/>
         ) : (
           ""
         )}

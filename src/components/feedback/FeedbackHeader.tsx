@@ -29,8 +29,10 @@ const FeedbackHeader = (props: Props) => {
   };
 
   return (
-    <div className="mb-6 flex items-start justify-between">
-      <h2 className="text-xl font-medium text-grey9">Feedback</h2>
+    <div className="mb-6 flex flex-col items-start justify-between xms:flex-row">
+      <h2 className="mb-2 text-lg font-medium text-grey9 xms:mb-0 xs:text-xl">
+        Feedback
+      </h2>
       <div className="flex items-center gap-6">
         <BadgeWithCount
           variant="primary"
