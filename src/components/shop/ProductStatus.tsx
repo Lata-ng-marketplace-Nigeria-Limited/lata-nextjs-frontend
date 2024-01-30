@@ -49,10 +49,11 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4 xs:grid-cols-4 sl:gap-6">
+    <div className="grid grid-cols-4 gap-4 sl:gap-6">
       <BadgeWithCount
         count={props?.statusCounts?.active}
         activeVariant={activeButtonVariant()}
+        className="max-xs:text-[10px]"
         variant="primary"
         text="active"
         onClick={() => handleClick("active")}
@@ -60,6 +61,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
       <BadgeWithCount
         count={props?.statusCounts?.reviewing}
         activeVariant={activeButtonVariant()}
+        className="max-xs:text-[10px]"
         text="reviewing"
         variant="warning"
         onClick={() => handleClick("reviewing")}
@@ -67,6 +69,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
       <BadgeWithCount
         count={props?.statusCounts?.denied}
         activeVariant={activeButtonVariant()}
+        className="max-xs:text-[10px]"
         text="denied"
         variant="danger"
         onClick={() => handleClick("denied")}
@@ -74,6 +77,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
       <BadgeWithCount
         count={props?.statusCounts?.draft}
         activeVariant={activeButtonVariant()}
+        className="max-xs:text-[10px]"
         text="draft"
         variant="normal"
         onClick={() => handleClick("draft")}
