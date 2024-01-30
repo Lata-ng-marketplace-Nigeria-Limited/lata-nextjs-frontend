@@ -30,7 +30,7 @@ const SelectTrigger = React.forwardRef<
       className={cn(
         `
       flex 
-      min-h-[2rem] 
+      min-h-[3rem] 
       sm:min-h-12
       px-4
       rounded-md
