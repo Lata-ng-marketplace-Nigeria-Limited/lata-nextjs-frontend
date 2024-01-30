@@ -82,7 +82,7 @@ export const authCallbackApi = async (
 export const getUserLatestDataApi = async (): Promise<User | null> => {
   noStore();
   try {
-    return
+    // return
     const session = await getServerSession(authConfig);
     const res = await fetch(getApiUrl("/users/me"), {
       headers: {
