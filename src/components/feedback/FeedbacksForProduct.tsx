@@ -4,6 +4,7 @@ import CreateFeedback from "./CreateFeedback";
 import { Product } from "@/interface/products";
 import FeedbackContent from "./FeedbackContent";
 import { cn } from "@/utils";
+import EmptyFeedback from "./EmptyFeedback";
 
 interface Props {
   page?: string;
@@ -25,8 +26,18 @@ const FeedbacksForProduct = async (props: Props) => {
 
       <div className={cn({ " hidden ": productFeedback.isEmpty })}>
         {productFeedback.data.map((feedback) => (
-          <FeedbackContent key={feedback.id} feedback={feedback} hideLink />
+          <FeedbackContent key={feedback?.id} feedback={feedback} hideLink />
         ))}
+      </div>
+      <div
+        className={cn({
+          hidden: !productFeedback?.isEmpty || !props?.isOwnProduct,
+        })}
+      >
+        <EmptyFeedback
+          showCopy={props.isOwnProduct}
+          productId={props?.product?.id}
+        />
       </div>
     </>
   );

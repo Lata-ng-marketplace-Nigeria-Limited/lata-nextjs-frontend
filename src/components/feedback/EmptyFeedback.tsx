@@ -2,20 +2,32 @@
 
 import Button from "@/components/atom/Button";
 import { SimleyXEyesIcon } from "@/components/atom/icons/SimleyXEyes";
-import { toast } from "../ui/use-toast";
+import { cn, copyTextToClipboard } from "@/utils";
+import { DASHBOARD_PRODUCT_ROUTE } from "@/constants/routes";
 
 interface Props {
   param?: string;
+  showCopy?: boolean;
+  productId?: string;
 }
 
 const EmptyFeedback = (props: Props) => {
-  const onCopyToClipboard = () => {
-    toast({
-      title: "Your profile link has been copied to the clipboard",
-      variant: "success",
-      duration: 15000,
+  const handleCopyToClipboard = () => {
+    const origin =
+      typeof window !== "undefined" && window.location.origin
+        ? window.location.origin
+        : "";
+
+    const URL = `${origin}${DASHBOARD_PRODUCT_ROUTE}/${props?.productId}`;
+
+    copyTextToClipboard({
+      text: URL,
+      inputId: "seller-profile-link",
+      toastMessage:
+        "Your profile link has been copied to the clipboard" as string,
     });
   };
+
   return (
     <div className="mx-auto max-w-[447px] rounded-lg border border-offwhite px-14 py-6">
       <div className="flex justify-center">
@@ -25,19 +37,25 @@ const EmptyFeedback = (props: Props) => {
         You have not {props.param === "sent" ? "sent" : "received"} any Feedback
         yet.
       </p>
-      <p className="mb-3.5 text-center text-sm font-normal text-grey8">
+      <p className={cn("mb-3.5 text-center text-sm font-normal text-grey8")}>
         Ask your customers to drop feedbacks for you.
       </p>
-      {/* <p className="mb-3.5  text-center text-sm font-normal text-grey8">
+      <p
+        className={cn(
+          { hidden: !props.showCopy },
+          "mb-3.5  text-center text-sm font-normal text-grey8",
+        )}
+      >
         Copy and send the below link to them.
       </p>
       <Button
         format="primary"
-        className=" w-full"
-        onClick={onCopyToClipboard}
+        className={cn({ hidden: !props.showCopy }, "w-full")}
+        onClick={handleCopyToClipboard}
       >
         Copy my link
-      </Button> */}
+      </Button>
+      <input className="hidden" id="seller-profile-link" />
     </div>
   );
 };
