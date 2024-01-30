@@ -10,6 +10,7 @@ import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
 import { findAllMyProductsApi } from "@/api/product";
 import ProductStatusList from "@/components/shop/ProductStatus";
+import ShopTopArea from "@/components/shop/ShopTopArea";
 
 export const metadata: Metadata = {
   title: "My Shop",
@@ -42,13 +43,7 @@ export default async function Page({
       <Suspense>
         <GetUser />
       </Suspense>
-      <div className="items-center justify-between sl:flex">
-        <HeaderText title>My Shop</HeaderText>
-        <ProductStatusList
-          status={status}
-          statusCounts={products?.statusCounts}
-        />
-      </div>
+      <ShopTopArea statusCounts={products?.statusCounts || 0} />
       <Suspense key={page} fallback={<ProductListSkeleton />}>
         <MyShop
           products={products.data}

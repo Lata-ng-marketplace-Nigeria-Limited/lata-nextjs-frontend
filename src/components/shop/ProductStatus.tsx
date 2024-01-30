@@ -49,7 +49,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
   };
 
   return (
-    <div className="flex items-center gap-1  lg:gap-6">
+    <div className="grid grid-cols-2 gap-4 xs:grid-cols-4 sl:gap-6">
       <BadgeWithCount
         count={props?.statusCounts?.active}
         activeVariant={activeButtonVariant()}
