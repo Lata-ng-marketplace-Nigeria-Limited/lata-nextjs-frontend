@@ -15,7 +15,7 @@ export const SimleyXEyesIcon = (props: React.SVGProps<SVGSVGElement>) => (
         d="M60 105C84.8528 105 105 84.8528 105 60C105 35.1472 84.8528 15 60 15C35.1472 15 15 35.1472 15 60C15 84.8528 35.1472 105 60 105Z"
         stroke="#5113A1"
         strokeWidth="3"
-        stroke-miterlimit="10"
+        strokeMiterlimit="10"
       />
       <path
         d="M86.25 45L71.25 60"

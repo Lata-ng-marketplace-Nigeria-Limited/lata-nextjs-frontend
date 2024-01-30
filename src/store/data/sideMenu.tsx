@@ -44,6 +44,7 @@ import {
   Pencil,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
+import { FeedbackIcon } from "@/components/atom/icons/Feedback";
 
 export const sideMenu: {
   title: string;
@@ -226,17 +227,18 @@ export const sideMenu: {
     fill: false,
     href: DASHBOARD_NOTIFICATIONS_ROUTE,
   },
-  // {
-  //   title: "Feedback",
-  //   icon: <FeedbackIcon />,
-  //   isSeller: true,
-  //   isAdmin: false,
-  //   isStaff: false,
-  //   hideFromAdmin: false,
-  //   hideFromStaff: false,
-  //   fill: false,
-  //   href: DASHBOARD_FEEDBACK_ROUTE,
-  // },
+  {
+    title: "Feedback",
+    icon: <FeedbackIcon />,
+    isSeller: true,
+    isAdmin: false,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: false,
+    fill: false,
+    isAuth: false,
+    href: DASHBOARD_FEEDBACK_ROUTE,
+  },
   {
     title: "Subscriptions",
     icon: <SubscriptionIcon />,

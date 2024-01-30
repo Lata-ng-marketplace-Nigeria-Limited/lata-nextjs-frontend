@@ -1,20 +1,19 @@
-import { findAllMyProductsApi } from "@/api/product";
+import { FetchMeta } from "@/interface/general";
+import { Product } from "@/interface/products";
 import { MyProductList } from "@components/shop/MyProductList";
 
 interface Props {
-  page?: string;
+  products: Product[]
+  meta: FetchMeta;
+  isEmpty?: boolean;
 }
-export const MyShop = async ({ page }: Props) => {
-  const products = await findAllMyProductsApi({
-    page,
-  });
-
+export const MyShop = async (props: Props) => {
   return (
     <div className={"mt-[0.4375rem]"}>
       <MyProductList
-        products={products.data}
-        meta={products.meta}
-        isEmpty={products.isEmpty}
+        products={props?.products}
+        meta={props?.meta}
+        isEmpty={props?.isEmpty}
       />
     </div>
   );

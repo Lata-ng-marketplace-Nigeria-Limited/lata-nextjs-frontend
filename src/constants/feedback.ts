@@ -1,0 +1,7 @@
+export const POSITIVE_FEEDBACK = "POSITIVE";
+export const NEUTRAL_FEEDBACK = "NEUTRAL";
+export const NEGATIVE_FEEDBACK = "NEGATIVE";
+
+export const POSITIVE_FEEDBACK_RATING = 3;
+export const NEUTRAL_FEEDBACK_RATING = 2;
+export const NEGATIVE_FEEDBACK_RATING = 1;

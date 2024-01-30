@@ -1,5 +1,5 @@
 "use server";
-import { FindAProductData, Product, SavedProduct } from "@/interface/products";
+import { FindAProductData, IProductStatusCount, Product, SavedProduct } from "@/interface/products";
 import { createFormData, getApiUrl } from "@/utils";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { getServerSession } from "next-auth";
@@ -11,7 +11,7 @@ import { ADMIN_REVIEW_PRODUCTS_ROUTE } from "@/constants/routes";
 
 export const getDashboardProductsApi = async (
   query?: string,
-  subcategory?: string
+  subcategory?: string,
 ): Promise<{
   message: string;
   isTrending: boolean;
@@ -28,7 +28,6 @@ export const getDashboardProductsApi = async (
     if (subcategory) {
       params.append("subcategory", subcategory || "");
     }
-
 
     const url = `/products/trending?${params.toString()}`;
 
@@ -49,7 +48,7 @@ export const getDashboardProductsApi = async (
 };
 
 export const findAProductApi = async (
-  productId: string
+  productId: string,
 ): Promise<FindAProductData | null> => {
   try {
     unstable_noStore();
@@ -101,7 +100,7 @@ export const searchProductsApi = async ({
           Authorization: "Bearer " + token,
         },
         body: JSON.stringify(payload),
-      }
+      },
     );
 
     if (!resp.ok) {
@@ -114,27 +113,35 @@ export const searchProductsApi = async ({
   }
 };
 
+
 export const findAllMyProductsApi = async ({
   page,
   limit,
-}: SearchQuery): Promise<{
+  status,
+}: SearchQuery & { status?: string }): Promise<{
   data: Product[];
   meta: FetchMeta;
   message: string;
   isEmpty: boolean;
+  statusCounts: IProductStatusCount;
 }> => {
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
-    const res = await fetch(
-      getApiUrl(`/products/my?page=${page || 1}&limit=${limit || 10}`),
-      {
-        headers: {
-          Authorization: "Bearer " + session?.token,
-        },
-        cache: "no-cache",
-      }
-    );
+    const params = new URLSearchParams();
+
+    if (status) {
+      params.append("status", status || "");
+    }
+    params.append("page", String(page || 1));
+    params.append("limit", String(limit || 10));
+
+    const res = await fetch(getApiUrl(`/products/my?${params.toString()}`), {
+      headers: {
+        Authorization: "Bearer " + session?.token,
+      },
+      cache: "no-cache",
+    });
 
     if (!res.ok) {
       throw await res.json();
@@ -221,7 +228,7 @@ interface CreateProductApiOutput {
 }
 
 export const createAProductApi = async (
-  payload: FormData
+  payload: FormData,
 ): Promise<CreateProductApiOutput> => {
   try {
     const res = await $httpFile.post(`products`, payload);
@@ -234,7 +241,7 @@ export const createAProductApi = async (
 
 export const updateAProductApi = async (
   id: string,
-  payload: Partial<CreateProductApiInput>
+  payload: Partial<CreateProductApiInput>,
 ): Promise<{
   message: string;
   product: Product;
@@ -249,7 +256,7 @@ export const updateAProductApi = async (
 };
 
 export const saveAProductApi = async (
-  productId: string
+  productId: string,
 ): Promise<{
   message: string;
   userData: User;
@@ -265,7 +272,7 @@ export const saveAProductApi = async (
 };
 
 export const unSaveAProductApi = async (
-  productId: string
+  productId: string,
 ): Promise<{
   message: string;
   userData: User;
@@ -311,7 +318,7 @@ export interface GetNewProductsApiInput extends SearchQuery {
 }
 
 export const getNewProductsApi = async (
-  payload: GetNewProductsApiInput
+  payload: GetNewProductsApiInput,
 ): Promise<{
   data: Product[];
   meta: FetchMeta;
@@ -326,7 +333,7 @@ export const getNewProductsApi = async (
 };
 
 export const activateProductApi = async (
-  id: string
+  id: string,
 ): Promise<{
   message: string;
 }> => {
@@ -340,7 +347,7 @@ export const activateProductApi = async (
 };
 
 export const deactivateProductApi = async (
-  id: string
+  id: string,
 ): Promise<{
   message: string;
 }> => {
@@ -353,7 +360,7 @@ export const deactivateProductApi = async (
   }
 };
 export const cancelProductApi = async (
-  id: string
+  id: string,
 ): Promise<{
   message: string;
 }> => {

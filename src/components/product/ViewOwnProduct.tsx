@@ -9,9 +9,11 @@ interface Props {
 
 export default function ViewOwnProduct(props: Props) {
   return (
-    <ViewProductContainer>
-      <ProductDetails product={props.product} />
-      <ProductInsights product={props.product} />
-    </ViewProductContainer>
+    <div>
+      <ViewProductContainer>
+        <ProductDetails product={props.product} />
+        <ProductInsights product={props.product} />
+      </ViewProductContainer>
+    </div>
   );
 }
