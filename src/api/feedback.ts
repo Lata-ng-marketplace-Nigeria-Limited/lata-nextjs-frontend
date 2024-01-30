@@ -43,15 +43,19 @@ export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
     if (!res.ok) throw await res.json();
     return await res.json();
   } catch (error: any) {
+    console.log(error);
+    if (error.isOwnProduct) {
+      return error.response || error;
+    }
     throw error.response || error;
   }
 };
 
-export const getCustomerFeedback = async (
+export const getAllCustomerFeedback = async (
   type: FeedbackType,
   page: string,
   limit: string = "10",
-  viewing: string
+  viewing: string,
 ): Promise<{
   data: IFeedback[];
   meta: FetchMeta;
@@ -74,6 +78,38 @@ export const getCustomerFeedback = async (
       },
       cache: "no-cache",
     });
+    if (!res.ok) {
+      throw await res.json();
+    }
+    return await res.json();
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
+
+export const getProductFeedback = async (
+  productId: string,
+  page?: string,
+): Promise<{
+  data: IFeedback[];
+  meta: FetchMeta;
+  isEmpty?: boolean;
+}> => {
+  try {
+    const params = new URLSearchParams({
+      page: String(page) || "1",
+    });
+
+    const session = await getServerSession(authConfig);
+    const res = await fetch(
+      getApiUrl(`/feedbacks/product/${productId}?${params.toString()}`),
+      {
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+        cache: "no-cache",
+      },
+    );
     if (!res.ok) {
       throw await res.json();
     }

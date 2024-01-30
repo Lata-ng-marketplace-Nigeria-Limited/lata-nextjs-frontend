@@ -1,9 +1,7 @@
-import EmptyFeedback from "@/components/feedback/EmptyFeedback";
-import FeedbackHeader from "@/components/feedback/FeedbackHeader";
-import SellerFeedbackList from "@/components/feedback/SellerFeedbackList";
+import { GetUser } from "@/components/atom/GetUser";
 import SellerFeedbackWrapper from "@/components/feedback/SellerFeedbackWrapper";
 import { Metadata } from "next";
-import React from "react";
+import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Feedback",
@@ -20,7 +18,14 @@ const Page = ({
   const query = searchParams?.query || "";
   const viewing = searchParams?.viewing || "";
 
-  return <SellerFeedbackWrapper query={query} viewing={viewing} />;
+  return (
+    <>
+      <Suspense>
+        <GetUser />
+      </Suspense>
+      <SellerFeedbackWrapper query={query} viewing={viewing} />{" "}
+    </>
+  );
 };
 
 export default Page;

@@ -10,7 +10,6 @@ import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
 import { findAllMyProductsApi } from "@/api/product";
 import ProductStatusList from "@/components/shop/ProductStatus";
-import FeedbackTopArea from "@/components/feedback/FeedbackTopArea";
 
 export const metadata: Metadata = {
   title: "My Shop",

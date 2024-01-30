@@ -13,8 +13,6 @@ const FeedbackContent = (props: Props) => {
     3: "positive" as const,
   };
 
-  console.log(JSON.parse(props?.feedback?.meta || "{}").sender);
-
   return (
     <div className="mb-6 rounded-xl border border-grey2 px-10 py-6">
       <FeedbackButton
@@ -23,7 +21,7 @@ const FeedbackContent = (props: Props) => {
         className="pointer-events-none max-w-max"
       />
       <h2 className="mb-5 text-xl font-semibold text-grey9">
-        {JSON.parse(props?.feedback?.meta || "{}")?.sender || 'Anonymous'}
+        {props?.feedback?.sender || "Anonymous"}
       </h2>
       <p className="text-sm font-normal text-grey7">
         {props.feedback?.description || "No description"}

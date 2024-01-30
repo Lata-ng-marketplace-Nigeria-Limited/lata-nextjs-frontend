@@ -12,6 +12,7 @@ export interface ICustomerFeedback {
   reference?: string;
   type: FeedbackType;
   userId?: string;
+  sender?: string;
   meta?: string;
 }
 
@@ -30,5 +31,6 @@ export interface IFeedback {
   createdAt: string | null;
   updatedAt: string | null;
   product?: Product;
+  sender?: string;
   user?: User;
 }

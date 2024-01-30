@@ -6,10 +6,12 @@ import React from "react";
 import FeedbackContent from "./FeedbackContent";
 import Paginate from "../input/Paginate";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import EmptyFeedback from "./EmptyFeedback";
 
 interface Props {
   feedbacks: IFeedback[];
   meta: FetchMeta;
+  isEmpty?: boolean;
 }
 const SellerFeedbackList = (props: Props) => {
   const searchParams = useSearchParams();
@@ -25,9 +27,13 @@ const SellerFeedbackList = (props: Props) => {
 
   return (
     <>
-      {props.feedbacks.map((feedback) => (
-        <FeedbackContent feedback={feedback} key={feedback.id} />
-      ))}
+      {props.isEmpty ? (
+        <EmptyFeedback />
+      ) : (
+        props.feedbacks.map((feedback) => (
+          <FeedbackContent feedback={feedback} key={feedback.id} />
+        ))
+      )}
 
       {props.meta?.last_page > 1 ? (
         <>

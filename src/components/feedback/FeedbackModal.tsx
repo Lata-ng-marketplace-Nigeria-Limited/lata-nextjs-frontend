@@ -29,7 +29,7 @@ interface Props {
 const FeedbackModal = (props: Props) => {
   const [loading, setLoading] = React.useState(false);
   const [productRating, setProductRating] = React.useState<3 | 2 | 1 | 0>(0);
-  const user = useUser();
+  const { user } = useUser();
 
   const createFeedbackSchema = z.object({
     description: z
@@ -52,7 +52,7 @@ const FeedbackModal = (props: Props) => {
   const onSubmit = async (values: z.infer<typeof createFeedbackSchema>) => {
     if (!productRating) {
       return toast({
-        title: "Please select a feedback type",
+        title: "Select rating for this product",
         variant: "destructive",
         duration: 15000,
       });
@@ -64,12 +64,13 @@ const FeedbackModal = (props: Props) => {
         productId: props.product?.id,
         rating: productRating,
         type: "PRODUCT",
-        meta: JSON.stringify({ sender: user?.user?.name }),
+        userId: user?.id,
+        sender: user?.name,
       };
 
       const res = await saveCustomerFeedback(payload);
 
-      if (res.message) {
+      if (res.success) {
         toast({
           title: "Your feedback has been sent successfully",
           description: res.message,
@@ -78,9 +79,25 @@ const FeedbackModal = (props: Props) => {
         });
         props.setOpenFeedbackModal(false);
       }
+
+      if (!res.success) {
+        const errorMessage = "You cannot give feedback to your own product";
+        if (res.isOwnProduct) {
+          toast({
+            title: errorMessage,
+            variant: "destructive",
+            duration: 15000,
+          });
+        }
+        return;
+      }
       setLoading(false);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast({
+        title: "Something went wrong",
+        variant: "destructive",
+        duration: 15000,
+      });
     } finally {
       setLoading(false);
     }

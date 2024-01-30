@@ -1,4 +1,4 @@
-import { getCustomerFeedback } from "@/api/feedback";
+import { getAllCustomerFeedback } from "@/api/feedback";
 import React from "react";
 import FeedbackHeader from "./FeedbackHeader";
 import SellerFeedbackList from "./SellerFeedbackList";
@@ -8,7 +8,7 @@ interface Props {
   viewing: string;
 }
 const SellerFeedbackWrapper = async (props: Props) => {
-  const feedbacks = await getCustomerFeedback(
+  const feedbacks = await getAllCustomerFeedback(
     "PRODUCT",
     props.query,
     "10",
@@ -22,7 +22,11 @@ const SellerFeedbackWrapper = async (props: Props) => {
         totalSent={feedbacks?.totalSent || 0}
         feedbackView={props?.viewing}
       />
-      <SellerFeedbackList feedbacks={feedbacks?.data} meta={feedbacks?.meta} />
+      <SellerFeedbackList
+        feedbacks={feedbacks?.data}
+        meta={feedbacks?.meta}
+        isEmpty={feedbacks.isEmpty}
+      />
     </div>
   );
 };
