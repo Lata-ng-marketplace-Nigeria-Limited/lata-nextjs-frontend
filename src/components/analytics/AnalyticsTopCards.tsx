@@ -21,7 +21,7 @@ const AnalyticsTopCards = ({
       )}
     >
       <p className="tablet:mb-4 mb-2 text-sm font-normal">{title}</p>
-      <p className="tablet:mb-4 mb-2 font-semibold text-2xl tablet:text-xl">{number}</p>
+      <p className="tablet:mb-4 mb-2 font-semibold text-2xl tablet:text-xl">{number || 0}</p>
       <p className="text-xs font-normal">{description}</p>
     </div>
   );

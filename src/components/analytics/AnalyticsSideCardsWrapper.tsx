@@ -42,7 +42,7 @@ const AnalyticsSideCardsWrapper = async ({ selectedMonth }: Props) => {
       />
       <AnalyticsSideCard
         title="Message Clicks"
-        clicksCount={messageClicks}
+        clicksCount={messageClicks || 0}
         description={monthInFull}
       />
     </div>
