@@ -55,15 +55,15 @@ export default function ProductInsights(props: Props) {
       <MobileBorderArea
         className={cn(
           `
+            h-max
             px-[10px]
             py-6
             sm:px-[43px]
-            h-max
-          `
+          `,
         )}
         showBorderInDesktop
       >
-        <div className={"flex flex-col gap-y-3 md:gap-y-6 mb-3"}>
+        <div className={"mb-3 flex flex-col gap-y-3 md:gap-y-6"}>
           <HeaderText>Product insights</HeaderText>
           <Hr className={"border-grey2"} />
         </div>
@@ -77,7 +77,7 @@ export default function ProductInsights(props: Props) {
           <ProductInsightInfo
             icon={
               <SavedIcon
-                className={"w-7 h-7"}
+                className={"h-7 w-7"}
                 pathClass={"fill-primary stroke-primary"}
               />
             }
@@ -97,8 +97,7 @@ export default function ProductInsights(props: Props) {
         </div>
       </MobileBorderArea>
 
-      {props.product?.status !== "CANCELLED" ||
-      user?.email.includes("rnwonder") ? (
+      {props.product?.status || user?.email.includes("rnwonder") ? (
         <MobileBorderArea
           className={"flex h-fit flex-col px-2.5 py-6 sm:px-6"}
           showBorderInDesktop
@@ -134,16 +133,16 @@ export default function ProductInsights(props: Props) {
           className={"flex h-fit flex-col px-2.5 py-6 sm:px-6"}
           showBorderInDesktop
         >
-          <p className={"text-sm tablet:text-base font-medium"}>Under Review</p>
+          <p className={"text-sm font-medium tablet:text-base"}>Under Review</p>
         </MobileBorderArea>
       ) : null}
 
       {props.product?.status === "CANCELLED" ? (
         <MobileBorderArea
-          className={"flex h-fit flex-col px-2.5 py-6 sm:px-6 bg-danger"}
+          className={"flex h-fit flex-col bg-danger px-2.5 py-6 sm:px-6"}
           showBorderInDesktop
         >
-          <p className={"text-sm tablet:text-base font-bold text-white"}>
+          <p className={"text-sm font-bold text-white tablet:text-base"}>
             Product Rejected
           </p>
         </MobileBorderArea>
