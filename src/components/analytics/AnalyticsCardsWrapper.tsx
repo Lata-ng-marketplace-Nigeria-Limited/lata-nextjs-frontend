@@ -9,15 +9,15 @@ const AnalyticsCardsWrapper = async () => {
   const formatNumber = (number: number) => {
     return Number(new Intl.NumberFormat("en-US").format(number));
   };
-  const productClicks = formatNumber(response?.productClicks?.clicks ?? 0);
-  const productViews = formatNumber(response?.productViews?.views ?? 0);
-  const phoneClicks = formatNumber(response?.phoneClicks?.clicks ?? 0);
-  const messageClicks = formatNumber(response?.messageClicks?.clicks ?? 0);
+  const productClicks = formatNumber(response?.productClicks ?? 0);
+  const productViews = formatNumber(response?.productViews ?? 0);
+  const phoneClicks = formatNumber(response?.phoneClicks ?? 0);
+  const messageClicks = formatNumber(response?.messageClicks ?? 0);
 
   return (
     <div>
-      <section className="border-grey2 border border-solid rounded-[0.625rem] py-6 lg:py-[2.19rem] px-6 mb-8 mt-6">
-        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4  gap-6">
+      <section className="mb-8 mt-6 rounded-[0.625rem] border border-solid border-grey2 px-6 py-6 lg:py-[2.19rem]">
+        <div className="grid grid-cols-1 gap-6 xs:grid-cols-2  lg:grid-cols-4">
           <AnalyticsTopCards
             isTotalViews
             title="Total Views"

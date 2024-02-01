@@ -18,10 +18,10 @@ interface AnalyticsClicksData {
 export interface GetSellerAnalyticsResponse {
   isError?: boolean;
   sucess?: boolean;
-  phoneClicks: AnalyticsClicksData;
-  productClicks: AnalyticsClicksData;
-  messageClicks: AnalyticsClicksData;
-  productViews: AnalyticsClicksData & { views: number };
+  phoneClicks: number;
+  productClicks: number;
+  messageClicks: number;
+  productViews: number & { views: number };
   month?: string;
 }
 
