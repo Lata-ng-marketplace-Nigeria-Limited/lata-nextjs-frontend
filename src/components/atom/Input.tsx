@@ -29,7 +29,8 @@ const Input = React.forwardRef(
         ref={ref as any}
         className={cn(
           `
-          h-12 
+          h-[2rem]
+          sm:h-12 
           px-4
           w-full
           rounded-md
