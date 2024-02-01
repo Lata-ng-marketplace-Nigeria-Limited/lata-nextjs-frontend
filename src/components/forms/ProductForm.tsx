@@ -213,7 +213,7 @@ export default function ProductForm({
           toast({
             title: "Product created successfully",
             description: res.msg,
-            variant: "success",
+            variant: res?.savedInDraft ? "warning" : "success",
             duration: 15000,
           });
         }
