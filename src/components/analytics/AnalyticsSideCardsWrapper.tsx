@@ -27,17 +27,17 @@ const AnalyticsSideCardsWrapper = async ({ selectedMonth }: Props) => {
     <div className="lg:basis-[20%] lg:flex lg:flex-col gap-6 grid p-6 lg:p-0 grid-cols-1 xs:grid-cols-2 w-full mt-4 tablet:mt-8 lg:mt-0 border lg:border-0 rounded">
       <AnalyticsSideCard
         title="Views"
-        clicksCount={productViews}
+        clicksCount={productViews || 0}
         description={monthInFull}
       />
       <AnalyticsSideCard
         title="Product Clicks"
-        clicksCount={productClicks}
+        clicksCount={productClicks || 0}
         description={monthInFull}
       />
       <AnalyticsSideCard
         title="Phone Clicks"
-        clicksCount={phoneClicks}
+        clicksCount={phoneClicks || 0}
         description={monthInFull}
       />
       <AnalyticsSideCard
