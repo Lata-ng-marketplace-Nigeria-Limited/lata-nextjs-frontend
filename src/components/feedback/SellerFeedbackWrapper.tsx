@@ -1,5 +1,5 @@
 import { getAllCustomerFeedback } from "@/api/feedback";
-import React from "react";
+import React, { Suspense } from "react";
 import FeedbackHeader from "./FeedbackHeader";
 import SellerFeedbackList from "./SellerFeedbackList";
 
@@ -22,11 +22,13 @@ const SellerFeedbackWrapper = async (props: Props) => {
         totalSent={feedbacks?.totalSent || 0}
         feedbackView={props?.viewing}
       />
-      <SellerFeedbackList
-        feedbacks={feedbacks?.data}
-        meta={feedbacks?.meta}
-        isEmpty={feedbacks.isEmpty}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SellerFeedbackList
+          feedbacks={feedbacks?.data}
+          meta={feedbacks?.meta}
+          isEmpty={feedbacks.isEmpty}
+        />
+      </Suspense>
     </div>
   );
 };

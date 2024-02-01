@@ -87,6 +87,12 @@ export const getAllCustomerFeedback = async (
   }
 };
 
+export interface IGetProductFeedback {
+  data: IFeedback[];
+  meta: FetchMeta;
+  isEmpty?: boolean;
+}
+
 export const getProductFeedback = async (
   productId: string,
   page?: string,
@@ -107,7 +113,6 @@ export const getProductFeedback = async (
         headers: {
           Authorization: `Bearer ${session?.token}`,
         },
-        cache: "no-cache",
       },
     );
     if (!res.ok) {

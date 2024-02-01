@@ -14,6 +14,7 @@ import Modal from "@molecule/Modal";
 import Button from "@atom/Button";
 import { cn, formatPrice } from "@/utils";
 import ProductCard from "@components/product/ProductCard";
+import FeedbacksForProduct from "../feedback/FeedbacksForProduct";
 
 interface Props {
   product: Product | undefined;
@@ -114,6 +115,12 @@ export default function ViewNotOwnProduct(props: Props) {
           />
           <SafetyTips />
 
+          {props?.product ? (
+            <div className="mt-8 max-h-[30rem] overflow-y-auto">
+              <FeedbacksForProduct product={props.product as Product} />
+            </div>
+          ) : null}
+
           {props.product?.status === "ACTIVE" ? (
             <>
               {user?.role === "ADMIN" ? (
@@ -144,7 +151,7 @@ export default function ViewNotOwnProduct(props: Props) {
         >
           <h2
             className={
-              "text-xs sm:text-base font-semibold sm:font-medium text-grey9 "
+              "text-xs font-semibold text-grey9 sm:text-base sm:font-medium "
             }
           >
             Similar products
