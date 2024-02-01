@@ -225,6 +225,7 @@ interface CreateProductApiOutput {
   planName: string;
   subscriptionName: string;
   msg: string;
+  savedInDraft: boolean;
 }
 
 export const createAProductApi = async (
