@@ -5,7 +5,7 @@ import Button from "@components/atom/Button";
 import FeedbackModal from "@components/feedback/FeedbackModal";
 import { Product } from "@/interface/products";
 import { useUser } from "@/hooks/useUser";
-import { toast } from "@components/ui/use-toast";
+import { useToast } from "@components/ui/use-toast";
 import { cn } from "@/utils";
 
 interface Props {
@@ -17,11 +17,13 @@ interface Props {
 const CreateFeedback = (props: Props) => {
   const [openFeedbackModal, setOpenFeedbackModal] = React.useState(false);
   const { isLoggedIn } = useUser();
+  const { toast } = useToast();
 
   const handleModal = () => {
     if (!isLoggedIn) {
-      return toast({
+      toast({
         title: "Login to leave a feedback",
+      description: "This may take a while, please wait",
         variant: "destructive",
         duration: 15000,
       });

@@ -52,7 +52,7 @@ const FeedbackModal = (props: Props) => {
   const onSubmit = async (values: z.infer<typeof createFeedbackSchema>) => {
     if (!productRating) {
       return toast({
-        title: "Select rating for this product",
+        title: "Click on positive, negative or neutral before sending",
         variant: "destructive",
         duration: 15000,
       });

@@ -34,10 +34,7 @@ const FeedbacksForProduct = async (props: Props) => {
           hidden: !productFeedback?.isEmpty || !props?.isOwnProduct,
         })}
       >
-        <EmptyFeedback
-          showCopy={props.isOwnProduct}
-          productId={props?.product?.id}
-        />
+        <EmptyFeedback showCopy={props.isOwnProduct} product={props.product} />
       </div>
     </>
   );
