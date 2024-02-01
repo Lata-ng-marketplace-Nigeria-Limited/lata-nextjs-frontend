@@ -23,7 +23,6 @@ const CreateFeedback = (props: Props) => {
     if (!isLoggedIn) {
       toast({
         title: "Login to leave a feedback",
-      description: "This may take a while, please wait",
         variant: "destructive",
         duration: 15000,
       });
