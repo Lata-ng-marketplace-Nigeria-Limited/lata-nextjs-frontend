@@ -82,4 +82,5 @@ export interface IProductStatusCount {
   denied: number;
   draft: number;
   other: number;
+  unsubscribed: number
 }
