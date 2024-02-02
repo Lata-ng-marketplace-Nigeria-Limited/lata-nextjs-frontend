@@ -6,13 +6,14 @@ import { GetSellerAnalyticsResponse } from "@/interface/views";
 const AnalyticsCardsWrapper = async () => {
   const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi();
 
-  const formatNumber = (number: number) => {
-    return Number(new Intl.NumberFormat("en-US").format(number));
+  const formatNumber = (number: number | undefined | null) => {
+    if (!number || typeof number !== "number") return 0;
+    return number.toLocaleString();
   };
-  const productClicks = formatNumber(response?.productClicks ?? 0);
-  const productViews = formatNumber(response?.productViews ?? 0);
-  const phoneClicks = formatNumber(response?.phoneClicks ?? 0);
-  const messageClicks = formatNumber(response?.messageClicks ?? 0);
+  const productViews = formatNumber(response?.productViews);
+  const productClicks = formatNumber(response?.productClicks);
+  const phoneClicks = formatNumber(response?.phoneClicks);
+  const messageClicks = formatNumber(response?.messageClicks);
 
   return (
     <div>

@@ -77,7 +77,7 @@ export const DashboardSelectCategories = () => {
           },
           ...categoriesSelectData,
         ]}
-        placeholder={"Select category"}
+        placeholder={"Quick Search"}
         inputClass={cn(
           `min-w-[120px] xms:min-w-[130px] xls:min-w-[150px] px-4 py-1 xs:py-2 sm:min-w-[174px] w-fit text-xs sm:text-sm rounded-[12px] border-primary hover:border-primary text-primary`,
         )}

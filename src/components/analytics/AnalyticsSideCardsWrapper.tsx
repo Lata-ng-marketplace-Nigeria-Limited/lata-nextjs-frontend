@@ -13,7 +13,8 @@ const AnalyticsSideCardsWrapper = async ({ selectedMonth }: Props) => {
   const monthInFull = months[Number(response?.month) - 1]?.extra ?? "";
 
   const formatNumber = (number: number) => {
-    return Number(new Intl.NumberFormat("en-US").format(number));
+    if (!number || typeof number !== "number") return 0;
+    return number.toLocaleString();
   };
 
   const productClicks = formatNumber(response?.productClicks ?? 0);
