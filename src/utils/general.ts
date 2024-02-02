@@ -3,6 +3,8 @@ import { AUTH_CALLBACK_ROUTE } from "@/constants/routes";
 import { ApiAuthCallback } from "@/api/auth";
 import { User } from "@/interface/user";
 import { toast } from "@/components/ui/use-toast";
+import { clearAllCookies } from ".";
+import { signOut } from "next-auth/react";
 
 export const getEnv = (env: IEnv): string => {
   return process.env[env] || "";
@@ -30,7 +32,7 @@ export const getUserFromAuthCallback = (data: ApiAuthCallback): User => {
   Reflect.deleteProperty(loggedUser, "token");
   Reflect.deleteProperty(loggedUser, "type");
   // Reflect.deleteProperty(loggedUser, "expires_at");
-  
+
   return loggedUser;
 };
 
@@ -224,3 +226,24 @@ export async function copyTextToClipboard({
     });
   }
 }
+
+export const logoutUserOnSessionExpiration = async (
+  user: User,
+  clear: () => void,
+) => {
+  if ((user && new Date() > new Date(user?.expires_at)) || !user?.expires_at) {
+
+    toast({
+      title: "Session Expired",
+      description: "Please login again",
+      variant: "destructive",
+      duration: 15000,
+    });
+    setTimeout(() => {}, 2000);
+    localStorage.clear();
+    sessionStorage.clear();
+    clearAllCookies();
+    clear();
+    await signOut({ redirect: true, callbackUrl: "/" });
+  }
+};

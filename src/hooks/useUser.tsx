@@ -1,10 +1,9 @@
 import { useLocalStore } from "@/store/states/localStore";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import {
-  clearAllCookies,
-  deleteCookies,
   getUserFromAuthCallback,
+  logoutUserOnSessionExpiration,
   setCookies,
 } from "@/utils";
 import { User } from "@/interface/user";
@@ -13,7 +12,6 @@ import { Plan } from "@/interface/payment";
 import { SessionData } from "@/interface/next-auth";
 import { useUserStore } from "@/store/states/userState";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
 
 export const useUser = () => {
   const { user, updateUser, clear, setUser } = useLocalStore();
@@ -21,29 +19,13 @@ export const useUser = () => {
   const { data, status, update } = useSession();
   const isSocketConnected = useUserStore((state) => state.isSocketConnected);
   const { replace } = useRouter();
-  const { toast } = useToast();
 
   useEffect(() => {
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
     if (!user) return;
-    (async () => {
-      if (user && new Date() > new Date(user?.expires_at)) {
-        toast({
-          title: "Session Expired",
-          description: "Please login again",
-          variant: "destructive",
-          duration: 15000,
-        });
-        setTimeout(() => {}, 3000);
-        localStorage.clear();
-        sessionStorage.clear();
-        clearAllCookies();
-        clear();
-        await signOut({ redirect: true, callbackUrl: "/" });
-      }
-    })();
+    logoutUserOnSessionExpiration(user, clear);
   }, [user?.plan, user?.subscriptionStatus]);
 
   const handleUpdate = useCallback(
