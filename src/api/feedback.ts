@@ -52,7 +52,7 @@ export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
   }
 };
 
-export const getAllCustomerFeedback = async (
+export const getAllSellerFeedbacks = async (
   type: FeedbackType,
   page: string,
   viewing: string,
@@ -68,7 +68,6 @@ export const getAllCustomerFeedback = async (
       viewing,
       type,
       page: String(page) || "1",
-      limit:  "10",
     });
 
     const session = await getServerSession(authConfig);

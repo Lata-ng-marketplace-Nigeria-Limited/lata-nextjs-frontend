@@ -1,4 +1,4 @@
-import { getAllCustomerFeedback } from "@/api/feedback";
+import { getAllSellerFeedbacks } from "@/api/feedback";
 import { GetUser } from "@/components/atom/GetUser";
 import FeedbackHeader from "@/components/feedback/FeedbackHeader";
 import SellerFeedbackList from "@/components/feedback/SellerFeedbackList";
@@ -29,7 +29,7 @@ const Page = async ({
   const query = searchParams?.query || "";
   const viewing = searchParams?.viewing || "";
 
-  const feedbacks = await getAllCustomerFeedback("PRODUCT", query, viewing);
+  const feedbacks = await getAllSellerFeedbacks("PRODUCT", query, viewing);
 
   return (
     <>
