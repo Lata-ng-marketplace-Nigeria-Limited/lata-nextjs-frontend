@@ -75,7 +75,7 @@ const ProductStatusList: React.FC<IProductStatusList> = (props) => {
         onClick={() => handleClick("denied")}
       />
       <BadgeWithCount
-        count={props?.statusCounts?.draft}
+        count={props?.statusCounts?.draft + props?.statusCounts?.unsubscribed}
         activeVariant={activeButtonVariant()}
         className="max-xs:text-[10px]"
         text="draft"

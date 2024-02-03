@@ -1,5 +1,5 @@
 import { useLocalStore } from "@/store/states/localStore";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { getUserFromAuthCallback, logoutUser, setCookies } from "@/utils";
 import { User } from "@/interface/user";

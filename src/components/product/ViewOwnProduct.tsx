@@ -15,7 +15,7 @@ export default function ViewOwnProduct(props: Props) {
         <ProductDetails product={props.product} />
         <div>
           <ProductInsights product={props.product} />
-          {props.product ? (
+          {props.product && props.product?.status === "ACTIVE" ? (
             <div className="mt-8 max-h-[30rem] overflow-y-auto">
               <FeedbacksForProduct product={props.product as Product} />
             </div>

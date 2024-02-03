@@ -31,7 +31,8 @@ export const getUserFromAuthCallback = (data: ApiAuthCallback): User => {
   };
   Reflect.deleteProperty(loggedUser, "token");
   Reflect.deleteProperty(loggedUser, "type");
-  Reflect.deleteProperty(loggedUser, "expires_at");
+  // Reflect.deleteProperty(loggedUser, "expires_at");
+
   return loggedUser;
 };
 
