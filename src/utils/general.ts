@@ -1,8 +1,10 @@
 import { ApiErrorResponse, IEnv } from "@/interface/general";
-import { AUTH_CALLBACK_ROUTE } from "@/constants/routes";
+import { AUTH_CALLBACK_ROUTE, LOGIN_ROUTE } from "@/constants/routes";
 import { ApiAuthCallback } from "@/api/auth";
 import { User } from "@/interface/user";
 import { toast } from "@/components/ui/use-toast";
+import { clearAllCookies } from ".";
+import { signOut } from "next-auth/react";
 
 export const getEnv = (env: IEnv): string => {
   return process.env[env] || "";
@@ -223,3 +225,22 @@ export async function copyTextToClipboard({
     });
   }
 }
+
+export const logoutUser = async (
+  clear: () => void,
+  sessionTimeout: boolean = false,
+) => {
+  if (sessionTimeout) {
+    toast({
+      title: "Session Expired",
+      description: "Please login again",
+      variant: "destructive",
+      duration: 15000,
+    });
+  }
+  localStorage.clear();
+  sessionStorage.clear();
+  clearAllCookies();
+  clear();
+  await signOut({ redirect: true, callbackUrl: "/auth" + LOGIN_ROUTE });
+};
