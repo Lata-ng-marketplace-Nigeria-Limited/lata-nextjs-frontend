@@ -58,7 +58,7 @@ const FeedbacksForProduct = (props: Props) => {
                 hidden:
                   !productFeedback.isEmpty && user?.id !== props?.product?.id,
               },
-              "mt-4 text-center font-semibold text-gray-500 ",
+              "mt-4 font-semibold text-gray-500 ",
             )}
           >
             No feeback for this product yet
