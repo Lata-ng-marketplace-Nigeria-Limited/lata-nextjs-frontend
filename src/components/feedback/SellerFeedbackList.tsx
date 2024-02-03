@@ -7,9 +7,10 @@ import FeedbackContent from "./FeedbackContent";
 import Paginate from "../input/Paginate";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import EmptyFeedback from "./EmptyFeedback";
+import FeedbackContentSkeleton from "../skeleton/FeedbackContentSkeleton";
 
 interface Props {
-  feedbacks: IFeedback[];
+  feedbacks?: IFeedback[];
   meta: FetchMeta;
   isEmpty?: boolean;
 }
@@ -26,16 +27,23 @@ const SellerFeedbackList = (props: Props) => {
     replace(`${pathname}?${params.toString()}`);
   };
 
+  const showFeedback = () => {
+    if (props?.isEmpty) {
+      return <EmptyFeedback param={params.get("viewing") || ""} />;
+    }
+
+    if (props?.feedbacks) {
+      return props.feedbacks.map((feedback) => (
+        <FeedbackContent feedback={feedback} key={feedback.id} />
+      ));
+    } else {
+      <FeedbackContentSkeleton hideLink />;
+    }
+  };
+
   return (
     <>
-      {props.isEmpty ? (
-        <EmptyFeedback param={params.get("viewing") || ""} />
-      ) : (
-        props.feedbacks.map((feedback) => (
-          <FeedbackContent feedback={feedback} key={feedback.id} />
-        ))
-      )}
-
+      {showFeedback()}
       {props.meta?.last_page > 1 ? (
         <>
           <div className={"mt-4"} />
