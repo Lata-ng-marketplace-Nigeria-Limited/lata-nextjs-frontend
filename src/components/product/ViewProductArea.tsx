@@ -30,7 +30,7 @@ export const ViewProductArea = ({ data }: Props) => {
       }
     }
     setLoading(false);
-  }, [data, updateUser]);
+  }, [data]);
 
   return (
     <div>

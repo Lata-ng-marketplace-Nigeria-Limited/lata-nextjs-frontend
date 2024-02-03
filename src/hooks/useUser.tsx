@@ -1,7 +1,7 @@
 import { useLocalStore } from "@/store/states/localStore";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import { deleteCookies, getUserFromAuthCallback, setCookies } from "@/utils";
+import { getUserFromAuthCallback, logoutUser, setCookies } from "@/utils";
 import { User } from "@/interface/user";
 import { authCallbackApi } from "@/api/auth";
 import { Plan } from "@/interface/payment";
@@ -19,6 +19,13 @@ export const useUser = () => {
   useEffect(() => {
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
+    }
+
+    if (
+      (user && new Date() > new Date(user?.expires_at)) ||
+      (user && !user?.expires_at)
+    ) {
+      logoutUser(clear, true);
     }
   }, [user?.plan, user?.subscriptionStatus]);
 

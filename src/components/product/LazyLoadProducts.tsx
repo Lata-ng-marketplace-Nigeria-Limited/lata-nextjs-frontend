@@ -10,7 +10,7 @@ import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 
 interface Props {
   products: Product[];
-  showLimit: number;
+  showLimit?: number;
   offset?: number;
   fallbackText?: string;
   onUnSave?: (productId: string) => void;
@@ -25,14 +25,15 @@ export default function LazyLoadProducts(props: Props) {
   const entry = useIntersectionObserver(ref, {});
   const isVisible = !!entry?.isIntersecting;
 
+
   useEffect(() => {
     if (!isVisible) return;
     if (offset >= props.products?.length) return;
     const nextTenProducts = props.products?.slice(
       offset,
-      offset + props?.showLimit,
+      offset + props?.showLimit!,
     );
-    setOffset(offset + props?.showLimit);
+    setOffset(offset + props?.showLimit!);
     setShowingProducts([...showingProducts, ...nextTenProducts]);
   }, [isVisible, props?.products, offset, showingProducts, props?.showLimit]);
 

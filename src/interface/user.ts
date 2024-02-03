@@ -36,6 +36,7 @@ export interface User {
   notifications: { id: string; userId: string }[];
   createdAt: string;
   updatedAt: string;
+  expires_at: string;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";

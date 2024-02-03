@@ -8,7 +8,8 @@ export type ButtonType =
   | "tertiary"
   | "danger"
   | "link"
-  | "icon";
+  | "icon"
+  | "none";
 
 type AsButton = {
   as?: "button";

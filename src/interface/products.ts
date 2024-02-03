@@ -75,3 +75,12 @@ export interface SavedProduct {
   updatedAt: string;
   product: Product;
 }
+
+export interface IProductStatusCount {
+  active: number;
+  reviewing: number;
+  denied: number;
+  draft: number;
+  other: number;
+  unsubscribed: number
+}

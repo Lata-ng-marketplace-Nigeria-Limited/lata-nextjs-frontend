@@ -213,7 +213,7 @@ export default function ProductForm({
           toast({
             title: "Product created successfully",
             description: res.msg,
-            variant: "success",
+            variant: res?.savedInDraft ? "warning" : "success",
             duration: 15000,
           });
         }
@@ -390,6 +390,7 @@ export default function ProductForm({
                 wrapperClass={"w-full"}
                 placeholder={"Product name"}
                 label={"Product name"}
+                inputClass="!h-12"
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
@@ -407,6 +408,7 @@ export default function ProductForm({
                 wrapperClass={"w-full"}
                 placeholder={"Price"}
                 label={"Price"}
+                inputClass="!h-12"
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
@@ -425,6 +427,7 @@ export default function ProductForm({
                 inputProps={{ ...field }}
                 placeholder={"Select category"}
                 options={categoriesSelectData}
+                inputClass="!min-h-12"
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
@@ -446,6 +449,7 @@ export default function ProductForm({
                 inputProps={{ ...field }}
                 placeholder={"Select Subcategory"}
                 options={subCategoriesSelectData}
+                inputClass="!min-h-12"
                 name={field.name}
                 disabled={loading || !hasChosenCategory}
                 value={field.value || ""}
@@ -477,6 +481,7 @@ export default function ProductForm({
                     value: "Used",
                   },
                 ]}
+                inputClass="!min-h-12"
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
@@ -499,6 +504,7 @@ export default function ProductForm({
                   label: state.label,
                   value: state.value,
                 }))}
+                inputClass="!min-h-12"
                 name={field.name}
                 disabled={loading}
                 value={field.value || ""}
@@ -521,6 +527,7 @@ export default function ProductForm({
               inputProps={{ ...field }}
               placeholder={"Select city"}
               options={cities}
+              inputClass="!min-h-12"
               name={field.name}
               disabled={loading || !hasSelectedState}
               value={field.value || ""}
@@ -544,6 +551,7 @@ export default function ProductForm({
                 label: `${index}%`,
                 value: `${index}`,
               }))}
+              inputClass="!min-h-12"
               name={field.name}
               disabled={loading}
               value={field.value || ""}

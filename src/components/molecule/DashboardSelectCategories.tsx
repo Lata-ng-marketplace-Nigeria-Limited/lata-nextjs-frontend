@@ -77,7 +77,7 @@ export const DashboardSelectCategories = () => {
           },
           ...categoriesSelectData,
         ]}
-        placeholder={"Select category"}
+        placeholder={"Quick Search"}
         inputClass={cn(
           `min-w-[120px] xms:min-w-[130px] xls:min-w-[150px] px-4 py-1 xs:py-2 sm:min-w-[174px] w-fit text-xs sm:text-sm rounded-[12px] border-primary hover:border-primary text-primary`,
         )}
@@ -88,7 +88,7 @@ export const DashboardSelectCategories = () => {
 
       <Button
         format="primary"
-        className="min-w-[120px] px-4 py-1 text-base font-normal xms:min-w-[140px] xls:min-w-[150px] xs:text-base xs:font-semibold sm:min-w-[174px] opacity-0 pointer-events-none"
+        className="min-w-[120px] px-4 py-1 text-base font-normal xms:min-w-[140px] xls:min-w-[150px] xs:text-base xs:font-semibold sm:min-w-[174px]"
         onClick={handleShowModal}
       >
         BUY HERE

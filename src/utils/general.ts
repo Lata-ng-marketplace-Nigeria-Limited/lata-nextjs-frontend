@@ -1,7 +1,10 @@
 import { ApiErrorResponse, IEnv } from "@/interface/general";
-import { AUTH_CALLBACK_ROUTE } from "@/constants/routes";
+import { AUTH_CALLBACK_ROUTE, LOGIN_ROUTE } from "@/constants/routes";
 import { ApiAuthCallback } from "@/api/auth";
 import { User } from "@/interface/user";
+import { toast } from "@/components/ui/use-toast";
+import { clearAllCookies } from ".";
+import { signOut } from "next-auth/react";
 
 export const getEnv = (env: IEnv): string => {
   return process.env[env] || "";
@@ -17,8 +20,8 @@ export function encodeUnicode(str: string) {
       function toSolidBytes(match, p1) {
         // @ts-ignore
         return String.fromCharCode("0x" + p1);
-      }
-    )
+      },
+    ),
   );
 }
 
@@ -28,7 +31,8 @@ export const getUserFromAuthCallback = (data: ApiAuthCallback): User => {
   };
   Reflect.deleteProperty(loggedUser, "token");
   Reflect.deleteProperty(loggedUser, "type");
-  Reflect.deleteProperty(loggedUser, "expires_at");
+  // Reflect.deleteProperty(loggedUser, "expires_at");
+
   return loggedUser;
 };
 
@@ -170,17 +174,74 @@ export function copyPrevLocalStore(prev: any) {
 }
 
 export const getApiUrl = (path: string) => {
-  return process.env.NEXT_PUBLIC_LATA_API_URL  + path;
+  return process.env.NEXT_PUBLIC_LATA_API_URL + path;
 };
 
-export const sortArray = (arr: any[], key: string, order: 'asc' | 'desc' = 'asc') => {
+export const sortArray = (
+  arr: any[],
+  key: string,
+  order: "asc" | "desc" = "asc",
+) => {
   return arr.sort((a: any, b: any) => {
     if (a[key] < b[key]) {
-      return order === 'asc' ? -1 : 1;
+      return order === "asc" ? -1 : 1;
     }
     if (a[key] > b[key]) {
-      return order === 'asc' ? 1 : -1;
+      return order === "asc" ? 1 : -1;
     }
     return 0;
   });
+};
+
+export async function copyTextToClipboard({
+  text,
+  inputId = "text-clipboard-input",
+  toastMessage,
+}: {
+  text?: string;
+  inputId: string;
+  toastMessage?: string;
+}) {
+  const copyText = document.getElementById(inputId) as HTMLInputElement;
+  if (copyText && !text) {
+    // @ts-ignore
+    copyText.select();
+    // @ts-ignore
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    // @ts-ignore
+    await navigator.clipboard.writeText(copyText.value);
+    document.execCommand("copy");
+    // @ts-ignore
+    toast({
+      title: toastMessage ?? `Copied ${copyText.value} to clipboard.`,
+      variant: "success",
+      duration: 15000,
+    });
+  } else if (text) {
+    await navigator.clipboard.writeText(text);
+    toast({
+      title: toastMessage ?? `Copied ${copyText.value} to clipboard.`,
+      variant: "success",
+      duration: 15000,
+    });
+  }
+}
+
+export const logoutUser = async (
+  clear: () => void,
+  sessionTimeout: boolean = false,
+) => {
+  if (sessionTimeout) {
+    toast({
+      title: "Session Expired",
+      description: "Please login again",
+      variant: "destructive",
+      duration: 15000,
+    });
+  }
+  localStorage.clear();
+  sessionStorage.clear();
+  clearAllCookies();
+  clear();
+  await signOut({ redirect: true, callbackUrl: "/auth" + LOGIN_ROUTE });
 };

@@ -6,18 +6,19 @@ import { GetSellerAnalyticsResponse } from "@/interface/views";
 const AnalyticsCardsWrapper = async () => {
   const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi();
 
-  const formatNumber = (number: number) => {
-    return Number(new Intl.NumberFormat("en-US").format(number));
+  const formatNumber = (number: number | undefined | null) => {
+    if (!number || typeof number !== "number") return 0;
+    return number.toLocaleString();
   };
-  const productClicks = formatNumber(response?.productClicks?.clicks ?? 0);
-  const productViews = formatNumber(response?.productViews?.views ?? 0);
-  const phoneClicks = formatNumber(response?.phoneClicks?.clicks ?? 0);
-  const messageClicks = formatNumber(response?.messageClicks?.clicks ?? 0);
+  const productViews = formatNumber(response?.productViews);
+  const productClicks = formatNumber(response?.productClicks);
+  const phoneClicks = formatNumber(response?.phoneClicks);
+  const messageClicks = formatNumber(response?.messageClicks);
 
   return (
     <div>
-      <section className="border-grey2 border border-solid rounded-[0.625rem] py-6 lg:py-[2.19rem] px-6 mb-8 mt-6">
-        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4  gap-6">
+      <section className="mb-8 mt-6 rounded-[0.625rem] border border-solid border-grey2 px-6 py-6 lg:py-[2.19rem]">
+        <div className="grid grid-cols-1 gap-6 xs:grid-cols-2  lg:grid-cols-4">
           <AnalyticsTopCards
             isTotalViews
             title="Total Views"

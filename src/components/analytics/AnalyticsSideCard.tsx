@@ -1,7 +1,7 @@
 import React from "react";
 
 interface Props {
-  clicksCount: number;
+  clicksCount: number | string;
   title: string;
   description: string;
 }
