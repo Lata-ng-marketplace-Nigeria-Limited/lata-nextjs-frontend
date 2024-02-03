@@ -3,6 +3,7 @@
 import React from "react";
 import BadgeWithCount from "../atom/BadgeWithCount";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import HeaderText from "../atom/HeaderText";
 
 interface Props {
   totalReceived: number;
@@ -30,9 +31,8 @@ const FeedbackHeader = (props: Props) => {
 
   return (
     <div className="mb-6 flex flex-col items-start justify-between xms:flex-row">
-      <h2 className="mb-2 text-lg font-medium text-grey9 xms:mb-0 xs:text-xl">
-        Feedback
-      </h2>
+      <HeaderText title>Feedbacks</HeaderText>
+
       <div className="flex items-center gap-6">
         <BadgeWithCount
           variant="primary"

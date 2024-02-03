@@ -10,6 +10,7 @@ import { $http } from "@/service/axios";
 import { getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 
 interface MessageLataApiInput {
   message: string;
@@ -29,7 +30,6 @@ export const messageLataApi = async (
 };
 
 export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
-  if (!payload) throw new Error("Payload is required");
   try {
     const session = await getServerSession(authConfig);
     const res = await fetch(getApiUrl("/feedbacks"), {
@@ -41,6 +41,7 @@ export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
       },
     });
     if (!res.ok) throw await res.json();
+    revalidateTag("product-feedback");
     return await res.json();
   } catch (error: any) {
     console.log(error);
@@ -51,10 +52,9 @@ export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
   }
 };
 
-export const getAllCustomerFeedback = async (
+export const getAllSellerFeedbacks = async (
   type: FeedbackType,
   page: string,
-  limit: string = "10",
   viewing: string,
 ): Promise<{
   data: IFeedback[];
@@ -68,7 +68,6 @@ export const getAllCustomerFeedback = async (
       viewing,
       type,
       page: String(page) || "1",
-      limit: String(limit) || "10",
     });
 
     const session = await getServerSession(authConfig);
@@ -112,6 +111,10 @@ export const getProductFeedback = async (
       {
         headers: {
           Authorization: `Bearer ${session?.token}`,
+        },
+        cache: "no-cache",
+        next: {
+          tags: ["product-feedback"],
         },
       },
     );

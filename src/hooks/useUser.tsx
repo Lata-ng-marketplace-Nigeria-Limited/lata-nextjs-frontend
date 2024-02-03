@@ -1,11 +1,7 @@
 import { useLocalStore } from "@/store/states/localStore";
 import { signIn, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import {
-  getUserFromAuthCallback,
-  logoutUserOnSessionExpiration,
-  setCookies,
-} from "@/utils";
+import { getUserFromAuthCallback, logoutUser, setCookies } from "@/utils";
 import { User } from "@/interface/user";
 import { authCallbackApi } from "@/api/auth";
 import { Plan } from "@/interface/payment";
@@ -24,8 +20,13 @@ export const useUser = () => {
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
-    if (!user) return;
-    logoutUserOnSessionExpiration(user, clear);
+
+    if (
+      (user && new Date() > new Date(user?.expires_at)) ||
+      (user && !user?.expires_at)
+    ) {
+      logoutUser(clear, true);
+    }
   }, [user?.plan, user?.subscriptionStatus]);
 
   const handleUpdate = useCallback(

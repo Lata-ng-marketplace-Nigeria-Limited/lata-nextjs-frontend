@@ -1,5 +1,5 @@
 import { ApiErrorResponse, IEnv } from "@/interface/general";
-import { AUTH_CALLBACK_ROUTE } from "@/constants/routes";
+import { AUTH_CALLBACK_ROUTE, LOGIN_ROUTE } from "@/constants/routes";
 import { ApiAuthCallback } from "@/api/auth";
 import { User } from "@/interface/user";
 import { toast } from "@/components/ui/use-toast";
@@ -227,23 +227,21 @@ export async function copyTextToClipboard({
   }
 }
 
-export const logoutUserOnSessionExpiration = async (
-  user: User,
+export const logoutUser = async (
   clear: () => void,
+  sessionTimeout: boolean = false,
 ) => {
-  if ((user && new Date() > new Date(user?.expires_at)) || !user?.expires_at) {
-
+  if (sessionTimeout) {
     toast({
       title: "Session Expired",
       description: "Please login again",
       variant: "destructive",
       duration: 15000,
     });
-    setTimeout(() => {}, 2000);
-    localStorage.clear();
-    sessionStorage.clear();
-    clearAllCookies();
-    clear();
-    await signOut({ redirect: true, callbackUrl: "/" });
   }
+  localStorage.clear();
+  sessionStorage.clear();
+  clearAllCookies();
+  clear();
+  await signOut({ redirect: true, callbackUrl: "/auth" + LOGIN_ROUTE });
 };

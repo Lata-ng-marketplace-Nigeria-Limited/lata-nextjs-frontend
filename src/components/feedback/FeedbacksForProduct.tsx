@@ -8,6 +8,7 @@ import FeedbackContent from "./FeedbackContent";
 import { cn } from "@/utils";
 import EmptyFeedback from "./EmptyFeedback";
 import { useUser } from "@/hooks/useUser";
+import FeedbackContentSkeleton from "../skeleton/FeedbackContentSkeleton";
 
 interface Props {
   page?: string;
@@ -63,7 +64,7 @@ const FeedbacksForProduct = (props: Props) => {
           </div>
         </>
       ) : (
-        <div>Feedbacks not found</div>
+        <FeedbackContentSkeleton hideLink/>
       )}
     </>
   );
