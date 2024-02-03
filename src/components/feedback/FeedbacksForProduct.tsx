@@ -18,7 +18,6 @@ interface Props {
 
 const FeedbacksForProduct = (props: Props) => {
   const { user } = useUser();
-
   const [productFeedback, setProductFeedback] =
     React.useState<IGetProductFeedback | null>(null);
 
@@ -41,6 +40,7 @@ const FeedbacksForProduct = (props: Props) => {
             isOwnProduct={user?.id === props.product?.user?.id}
           />
 
+          {/* hidden if productFeedback.data array is empty */}
           <div className={cn({ " hidden ": productFeedback.isEmpty })}>
             {productFeedback.data.map((feedback) => (
               <FeedbackContent
@@ -50,6 +50,21 @@ const FeedbacksForProduct = (props: Props) => {
               />
             ))}
           </div>
+
+          {/* Only dislayed if productFeedback.data array is empty and product does not belong to this user */}
+          <p
+            className={cn(
+              {
+                hidden:
+                  !productFeedback.isEmpty && user?.id !== props?.product?.id,
+              },
+              "mt-4 font-semibold text-gray-500 ",
+            )}
+          >
+            No feeback for this product yet
+          </p>
+
+          {/* Only dislayed if productFeedback.data array is empty and product belongs to this user */}
           <div
             className={cn({
               hidden:
@@ -64,7 +79,7 @@ const FeedbacksForProduct = (props: Props) => {
           </div>
         </>
       ) : (
-        <FeedbackContentSkeleton hideLink/>
+        <FeedbackContentSkeleton hideLink />
       )}
     </>
   );
