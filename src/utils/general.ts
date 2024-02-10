@@ -245,3 +245,22 @@ export const logoutUser = async (
   clear();
   await signOut({ redirect: true, callbackUrl: "/auth" + LOGIN_ROUTE });
 };
+
+export function formatNumber(num: number) {
+  if (num < 1000000) {
+    const number = new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+    }).format(num);
+    return num; // Display the number with commas for thousands separator
+  }
+  if (num >= 1e12) {
+    return (num / 1e12).toFixed(1) + "T";
+  }
+  if (num >= 1e9) {
+    return (num / 1e9).toFixed(1) + "B";
+  }
+  if (num >= 1e6) {
+    return (num / 1e6).toFixed(1) + "M";
+  }
+}

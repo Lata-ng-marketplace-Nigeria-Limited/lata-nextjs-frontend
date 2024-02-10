@@ -14,6 +14,10 @@ interface Props extends PaginateProps {
   onColumnClick?: (column: { key: string; rowData: any }) => void;
   keyNotCursor?: string[];
   uesPaginate?: boolean;
+  tableClassName?: string;
+  rowClassName?: string;
+  tableHeadClassName?: string;
+  tdClassName?: string;
 }
 
 export const Table = (props: Props) => {
@@ -48,8 +52,18 @@ export const Table = (props: Props) => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table
+        className={cn(
+          "w-full text-left text-sm text-gray-500 dark:text-gray-400",
+          props.tableClassName,
+        )}
+      >
+        <thead
+          className={cn(
+            "bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400",
+            props.tableHeadClassName,
+          )}
+        >
           <tr>
             {props.format !== "compact" ? (
               <>
@@ -68,9 +82,9 @@ export const Table = (props: Props) => {
               {keys.map((key, i) => (
                 <tr
                   className={cn({
-                    "border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700":
+                    "border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800":
                       isOdd(0),
-                    "bg-white border-b dark:bg-gray-900 dark:border-gray-700":
+                    "border-b bg-white dark:border-gray-700 dark:bg-gray-900":
                       !isOdd(0),
                     "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900":
                       !!props.onRowClick,
@@ -88,16 +102,20 @@ export const Table = (props: Props) => {
           ) : (
             <>
               {props.tableData?.map((row, mainIndex) => (
+                <>
                 <tr
-                  className={cn({
-                    "border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700":
-                      isOdd(mainIndex),
-                    "bg-white border-b dark:bg-gray-900 dark:border-gray-700":
-                      !isOdd(mainIndex),
-                    "cursor-pointer": !!props.onRowClick,
-                    "hover:bg-purple-100 dark:hover:bg-gray-900":
-                      !!props.onRowClick || !!props.onColumnClick,
-                  })}
+                  className={cn(
+                    {
+                      "border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800":
+                        isOdd(mainIndex),
+                      "border-b bg-white dark:border-gray-700 dark:bg-gray-900":
+                        !isOdd(mainIndex),
+                      "cursor-pointer": !!props.onRowClick,
+                      "hover:bg-purple-100 dark:hover:bg-gray-900":
+                        !!props.onRowClick || !!props.onColumnClick,
+                    },
+                    props.rowClassName,
+                  )}
                   key={mainIndex}
                   onClick={() =>
                     props.onRowClick?.(props.tableData?.[mainIndex]?.rowData)
@@ -126,26 +144,34 @@ export const Table = (props: Props) => {
                       );
                     } else {
                       return (
-                        <td
-                          className={cn("px-6 py-4", {
-                            "cursor-pointer":
-                              !!props.onColumnClick &&
-                              !props.keyNotCursor?.includes(key),
-                          })}
-                          key={index}
-                          onClick={() =>
-                            props.onColumnClick?.({
-                              key,
-                              rowData: props.tableData?.[mainIndex]?.rowData,
-                            })
-                          }
-                        >
-                          {row[key]}
-                        </td>
+                        <>
+                          <td
+                            className={cn(
+                              "px-6 py-4",
+                              {
+                                "cursor-pointer":
+                                  !!props.onColumnClick &&
+                                  !props.keyNotCursor?.includes(key),
+                              },
+                              props.tdClassName,
+                            )}
+                            key={index}
+                            onClick={() =>
+                              props.onColumnClick?.({
+                                key,
+                                rowData: props.tableData?.[mainIndex]?.rowData,
+                              })
+                            }
+                          >
+                            {row[key]}
+                          </td>
+                        </>
                       );
                     }
                   })}
                 </tr>
+                <tr className="bg-red-800 "></tr>
+                </>
               ))}
             </>
           )}

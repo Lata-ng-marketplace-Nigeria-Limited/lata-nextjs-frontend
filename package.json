@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google-analytics/data": "^4.3.0",
     "@headlessui/react": "^1.7.17",
     "@hookform/resolvers": "^3.3.3",
     "@preact/signals-react": "^2.0.0",
