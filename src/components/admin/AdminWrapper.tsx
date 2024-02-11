@@ -6,9 +6,9 @@ import Button from "@/components/atom/Button";
 import RecentPosts from "@/components/posts/RecentPosts";
 import { getAnalyticsClicksAndViews } from "@/api/view";
 import AnalyticsChart from "@/components/analytics/AnalyticsChart";
-import AnalyticsSideCard from "../analytics/AnalyticsSideCard";
-import AnalyticsSideCardsHOC from "../analytics/AnalyticsSideCardsHOC";
-import AnalyticsChartAreaHOC from "../analytics/AnalyticsChartAreaHOC";
+import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
+import AnalyticsSideCardsHOC from "@/components/analytics/AnalyticsSideCardsHOC";
+import AnalyticsChartAreaHOC from "@/components/analytics/AnalyticsChartAreaHOC";
 import { formatNumber } from "@/utils";
 
 interface Props {
@@ -22,7 +22,9 @@ export default async function AdminDashboardWrapper(props: Props) {
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <HeaderText title>Admin Dashboard</HeaderText>
+          <HeaderText title className="mb-7">
+            Admin Dashboard
+          </HeaderText>
           <HeaderSubText>
             Hi {props?.username || "Admin"}, Welcome back!
           </HeaderSubText>
@@ -32,24 +34,40 @@ export default async function AdminDashboardWrapper(props: Props) {
 
       <AdminAnalyticsWrapper analyticsCount={response?.counts} />
 
-      <AnalyticsChartAreaHOC>
-        <AnalyticsChart chartsData={chartsData} />
+      <div className="mb-8">
+        <HeaderText title className="mb-7 md:mb-7">
+          Analytics Chart
+        </HeaderText>
 
-        <AnalyticsSideCardsHOC>
-          <AnalyticsSideCard
-            title="Monthly Sales"
-            clicksCount={formatNumber(response?.sales?.monthlySales) || 0}
-            description={response?.sales?.month}
-          />
+        <AnalyticsChartAreaHOC>
+          <AnalyticsChart chartsData={chartsData} />
 
-          <AnalyticsSideCard
-            title="Total Sales"
-            clicksCount={formatNumber(response?.sales?.totalSales)?.toLocaleString() || 0}
-            description="All time sales"
-          />
-        </AnalyticsSideCardsHOC>
-      </AnalyticsChartAreaHOC>
-      <RecentPosts reposts={response?.recentPosts} />
+          <AnalyticsSideCardsHOC>
+            <AnalyticsSideCard
+              title="Monthly Sales"
+              titleClassName="text-success"
+              clicksCount={formatNumber(response?.sales?.monthlySales) || 0}
+              description={response?.sales?.month}
+            />
+
+            <AnalyticsSideCard
+              title="Total Sales"
+              clicksCount={
+                formatNumber(response?.sales?.totalSales)?.toLocaleString() || 0
+              }
+              description="All time sales"
+            />
+          </AnalyticsSideCardsHOC>
+        </AnalyticsChartAreaHOC>
+      </div>
+
+      <div>
+        <HeaderText title className="mb-7 md:mb-7">
+          Recent Posts
+        </HeaderText>
+
+        <RecentPosts reposts={response?.recentPosts} />
+      </div>
     </div>
   );
 }

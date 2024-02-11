@@ -2,7 +2,12 @@ import { Product } from "@/interface/products";
 import { useUser } from "@hooks/useUser";
 import { useState } from "react";
 import Prompt, { PromptProps } from "@molecule/Prompt";
-import { deactivateProductApi, deleteAProductApi } from "@/api/product";
+import {
+  activateProductApi,
+  cancelProductApi,
+  deactivateProductApi,
+  deleteAProductApi,
+} from "@/api/product";
 import { useToast } from "@components/ui/use-toast";
 import ViewProductContainer from "@atom/ViewProductContainer";
 import ProductDetails from "@components/product/ProductDetails";
@@ -15,6 +20,7 @@ import Button from "@atom/Button";
 import { cn, formatPrice } from "@/utils";
 import ProductCard from "@components/product/ProductCard";
 import FeedbacksForProduct from "../feedback/FeedbacksForProduct";
+import { useRouter } from "next/navigation";
 
 interface Props {
   product: Product | undefined;
@@ -27,6 +33,7 @@ export default function ViewNotOwnProduct(props: Props) {
   const [modalProps, setModalProps] = useState<PromptProps>({});
   const [modalButtonLoading, setModalButtonLoading] = useState(false);
   const { toast } = useToast();
+  const { replace, refresh } = useRouter();
 
   const handleSendToReview = async () => {
     if (!props.product?.id) return;
@@ -93,6 +100,70 @@ export default function ViewNotOwnProduct(props: Props) {
     });
   };
 
+  const handleApproveProduct = (product: Product) => {
+    setShowModal(true);
+    setModalProps({
+      type: "default",
+      title: "Approve Product",
+      confirmText: "Approve",
+      confirmType: "primary",
+      description: "Are you sure you want to approve this product?",
+      onConfirm: async () => {
+        setModalButtonLoading(true);
+        try {
+          await activateProductApi(product.id);
+          toast({
+            title: "Product Approved",
+            description: "Product has been approved",
+            variant: "success",
+          });
+          refresh();
+        } catch (error) {
+          toast({
+            title: "Something went wrong",
+            description: "Please try again later",
+            variant: "destructive",
+          });
+        } finally {
+          handleCancel();
+        }
+      },
+    });
+  };
+
+  const handleRejectProduct = (product: Product) => {
+    setShowModal(true);
+    setModalProps({
+      type: "error",
+      title: "Reject Product",
+      confirmText: "Reject",
+      confirmType: "danger",
+      showRejectionForm: true,
+      description:
+        "Are you sure you want to reject this product? This product will no longer be listed under review products and will not be published. This action is irreversible.",
+      onConfirm: async () => {
+        setModalButtonLoading(true);
+        try {
+          // await cancelProductApi(product.id);
+          toast({
+            title: "Success",
+            description: "Product has been rejected",
+            variant: "success",
+          });
+          refresh();
+        } catch (error) {
+          toast({
+            title: "Something went wrong",
+            description: "Please try again later",
+            variant: "destructive",
+          });
+        } finally {
+          handleCancel();
+        }
+      },
+    });
+  };
+
   const handleCancel = () => {
     setShowModal(false);
     setModalButtonLoading(false);
@@ -115,29 +186,52 @@ export default function ViewNotOwnProduct(props: Props) {
           />
           <SafetyTips />
 
-          {props?.product ? (
+          {user?.role !== "ADMIN" && props?.product ? (
             <div className="mt-8 max-h-[30rem] overflow-y-auto">
               <FeedbacksForProduct product={props.product as Product} />
             </div>
           ) : null}
 
-          {props.product?.status === "ACTIVE" ? (
-            <>
-              {user?.role === "ADMIN" ? (
-                <>
-                  <Button format={"primary"} onClick={handleSendToReview}>
-                    Send to review
-                  </Button>
-                  <Button
-                    format={"danger"}
-                    onClick={() => handleDeleteProduct(props.product)}
-                  >
-                    Delete
-                  </Button>
-                </>
-              ) : null}
-              {/*<Button format={"secondary"}>Leave a feedback</Button>*/}
-            </>
+          {user?.role === "ADMIN" ? (
+            props?.product?.status === "ACTIVE" ? (
+              <>
+                <Button format={"secondary"} onClick={handleSendToReview}>
+                  Send to review
+                </Button>
+
+                <Button
+                  format={"danger"}
+                  onClick={() => handleDeleteProduct(props.product)}
+                >
+                  Delete
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  format={"primary"}
+                  onClick={() =>
+                    handleApproveProduct(props?.product as Product)
+                  }
+                >
+                  Approve post
+                </Button>
+
+                <Button
+                  format={"secondary"}
+                  onClick={() => handleRejectProduct(props?.product as Product)}
+                >
+                  Reject product
+                </Button>
+
+                <Button
+                  format={"danger"}
+                  onClick={() => handleDeleteProduct(props.product)}
+                >
+                  Delete
+                </Button>
+              </>
+            )
           ) : null}
         </ProductAsideArea>
       </ViewProductContainer>

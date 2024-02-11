@@ -18,6 +18,7 @@ interface Props extends PaginateProps {
   rowClassName?: string;
   tableHeadClassName?: string;
   tdClassName?: string;
+  wrapperClassName?: string;
 }
 
 export const Table = (props: Props) => {
@@ -51,7 +52,12 @@ export const Table = (props: Props) => {
   ]);
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div
+      className={cn(
+        "relative overflow-x-auto shadow-md sm:rounded-lg",
+        props.wrapperClassName,
+      )}
+    >
       <table
         className={cn(
           "w-full text-left text-sm text-gray-500 dark:text-gray-400",
@@ -102,60 +108,35 @@ export const Table = (props: Props) => {
           ) : (
             <>
               {props.tableData?.map((row, mainIndex) => (
-                <>
-                <tr
-                  className={cn(
-                    {
-                      "border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800":
-                        isOdd(mainIndex),
-                      "border-b bg-white dark:border-gray-700 dark:bg-gray-900":
-                        !isOdd(mainIndex),
-                      "cursor-pointer": !!props.onRowClick,
-                      "hover:bg-purple-100 dark:hover:bg-gray-900":
-                        !!props.onRowClick || !!props.onColumnClick,
-                    },
-                    props.rowClassName,
-                  )}
-                  key={mainIndex}
-                  onClick={() =>
-                    props.onRowClick?.(props.tableData?.[mainIndex]?.rowData)
-                  }
-                >
-                  {keys.map((key, index) => {
-                    if (index === 0) {
-                      return (
-                        <th
-                          scope="row"
-                          className={cn("px-6 py-4", {
-                            "cursor-pointer":
-                              !!props.onColumnClick &&
-                              !props.keyNotCursor?.includes(key),
-                          })}
-                          key={index}
-                          onClick={() =>
-                            props.onColumnClick?.({
-                              key,
-                              rowData: props.tableData?.[mainIndex]?.rowData,
-                            })
-                          }
-                        >
-                          {row[key]}
-                        </th>
-                      );
-                    } else {
-                      return (
-                        <>
-                          <td
-                            className={cn(
-                              "px-6 py-4",
-                              {
-                                "cursor-pointer":
-                                  !!props.onColumnClick &&
-                                  !props.keyNotCursor?.includes(key),
-                              },
-                              props.tdClassName,
-                            )}
-                            key={index}
+                <React.Fragment key={mainIndex}>
+                  <tr
+                    className={cn(
+                      {
+                        "border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800":
+                          isOdd(mainIndex),
+                        "border-b bg-white dark:border-gray-700 dark:bg-gray-900":
+                          !isOdd(mainIndex),
+                        "cursor-pointer": !!props.onRowClick,
+                        "hover:bg-purple-100 dark:hover:bg-gray-900":
+                          !!props.onRowClick || !!props.onColumnClick,
+                      },
+                      props.rowClassName,
+                    )}
+                    onClick={() =>
+                      props.onRowClick?.(props.tableData?.[mainIndex]?.rowData)
+                    }
+                  >
+                    {keys.map((key, index) => {
+                      if (index === 0) {
+                        return (
+                          <th
+                            scope="row"
+                            className={cn("px-6 py-4", {
+                              "cursor-pointer":
+                                !!props.onColumnClick &&
+                                !props.keyNotCursor?.includes(key),
+                            })}
+                            key={"th" + index}
                             onClick={() =>
                               props.onColumnClick?.({
                                 key,
@@ -164,14 +145,39 @@ export const Table = (props: Props) => {
                             }
                           >
                             {row[key]}
-                          </td>
-                        </>
-                      );
-                    }
-                  })}
-                </tr>
-                <tr className="bg-red-800 "></tr>
-                </>
+                          </th>
+                        );
+                      } else {
+                        return (
+                          <>
+                            <td
+                              className={cn(
+                                "px-6 py-4",
+                                {
+                                  "cursor-pointer":
+                                    !!props.onColumnClick &&
+                                    !props.keyNotCursor?.includes(key),
+                                },
+                                props.tdClassName,
+                              )}
+                              key={index}
+                              onClick={() =>
+                                props.onColumnClick?.({
+                                  key,
+                                  rowData:
+                                    props.tableData?.[mainIndex]?.rowData,
+                                })
+                              }
+                            >
+                              {row[key]}
+                            </td>
+                          </>
+                        );
+                      }
+                    })}
+                  </tr>
+                  <tr className="bg-red-800 "></tr>
+                </React.Fragment>
               ))}
             </>
           )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import TextInput from "@components/input/TextInput";
 import { cn, safeParseJSON } from "@/utils";
 import Button from "@atom/Button";
@@ -41,6 +41,9 @@ export const ReviewProduct = ({ products, meta, page, urlSearch }: Props) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { toast } = useToast();
+  const [rejectedFor, setRejectedFor] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [saveRejectedFor, setSaveRejectedFor] = useState(rejectedFor);
 
   const handleCancel = () => {
     setShowModal(false);
@@ -49,6 +52,18 @@ export const ReviewProduct = ({ products, meta, page, urlSearch }: Props) => {
       setModalProps({});
     }, 300);
   };
+
+  useEffect(() => {
+    if (!rejectedFor) {
+      setErrorMsg("Reason for product rejection cannot be empty");
+    } else if (rejectedFor.length < 10) {
+      setErrorMsg(
+        "Reason for product rejection must be more than 10 characters",
+      );
+    } else {
+      setErrorMsg("");
+    }
+  }, [rejectedFor]);
 
   const handleApproveProduct = (product: Product) => {
     setShowModal(true);
@@ -118,14 +133,26 @@ export const ReviewProduct = ({ products, meta, page, urlSearch }: Props) => {
     setModalProps({
       type: "error",
       title: "Reject Product",
+      showRejectionForm: true,
       confirmText: "Reject",
       confirmType: "danger",
       description:
         "Are you sure you want to reject this product? This product will no longer be listed under review products and will not be published. This action is irreversible.",
       onConfirm: async () => {
+        const payload = {
+          rejectedFor: localStorage.getItem("rejectedFor") as string,
+        };
+
         setModalButtonLoading(true);
+
         try {
-          await cancelProductApi(product.id);
+          const response = await cancelProductApi(product.id, payload);
+
+          console.log({ response });
+          setErrorMsg("");
+          setRejectedFor("");
+          localStorage.removeItem("rejectedFor");
+
           toast({
             title: "Success",
             description: "Product has been rejected",
@@ -195,7 +222,7 @@ export const ReviewProduct = ({ products, meta, page, urlSearch }: Props) => {
   };
   return (
     <div>
-      <form className={"flex gap-x-3 w-full mb-6"} onSubmit={handleSearch}>
+      <form className={"mb-6 flex w-full gap-x-3"} onSubmit={handleSearch}>
         <TextInput
           inputClass={cn(` h-[2rem]
           sm:h-10 `)}
@@ -205,7 +232,7 @@ export const ReviewProduct = ({ products, meta, page, urlSearch }: Props) => {
           setValue={setSearch}
         />
         <Button
-          className={"w-full sm:p-1 max-w-[100px]"}
+          className={"w-full max-w-[100px] sm:p-1"}
           format={"primary"}
           type={"submit"}
         >
@@ -260,6 +287,9 @@ export const ReviewProduct = ({ products, meta, page, urlSearch }: Props) => {
       >
         <Prompt
           {...modalProps}
+          setRejectedFor={setRejectedFor}
+          rejectedFor={rejectedFor}
+          errorMsg={errorMsg}
           onCancel={handleCancel}
           confirmLoading={modalButtonLoading}
         />

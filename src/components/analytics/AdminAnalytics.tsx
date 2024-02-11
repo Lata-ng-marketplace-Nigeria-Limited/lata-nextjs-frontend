@@ -1,8 +1,12 @@
+"use client";
+
 import React from "react";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import { GetSellerAnalyticsResponse } from "@/interface/views";
 import { IAdminAnalytics, getAdminAnalyticsApi } from "@/api/analytics";
 import AnalyticsTopCardsHOC from "./AnalyticsTopCardsHOC";
+import { redirect } from "next/navigation";
+import { ADMIN_ALL_SELLERS_ROUTE } from "@/constants/routes";
 
 interface Props {
   analyticsCount: IAdminAnalytics["counts"] | undefined;
@@ -26,21 +30,26 @@ const AdminAnalyticsWrapper = async (props: Props) => {
         isTotalViews
         title="All sellers"
         description="The total number of registered sellers"
+        isClickable
+        onClick={() => redirect(ADMIN_ALL_SELLERS_ROUTE)}
         number={totalSellersCount}
       />
       <AnalyticsTopCards
         title="Staff accounts"
         number={totalStaff}
+        isClickable
         description="The total number of registered staff"
       />
       <AnalyticsTopCards
         title="Paid Sellers"
         number={paidSellersCount}
+        isClickable
         description="The total number of paid subscribers"
       />
       <AnalyticsTopCards
         title="All Posts"
         number={totalPostsCount}
+        isClickable
         description="The total number of approved posts"
       />
     </AnalyticsTopCardsHOC>

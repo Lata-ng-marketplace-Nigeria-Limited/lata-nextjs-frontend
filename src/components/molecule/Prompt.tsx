@@ -1,6 +1,12 @@
+"use client";
+
 import Button, { ButtonType } from "../atom/Button";
 import { cn } from "@/utils";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import TextAreaInput from "../input/TextAreaInput";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export interface PromptProps {
   type?: "default" | "error" | "success";
@@ -26,6 +32,12 @@ export interface PromptProps {
   hideHeader?: boolean;
   hideDescription?: boolean;
   hideButtonArea?: boolean;
+  showRejectionForm?: boolean;
+
+  rejectedFor?: string;
+  errorMsg?: string;
+
+  setRejectedFor?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Prompt = React.forwardRef((props: PromptProps, ref) => {
@@ -51,8 +63,8 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
           {props.descriptionJSX || (
             <p
               className={cn(`
-              text-sm
               whitespace-pre-wrap
+              text-sm
             `)}
             >
               {props.description}
@@ -61,9 +73,9 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
           {props.errorMessage && (
             <p
               className={cn(`
-            text-danger
-            text-sm
             whitespace-pre-wrap
+            text-sm
+            text-danger
           `)}
             >
               {props.errorMessage}
@@ -72,12 +84,25 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
         </>
       ) : null}
 
+      {props.showRejectionForm && (
+        <TextAreaInput
+          value={props.rejectedFor}
+          inputClass={cn(`h-[9.375rem] sm:h-[12.5rem]`)}
+          setValue={props.setRejectedFor}
+          onChange={(e) => {
+            localStorage.setItem("rejectedFor", e.target.value);
+          }}
+          placeholder="Tell the seller why the product is being rejected"
+          errorMessage={props.errorMsg}
+        />
+      )}
+
       {!props.hideButtonArea ? (
         <>
           {props.buttonAreaJSX || (
             <div
               className={cn(
-                `flex justify-end gap-x-4 mt-[2rem]`,
+                `mt-[2rem] flex justify-end gap-x-4`,
                 props.buttonAreaJSXClassName,
               )}
             >
@@ -85,8 +110,8 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
                 <>
                   <Button
                     className={cn(`
-                  sm:py-1
                   sm:px-2
+                  sm:py-1
                  `)}
                     format={"tertiary"}
                     onClick={props.onCancel}
@@ -97,8 +122,8 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
 
                   <Button
                     className={cn(`
-                    sm:py-2
                     sm:px-3
+                    sm:py-2
                    `)}
                     format={props.confirmType || "primary"}
                     onClick={props.onConfirm}
