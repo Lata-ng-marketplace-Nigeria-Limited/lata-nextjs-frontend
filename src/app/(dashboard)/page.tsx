@@ -53,9 +53,9 @@ export default async function Home({
           </Suspense>
         </>
       ) : (
-        <>
+        <Suspense fallback={<p>Loading...</p>}>
           <AdminDashboardWrapper username={session?.user?.name || "Admin"} />
-        </>
+        </Suspense>
       )}
     </main>
   );

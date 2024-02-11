@@ -5,11 +5,11 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
 import { getAdminAnalyticsApi } from "@/api/analytics";
-import AdminAnalyticsWrapper from "@/components/analytics/AdminAnalytics";
+import AdminAnalyticsWrapper from "@/components/admin/AdminAnalytics";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";
 import Button from "@/components/atom/Button";
-import RecentPosts from "@/components/posts/RecentPosts";
+import RecentPosts from "@/components/admin/RecentPosts";
 import { getAnalyticsClicksAndViews } from "@/api/view";
 import AnalyticsChart from "@/components/analytics/AnalyticsChart";
 
@@ -39,9 +39,21 @@ export default async function Protected() {
       <Suspense>
         <GetUser />
       </Suspense>
-      <AdminAnalyticsWrapper analyticsCount={response?.counts} />
-      <AnalyticsChart chartsData={chartsData} />
-      <RecentPosts reposts={response?.recentPosts} />
+
+      <Suspense fallback={<p>Loading...</p>}>
+        <AdminAnalyticsWrapper analyticsCount={response?.counts} />
+      </Suspense>
+
+      <Suspense fallback={<p>Loading...</p>}>
+        <AnalyticsChart chartsData={chartsData} />
+      </Suspense>
+
+      <Suspense fallback={<p>Loading...</p>}>
+        <RecentPosts
+          reposts={response?.recentPosts?.data}
+          meta={response?.recentPosts?.meta}
+        />
+      </Suspense>
     </div>
   );
 }

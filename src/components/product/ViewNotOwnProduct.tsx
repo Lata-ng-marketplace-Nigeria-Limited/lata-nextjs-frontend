@@ -144,7 +144,7 @@ export default function ViewNotOwnProduct(props: Props) {
       onConfirm: async () => {
         setModalButtonLoading(true);
         try {
-          // await cancelProductApi(product.id);
+          await cancelProductApi(product.id);
           toast({
             title: "Success",
             description: "Product has been rejected",

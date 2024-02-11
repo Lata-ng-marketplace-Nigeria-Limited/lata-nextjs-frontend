@@ -32,7 +32,7 @@ const AllSellers = (props: Props) => {
             "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            manager: seller.name,
+            manager: seller.isManagedBy || "-",
           };
         })}
         usePaginate

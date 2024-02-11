@@ -16,7 +16,10 @@ export interface IAdminAnalytics {
     totalPosts: number;
     staff: number;
   };
-  recentPosts: Product[];
+  recentPosts: {
+    data: Product[];
+    meta: FetchMeta;
+  };
   sales: {
     totalSales: number;
     monthlySales: number;

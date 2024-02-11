@@ -248,11 +248,7 @@ export const logoutUser = async (
 
 export function formatNumber(num: number) {
   if (num < 1000000) {
-    const number = new Intl.NumberFormat("en-NG", {
-      style: "currency",
-      currency: "NGN",
-    }).format(num);
-    return num; // Display the number with commas for thousands separator
+    return num.toLocaleString(); // Display the number with commas for thousands separator
   }
   if (num >= 1e12) {
     return (num / 1e12).toFixed(1) + "T";
