@@ -28,11 +28,25 @@ const AnalyticsTopCards = ({
       )}
       onClick={onClick}
     >
-      <p className="mb-2 text-sm font-normal tablet:mb-4">{title}</p>
-      <p className="mb-2 text-2xl font-semibold tablet:mb-4 tablet:text-xl">
+      <p
+        className={cn(
+          { "text-grey10": !isTotalViews },
+          "mb-2 text-sm font-normal tablet:mb-4",
+        )}
+      >
+        {title}
+      </p>
+      <p
+        className={cn(
+          { "text-grey9": !isTotalViews },
+          "mb-2 text-2xl font-semibold tablet:mb-4 tablet:text-xl",
+        )}
+      >
         {number || 0}
       </p>
-      <p className="text-xs font-normal">{description}</p>
+      <p className={cn({ "text-grey7": !isTotalViews }, "text-xs font-normal")}>
+        {description}
+      </p>
     </div>
   );
 };
