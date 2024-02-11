@@ -2,7 +2,7 @@
 
 import Button, { ButtonType } from "../atom/Button";
 import { cn } from "@/utils";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TextAreaInput from "../input/TextAreaInput";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,11 +33,6 @@ export interface PromptProps {
   hideDescription?: boolean;
   hideButtonArea?: boolean;
   showRejectionForm?: boolean;
-
-  rejectedFor?: string;
-  errorMsg?: string;
-
-  setRejectedFor?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Prompt = React.forwardRef((props: PromptProps, ref) => {
@@ -83,19 +78,6 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
           )}
         </>
       ) : null}
-
-      {props.showRejectionForm && (
-        <TextAreaInput
-          value={props.rejectedFor}
-          inputClass={cn(`h-[9.375rem] sm:h-[12.5rem]`)}
-          setValue={props.setRejectedFor}
-          onChange={(e) => {
-            localStorage.setItem("rejectedFor", e.target.value);
-          }}
-          placeholder="Tell the seller why the product is being rejected"
-          errorMessage={props.errorMsg}
-        />
-      )}
 
       {!props.hideButtonArea ? (
         <>

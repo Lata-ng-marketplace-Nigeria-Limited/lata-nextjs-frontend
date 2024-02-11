@@ -148,3 +148,53 @@ export const getAllStaffAdminApi = async ({
     throw error.response || error;
   }
 };
+
+interface IGetAllPosts {
+  meta: FetchMeta;
+  data: Product[];
+  isError?: boolean;
+  message?: string;
+}
+
+export const getAllPosts = async ({
+  page,
+  limit,
+}: SearchQuery): Promise<IGetAllPosts> => {
+  const params = new URLSearchParams();
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  try {
+    unstable_noStore();
+    const session = await getServerSession(authConfig);
+
+    const res = await fetch(
+      getApiUrl(`/analytics/admin/posts?${params.toString()}`),
+      {
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+        cache: "no-cache",
+      },
+    );
+    if (!res.ok) {
+      const data = await res.json();
+      return {
+        ...data,
+        isError: true,
+      };
+    }
+    const json = await res.text();
+
+    if (json) {
+      return JSON.parse(json);
+    } else {
+      return {
+        isError: true,
+        message: "Empty response",
+      } as IGetAllPosts;
+    }
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};

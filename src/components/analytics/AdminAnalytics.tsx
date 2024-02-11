@@ -2,17 +2,21 @@
 
 import React from "react";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
-import { GetSellerAnalyticsResponse } from "@/interface/views";
-import { IAdminAnalytics, getAdminAnalyticsApi } from "@/api/analytics";
+import { IAdminAnalytics } from "@/api/analytics";
 import AnalyticsTopCardsHOC from "./AnalyticsTopCardsHOC";
-import { redirect } from "next/navigation";
-import { ADMIN_ALL_SELLERS_ROUTE } from "@/constants/routes";
+import { useRouter } from "next/navigation";
+import {
+  ADMIN_ALL_POSTS,
+  ADMIN_ALL_SELLERS_ROUTE,
+  ADMIN_ALL_STAFF_ROUTE,
+} from "@/constants/routes";
 
 interface Props {
   analyticsCount: IAdminAnalytics["counts"] | undefined;
 }
 
 const AdminAnalyticsWrapper = async (props: Props) => {
+  const { push } = useRouter();
   const formatNumber = (number: number | undefined | null) => {
     if (!number || typeof number !== "number") return 0;
     return number.toLocaleString();
@@ -31,7 +35,7 @@ const AdminAnalyticsWrapper = async (props: Props) => {
         title="All sellers"
         description="The total number of registered sellers"
         isClickable
-        onClick={() => redirect(ADMIN_ALL_SELLERS_ROUTE)}
+        onClick={() => push(ADMIN_ALL_SELLERS_ROUTE)}
         number={totalSellersCount}
       />
       <AnalyticsTopCards
@@ -44,12 +48,14 @@ const AdminAnalyticsWrapper = async (props: Props) => {
         title="Paid Sellers"
         number={paidSellersCount}
         isClickable
+        onClick={() => push(ADMIN_ALL_STAFF_ROUTE)}
         description="The total number of paid subscribers"
       />
       <AnalyticsTopCards
         title="All Posts"
         number={totalPostsCount}
         isClickable
+        onClick={() => push(ADMIN_ALL_POSTS)}
         description="The total number of approved posts"
       />
     </AnalyticsTopCardsHOC>

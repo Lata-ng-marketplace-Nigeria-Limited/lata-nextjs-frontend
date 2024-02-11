@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import Modal from "@components/molecule/Modal";
 import { SellerSignUpForm } from "@components/forms/SellerSignUpForm";
+import TableTopArea from "@components/admin/TableTopArea";
 
 interface Props {
   data: User[];
@@ -21,6 +22,7 @@ const AllSellers = (props: Props) => {
 
   return (
     <div>
+      <TableTopArea title="All Sellers" buttonText="+ Add Seller" />
       <TableWithRowGaps
         isClickable
         tableData={props?.data?.map((seller) => {

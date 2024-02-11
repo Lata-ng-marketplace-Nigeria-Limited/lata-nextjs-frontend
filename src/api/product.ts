@@ -1,10 +1,5 @@
 "use server";
-import {
-  FindAProductData,
-  IProductStatusCount,
-  Product,
-  SavedProduct,
-} from "@/interface/products";
+import { FindAProductData, IProductStatusCount, Product, SavedProduct } from "@/interface/products";
 import { createFormData, getApiUrl } from "@/utils";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { getServerSession } from "next-auth";
@@ -117,6 +112,7 @@ export const searchProductsApi = async ({
     throw error.response || error;
   }
 };
+
 
 export const findAllMyProductsApi = async ({
   page,
@@ -366,14 +362,11 @@ export const deactivateProductApi = async (
 };
 export const cancelProductApi = async (
   id: string,
-  payload: {
-    rejectedFor: string;
-  },
 ): Promise<{
   message: string;
 }> => {
   try {
-    const res = await $http.put(`products/cancel/${id}`, payload);
+    const res = await $http.get(`products/cancel/${id}`);
     revalidatePath(ADMIN_REVIEW_PRODUCTS_ROUTE);
     return res.data;
   } catch (error: any) {

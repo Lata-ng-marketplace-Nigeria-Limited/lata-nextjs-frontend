@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { DateTime } from "luxon";
 import { User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
-import { DateTime } from "luxon";
-import HeaderText from "../atom/HeaderText";
-import Button from "../atom/Button";
-import ComboBox from "../input/ComboBox";
 import TableWithRowGaps from "../table/TableWithRowGaps";
-import Modal from "../molecule/Modal";
-import { SellerSignUpForm } from "../forms/SellerSignUpForm";
+import Modal from "@components/molecule/Modal";
+import { SellerSignUpForm } from "@components/forms/SellerSignUpForm";
+import TableTopArea from "./TableTopArea";
 
 interface Props {
   data: User[];
@@ -24,13 +22,7 @@ const AllStaff = (props: Props) => {
 
   return (
     <div>
-      <div className="mb-7 flex items-center justify-between">
-        <HeaderText title>All Staff</HeaderText>
-        <div className="flex items-center">
-          <ComboBox options={["hi", "hello"]} wrapperClass="max-w-max" />
-          <Button format="primary">+ Add Staff</Button>
-        </div>
-      </div>
+     <TableTopArea title="All Staff" buttonText="+ Add Staff" placeholder="Search staff"/>
       <TableWithRowGaps
         isClickable
         tableData={props?.data?.map((staff) => {

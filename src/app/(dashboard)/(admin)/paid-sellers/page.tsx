@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Sellers",
+  title: "Paid Sellers",
 };
 
 export default async function Protected({
