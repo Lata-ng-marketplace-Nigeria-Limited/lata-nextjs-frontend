@@ -7,9 +7,9 @@ import RecentPosts from "@/components/admin/RecentPosts";
 import { getAnalyticsClicksAndViews } from "@/api/view";
 import AnalyticsChart from "@/components/analytics/AnalyticsChart";
 import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
-import AnalyticsSideCardsHOC from "@/components/analytics/AnalyticsSideCardsHOC";
-import AnalyticsChartAreaHOC from "@/components/analytics/AnalyticsChartAreaHOC";
 import { formatNumber } from "@/utils";
+import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
+import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
 
 interface Props {
   username: string;
@@ -47,13 +47,14 @@ export default async function AdminDashboardWrapper(props: Props) {
               title="Monthly Sales"
               titleClassName="text-success"
               clicksCount={
-               "₦" + formatNumber(Number(response?.sales?.monthlySales)) || 0
+                "₦" + formatNumber(Number(response?.sales?.monthlySales)) || 0
               }
               description={response?.sales?.month}
             />
 
             <AnalyticsSideCard
               title="Total Sales"
+              titleClassName="text-grey10"
               clicksCount={
                 "₦" + formatNumber(Number(response?.sales?.totalSales)) || 0
               }

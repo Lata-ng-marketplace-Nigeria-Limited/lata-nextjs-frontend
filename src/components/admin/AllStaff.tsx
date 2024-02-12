@@ -25,6 +25,8 @@ const AllStaff = (props: Props) => {
      <TableTopArea title="All Staff" buttonText="+ Add Staff" placeholder="Search staff"/>
       <TableWithRowGaps
         isClickable
+        emptyTableTitle="No Staff yet"
+        emptyTableDescription="All Staff will appear here"
         tableData={props?.data?.map((staff) => {
           return {
             name: staff?.name,
