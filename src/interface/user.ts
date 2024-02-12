@@ -37,6 +37,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   expires_at: string;
+  isManagedBy: string;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";

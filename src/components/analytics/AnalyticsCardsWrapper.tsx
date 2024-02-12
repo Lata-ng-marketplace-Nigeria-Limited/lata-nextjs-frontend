@@ -2,6 +2,7 @@ import { getSellerAnalyticsApi } from "@/api/view";
 import React from "react";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import { GetSellerAnalyticsResponse } from "@/interface/views";
+import AnalyticsTopCardsHOC from "./AnalyticsTopCardsHOC";
 
 const AnalyticsCardsWrapper = async () => {
   const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi();
@@ -17,31 +18,29 @@ const AnalyticsCardsWrapper = async () => {
 
   return (
     <div>
-      <section className="mb-8 mt-6 rounded-[0.625rem] border border-solid border-grey2 px-6 py-6 lg:py-[2.19rem]">
-        <div className="grid grid-cols-1 gap-6 xs:grid-cols-2  lg:grid-cols-4">
-          <AnalyticsTopCards
-            isTotalViews
-            title="Total Views"
-            description="Total view of all products"
-            number={productViews}
-          />
-          <AnalyticsTopCards
-            title="Total product clicks"
-            number={productClicks}
-            description="Total product clicks"
-          />
-          <AnalyticsTopCards
-            title="Total phone clicks"
-            number={phoneClicks}
-            description="Total phone clicks"
-          />
-          <AnalyticsTopCards
-            title="Total message clicks"
-            number={messageClicks}
-            description="Total message clicks"
-          />
-        </div>
-      </section>
+      <AnalyticsTopCardsHOC>
+        <AnalyticsTopCards
+          isTotalViews
+          title="Total Views"
+          description="Total view of all products"
+          number={productViews}
+        />
+        <AnalyticsTopCards
+          title="Total product clicks"
+          number={productClicks}
+          description="Total product clicks"
+        />
+        <AnalyticsTopCards
+          title="Total phone clicks"
+          number={phoneClicks}
+          description="Total phone clicks"
+        />
+        <AnalyticsTopCards
+          title="Total message clicks"
+          number={messageClicks}
+          description="Total message clicks"
+        />
+      </AnalyticsTopCardsHOC>
     </div>
   );
 };

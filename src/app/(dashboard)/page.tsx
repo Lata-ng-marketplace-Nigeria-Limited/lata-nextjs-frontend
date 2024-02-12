@@ -3,6 +3,9 @@ import HeroImage from "@/components/molecule/HeroImage";
 import HomeProducts from "@components/product/HomeProducts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { DashboardSelectCategories } from "@molecule/DashboardSelectCategories";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@authConfig";
+import AdminDashboardWrapper from "@/components/admin/AdminWrapper";
 
 export const metadata = {
   title: "Buy, sell, or rent products or search for your dream job on Lata.ng",
@@ -30,21 +33,30 @@ export default async function Home({
     page?: string;
   };
 }) {
-  // const session = await getServerSession(authConfig);
+  const session = await getServerSession(authConfig);
   const query = searchParams?.category || "";
   const subcategory = searchParams?.subcategory || "";
+
   return (
     <main className="">
-      <HeroImage
-        src={
-          "https://res.cloudinary.com/dg9by7oca/image/upload/v1690621836/gghgh_h3coii.webp"
-        }
-        alt={`Buy and sell products online`}
-      />
-      <DashboardSelectCategories />
-      <Suspense key={query} fallback={<ProductListSkeleton />}>
-        <HomeProducts query={query} subcategory={subcategory} />
-      </Suspense>
+      {session?.role !== "ADMIN" ? (
+        <>
+          <HeroImage
+            src={
+              "https://res.cloudinary.com/dg9by7oca/image/upload/v1690621836/gghgh_h3coii.webp"
+            }
+            alt={`Buy and sell products online`}
+          />
+          <DashboardSelectCategories />
+          <Suspense key={query} fallback={<ProductListSkeleton />}>
+            <HomeProducts query={query} subcategory={subcategory} />
+          </Suspense>
+        </>
+      ) : (
+        <Suspense fallback={<p>Loading...</p>}>
+          <AdminDashboardWrapper username={session?.user?.name || "Admin"} />
+        </Suspense>
+      )}
     </main>
   );
 }

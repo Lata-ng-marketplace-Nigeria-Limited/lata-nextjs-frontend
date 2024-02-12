@@ -2,6 +2,7 @@ import React from "react";
 import AnalyticsSideCard from "@components/analytics/AnalyticsSideCard";
 import { getSellerAnalyticsApi } from "@/api/view";
 import { months } from "@/store/data/analytics";
+import AnalyticsSideCardsHOC from "./AnalyticsSideCardsHOC";
 
 interface Props {
   selectedMonth: string;
@@ -23,7 +24,7 @@ const AnalyticsSideCardsWrapper = async ({ selectedMonth }: Props) => {
   const messageClicks = formatNumber(response?.messageClicks ?? 0);
 
   return (
-    <div className="mt-4 grid w-full grid-cols-1 gap-6 rounded border p-6 xs:grid-cols-2 tablet:mt-8 lg:mt-0 lg:flex lg:basis-[20%] lg:flex-col lg:border-0 lg:p-0">
+    <AnalyticsSideCardsHOC>
       <AnalyticsSideCard
         title="Views"
         clicksCount={productViews || 0}
@@ -44,7 +45,7 @@ const AnalyticsSideCardsWrapper = async ({ selectedMonth }: Props) => {
         clicksCount={messageClicks || 0}
         description={monthInFull}
       />
-    </div>
+    </AnalyticsSideCardsHOC>
   );
 };
 
