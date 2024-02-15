@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { User } from "@/interface/user";
+import { IAddedUserMeta, User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
 import { DateTime } from "luxon";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
-import Modal from "@components/molecule/Modal";
-import { SellerSignUpForm } from "@components/forms/SellerSignUpForm";
 import TableTopArea from "@components/admin/TableTopArea";
+import AddSellerForm from "@components/admin/AddSeller";
+import { Dialog, DialogContent } from "@components/ui/dialog";
 
 interface Props {
   data: User[];
@@ -20,9 +20,21 @@ const AllSellers = (props: Props) => {
     setShowAddSellerModal(!showAddSellerModal);
   };
 
+  const handleEscapeClick = () => {
+    setShowAddSellerModal(false);
+  };
+
+  const handleClickOutside = () => {
+    setShowAddSellerModal(false);
+  };
+
   return (
     <div>
-      <TableTopArea title="All Sellers" buttonText="+ Add Seller" />
+      <TableTopArea
+        title="All Sellers"
+        buttonText="+ Add Seller"
+        onClick={handleAddSeller}
+      />
       <TableWithRowGaps
         isClickable
         tableData={props?.data?.map((seller) => {
@@ -32,16 +44,22 @@ const AllSellers = (props: Props) => {
             "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            manager: seller.isManagedBy || "-",
+            manager: (seller?.meta as IAddedUserMeta)?.manager?.name || "-",
           };
         })}
         usePaginate
         meta={props.meta}
       />
 
-      <Modal isShown={showAddSellerModal} setIsShown={setShowAddSellerModal}>
-        <SellerSignUpForm />
-      </Modal>
+      <Dialog open={showAddSellerModal} modal>
+        <DialogContent
+          onPointerDownOutside={handleClickOutside}
+          onEscapeKeyDown={handleEscapeClick}
+          className="max-h-[calc(100vh-100px)] overflow-y-auto px-2 xls:px-4 xs:px-6"
+        >
+          <AddSellerForm setShowAddSellerModal={setShowAddSellerModal} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -34,7 +34,7 @@ export const getAdminAnalyticsApi = async (): Promise<IAdminAnalytics> => {
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
-    const res = await fetch(getApiUrl("/analytics/admin"), {
+    const res = await fetch(getApiUrl("/admin"), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
@@ -79,7 +79,7 @@ export const getAllSellersAdminApi = async ({
     const session = await getServerSession(authConfig);
 
     const res = await fetch(
-      getApiUrl(`/analytics/admin/sellers?${params.toString()}`),
+      getApiUrl(`/admin/sellers?${params.toString()}`),
       {
         headers: {
           Authorization: `Bearer ${session?.token}`,
@@ -122,7 +122,7 @@ export const getAllStaffAdminApi = async ({
     const session = await getServerSession(authConfig);
 
     const res = await fetch(
-      getApiUrl(`/analytics/admin/staff?${params.toString()}`),
+      getApiUrl(`/admin/staff?${params.toString()}`),
       {
         headers: {
           Authorization: `Bearer ${session?.token}`,
@@ -172,7 +172,7 @@ export const getAllPosts = async ({
     const session = await getServerSession(authConfig);
 
     const res = await fetch(
-      getApiUrl(`/analytics/admin/posts?${params.toString()}`),
+      getApiUrl(`/admin/posts?${params.toString()}`),
       {
         headers: {
           Authorization: `Bearer ${session?.token}`,

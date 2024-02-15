@@ -2,7 +2,7 @@
 
 import React from "react";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
-import { IAdminAnalytics } from "@/api/analytics";
+import { IAdminAnalytics } from "@/api/admin";
 import AnalyticsTopCardsHOC from "../analytics/AnalyticsTopCardsHOC";
 import { useRouter } from "next/navigation";
 import {

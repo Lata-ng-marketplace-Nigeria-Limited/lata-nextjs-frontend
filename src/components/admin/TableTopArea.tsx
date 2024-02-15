@@ -8,7 +8,9 @@ interface Props {
   title: string;
   buttonText?: string;
   hideButton?: boolean;
+  onClick?: () => void;
 }
+
 const TableTopArea = (props: Props) => {
   return (
     <div className="mb-7 flex items-center justify-between">
@@ -20,7 +22,11 @@ const TableTopArea = (props: Props) => {
         />
 
         {props.hideButton ? null : (
-          <Button format="primary" className="whitespace-nowrap">
+          <Button
+            format="primary"
+            className="whitespace-nowrap"
+            onClick={props.onClick}
+          >
             {props.buttonText || "+ Add Seller"}
           </Button>
         )}

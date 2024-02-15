@@ -34,7 +34,7 @@ const AllStaff = (props: Props) => {
             "reg Date": DateTime.fromISO(staff?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            manager: staff.name,
+            admin: staff.name,
           };
         })}
         usePaginate

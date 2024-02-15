@@ -39,6 +39,23 @@ export const registerApi = async (
   }
 };
 
+export const adminOrStaffAddUserApi = async (
+  data: RegisterApiInput,
+): Promise<{
+  message: string;
+  authorized?: boolean;
+  isEmailVerified?: boolean;
+  publicToken?: string;
+}> => {
+  try {
+    const formData = createFormData(data);
+    const response = await $http.post("/auth/register/add", formData);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
 export interface UpdateUserProfileInput {
   name: string;
   oldPassword?: string;

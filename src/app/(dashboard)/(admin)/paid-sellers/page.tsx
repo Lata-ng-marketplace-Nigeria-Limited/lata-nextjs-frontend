@@ -1,4 +1,4 @@
-import { getAllSellersAdminApi } from "@/api/analytics";
+import { getAllSellersAdminApi } from "@/api/admin";
 import AllSellers from "@/components/admin/AllSellers";
 import { GetUser } from "@/components/atom/GetUser";
 import { authConfig } from "@authConfig";

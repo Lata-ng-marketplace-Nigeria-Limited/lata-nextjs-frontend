@@ -14,7 +14,7 @@ export interface User {
   address?: string;
   avatar?: string;
   aboutBusiness?: string;
-  meta?: UserMeta;
+  meta?: UserMeta | IAddedUserMeta;
   googleIntegration?: string;
   emailVerified?: boolean;
   phoneNumberVerified?: boolean;
@@ -37,7 +37,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   expires_at: string;
-  isManagedBy: string;
+  managedBy: string;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";
@@ -48,6 +48,10 @@ export interface UserMeta {
   user_agent?: string;
   logged_in_at?: string;
   [key: string]: any;
+}
+
+export interface IAddedUserMeta{
+  manager: User
 }
 
 export interface Settings {
