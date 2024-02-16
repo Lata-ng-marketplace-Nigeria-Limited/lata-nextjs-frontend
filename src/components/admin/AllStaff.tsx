@@ -5,24 +5,29 @@ import { DateTime } from "luxon";
 import { User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
 import TableWithRowGaps from "../table/TableWithRowGaps";
-import Modal from "@components/molecule/Modal";
-import { SellerSignUpForm } from "@components/forms/SellerSignUpForm";
 import TableTopArea from "./TableTopArea";
+import AddStaffForm from "./AddStaffForm";
+import ResizableDialog from "./ResizableDialog";
 
 interface Props {
   data: User[];
   meta: FetchMeta;
 }
 const AllStaff = (props: Props) => {
-  const [showAddSellerModal, setShowAddSellerModal] = useState(false);
+  const [showAddStaffModal, setShowAddStaffModal] = useState(false);
 
   const handleAddStaff = () => {
-    setShowAddSellerModal(!showAddSellerModal);
+    setShowAddStaffModal(!showAddStaffModal);
   };
 
   return (
     <div>
-     <TableTopArea title="All Staff" buttonText="+ Add Staff" placeholder="Search staff"/>
+      <TableTopArea
+        title="All Staff"
+        buttonText="+ Add Staff"
+        placeholder="Search staff"
+        onClick={handleAddStaff}
+      />
       <TableWithRowGaps
         isClickable
         emptyTableTitle="No Staff yet"
@@ -41,9 +46,12 @@ const AllStaff = (props: Props) => {
         meta={props.meta}
       />
 
-      <Modal isShown={showAddSellerModal} setIsShown={setShowAddSellerModal}>
-        <SellerSignUpForm />
-      </Modal>
+      <ResizableDialog
+        isShown={showAddStaffModal}
+        setIsShown={setShowAddStaffModal}
+      >
+        <AddStaffForm setShowAddSellerModal={setShowAddStaffModal} />
+      </ResizableDialog>
     </div>
   );
 };
