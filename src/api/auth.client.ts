@@ -16,11 +16,22 @@ interface SellerRegisterApiInput {
   shouldCompleteProfile?: boolean;
 }
 
+interface StaffRegisterApiInput {
+  role: "STAFF";
+  phoneNumber?: string;
+  position: string;
+  address: string;
+  file?: File;
+  accountName: string;
+  accountNumber: string;
+  bankName: string;
+}
+
 type RegisterApiInput = {
   name: string;
   email: string;
   password: string;
-} & (BuyerRegisterApiInput | SellerRegisterApiInput);
+} & (BuyerRegisterApiInput | SellerRegisterApiInput | StaffRegisterApiInput );
 
 export const registerApi = async (
   data: RegisterApiInput,

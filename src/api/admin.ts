@@ -34,7 +34,7 @@ export const getAdminAnalyticsApi = async (): Promise<IAdminAnalytics> => {
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
-    const res = await fetch(getApiUrl("/admin"), {
+    const res = await fetch(getApiUrl("/admin/analytics"), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
