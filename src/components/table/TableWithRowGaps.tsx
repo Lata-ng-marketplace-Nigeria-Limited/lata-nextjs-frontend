@@ -92,7 +92,7 @@ const TableWithRowGaps = (props: Props) => {
                   ))}
                 </TableRow>
                 <TableRow className="border-0 border-transparent bg-transparent hover:bg-white">
-                  <div className="h-2"></div>
+                  <TableCell className="p-1"></TableCell>
                 </TableRow>
               </React.Fragment>
             ))}

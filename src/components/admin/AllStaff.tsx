@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import { IAddedUserMeta, User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
@@ -15,11 +15,32 @@ interface Props {
 }
 const AllStaff = (props: Props) => {
   const [showAddStaffModal, setShowAddStaffModal] = useState(false);
+  const [filteredData, setFilteredData] = useState<User[]>(props.data);
+  const [search, setSearch] = useState("");
 
   const handleAddStaff = () => {
     setShowAddStaffModal(!showAddStaffModal);
   };
 
+  useEffect(() => {
+    const filter = props.data.filter(
+      (staff) =>
+        // search by name
+        staff.name.toLowerCase().includes(search) ||
+        // search by admin
+        (staff?.meta as IAddedUserMeta)?.manager?.name
+          .toLowerCase()
+          .includes(search) ||
+        // search by location
+        (staff.address as string).toLowerCase().includes(search) ||
+        // search by reg date
+        DateTime.fromISO(staff.createdAt)
+          .toFormat("dd LLL, yyyy")
+          .toLowerCase()
+          .includes(search),
+    );
+    setFilteredData(filter);
+  }, [search, props.data]);
 
   return (
     <>
@@ -28,12 +49,13 @@ const AllStaff = (props: Props) => {
         buttonText="+ Add Staff"
         placeholder="Search staff"
         onClick={handleAddStaff}
+        setSearch={setSearch}
       />
       <TableWithRowGaps
         isClickable
         emptyTableTitle="No Staff yet"
         emptyTableDescription="All Staff will appear here"
-        tableData={props?.data?.map((staff) => {
+        tableData={filteredData.map((staff) => {
           return {
             name: staff?.name,
             location: staff?.address,
