@@ -7,7 +7,7 @@ import { DateTime } from "luxon";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import TableTopArea from "@components/admin/TableTopArea";
 import AddSellerForm from "@components/admin/AddSeller";
-import { Dialog, DialogContent } from "@components/ui/dialog";
+import ResizableDialog from "./ResizableDialog";
 
 interface Props {
   data: User[];
@@ -51,15 +51,12 @@ const AllSellers = (props: Props) => {
         meta={props.meta}
       />
 
-      <Dialog open={showAddSellerModal} modal>
-        <DialogContent
-          onPointerDownOutside={handleClickOutside}
-          onEscapeKeyDown={handleEscapeClick}
-          className="max-h-[calc(100vh-100px)] overflow-y-auto px-2 xls:px-4 xs:px-6"
-        >
-          <AddSellerForm setShowAddSellerModal={setShowAddSellerModal} />
-        </DialogContent>
-      </Dialog>
+      <ResizableDialog
+        isShown={showAddSellerModal}
+        setIsShown={setShowAddSellerModal}
+      >
+        <AddSellerForm setShowAddSellerModal={setShowAddSellerModal} />
+      </ResizableDialog>
     </div>
   );
 };
