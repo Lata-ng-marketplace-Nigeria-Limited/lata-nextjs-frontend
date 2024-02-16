@@ -62,7 +62,7 @@ const TableWithRowGaps = (props: Props) => {
 
   return (
     <>
-      {props.tableData && props.tableData.length > 1 ? (
+      {props.tableData && props.tableData.length > 0 ? (
         <Table className="border-collapse text-grey10">
           <TableHeader>
             <TableRow>
@@ -91,8 +91,8 @@ const TableWithRowGaps = (props: Props) => {
                     <TableCell key={"TableCell" + index}>{row[key]}</TableCell>
                   ))}
                 </TableRow>
-                <TableRow className="border border-x-0 border-transparent">
-                  <div className="h-2 "></div>
+                <TableRow className="border-0 border-transparent bg-transparent hover:bg-white">
+                  <div className="h-2"></div>
                 </TableRow>
               </React.Fragment>
             ))}

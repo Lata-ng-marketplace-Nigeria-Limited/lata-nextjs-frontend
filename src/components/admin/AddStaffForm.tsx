@@ -80,7 +80,7 @@ const AddStaffForm = (props: Props) => {
       });
 
       toast({
-        description: `Seller account created successfully`,
+        description: `Staff account created successfully`,
         variant: "success",
         duration: 15000,
       });
@@ -196,7 +196,7 @@ const AddStaffForm = (props: Props) => {
                     {...field}
                     placeholder="Enter position"
                     disabled={loading}
-                    errorMessage={errors.address?.message}
+                    errorMessage={errors.position?.message}
                   />
                 </FormTopLabel>
               )}
@@ -208,17 +208,17 @@ const AddStaffForm = (props: Props) => {
               render={({ field }) => (
                 <FormTopLabel
                   labelClass="font-semibold text-sm"
-                  label={"Location"}
+                  label={"Address"}
                 >
                   <TextInput
                     {...field}
                     placeholder="Enter location"
                     disabled={loading}
-                    errorMessage={errors.location?.message}
+                    errorMessage={errors.address?.message}
                   />
                 </FormTopLabel>
               )}
-              name={"location"}
+              name={"address"}
               control={control}
             />
 

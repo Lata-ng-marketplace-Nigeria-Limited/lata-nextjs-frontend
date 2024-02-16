@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { DateTime } from "luxon";
-import { User } from "@/interface/user";
+import { IAddedUserMeta, User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
 import TableWithRowGaps from "../table/TableWithRowGaps";
 import TableTopArea from "./TableTopArea";
@@ -20,8 +20,9 @@ const AllStaff = (props: Props) => {
     setShowAddStaffModal(!showAddStaffModal);
   };
 
+
   return (
-    <div>
+    <>
       <TableTopArea
         title="All Staff"
         buttonText="+ Add Staff"
@@ -39,7 +40,7 @@ const AllStaff = (props: Props) => {
             "reg Date": DateTime.fromISO(staff?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            admin: staff.name,
+            admin: (staff?.meta as IAddedUserMeta)?.manager?.name || "-",
           };
         })}
         usePaginate
@@ -52,7 +53,7 @@ const AllStaff = (props: Props) => {
       >
         <AddStaffForm setShowAddSellerModal={setShowAddStaffModal} />
       </ResizableDialog>
-    </div>
+    </>
   );
 };
 

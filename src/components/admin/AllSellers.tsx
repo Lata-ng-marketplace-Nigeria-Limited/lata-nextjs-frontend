@@ -20,19 +20,12 @@ const AllSellers = (props: Props) => {
     setShowAddSellerModal(!showAddSellerModal);
   };
 
-  const handleEscapeClick = () => {
-    setShowAddSellerModal(false);
-  };
-
-  const handleClickOutside = () => {
-    setShowAddSellerModal(false);
-  };
-
   return (
     <div>
       <TableTopArea
         title="All Sellers"
         buttonText="+ Add Seller"
+        placeholder="Search sellers"
         onClick={handleAddSeller}
       />
       <TableWithRowGaps
