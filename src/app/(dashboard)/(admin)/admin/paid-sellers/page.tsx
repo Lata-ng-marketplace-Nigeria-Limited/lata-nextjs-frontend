@@ -18,6 +18,7 @@ export default async function Protected({
   searchParams: {
     page: string;
     limit: string;
+    transactionStatus: string;
   };
 }) {
   const session = await getServerSession(authConfig);
@@ -27,8 +28,12 @@ export default async function Protected({
 
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
-  const response = await getAllPaidSellersAdminApi({ page, limit });
-  console.log(response);
+  const transactionStatus = searchParams?.transactionStatus || "";
+  const response = await getAllPaidSellersAdminApi({
+    page,
+    limit,
+    transactionStatus,
+  });
 
   return (
     <div>
@@ -41,6 +46,8 @@ export default async function Protected({
           activeSubscriptionCount={response?.activeSubscriptionCount}
           dueSubscriptionCount={response?.dueSubscriptionCount}
           newSubscriptionCount={response?.newSubscriptionCount}
+          unSubscribedUsersCount={response?.unSubscribedUsersCount}
+          meta={response?.meta}
         />
       </Suspense>
     </div>

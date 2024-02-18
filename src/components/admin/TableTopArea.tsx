@@ -15,10 +15,10 @@ interface Props {
 const TableTopArea = (props: Props) => {
   return (
     <div className="mb-7 flex items-center justify-between">
-      <HeaderText title>{props.title || "All Sellers"}</HeaderText>
+      <HeaderText title>{props.title}</HeaderText>
       <div className="flex items-center gap-2 tablet:gap-10">
         <SearchInput
-          placeholder={props.placeholder || "Search sellers"}
+          placeholder={props.placeholder}
           wrapperClass="max-w-max"
           setSearch={props.setSearch}
         />
@@ -29,7 +29,7 @@ const TableTopArea = (props: Props) => {
             className="whitespace-nowrap"
             onClick={props.onClick}
           >
-            {props.buttonText || "+ Add Seller"}
+            {props.buttonText}
           </Button>
         )}
       </div>

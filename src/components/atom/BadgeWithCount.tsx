@@ -1,5 +1,5 @@
 import { cn } from "@/utils";
-import Button from "./Button";
+import Button from "@components/atom/Button";
 
 export type IBadgeWithCountVariants =
   | "primary"

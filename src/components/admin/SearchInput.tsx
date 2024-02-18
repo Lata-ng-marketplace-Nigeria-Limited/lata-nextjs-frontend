@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useId, useState } from "react";
+import React from "react";
 import { InputProps } from "../atom/Input";
 import { cn } from "@/utils";
 import { SearchIcon } from "@components/atom/icons/Search";
@@ -25,18 +25,6 @@ const SearchInput = React.forwardRef(
     }: Props,
     ref,
   ) => {
-    const id = useId();
-    const [focused, setFocused] = useState(false);
-    const [filterList, setFilterList] = useState<any[] | null>([]);
-
-    const handleFocus = useCallback(() => {
-      setFocused(true);
-    }, []);
-
-    const handleBlur = useCallback(() => {
-      setFocused(false);
-    }, []);
-
     return (
       <div className={cn(" relative w-full", wrapperClass)}>
         <SearchIcon

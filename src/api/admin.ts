@@ -155,10 +155,14 @@ export const getAllStaffAdminApi = async ({
 export const getAllPaidSellersAdminApi = async ({
   page,
   limit,
-}: SearchQuery): Promise<any> => {
+  transactionStatus,
+}: SearchQuery & {transactionStatus: string}): Promise<any> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
+  if (transactionStatus) {
+    params.append("transactionStatus", transactionStatus);
+  }
 
   try {
     unstable_noStore();

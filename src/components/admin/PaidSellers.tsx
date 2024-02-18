@@ -2,21 +2,25 @@
 
 import React, { useEffect, useState } from "react";
 import BadgeWithCount from "../atom/BadgeWithCount";
-import { IProductStatusType } from "../shop/ProductStatus";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FetchMeta } from "@/interface/general";
-import TableTopArea from "./TableTopArea";
 import TableWithRowGaps from "../table/TableWithRowGaps";
 import { ISubscribedUser } from "@/interface/user";
 import { DateTime } from "luxon";
 import { formatPrice } from "@/utils";
+import Badge from "@components/atom/Badge";
+import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
+import HeaderText from "../atom/HeaderText";
+import SearchInput from "./SearchInput";
 
 interface Props {
   data: ISubscribedUser[];
   activeSubscriptionCount: number;
   dueSubscriptionCount: number;
   newSubscriptionCount: number;
-  // meta: FetchMeta;
+  unSubscribedUsersCount: number;
+  transactionStatus?: string;
+  meta: FetchMeta;
 }
 
 const PaidSellers = (props: Props) => {
@@ -47,11 +51,14 @@ const PaidSellers = (props: Props) => {
   }, [search, props.data]);
 
   const params = new URLSearchParams(searchParams);
-  const handleClick = (status: IProductStatusType) => {
-    if (status) {
-      params.set("status", status);
+
+  const handleClick = (
+    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED",
+  ) => {
+    if (transactionStatus) {
+      params.set("transactionStatus", transactionStatus);
     } else {
-      params.delete("status", status);
+      params.delete("transactionStatus", transactionStatus);
     }
     router.replace(`${pathname}?${params.toString()}`);
   };
@@ -60,47 +67,112 @@ const PaidSellers = (props: Props) => {
     return DateTime.fromISO(date).toFormat("dd LLL, yyyy");
   };
 
+  const activeButtonVariant = () => {
+    if (params.get("transactionStatus") === "NEW") {
+      return "primary";
+    } else if (params.get("transactionStatus") === "ACTIVE") {
+      return "success";
+    } else if (params.get("transactionStatus") === "UNSUBSCRIBED") {
+      return "normal";
+    } else if (params.get("transactionStatus") === "DUE") {
+      return "warning";
+    } else {
+      return "success";
+    }
+  };
+
+  const activeSideButton = (
+    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED",
+  ) => {
+    if (transactionStatus === "NEW") {
+      return "primary";
+    } else if (transactionStatus === "ACTIVE") {
+      return "success";
+    } else if (transactionStatus === "UNSUBSCRIBED") {
+      return "normal";
+    } else if (transactionStatus === "DUE") {
+      return "danger";
+    } else {
+      return "success";
+    }
+  };
+
   return (
     <div>
-      <div className="grid grid-cols-4 gap-4 sl:gap-6">
-        <BadgeWithCount
-          count={props.newSubscriptionCount}
-          // activeVariant={activeButtonVariant()}
-          className="max-xs:text-[10px]"
-          variant="primary"
-          text="new"
-          // onClick={() => handleClick("active")}
-        />
-        <BadgeWithCount
-          count={props.activeSubscriptionCount}
-          // activeVariant={activeButtonVariant()}
-          className="max-xs:text-[10px]"
-          text="active"
-          variant="success"
-          onClick={() => handleClick("reviewing")}
-        />
-        <BadgeWithCount
-          count={props.dueSubscriptionCount}
-          // activeVariant={activeButtonVariant()}
-          className="max-xs:text-[10px]"
-          text="due"
-          variant="warning"
-          onClick={() => handleClick("denied")}
+      <div className="mb-7 flex justify-end">
+        <SearchInput
+          placeholder={"Search Sellers"}
+          wrapperClass="max-w-max"
+          setSearch={setSearch}
         />
       </div>
+      <div className="mb-7 flex items-center justify-between">
+        <HeaderText title>{"Paid Sellers"}</HeaderText>
+        <div className="flex justify-end gap-4 sl:gap-6">
+          <BadgeWithCount
+            count={props.activeSubscriptionCount}
+            activeVariant={activeButtonVariant()}
+            className="max-xs:text-[10px]"
+            text="active"
+            variant="success"
+            onClick={() => handleClick("ACTIVE")}
+          />
+
+          <BadgeWithCount
+            count={props.newSubscriptionCount}
+            activeVariant={activeButtonVariant()}
+            className="max-xs:text-[10px]"
+            variant="primary"
+            text="new"
+            onClick={() => handleClick("NEW")}
+          />
+
+          <BadgeWithCount
+            count={props.dueSubscriptionCount}
+            activeVariant={activeButtonVariant()}
+            className="max-xs:text-[10px]"
+            text="due"
+            variant="danger"
+            onClick={() => handleClick("DUE")}
+          />
+
+          <BadgeWithCount
+            count={props.unSubscribedUsersCount}
+            activeVariant={activeButtonVariant()}
+            className="max-xs:text-[10px]"
+            variant="normal"
+            text="unsubscribed"
+            onClick={() => handleClick("UNSUBSCRIBED")}
+          />
+        </div>
+      </div>
+
       <div>
-        <TableTopArea
-          title="All Sellers"
-          buttonText="+ Add Seller"
-          placeholder="Search sellers"
-          setSearch={setSearch}
-          hideButton
-        />
         <TableWithRowGaps
-          isClickable
+          emptyTableTitle="No Paid seller found"
+          emptyTableDescription="All paid sellers will be displayed here"
           tableData={filteredData?.map((seller) => {
             return {
-              name: seller?.name,
+              name: (
+                <div
+                  className="flex cursor-pointer items-center gap-2"
+                  onClick={() =>
+                    router.push(
+                      DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id,
+                    )
+                  }
+                >
+                  <Badge
+                    variant={activeSideButton(seller?.subscription_status)}
+                    text={
+                      seller?.subscription_status === "ACTIVE"
+                        ? "on"
+                        : seller?.subscription_status
+                    }
+                  />
+                  <p className="capitalize">{seller?.name}</p>
+                </div>
+              ),
               "payment mode": (
                 <p className="capitalize">{seller?.transaction_provider}</p>
               ),
@@ -121,7 +193,7 @@ const PaidSellers = (props: Props) => {
             };
           })}
           usePaginate
-          // meta={props.meta}
+          meta={props.meta}
         />
       </div>
     </div>
