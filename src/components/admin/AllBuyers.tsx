@@ -104,14 +104,14 @@ const AllBuyers = (props: Props) => {
       />
       <TableWithRowGaps
         isClickable
-        tableData={filteredData.map((seller) => {
+        tableData={filteredData.map((buyer) => {
           return {
-            name: seller?.name,
-            email: seller?.email,
-            "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
+            name: buyer?.name,
+            email: buyer?.email,
+            "reg Date": DateTime.fromISO(buyer?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            manager: (seller?.meta as IAddedUserMeta)?.manager?.name || "-",
+            phone: buyer?.phoneNumber || "-",
           };
         })}
         usePaginate
