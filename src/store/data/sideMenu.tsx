@@ -10,6 +10,7 @@ import { SettingsIcon } from "@/components/atom/icons/Settings";
 import { PhoneIcon } from "@/components/atom/icons/Phone";
 import { SalesAgreementIcon } from "@/components/atom/icons/SalesAgreement";
 import {
+  ADMIN_ALL_BUYERS,
   ADMIN_BLOCKED_ACCOUNTS_ROUTE,
   ADMIN_EDIT_CATEGORY_ROUTE,
   ADMIN_EDIT_LOCATION_ROUTE,
@@ -45,6 +46,7 @@ import {
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
+import { ShoppingCartIcon } from "@/components/atom/icons/ShoppingCart";
 
 export const sideMenu: {
   title: string;
@@ -89,10 +91,22 @@ export const sideMenu: {
     isAdmin: false,
     isAuth: false,
     isStaff: false,
-    hideFromAdmin: false,
+    hideFromAdmin: true,
     hideFromStaff: false,
     fill: false,
     href: DASHBOARD_SAVED_ROUTE,
+  },
+  {
+    title: "Buyers",
+    icon: <ShoppingCartIcon />,
+    isSeller: false,
+    isAdmin: true,
+    isAuth: false,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: true,
+    fill: false,
+    href: ADMIN_ALL_BUYERS,
   },
   {
     title: "My Shop",

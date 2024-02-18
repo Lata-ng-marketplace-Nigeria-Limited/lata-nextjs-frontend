@@ -18,7 +18,6 @@ interface Props {
   activeSubscriptionCount: number;
   dueSubscriptionCount: number;
   newSubscriptionCount: number;
-  unSubscribedUsersCount: number;
   transactionStatus?: string;
   meta: FetchMeta;
 }
@@ -84,18 +83,20 @@ const PaidSellers = (props: Props) => {
   const activeSideButton = (
     transactionStatus: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED",
   ) => {
-    if (transactionStatus === "NEW") {
+    if (params.get("transactionStatus") === "NEW") {
       return "primary";
-    } else if (transactionStatus === "ACTIVE") {
+    } else if (params.get("transactionStatus") === "ACTIVE") {
       return "success";
-    } else if (transactionStatus === "UNSUBSCRIBED") {
+    } else if (params.get("transactionStatus") === "UNSUBSCRIBED") {
       return "normal";
-    } else if (transactionStatus === "DUE") {
+    } else if (params.get("transactionStatus") === "DUE") {
       return "danger";
     } else {
       return "success";
     }
   };
+
+  console.log;
 
   return (
     <div>
@@ -135,15 +136,6 @@ const PaidSellers = (props: Props) => {
             variant="danger"
             onClick={() => handleClick("DUE")}
           />
-
-          <BadgeWithCount
-            count={props.unSubscribedUsersCount}
-            activeVariant={activeButtonVariant()}
-            className="max-xs:text-[10px]"
-            variant="normal"
-            text="unsubscribed"
-            onClick={() => handleClick("UNSUBSCRIBED")}
-          />
         </div>
       </div>
 
@@ -165,7 +157,9 @@ const PaidSellers = (props: Props) => {
                   <Badge
                     variant={activeSideButton(seller?.subscription_status)}
                     text={
-                      seller?.subscription_status === "ACTIVE"
+                      seller?.subscription_status === "ACTIVE" ||
+                      (seller?.subscription_status === "NEW" &&
+                        params.get("transactionStatus") === "ACTIVE")
                         ? "on"
                         : seller?.subscription_status
                     }
@@ -176,18 +170,23 @@ const PaidSellers = (props: Props) => {
               "payment mode": (
                 <p className="capitalize">{seller?.transaction_provider}</p>
               ),
-              plan: (
-                <p className="capitalize">
-                  {seller?.plan_name}-{seller?.plan_duration}
-                  {seller?.plan_duration > 1 ? "months" : "month"}
-                </p>
-              ),
-              product: seller?.subscription_name,
-              duration: (
+              plan:
+                seller?.plan_name || seller?.plan_duration ? (
+                  <p className="capitalize">
+                    {seller?.plan_name}-{seller?.plan_duration}
+                    {seller?.plan_duration > 1 ? "months" : "month"}
+                  </p>
+                ) : (
+                  "-"
+                ),
+              product: seller?.subscription_name || "-",
+              duration: seller?.subscription_paid_at ? (
                 <p>
                   {formatDate(seller?.subscription_paid_at)} -{" "}
                   {formatDate(seller?.subscription_expiry_date)}
                 </p>
+              ) : (
+                "Due"
               ),
               amount: <p>{formatPrice(seller?.transaction_actual_amount)}</p>,
             };

@@ -26,15 +26,15 @@ const AllStaff = (props: Props) => {
     const filter = props.data.filter(
       (staff) =>
         // search by name
-        staff.name.toLowerCase().includes(search) ||
+        staff?.name.toLowerCase().includes(search) ||
         // search by admin
         (staff?.meta as IAddedUserMeta)?.manager?.name
           .toLowerCase()
           .includes(search) ||
         // search by location
-        (staff.address as string).toLowerCase().includes(search) ||
+        (staff?.address as string).toLowerCase().includes(search) ||
         // search by reg date
-        DateTime.fromISO(staff.createdAt)
+        DateTime.fromISO(staff?.createdAt)
           .toFormat("dd LLL, yyyy")
           .toLowerCase()
           .includes(search),

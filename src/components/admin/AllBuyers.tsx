@@ -6,47 +6,42 @@ import { FetchMeta } from "@/interface/general";
 import { DateTime } from "luxon";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import TableTopArea from "@components/admin/TableTopArea";
-import AddSellerForm from "@components/admin/AddSeller";
 import ResizableDialog from "./ResizableDialog";
 import BadgeWithCount from "../atom/BadgeWithCount";
-import { IBadgeVariants } from "../atom/Badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
+import { IBadgeVariants } from "../atom/Badge";
+import AddBuyerForm from "./AddBuyerForm";
 
 interface Props {
   data: User[];
   meta: FetchMeta;
-  countVerifiedSellers?: number;
-  countUnverifiedSellers?: number;
+  countVerifiedBuyers: number;
+  countUnverifiedBuyers: number;
 }
-const AllSellers = (props: Props) => {
-  const [showAddSellerModal, setShowAddSellerModal] = useState(false);
+const AllBuyers = (props: Props) => {
+  const [showAddBuyerModal, setShowAddBuyerModal] = useState(false);
   const [filteredData, setFilteredData] = useState<User[]>(props.data);
   const [search, setSearch] = useState("");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const params = new URLSearchParams(searchParams);
-
-  const handleAddSeller = () => {
-    setShowAddSellerModal(!showAddSellerModal);
+  const handleAddBuyer = () => {
+    setShowAddBuyerModal(!showAddBuyerModal);
   };
 
   useEffect(() => {
     const filter = props.data.filter(
-      (seller) =>
-        // search by nam
-        seller?.name.toLowerCase().includes(search) ||
-        // search by manager
-        (seller?.meta as IAddedUserMeta)?.manager?.name
-          .toLowerCase()
-          .includes(search) ||
+      (buyer) =>
+        // search by name
+        buyer?.name.toLowerCase().includes(search) ||
         // search by location
-        (seller?.address as string).toLowerCase().includes(search) ||
+        (buyer?.address &&
+          (buyer?.address as string).toLowerCase().includes(search)) ||
+        //search by email
+        buyer?.email.toLowerCase().includes(search) ||
         // search by reg date
-        DateTime.fromISO(seller?.createdAt)
+        DateTime.fromISO(buyer?.createdAt)
           .toFormat("dd LLL, yyyy")
           .toLowerCase()
           .includes(search),
@@ -54,17 +49,23 @@ const AllSellers = (props: Props) => {
     setFilteredData(filter);
   }, [search, props.data]);
 
+  const params = new URLSearchParams(searchParams);
+
   const activeButtonVariant = (): IBadgeVariants => {
     if (params.get("verified") === "0") {
       return "warning";
-    } else if (params.get("verified") === "zero_uploads") {
-      return "normal";
     } else {
       return "primary";
     }
   };
 
-  const handleClick = (verified: "0" | "1" | "zero_uploads") => {
+  useEffect(() => {
+    if (!params.get("verified")) {
+      params.set("verified", "1");
+    }
+  }, []);
+
+  const handleClick = (verified: "0" | "1") => {
     if (verified) {
       params.set("verified", verified);
     } else {
@@ -77,7 +78,7 @@ const AllSellers = (props: Props) => {
     <div>
       <div className="mb-7 flex justify-end gap-4 sl:gap-6">
         <BadgeWithCount
-          count={props?.countVerifiedSellers || 0}
+          count={props?.countVerifiedBuyers}
           activeVariant={activeButtonVariant()}
           className="max-xs:text-[10px]"
           text="verified"
@@ -86,43 +87,27 @@ const AllSellers = (props: Props) => {
         />
 
         <BadgeWithCount
-          count={props?.countUnverifiedSellers || 0}
+          count={props?.countUnverifiedBuyers}
           activeVariant={activeButtonVariant()}
           className="max-xs:text-[10px]"
           variant="warning"
           text="unverified"
           onClick={() => handleClick("0")}
         />
-
-        <BadgeWithCount
-          count={props?.countUnverifiedSellers || 0}
-          activeVariant={activeButtonVariant()}
-          className="max-xs:text-[10px]"
-          variant="normal"
-          text="No Uploads"
-          onClick={() => handleClick("zero_uploads")}
-        />
       </div>
       <TableTopArea
-        title="All Sellers"
-        buttonText="+ Add Seller"
-        placeholder="Search sellers"
-        onClick={handleAddSeller}
+        title="All Buyers"
+        buttonText="+ Add Buyer"
+        placeholder="Search buyers"
+        onClick={handleAddBuyer}
         setSearch={setSearch}
       />
       <TableWithRowGaps
         isClickable
         tableData={filteredData.map((seller) => {
           return {
-            name: (
-              <Link
-                href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id}
-                className="hover:text-primary"
-              >
-                {seller?.name}
-              </Link>
-            ),
-            location: seller?.address,
+            name: seller?.name,
+            email: seller?.email,
             "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
@@ -134,13 +119,13 @@ const AllSellers = (props: Props) => {
       />
 
       <ResizableDialog
-        isShown={showAddSellerModal}
-        setIsShown={setShowAddSellerModal}
+        isShown={showAddBuyerModal}
+        setIsShown={setShowAddBuyerModal}
       >
-        <AddSellerForm setShowAddSellerModal={setShowAddSellerModal} />
+        <AddBuyerForm setShowAddBuyerModal={setShowAddBuyerModal} />
       </ResizableDialog>
     </div>
   );
 };
 
-export default AllSellers;
+export default AllBuyers;

@@ -1,5 +1,4 @@
-import { getAllPaidSellersAdminApi, getAllSellersAdminApi } from "@/api/admin";
-import AllSellers from "@/components/admin/AllSellers";
+import { getAllPaidSellersAdminApi } from "@/api/admin";
 import PaidSellers from "@/components/admin/PaidSellers";
 import { GetUser } from "@/components/atom/GetUser";
 import { authConfig } from "@authConfig";
@@ -46,7 +45,6 @@ export default async function Protected({
           activeSubscriptionCount={response?.activeSubscriptionCount}
           dueSubscriptionCount={response?.dueSubscriptionCount}
           newSubscriptionCount={response?.newSubscriptionCount}
-          unSubscribedUsersCount={response?.unSubscribedUsersCount}
           meta={response?.meta}
         />
       </Suspense>

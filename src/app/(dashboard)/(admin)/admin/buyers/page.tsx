@@ -1,5 +1,5 @@
-import { getAllSellersAdminApi } from "@/api/admin";
-import AllSellers from "@/components/admin/AllSellers";
+import { getAllBuyersAdminApi } from "@/api/admin";
+import AllBuyers from "@/components/admin/AllBuyers";
 import { GetUser } from "@/components/atom/GetUser";
 import { authConfig } from "@authConfig";
 import { Metadata } from "next";
@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Sellers",
+  title: "Buyers",
 };
 
 export default async function Protected({
@@ -28,7 +28,7 @@ export default async function Protected({
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
   const verified = searchParams?.verified || "";
-  const response = await getAllSellersAdminApi({ page, limit, verified });
+  const response = await getAllBuyersAdminApi({ page, limit, verified });
 
   return (
     <div>
@@ -36,11 +36,11 @@ export default async function Protected({
         <GetUser />
       </Suspense>
       <Suspense fallback={<p>Loading...</p>}>
-        <AllSellers
+        <AllBuyers
           data={response.data}
           meta={response.meta}
-          countVerifiedSellers={response?.countVerifiedSellers}
-          countUnverifiedSellers={response?.countUnVerifiedSellers}
+          countVerifiedBuyers={response?.countVerifiedBuyers}
+          countUnverifiedBuyers={response?.countUnverifiedBuyers}
         />
       </Suspense>
     </div>
