@@ -50,6 +50,12 @@ const BadgeWithCount = (props: Props) => {
           "text-grey9":
             props.variant === "normal" && props.variant !== props.activeVariant,
         },
+        {
+          "bg-success text-white hover:bg-success hover:text-white":
+            props.variant === "success" && props.variant === props.activeVariant,
+          "text-success":
+            props.variant === "success" && props.variant !== props.activeVariant,
+        },
         "cursor-pointer capitalize",
       )}
       onClick={props.onClick}

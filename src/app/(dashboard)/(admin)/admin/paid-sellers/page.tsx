@@ -1,5 +1,6 @@
-import { getAllSellersAdminApi } from "@/api/admin";
+import { getAllPaidSellersAdminApi, getAllSellersAdminApi } from "@/api/admin";
 import AllSellers from "@/components/admin/AllSellers";
+import PaidSellers from "@/components/admin/PaidSellers";
 import { GetUser } from "@/components/atom/GetUser";
 import { authConfig } from "@authConfig";
 import { Metadata } from "next";
@@ -26,7 +27,8 @@ export default async function Protected({
 
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
-  const response = await getAllSellersAdminApi({ page, limit });
+  const response = await getAllPaidSellersAdminApi({ page, limit });
+  console.log(response);
 
   return (
     <div>
@@ -34,7 +36,12 @@ export default async function Protected({
         <GetUser />
       </Suspense>
       <Suspense fallback={<p>Loading...</p>}>
-        <AllSellers data={response.data} meta={response.meta} />
+        <PaidSellers
+          data={response?.data}
+          activeSubscriptionCount={response?.activeSubscriptionCount}
+          dueSubscriptionCount={response?.dueSubscriptionCount}
+          newSubscriptionCount={response?.newSubscriptionCount}
+        />
       </Suspense>
     </div>
   );

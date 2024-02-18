@@ -77,3 +77,21 @@ export interface AuthorizeResponse {
   token?: string;
   shouldCompleteProfile?: boolean;
 }
+
+export interface ISubscribedUser {
+  id: string;
+  name: string;
+  email: string;
+  phone_number: string | null;
+  subscription_status: 'NEW' | 'ACTIVE' | 'DUE' | 'UNSUBSCRIBED';
+  subscription_expiry_date: string; 
+  subscription_paid_at: string; 
+  address: string | null;
+  avatar: string | null;
+  subscription_name: string;
+  plan_duration: number;
+  transaction_provider: string;
+  total_transactions: number;
+  transaction_actual_amount: number;
+  plan_name: string;
+}
