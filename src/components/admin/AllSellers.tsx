@@ -13,6 +13,7 @@ import { IBadgeVariants } from "../atom/Badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
+import Image from "next/image";
 
 interface Props {
   data: User[];
@@ -115,12 +116,21 @@ const AllSellers = (props: Props) => {
         tableData={filteredData.map((seller) => {
           return {
             name: (
-              <Link
-                href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id}
-                className="hover:text-primary"
-              >
-                {seller?.name}
-              </Link>
+              <div className="flex items-center gap-2">
+                <Image
+                  src={seller?.avatar || ""}
+                  alt={"image of " + seller?.name}
+                  width={20}
+                  height={20}
+                  className="aspect-square rounded-full object-cover"
+                />
+                <Link
+                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id}
+                  className="hover:text-primary"
+                >
+                  {seller?.name}
+                </Link>
+              </div>
             ),
             location: seller?.address,
             "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(

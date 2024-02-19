@@ -8,6 +8,8 @@ import TableWithRowGaps from "../table/TableWithRowGaps";
 import TableTopArea from "./TableTopArea";
 import AddStaffForm from "./AddStaffForm";
 import ResizableDialog from "./ResizableDialog";
+import Link from "next/link";
+import Image from "next/image";
 
 interface Props {
   data: User[];
@@ -57,7 +59,18 @@ const AllStaff = (props: Props) => {
         emptyTableDescription="All Staff will appear here"
         tableData={filteredData.map((staff) => {
           return {
-            name: staff?.name,
+            name: (
+              <div className="flex items-center gap-2">
+                <Image
+                  src={staff?.avatar || ""}
+                  alt={"image of " + staff?.name}
+                  width={20}
+                  height={20}
+                  className="aspect-square rounded-full object-cover"
+                />
+                <Link href={"#"}>{staff?.name}</Link>
+              </div>
+            ),
             location: staff?.address,
             "reg Date": DateTime.fromISO(staff?.createdAt).toFormat(
               "dd LLL, yyyy",
