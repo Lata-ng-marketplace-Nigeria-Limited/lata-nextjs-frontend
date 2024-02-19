@@ -8,7 +8,7 @@ import TableWithRowGaps from "../table/TableWithRowGaps";
 import { ISubscribedUser } from "@/interface/user";
 import { DateTime } from "luxon";
 import { formatPrice } from "@/utils";
-import Badge from "@components/atom/Badge";
+import Badge, { IBadgeVariants } from "@components/atom/Badge";
 import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
 import HeaderText from "../atom/HeaderText";
 import SearchInput from "./SearchInput";
@@ -66,34 +66,24 @@ const PaidSellers = (props: Props) => {
     return DateTime.fromISO(date).toFormat("dd LLL, yyyy");
   };
 
-  const activeButtonVariant = () => {
-    if (params.get("transactionStatus") === "NEW") {
-      return "primary";
-    } else if (params.get("transactionStatus") === "ACTIVE") {
-      return "success";
-    } else if (params.get("transactionStatus") === "UNSUBSCRIBED") {
-      return "normal";
-    } else if (params.get("transactionStatus") === "DUE") {
-      return "warning";
-    } else {
-      return "success";
+  const getBadgeVariant = (): IBadgeVariants => {
+    switch (params.get("transactionStatus")) {
+      case "NEW":
+        return "primary";
+      case "ACTIVE":
+        return "success";
+      case "UNSUBSCRIBED":
+        return "normal";
+      case "DUE":
+        return "danger";
+      default:
+        return "success";
     }
   };
 
-  const activeSideButton = (
-    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED",
-  ) => {
-    if (params.get("transactionStatus") === "NEW") {
-      return "primary";
-    } else if (params.get("transactionStatus") === "ACTIVE") {
-      return "success";
-    } else if (params.get("transactionStatus") === "UNSUBSCRIBED") {
-      return "normal";
-    } else if (params.get("transactionStatus") === "DUE") {
-      return "danger";
-    } else {
-      return "success";
-    }
+  const sideBtnDisplay = () => {
+    const status = params.get("transactionStatus");
+    return (status?.toLowerCase() === "active" ? "on" : status) || "loading";
   };
 
   return (
@@ -110,7 +100,7 @@ const PaidSellers = (props: Props) => {
         <div className="flex justify-end gap-4 sl:gap-6">
           <BadgeWithCount
             count={props.activeSubscriptionCount}
-            activeVariant={activeButtonVariant()}
+            activeVariant={getBadgeVariant()}
             className="max-xs:text-[10px]"
             text="active"
             variant="success"
@@ -119,7 +109,7 @@ const PaidSellers = (props: Props) => {
 
           <BadgeWithCount
             count={props.newSubscriptionCount}
-            activeVariant={activeButtonVariant()}
+            activeVariant={getBadgeVariant()}
             className="max-xs:text-[10px]"
             variant="primary"
             text="new"
@@ -128,7 +118,7 @@ const PaidSellers = (props: Props) => {
 
           <BadgeWithCount
             count={props.dueSubscriptionCount}
-            activeVariant={activeButtonVariant()}
+            activeVariant={getBadgeVariant()}
             className="max-xs:text-[10px]"
             text="due"
             variant="danger"
@@ -152,16 +142,7 @@ const PaidSellers = (props: Props) => {
                     )
                   }
                 >
-                  <Badge
-                    variant={activeSideButton(seller?.subscription_status)}
-                    text={
-                      seller?.subscription_status === "ACTIVE" ||
-                      (seller?.subscription_status === "NEW" &&
-                        params.get("transactionStatus") === "ACTIVE")
-                        ? "on"
-                        : seller?.subscription_status
-                    }
-                  />
+                  <Badge variant={getBadgeVariant()} text={sideBtnDisplay()} />
                   <p className="capitalize">{seller?.name}</p>
                 </div>
               ),
