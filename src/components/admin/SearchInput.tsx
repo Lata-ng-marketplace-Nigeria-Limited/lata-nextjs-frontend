@@ -64,7 +64,7 @@ const SearchInput = React.forwardRef(
               `,
             inputClass,
           )}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
       </div>
     );
