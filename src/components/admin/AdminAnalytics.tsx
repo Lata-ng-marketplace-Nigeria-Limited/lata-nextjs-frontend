@@ -16,8 +16,8 @@ interface Props {
   analyticsCount: IAdminAnalytics["counts"] | undefined;
 }
 
-const AdminAnalyticsWrapper = async (props: Props) => {
-  const { push } = useRouter();
+const AdminAnalyticsWrapper = (props: Props) => {
+  const router = useRouter();
   const formatNumber = (number: number | undefined | null) => {
     if (!number || typeof number !== "number") return 0;
     return number.toLocaleString();
@@ -40,20 +40,20 @@ const AdminAnalyticsWrapper = async (props: Props) => {
         title="All sellers"
         description="The total number of registered sellers"
         isClickable
-        onClick={() => push(ADMIN_ALL_SELLERS_ROUTE)}
+        onClick={() => router?.push(ADMIN_ALL_SELLERS_ROUTE)}
         number={totalSellersCount}
       />
       <AnalyticsTopCards
         title="Staff accounts"
         number={totalStaff}
         isClickable
-        onClick={() => push(ADMIN_ALL_STAFF_ROUTE)}
+        onClick={() => router?.push(ADMIN_ALL_STAFF_ROUTE)}
         description="The total number of registered staff"
       />
       <AnalyticsTopCards
         title="Paid Sellers"
         number={paidSellersCount}
-        onClick={() => push(ADMIN_PAID_SELLERS_ROUTE)}
+        onClick={() => router?.push(ADMIN_PAID_SELLERS_ROUTE)}
         isClickable
         description="The total number of paid subscribers"
       />
@@ -61,7 +61,7 @@ const AdminAnalyticsWrapper = async (props: Props) => {
         title="All Posts"
         number={totalPostsCount}
         isClickable
-        onClick={() => push(ADMIN_ALL_POSTS)}
+        onClick={() => router?.push(ADMIN_ALL_POSTS)}
         description="The total number of approved posts"
       />
     </AnalyticsTopCardsHOC>

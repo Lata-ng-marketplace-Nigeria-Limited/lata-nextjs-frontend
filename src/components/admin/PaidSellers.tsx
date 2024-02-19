@@ -96,8 +96,6 @@ const PaidSellers = (props: Props) => {
     }
   };
 
-  console.log;
-
   return (
     <div>
       <div className="mb-7 flex justify-end">
