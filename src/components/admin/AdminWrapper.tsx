@@ -1,4 +1,4 @@
-import { getAdminAnalyticsApi } from "@/api/analytics";
+import { getAdminAnalyticsApi } from "@/api/admin";
 import AdminAnalyticsWrapper from "@/components/admin/AdminAnalytics";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";

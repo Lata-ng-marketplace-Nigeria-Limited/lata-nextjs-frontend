@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useId, useState } from "react";
+import React from "react";
 import { InputProps } from "../atom/Input";
 import { cn } from "@/utils";
 import { SearchIcon } from "@components/atom/icons/Search";
@@ -10,7 +10,7 @@ interface Props extends Omit<InputProps, "className"> {
   inputClass?: string;
   placeholder?: string;
   searchIconClass?: string;
-  setFilteredData?: any[];
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SearchInput = React.forwardRef(
@@ -20,23 +20,11 @@ const SearchInput = React.forwardRef(
       inputClass,
       placeholder,
       searchIconClass,
-      setFilteredData,
+      setSearch,
       ...props
     }: Props,
     ref,
   ) => {
-    const id = useId();
-    const [search, setSearch] = useState("");
-    const [focused, setFocused] = useState(false);
-
-    const handleFocus = useCallback(() => {
-      setFocused(true);
-    }, []);
-
-    const handleBlur = useCallback(() => {
-      setFocused(false);
-    }, []);
-
     return (
       <div className={cn(" relative w-full", wrapperClass)}>
         <SearchIcon
@@ -76,6 +64,7 @@ const SearchInput = React.forwardRef(
               `,
             inputClass,
           )}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
     );

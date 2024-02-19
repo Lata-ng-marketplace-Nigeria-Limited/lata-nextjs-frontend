@@ -44,3 +44,5 @@ export const ADMIN_RIDER_REQUESTS_ROUTE = "/rider-requests";
 export const ADMIN_ALL_SELLERS_ROUTE = "/admin/sellers";
 export const ADMIN_ALL_STAFF_ROUTE = "/admin/staff";
 export const ADMIN_ALL_POSTS = "/admin/posts"
+export const ADMIN_PAID_SELLERS_ROUTE = "/admin/paid-sellers"
+export const ADMIN_ALL_BUYERS = "/admin/buyers"

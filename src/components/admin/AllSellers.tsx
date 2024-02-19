@@ -1,47 +1,154 @@
 "use client";
 
-import React, { useState } from "react";
-import { User } from "@/interface/user";
+import React, { useEffect, useState } from "react";
+import { IAddedUserMeta, User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
 import { DateTime } from "luxon";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
-import Modal from "@components/molecule/Modal";
-import { SellerSignUpForm } from "@components/forms/SellerSignUpForm";
 import TableTopArea from "@components/admin/TableTopArea";
+import AddSellerForm from "@components/admin/AddSeller";
+import ResizableDialog from "./ResizableDialog";
+import BadgeWithCount from "../atom/BadgeWithCount";
+import { IBadgeVariants } from "../atom/Badge";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
+import Image from "next/image";
 
 interface Props {
   data: User[];
   meta: FetchMeta;
+  countVerifiedSellers?: number;
+  countUnverifiedSellers?: number;
 }
 const AllSellers = (props: Props) => {
   const [showAddSellerModal, setShowAddSellerModal] = useState(false);
+  const [filteredData, setFilteredData] = useState<User[]>(props.data);
+  const [search, setSearch] = useState("");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const params = new URLSearchParams(searchParams);
 
   const handleAddSeller = () => {
     setShowAddSellerModal(!showAddSellerModal);
   };
 
+  useEffect(() => {
+    const filter = props.data.filter(
+      (seller) =>
+        // search by nam
+        seller?.name.toLowerCase().includes(search) ||
+        // search by manager
+        (seller?.meta as IAddedUserMeta)?.manager?.name
+          .toLowerCase()
+          .includes(search) ||
+        // search by location
+        (seller?.address as string).toLowerCase().includes(search) ||
+        // search by reg date
+        DateTime.fromISO(seller?.createdAt)
+          .toFormat("dd LLL, yyyy")
+          .toLowerCase()
+          .includes(search),
+    );
+    setFilteredData(filter);
+  }, [search, props.data]);
+
+  const activeButtonVariant = (): IBadgeVariants => {
+    if (params.get("verified") === "0") {
+      return "warning";
+    } else if (params.get("verified") === "zero_uploads") {
+      return "normal";
+    } else {
+      return "primary";
+    }
+  };
+
+  const handleClick = (verified: "0" | "1" | "zero_uploads") => {
+    if (verified) {
+      params.set("verified", verified);
+    } else {
+      params.delete("verified", verified);
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <div>
-      <TableTopArea title="All Sellers" buttonText="+ Add Seller" />
+      <div className="mb-7 flex justify-end gap-4 sl:gap-6">
+        <BadgeWithCount
+          count={props?.countVerifiedSellers || 0}
+          activeVariant={activeButtonVariant()}
+          className="max-xs:text-[10px]"
+          text="verified"
+          variant="primary"
+          onClick={() => handleClick("1")}
+        />
+
+        <BadgeWithCount
+          count={props?.countUnverifiedSellers || 0}
+          activeVariant={activeButtonVariant()}
+          className="max-xs:text-[10px]"
+          variant="warning"
+          text="unverified"
+          onClick={() => handleClick("0")}
+        />
+
+        <BadgeWithCount
+          count={props?.countUnverifiedSellers || 0}
+          activeVariant={activeButtonVariant()}
+          className="max-xs:text-[10px]"
+          variant="normal"
+          text="No Uploads"
+          onClick={() => handleClick("zero_uploads")}
+        />
+      </div>
+      <TableTopArea
+        title="All Sellers"
+        buttonText="+ Add Seller"
+        placeholder="Search sellers"
+        onClick={handleAddSeller}
+        setSearch={setSearch}
+      />
       <TableWithRowGaps
         isClickable
-        tableData={props?.data?.map((seller) => {
+        tableData={filteredData.map((seller) => {
           return {
-            name: seller?.name,
+            name: (
+              <div className="flex items-center gap-2">
+                <Image
+                  src={seller?.avatar || ""}
+                  alt={"image of " + seller?.name}
+                  width={20}
+                  height={20}
+                  className="aspect-square rounded-full object-cover"
+                />
+                <Link
+                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id}
+                  className="hover:text-primary"
+                >
+                  {seller?.name}
+                </Link>
+              </div>
+            ),
             location: seller?.address,
             "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            manager: seller.isManagedBy || "-",
+            manager: (seller?.meta as IAddedUserMeta)?.manager?.name || "-",
           };
         })}
         usePaginate
         meta={props.meta}
       />
 
-      <Modal isShown={showAddSellerModal} setIsShown={setShowAddSellerModal}>
-        <SellerSignUpForm />
-      </Modal>
+      <ResizableDialog
+        isShown={showAddSellerModal}
+        setIsShown={setShowAddSellerModal}
+      >
+        <AddSellerForm setShowAddSellerModal={setShowAddSellerModal} />
+      </ResizableDialog>
     </div>
   );
 };

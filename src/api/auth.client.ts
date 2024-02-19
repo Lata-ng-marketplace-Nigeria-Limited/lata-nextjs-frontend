@@ -16,11 +16,22 @@ interface SellerRegisterApiInput {
   shouldCompleteProfile?: boolean;
 }
 
+interface StaffRegisterApiInput {
+  role: "STAFF";
+  phoneNumber?: string;
+  position: string;
+  address: string;
+  file?: File;
+  accountName: string;
+  accountNumber: string;
+  bankName: string;
+}
+
 type RegisterApiInput = {
   name: string;
   email: string;
   password: string;
-} & (BuyerRegisterApiInput | SellerRegisterApiInput);
+} & (BuyerRegisterApiInput | SellerRegisterApiInput | StaffRegisterApiInput );
 
 export const registerApi = async (
   data: RegisterApiInput,
@@ -33,6 +44,23 @@ export const registerApi = async (
   try {
     const formData = createFormData(data);
     const response = await $http.post("/auth/register", formData);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const adminOrStaffAddUserApi = async (
+  data: RegisterApiInput,
+): Promise<{
+  message: string;
+  authorized?: boolean;
+  isEmailVerified?: boolean;
+  publicToken?: string;
+}> => {
+  try {
+    const formData = createFormData(data);
+    const response = await $http.post("/auth/register/add", formData);
     return response.data;
   } catch (error: any) {
     throw error.response;

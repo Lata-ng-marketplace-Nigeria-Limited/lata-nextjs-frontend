@@ -2,13 +2,14 @@
 
 import React from "react";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
-import { IAdminAnalytics } from "@/api/analytics";
+import { IAdminAnalytics } from "@/api/admin";
 import AnalyticsTopCardsHOC from "../analytics/AnalyticsTopCardsHOC";
 import { useRouter } from "next/navigation";
 import {
   ADMIN_ALL_POSTS,
   ADMIN_ALL_SELLERS_ROUTE,
   ADMIN_ALL_STAFF_ROUTE,
+  ADMIN_PAID_SELLERS_ROUTE,
 } from "@/constants/routes";
 
 interface Props {
@@ -52,6 +53,7 @@ const AdminAnalyticsWrapper = async (props: Props) => {
       <AnalyticsTopCards
         title="Paid Sellers"
         number={paidSellersCount}
+        onClick={() => push(ADMIN_PAID_SELLERS_ROUTE)}
         isClickable
         description="The total number of paid subscribers"
       />

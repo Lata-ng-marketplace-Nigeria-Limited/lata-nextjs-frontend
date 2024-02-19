@@ -1,104 +1,75 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { sellerSignUpSchema } from "@/store/schemas/sellerSignUpSchema";
 import { z } from "zod";
-import {
-  cn,
-  convertBytesToMB,
-  getFormErrorObject,
-  isFileSizeGreaterThan,
-} from "@/utils";
+import { cn, getFormErrorObject } from "@/utils";
 import { ApiErrorResponse } from "@/interface/general";
 import { adminOrStaffAddUserApi } from "@/api/auth.client";
 import TextInput from "../input/TextInput";
 import Button from "../atom/Button";
-import ImageUploader from "../input/ImageUploader";
 import { toast } from "../ui/use-toast";
 import FormTopLabel from "../input/FormTopLabel";
+import { buyerSignUpSchema } from "@/store/schemas/buyerSignUpSchema";
 
 interface Props {
-  setShowAddSellerModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowAddBuyerModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddSellerForm = (props: Props) => {
+const AddBuyerForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<FileList>();
-  const [imageErrorMessage, setImageErrorMessage] = useState("");
-  const [avatar, setAvatar] = useState("");
 
   const {
     formState: { errors },
     handleSubmit,
     control,
     setError,
-    setValue,
-  } = useForm<z.infer<typeof sellerSignUpSchema>>({
-    resolver: zodResolver(sellerSignUpSchema),
+  } = useForm<z.infer<typeof buyerSignUpSchema>>({
+    resolver: zodResolver(buyerSignUpSchema),
     defaultValues: {
       name: "",
       password: "",
       phoneNumber: "",
       email: "",
-      address: "",
-      aboutBusiness: "",
     },
   });
 
-  useEffect(() => {
-    if (!file?.length) return;
-    const uploadedFile = file?.[0]!;
-    if (isFileSizeGreaterThan(uploadedFile, 5)) {
-      setImageErrorMessage(
-        "Image size cannot be greater than 5mb. Current image is " +
-          convertBytesToMB(uploadedFile.size) +
-          "mb",
-      );
-    } else {
-      setImageErrorMessage("");
-    }
-  }, [file]);
-
-  const onSubmit = async (values: z.infer<typeof sellerSignUpSchema>) => {
-    if (imageErrorMessage) return;
+  const onSubmit = async (values: z.infer<typeof buyerSignUpSchema>) => {
     const allValues = {
       ...values,
-      ...(file?.[0] ? { file: file?.[0] } : {}),
     };
     setLoading(true);
     try {
       const response = await adminOrStaffAddUserApi({
         ...allValues,
-        role: "SELLER",
+        role: "BUYER",
       });
 
       toast({
-        description: `Seller account created successfully`,
+        description: `Buyer account created successfully`,
         variant: "success",
         duration: 15000,
       });
       console.log("response", response);
-      props.setShowAddSellerModal?.(false);
+      props.setShowAddBuyerModal?.(false);
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<
-        z.infer<typeof sellerSignUpSchema>
+        z.infer<typeof buyerSignUpSchema>
       > = error;
       const errorObj = getFormErrorObject(errorResponse);
 
-        if (errorObj) {
-          setLoading(false);
-          if (errorObj.file) setImageErrorMessage(errorObj.file);
-          const errorArray = Object.entries(errorObj);
-          errorArray.forEach(([key, value]) => {
-            setError(key as keyof z.infer<typeof sellerSignUpSchema>, {
-              type: "manual",
-              message: value,
-            });
+      if (errorObj) {
+        setLoading(false);
+        const errorArray = Object.entries(errorObj);
+        errorArray.forEach(([key, value]) => {
+          setError(key as keyof z.infer<typeof buyerSignUpSchema>, {
+            type: "manual",
+            message: value,
           });
-          return;
-        }
+        });
+        return;
+      }
 
       setLoading(false);
       toast({
@@ -110,17 +81,6 @@ const AddSellerForm = (props: Props) => {
 
   return (
     <form className={"flex flex-col gap-y-6"} onSubmit={handleSubmit(onSubmit)}>
-      <ImageUploader
-        format={"profile"}
-        name={"profile"}
-        file={file}
-        disabled={loading}
-        setValue={setFile}
-        imageUrl={avatar}
-        errorMessage={imageErrorMessage}
-        profileDescription={"Add a profile picture or seller's business logo"}
-      />
-
       <Controller
         render={({ field }) => (
           <FormTopLabel labelClass="font-semibold text-sm" label={"Fullname"}>
@@ -171,42 +131,6 @@ const AddSellerForm = (props: Props) => {
 
       <Controller
         render={({ field }) => (
-          <FormTopLabel
-            labelClass="font-semibold text-sm"
-            label={"Business location"}
-          >
-            <TextInput
-              {...field}
-              placeholder="Enter business location"
-              disabled={loading}
-              errorMessage={errors.address?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"address"}
-        control={control}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <FormTopLabel
-            labelClass="font-semibold text-sm"
-            label={"About business"}
-          >
-            <TextInput
-              {...field}
-              placeholder="About business"
-              disabled={loading}
-              errorMessage={errors.aboutBusiness?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"aboutBusiness"}
-        control={control}
-      />
-
-      <Controller
-        render={({ field }) => (
           <FormTopLabel labelClass="font-semibold text-sm" label={"Password"}>
             <TextInput
               {...field}
@@ -215,9 +139,6 @@ const AddSellerForm = (props: Props) => {
               isPassword
               disabled={loading}
               name={"field.name"}
-              // wrapperClass={cn({
-              //   hidden: shouldCompleteForm,
-              // })}
               errorMessage={errors.password?.message}
             />
           </FormTopLabel>
@@ -242,4 +163,4 @@ const AddSellerForm = (props: Props) => {
   );
 };
 
-export default AddSellerForm;
+export default AddBuyerForm;

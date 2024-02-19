@@ -2,7 +2,7 @@
 
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { Product } from "@/interface/products";
-import { User } from "@/interface/user";
+import { ISubscribedUser, User } from "@/interface/user";
 import { getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
@@ -34,7 +34,7 @@ export const getAdminAnalyticsApi = async (): Promise<IAdminAnalytics> => {
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
-    const res = await fetch(getApiUrl("/analytics/admin"), {
+    const res = await fetch(getApiUrl("/admin/analytics"), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
@@ -64,29 +64,32 @@ interface IGetAllSellersAdminApi {
   message?: string;
   data: User[];
   meta: FetchMeta;
+  countVerifiedSellers: number;
+  countUnVerifiedSellers: number;
 }
 
 export const getAllSellersAdminApi = async ({
   page,
   limit,
-}: SearchQuery): Promise<IGetAllSellersAdminApi> => {
+  verified,
+}: SearchQuery & { verified: string }): Promise<IGetAllSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
+  if (verified) {
+    params.append("verified", verified);
+  }
 
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
-    const res = await fetch(
-      getApiUrl(`/analytics/admin/sellers?${params.toString()}`),
-      {
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-        cache: "no-cache",
+    const res = await fetch(getApiUrl(`/admin/sellers?${params.toString()}`), {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
       },
-    );
+      cache: "no-cache",
+    });
     if (!res.ok) {
       const data = await res.json();
       return {
@@ -121,8 +124,63 @@ export const getAllStaffAdminApi = async ({
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
+    const res = await fetch(getApiUrl(`/admin/staff?${params.toString()}`), {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+      cache: "no-cache",
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      return {
+        ...data,
+        isError: true,
+      };
+    }
+    const json = await res.text();
+
+    if (json) {
+      return JSON.parse(json);
+    } else {
+      return {
+        isError: true,
+        message: "Empty response",
+      } as IGetAllSellersAdminApi;
+    }
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
+
+interface IGetAllPaidSellersAdminApi {
+  isError?: boolean;
+  message?: string;
+  data: ISubscribedUser[];
+  meta: FetchMeta;
+  activeSubscriptionCount: number;
+  dueSubscriptionCount: number;
+  newSubscriptionCount: number;
+  unSubscribedUsersCount: number;
+}
+
+export const getAllPaidSellersAdminApi = async ({
+  page,
+  limit,
+  transactionStatus,
+}: SearchQuery & { transactionStatus: string }): Promise<IGetAllPaidSellersAdminApi> => {
+  const params = new URLSearchParams();
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+  if (transactionStatus) {
+    params.append("transactionStatus", transactionStatus);
+  }
+
+  try {
+    unstable_noStore();
+    const session = await getServerSession(authConfig);
+
     const res = await fetch(
-      getApiUrl(`/analytics/admin/staff?${params.toString()}`),
+      getApiUrl(`/admin/paid-sellers?${params.toString()}`),
       {
         headers: {
           Authorization: `Bearer ${session?.token}`,
@@ -145,7 +203,60 @@ export const getAllStaffAdminApi = async ({
       return {
         isError: true,
         message: "Empty response",
-      } as IGetAllSellersAdminApi;
+      } as IGetAllPaidSellersAdminApi;
+    }
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
+
+interface IGetAllBuyersAdminApi {
+  isError?: boolean;
+  message?: string;
+  data: User[];
+  meta: FetchMeta;
+  countVerifiedBuyers: number;
+  countUnverifiedBuyers: number;
+}
+
+export const getAllBuyersAdminApi = async ({
+  page,
+  limit,
+  verified,
+}: SearchQuery & { verified: string }): Promise<IGetAllBuyersAdminApi> => {
+  const params = new URLSearchParams();
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+  if (verified) {
+    params.append("verified", verified);
+  }
+
+  try {
+    unstable_noStore();
+    const session = await getServerSession(authConfig);
+
+    const res = await fetch(getApiUrl(`/admin/buyers?${params.toString()}`), {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+      cache: "no-cache",
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      return {
+        ...data,
+        isError: true,
+      };
+    }
+    const json = await res.text();
+
+    if (json) {
+      return JSON.parse(json);
+    } else {
+      return {
+        isError: true,
+        message: "Empty response",
+      } as IGetAllBuyersAdminApi;
     }
   } catch (error: any) {
     throw error.response || error;
@@ -171,15 +282,12 @@ export const getAllPosts = async ({
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
-    const res = await fetch(
-      getApiUrl(`/analytics/admin/posts?${params.toString()}`),
-      {
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-        cache: "no-cache",
+    const res = await fetch(getApiUrl(`/admin/posts?${params.toString()}`), {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
       },
-    );
+      cache: "no-cache",
+    });
     if (!res.ok) {
       const data = await res.json();
       return {

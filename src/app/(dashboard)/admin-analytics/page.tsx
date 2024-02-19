@@ -4,7 +4,7 @@ import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
-import { getAdminAnalyticsApi } from "@/api/analytics";
+import { getAdminAnalyticsApi } from "@/api/admin";
 import AdminAnalyticsWrapper from "@/components/admin/AdminAnalytics";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";

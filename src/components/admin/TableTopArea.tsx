@@ -8,20 +8,28 @@ interface Props {
   title: string;
   buttonText?: string;
   hideButton?: boolean;
+  onClick?: () => void;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
+
 const TableTopArea = (props: Props) => {
   return (
     <div className="mb-7 flex items-center justify-between">
-      <HeaderText title>{props.title || "All Sellers"}</HeaderText>
+      <HeaderText title>{props.title}</HeaderText>
       <div className="flex items-center gap-2 tablet:gap-10">
         <SearchInput
-          placeholder={props.placeholder || "Search sellers"}
+          placeholder={props.placeholder}
           wrapperClass="max-w-max"
+          setSearch={props.setSearch}
         />
 
         {props.hideButton ? null : (
-          <Button format="primary" className="whitespace-nowrap">
-            {props.buttonText || "+ Add Seller"}
+          <Button
+            format="primary"
+            className="whitespace-nowrap"
+            onClick={props.onClick}
+          >
+            {props.buttonText}
           </Button>
         )}
       </div>

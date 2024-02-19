@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import { FetchMeta } from "@/interface/general";
+import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
 
 interface Props {
   reposts: Product[];
@@ -30,7 +31,12 @@ const RecentPosts = async (props: Props) => {
                   height={20}
                   className="rounded-full"
                 />
-                <p className="font-semibold">{post?.user?.name}</p>
+                <Link
+                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + post.user?.id}
+                  className="font-semibold hover:text-primary"
+                >
+                  {post?.user?.name}
+                </Link>
               </div>
             ),
             location: <p>{post?.state}</p>,
