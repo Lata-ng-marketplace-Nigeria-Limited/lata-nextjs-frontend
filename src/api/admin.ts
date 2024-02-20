@@ -66,6 +66,7 @@ interface IGetAllSellersAdminApi {
   meta: FetchMeta;
   countVerifiedSellers: number;
   countUnVerifiedSellers: number;
+  usersWithNoUploadsCount: number;
 }
 
 export const getAllSellersAdminApi = async ({
@@ -161,13 +162,16 @@ interface IGetAllPaidSellersAdminApi {
   dueSubscriptionCount: number;
   newSubscriptionCount: number;
   unSubscribedUsersCount: number;
+  returningSubscribersCount: number;
 }
 
 export const getAllPaidSellersAdminApi = async ({
   page,
   limit,
   transactionStatus,
-}: SearchQuery & { transactionStatus: string }): Promise<IGetAllPaidSellersAdminApi> => {
+}: SearchQuery & {
+  transactionStatus: string;
+}): Promise<IGetAllPaidSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));

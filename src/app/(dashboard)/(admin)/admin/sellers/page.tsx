@@ -41,6 +41,7 @@ export default async function Protected({
           meta={response.meta}
           countVerifiedSellers={response?.countVerifiedSellers}
           countUnverifiedSellers={response?.countUnVerifiedSellers}
+          usersWithNoUploadsCount={response?.usersWithNoUploadsCount}
         />
       </Suspense>
     </div>

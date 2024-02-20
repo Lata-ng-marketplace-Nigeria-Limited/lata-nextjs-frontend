@@ -54,9 +54,8 @@ const AddBuyerForm = (props: Props) => {
       console.log("response", response);
       props.setShowAddBuyerModal?.(false);
     } catch (error: any) {
-      const errorResponse: ApiErrorResponse<
-        z.infer<typeof buyerSignUpSchema>
-      > = error;
+      const errorResponse: ApiErrorResponse<z.infer<typeof buyerSignUpSchema>> =
+        error;
       const errorObj = getFormErrorObject(errorResponse);
 
       if (errorObj) {
@@ -156,6 +155,16 @@ const AddBuyerForm = (props: Props) => {
             className={"w-full"}
           >
             Create account
+          </Button>
+        </div>
+        <div className={"flex w-full flex-col gap-y-2"}>
+          <Button
+            type={"button"}
+            format={"secondary"}
+            className={"w-full"}
+            onClick={() => props.setShowAddBuyerModal?.(false)}
+          >
+            Cancel
           </Button>
         </div>
       </div>

@@ -45,6 +45,7 @@ export default async function Protected({
           activeSubscriptionCount={response?.activeSubscriptionCount}
           dueSubscriptionCount={response?.dueSubscriptionCount}
           newSubscriptionCount={response?.newSubscriptionCount}
+          returningSubscribersCount={response?.returningSubscribersCount}
           meta={response?.meta}
         />
       </Suspense>
