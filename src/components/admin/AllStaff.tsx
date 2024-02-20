@@ -86,7 +86,7 @@ const AllStaff = (props: Props) => {
         isShown={showAddStaffModal}
         setIsShown={setShowAddStaffModal}
       >
-        <AddStaffForm setShowAddSellerModal={setShowAddStaffModal} />
+        <AddStaffForm setShowAddStaffModal={setShowAddStaffModal} />
       </ResizableDialog>
     </>
   );

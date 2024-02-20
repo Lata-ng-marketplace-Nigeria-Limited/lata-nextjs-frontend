@@ -18,6 +18,7 @@ interface Props {
   activeSubscriptionCount: number;
   dueSubscriptionCount: number;
   newSubscriptionCount: number;
+  returningSubscribersCount: number;
   transactionStatus?: string;
   meta: FetchMeta;
 }
@@ -52,7 +53,7 @@ const PaidSellers = (props: Props) => {
   const params = new URLSearchParams(searchParams);
 
   const handleClick = (
-    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED",
+    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "RETURNING",
   ) => {
     if (transactionStatus) {
       params.set("transactionStatus", transactionStatus);
@@ -72,7 +73,7 @@ const PaidSellers = (props: Props) => {
         return "primary";
       case "ACTIVE":
         return "success";
-      case "UNSUBSCRIBED":
+      case "RETURNING":
         return "normal";
       case "DUE":
         return "danger";
@@ -83,21 +84,31 @@ const PaidSellers = (props: Props) => {
 
   const sideBtnDisplay = () => {
     const status = params.get("transactionStatus");
-    return (status?.toLowerCase() === "active" ? "on" : status) || "loading";
+    return (status?.toLowerCase() === "active" ? "on" : status) || "active";
+  };
+
+  const duration = (seller: ISubscribedUser) => {
+    if (seller?.subscription_paid_at && seller?.subscription_expiry_date) {
+      return (
+        <p>
+          {formatDate(seller?.subscription_paid_at)} -{" "}
+          {formatDate(seller?.subscription_expiry_date)}
+        </p>
+      );
+    } else if (
+      !seller?.subscription_paid_at &&
+      seller?.subscription_expiry_date
+    ) {
+      return <p>{formatDate(seller?.subscription_expiry_date)}</p>;
+    } else {
+      return "Due";
+    }
   };
 
   return (
     <div>
       <div className="mb-7 flex justify-end">
-        <SearchInput
-          placeholder={"Search Sellers"}
-          wrapperClass="max-w-max"
-          setSearch={setSearch}
-        />
-      </div>
-      <div className="mb-7 flex items-center justify-between">
-        <HeaderText title>{"Paid Sellers"}</HeaderText>
-        <div className="flex justify-end gap-4 sl:gap-6">
+        <div className="flex justify-end gap-4 overflow-x-auto sl:gap-6">
           <BadgeWithCount
             count={props.activeSubscriptionCount}
             activeVariant={getBadgeVariant()}
@@ -117,6 +128,15 @@ const PaidSellers = (props: Props) => {
           />
 
           <BadgeWithCount
+            count={props.returningSubscribersCount}
+            activeVariant={getBadgeVariant()}
+            className="max-xs:text-[10px]"
+            text="returning"
+            variant="normal"
+            onClick={() => handleClick("RETURNING")}
+          />
+
+          <BadgeWithCount
             count={props.dueSubscriptionCount}
             activeVariant={getBadgeVariant()}
             className="max-xs:text-[10px]"
@@ -125,6 +145,14 @@ const PaidSellers = (props: Props) => {
             onClick={() => handleClick("DUE")}
           />
         </div>
+      </div>
+      <div className="mb-7 flex items-center justify-between">
+        <HeaderText title>{"Paid Sellers"}</HeaderText>
+        <SearchInput
+          placeholder={"Search Sellers"}
+          wrapperClass="max-w-max"
+          setSearch={setSearch}
+        />
       </div>
 
       <div>
@@ -159,14 +187,7 @@ const PaidSellers = (props: Props) => {
                   "-"
                 ),
               product: seller?.subscription_name || "-",
-              duration: seller?.subscription_paid_at ? (
-                <p>
-                  {formatDate(seller?.subscription_paid_at)} -{" "}
-                  {formatDate(seller?.subscription_expiry_date)}
-                </p>
-              ) : (
-                "Due"
-              ),
+              duration: duration(seller),
               amount: <p>{formatPrice(seller?.transaction_actual_amount)}</p>,
             };
           })}

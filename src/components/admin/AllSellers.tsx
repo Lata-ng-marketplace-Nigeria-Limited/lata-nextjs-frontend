@@ -20,6 +20,7 @@ interface Props {
   meta: FetchMeta;
   countVerifiedSellers?: number;
   countUnverifiedSellers?: number;
+  usersWithNoUploadsCount?: number;
 }
 const AllSellers = (props: Props) => {
   const [showAddSellerModal, setShowAddSellerModal] = useState(false);
@@ -38,17 +39,17 @@ const AllSellers = (props: Props) => {
   useEffect(() => {
     const filter = props.data.filter(
       (seller) =>
-        // search by nam
-        seller?.name.toLowerCase().includes(search) ||
+        // search by name
+        seller?.name?.toLowerCase().includes(search) ||
         // search by manager
-        (seller?.meta as IAddedUserMeta)?.manager?.name
-          .toLowerCase()
+        ((seller?.meta as IAddedUserMeta) || {})?.manager?.name
+          ?.toLowerCase()
           .includes(search) ||
         // search by location
-        (seller?.address as string).toLowerCase().includes(search) ||
+        seller?.address?.toLowerCase().includes(search) ||
         // search by reg date
         DateTime.fromISO(seller?.createdAt)
-          .toFormat("dd LLL, yyyy")
+          ?.toFormat("dd LLL, yyyy")
           .toLowerCase()
           .includes(search),
     );
@@ -96,7 +97,7 @@ const AllSellers = (props: Props) => {
         />
 
         <BadgeWithCount
-          count={props?.countUnverifiedSellers || 0}
+          count={props?.usersWithNoUploadsCount || 0}
           activeVariant={activeButtonVariant()}
           className="max-xs:text-[10px]"
           variant="normal"

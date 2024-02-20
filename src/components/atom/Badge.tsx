@@ -41,7 +41,7 @@ const Badge = (props: Props) => {
           "bg-success text-white hover:bg-success hover:text-white":
             props.variant === "success",
         },
-        "cursor-pointer rounded-[0.3125rem] !p-1 text-xs font-medium capitalize",
+        "cursor-pointer rounded-[0.3125rem] !p-1 text-xs font-medium capitalize outline-0",
       )}
       onClick={props.onClick}
     >
