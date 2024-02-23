@@ -1,5 +1,6 @@
 "use server";
 
+import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
@@ -324,6 +325,7 @@ interface IGetProtectedSellerApi {
   };
   isError?: boolean;
   message?: string;
+  feedbacks?: IFeedback[];
 }
 export const getProtectedSellerApi = async ({
   sellerId,

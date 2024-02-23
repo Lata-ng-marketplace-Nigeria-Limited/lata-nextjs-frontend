@@ -16,17 +16,12 @@ export default async function Page({
     sellerId: string;
   };
 }) {
-  const response = await getProtectedSellerApi({ sellerId });
-  console.log(response);
   return (
     <div>
       <Suspense>
         <GetUser />
       </Suspense>
-
-      <Suspense key={sellerId} fallback={<p>loading...</p>}>
-        <ProtectedSellerProfile data={response.data} />
-      </Suspense>
+      <ProtectedSellerProfile sellerId={sellerId} />
     </div>
   );
 }
