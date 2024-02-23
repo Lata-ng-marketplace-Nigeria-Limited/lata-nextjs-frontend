@@ -12,7 +12,7 @@ import BadgeWithCount from "../atom/BadgeWithCount";
 import { IBadgeVariants } from "../atom/Badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
+import { DASHBOARD_PROTECTED_SELLER_ROUTE, DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
 import Image from "next/image";
 
 interface Props {
@@ -126,7 +126,7 @@ const AllSellers = (props: Props) => {
                   className="aspect-square rounded-full object-cover"
                 />
                 <Link
-                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id}
+                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
                   className="hover:text-primary"
                 >
                   {seller?.name}

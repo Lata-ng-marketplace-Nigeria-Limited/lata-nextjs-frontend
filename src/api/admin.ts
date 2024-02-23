@@ -281,7 +281,6 @@ export const getAllPosts = async ({
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
@@ -313,3 +312,97 @@ export const getAllPosts = async ({
     throw error.response || error;
   }
 };
+
+interface IGetProtectedSellerApi {
+  data: User & {
+    approvedPosts: number;
+    cancelledPosts: number;
+    totalPosts: number;
+    planDuration: string;
+    planName: string;
+    managerName: string;
+  };
+  isError?: boolean;
+  message?: string;
+}
+export const getProtectedSellerApi = async ({
+  sellerId,
+}: {
+  sellerId: string;
+}): Promise<IGetProtectedSellerApi> => {
+  try {
+    unstable_noStore();
+    const session = await getServerSession(authConfig);
+
+    const res = await fetch(getApiUrl(`/admin/seller/${sellerId}`), {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+      cache: "no-cache",
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      return {
+        ...data,
+        isError: true,
+      };
+    }
+    const json = await res.text();
+
+    if (json) {
+      return JSON.parse(json);
+    } else {
+      return {
+        isError: true,
+        message: "Empty response",
+      } as IGetProtectedSellerApi;
+    }
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
+
+interface ApiResponse<T> {
+  isError?: boolean;
+  message?: string;
+  data: T;
+  meta: FetchMeta;
+}
+
+async function fetchData<T>(
+  url: string,
+  params: URLSearchParams,
+  session: any,
+): Promise<ApiResponse<T>> {
+  try {
+    unstable_noStore();
+    const res = await fetch(`${url}?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+      cache: "no-cache",
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      return {
+        ...data,
+        isError: true,
+      } as ApiResponse<T>;
+    }
+
+    const json = await res.text();
+    if (json) {
+      return JSON.parse(json) as ApiResponse<T>;
+    } else {
+      return {
+        isError: true,
+        message: "Empty response",
+        data: {} as T,
+        meta: {} as FetchMeta,
+      };
+    }
+  } catch (error: any) {
+    throw error.response || error;
+  }
+}

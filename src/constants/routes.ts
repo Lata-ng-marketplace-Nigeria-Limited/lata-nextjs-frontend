@@ -46,3 +46,4 @@ export const ADMIN_ALL_STAFF_ROUTE = "/admin/staff";
 export const ADMIN_ALL_POSTS = "/admin/posts"
 export const ADMIN_PAID_SELLERS_ROUTE = "/admin/paid-sellers"
 export const ADMIN_ALL_BUYERS = "/admin/buyers"
+export const DASHBOARD_PROTECTED_SELLER_ROUTE = "/protected-seller"
