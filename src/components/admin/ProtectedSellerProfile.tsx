@@ -2,13 +2,13 @@ import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
 import Button from "@components/atom/Button";
 import UserImage from "@components/staff/download (1).jpeg";
 import UserBanner from "@components/staff/UserBanner";
-import { User } from "@/interface/user";
 import { DateTime } from "luxon";
 import ProductGridList from "@components/atom/ProductGridList";
 import ProductCard from "../product/ProductCard";
 import { formatPrice } from "@/utils";
 import FeedbackContent from "@components/feedback/FeedbackContent";
 import { getProtectedSellerApi } from "@/api/admin";
+import SellerActionBtns from "./SellerActionBtns";
 
 interface Props {
   sellerId: string;
@@ -123,24 +123,10 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
               description="Expiry date"
             />
           </UserDetailContainer>
-
-          <div className="mb-6 rounded-xl border border-grey2 p-6">
-            <Button format="primary" className="mb-8 block w-full">
-              Change Manager
-            </Button>
-            <Button format="secondary" className="mb-8 block w-full">
-              Activate Subscription
-            </Button>
-            <Button format="secondary" className="mb-8 block w-full">
-              Upload Product
-            </Button>
-            <Button format="secondary" className="mb-8 block w-full">
-              Block User
-            </Button>
-            <Button format="danger" className="mb-8 block w-full">
-              Delete Seller
-            </Button>
-          </div>
+          <SellerActionBtns
+            managers={response?.managers || []}
+            sellerId={sellerId}
+          />
         </div>
       </div>
 
@@ -150,7 +136,8 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
           total={response?.data?.products.length}
           isEmpty={response?.data?.products.length === 0}
         >
-          {response?.data?.products?.length ? (
+          {response?.data?.products?.filter((p) => p.status === "INACTIVE")
+            .length ? (
             <>
               {response?.data?.products
                 .filter((p) => p.status == "INACTIVE")
@@ -209,7 +196,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
       </div>
 
       <div>
-        <h2 className="text-base font-medium">Feedbacks</h2>
+        <h2 className="mb-3 text-base font-medium">Feedbacks</h2>
 
         {response?.feedbacks?.length ? (
           response?.feedbacks?.map((feedback, i) => (

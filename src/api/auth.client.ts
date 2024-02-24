@@ -31,7 +31,7 @@ type RegisterApiInput = {
   name: string;
   email: string;
   password: string;
-} & (BuyerRegisterApiInput | SellerRegisterApiInput | StaffRegisterApiInput );
+} & (BuyerRegisterApiInput | SellerRegisterApiInput | StaffRegisterApiInput);
 
 export const registerApi = async (
   data: RegisterApiInput,
@@ -136,6 +136,26 @@ export const forgetPasswordApi = async ({
       email,
     });
     return res.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+interface IChangeManagerApi {
+  sellerId: string;
+  managerId: string;
+}
+
+export const changeManagerApi = async (
+  data: IChangeManagerApi,
+): Promise<{
+  message: string;
+  success: boolean;
+}> => {
+  try {
+    const formData = createFormData(data);
+    const response = await $http.put("/admin/change-manager", formData);
+    return response.data;
   } catch (error: any) {
     throw error.response;
   }

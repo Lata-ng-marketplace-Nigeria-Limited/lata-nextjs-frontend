@@ -1,0 +1,113 @@
+"use client";
+
+import React from "react";
+import { User } from "@/interface/user";
+import SearchInput from "./SearchInput";
+import Image from "next/image";
+import AppAvatar from "../molecule/Avatar";
+import Button from "../atom/Button";
+import { changeManagerApi } from "@/api/auth.client";
+import { cn } from "@/utils";
+import { toast } from "@/components/ui/use-toast";
+
+interface Props {
+  sellerId: string;
+  managers: User[];
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ChangeManager = (props: Props) => {
+  const [search, setSearch] = React.useState("");
+  const [filteredManagers, setFilteredManagers] = React.useState<User[]>(
+    props.managers,
+  );
+  const [selectedManager, setSelectedManager] = React.useState<User | null>(
+    null,
+  );
+
+  const onChangeManager = async () => {
+    if (!selectedManager) return;
+    const payload = {
+      managerId: selectedManager.id,
+      sellerId: props.sellerId,
+    };
+
+    try {
+      const response = await changeManagerApi(payload);
+      if (response.success) {
+        console.log(response);
+        toast({
+          title: response.message,
+          variant: "success",
+          duration: 1000,
+        });
+      } else {
+        toast({
+          title: "Something went wrong",
+          variant: "destructive",
+          duration: 1000,
+        });
+      }
+      props.setOpenModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    const filter = props.managers.filter((manager) =>
+      manager.name.toLowerCase().includes(search.toLowerCase()),
+    );
+    setFilteredManagers(filter);
+  }, [search, props.managers]);
+
+  return (
+    <div>
+      <h2 className="mb-5">Choose New Manager</h2>
+      <div className="mb-5">
+        <SearchInput setSearch={setSearch} />
+      </div>
+      <div className="mb-5">
+        {filteredManagers.length > 0 ? (
+          filteredManagers.map((manager) => (
+            <div
+              key={manager.id}
+              onClick={() => setSelectedManager(manager)}
+              className={cn(
+                "mb-2 flex cursor-pointer items-center gap-3 hover:bg-purp1",
+                {
+                  "bg-primary text-white hover:bg-primary hover:text-white":
+                    selectedManager?.name === manager.name,
+                },
+              )}
+            >
+              {manager.avatar ? (
+                <Image src={manager.avatar} alt={"image of" + manager.name} />
+              ) : (
+                <AppAvatar name={manager.name} type="user" />
+              )}
+              <p>{manager.name}</p>
+            </div>
+          ))
+        ) : (
+          <p>No managers found</p>
+        )}
+
+        <div className="flex items-center justify-end gap-5">
+          <Button format="secondary" onClick={() => props.setOpenModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            format="primary"
+            onClick={onChangeManager}
+            disabled={!selectedManager}
+          >
+            Change
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChangeManager;

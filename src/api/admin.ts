@@ -326,6 +326,7 @@ interface IGetProtectedSellerApi {
   isError?: boolean;
   message?: string;
   feedbacks?: IFeedback[];
+  managers?: User[];
 }
 export const getProtectedSellerApi = async ({
   sellerId,
