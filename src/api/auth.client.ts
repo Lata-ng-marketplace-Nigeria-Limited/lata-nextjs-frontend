@@ -160,3 +160,17 @@ export const changeManagerApi = async (
     throw error.response;
   }
 };
+
+export const deleteFeedbackApi = async (
+  id: string,
+): Promise<{
+  message: string;
+  success: boolean;
+}> => {
+  try {
+    const response = await $http.delete("/feedbacks/" + id);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};

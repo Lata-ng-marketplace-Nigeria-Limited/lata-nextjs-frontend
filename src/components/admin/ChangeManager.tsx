@@ -9,6 +9,7 @@ import Button from "../atom/Button";
 import { changeManagerApi } from "@/api/auth.client";
 import { cn } from "@/utils";
 import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface Props {
   sellerId: string;
@@ -24,6 +25,7 @@ const ChangeManager = (props: Props) => {
   const [selectedManager, setSelectedManager] = React.useState<User | null>(
     null,
   );
+  const { refresh } = useRouter();
 
   const onChangeManager = async () => {
     if (!selectedManager) return;
@@ -35,12 +37,12 @@ const ChangeManager = (props: Props) => {
     try {
       const response = await changeManagerApi(payload);
       if (response.success) {
-        console.log(response);
         toast({
           title: response.message,
           variant: "success",
           duration: 1000,
         });
+        refresh();
       } else {
         toast({
           title: "Something went wrong",
@@ -63,7 +65,7 @@ const ChangeManager = (props: Props) => {
 
   return (
     <div>
-      <h2 className="mb-5">Choose New Manager</h2>
+      <h2 className="mb-5 text-lg font-semibold">Choose New Manager</h2>
       <div className="mb-5">
         <SearchInput setSearch={setSearch} />
       </div>
@@ -74,7 +76,7 @@ const ChangeManager = (props: Props) => {
               key={manager.id}
               onClick={() => setSelectedManager(manager)}
               className={cn(
-                "mb-2 flex cursor-pointer items-center gap-3 hover:bg-purp1",
+                "mb-4 flex cursor-pointer items-center gap-3 rounded-md hover:bg-purp1",
                 {
                   "bg-primary text-white hover:bg-primary hover:text-white":
                     selectedManager?.name === manager.name,

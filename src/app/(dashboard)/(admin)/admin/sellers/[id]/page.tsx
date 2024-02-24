@@ -19,8 +19,6 @@ export default async function Page({
     sellerId: string;
   };
 }) {
-  const response = await getProtectedSellerApi({ sellerId });
-  console.log(response);
   return (
     <div>
       <Suspense>
@@ -28,7 +26,7 @@ export default async function Page({
       </Suspense>
 
       <Suspense key={sellerId} fallback={<ViewProductSkeleton />}>
-        <ProtectedSellerProfile />
+        <ProtectedSellerProfile sellerId={sellerId} />
       </Suspense>
     </div>
   );

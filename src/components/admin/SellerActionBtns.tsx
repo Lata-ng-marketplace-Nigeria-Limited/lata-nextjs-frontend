@@ -3,10 +3,12 @@
 import React from "react";
 import ChangeManager from "./ChangeManager";
 import Button from "../atom/Button";
-import { DASHBOARD_SUBSCRIPTIONS_ROUTE } from "@/constants/routes";
+import {
+  ADMIN_UPLOAD_PRODUCT_ROUTE,
+  DASHBOARD_SUBSCRIPTIONS_ROUTE,
+} from "@/constants/routes";
 import { useRouter } from "next/navigation";
 import { User } from "@/interface/user";
-import { changeManagerApi } from "@/api/auth.client";
 import ResizableDialog from "./ResizableDialog";
 
 interface Props {
@@ -34,7 +36,11 @@ const SellerActionBtns = (props: Props) => {
       >
         Activate Subscription
       </Button>
-      <Button format="secondary" className="mb-8 block w-full">
+      <Button
+        format="secondary"
+        className="mb-8 block w-full"
+        onClick={() => push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.sellerId}`)}
+      >
         Upload Product
       </Button>
       <Button format="secondary" className="mb-8 block w-full">

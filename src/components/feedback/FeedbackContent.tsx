@@ -6,8 +6,12 @@ import { IFeedback } from "@/interface/feedback";
 import Link from "next/link";
 import { DASHBOARD_PRODUCT_ROUTE } from "@/constants/routes";
 import { cn } from "@/utils";
-import Image from "next/image";
 import DeleteIcon from "../atom/icons/Delete";
+import ResizableDialog from "../admin/ResizableDialog";
+import Button from "../atom/Button";
+import { deleteFeedbackApi } from "@/api/auth.client";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface Props {
   feedback?: IFeedback;
@@ -15,10 +19,37 @@ interface Props {
 }
 
 const FeedbackContent = (props: Props) => {
+  const [openModal, setOpenModal] = React.useState(false);
+  const { refresh } = useRouter();
+
   const feedbackRating = {
     1: "negative" as const,
     2: "neutral" as const,
     3: "positive" as const,
+  };
+
+  const onDeleteFeedback = async () => {
+    if (!props.feedback?.id) return;
+    try {
+      const response = await deleteFeedbackApi(props.feedback?.id);
+      if (response.success) {
+        toast({
+          title: "Feedback deleted",
+          description: "You have successfully deleted the feedback",
+          variant: "success",
+        });
+        refresh();
+      } else {
+        toast({
+          title: "Failed to delete feedback",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      }
+      setOpenModal(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -29,7 +60,10 @@ const FeedbackContent = (props: Props) => {
           type={feedbackRating[props.feedback?.rating || 2]}
           className="pointer-events-none !mb-2 !max-w-max tablet:!mb-5"
         />
-        <DeleteIcon />
+        <DeleteIcon
+          className="cursor-pointer"
+          onClick={() => setOpenModal(!openModal)}
+        />
       </div>
 
       <h2 className="mb-2 text-base font-semibold text-grey9 tablet:mb-5 tablet:text-xl">
@@ -47,6 +81,27 @@ const FeedbackContent = (props: Props) => {
       >
         View product
       </Link>
+      <ResizableDialog isShown={openModal} setIsShown={setOpenModal}>
+        <p className="mb-4">
+          You are about to delete a product feedback for{" "}
+          <span className="font-semibold text-primary">
+            {props?.feedback?.product?.user?.name}{" "}
+          </span>
+          . Click on "Confirm" to proceed.
+        </p>
+        <div className="flex items-center justify-end gap-5">
+          <Button format="secondary" onClick={() => setOpenModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            format="danger"
+            onClick={onDeleteFeedback}
+            className="bg-danger text-white hover:bg-danger hover:text-white"
+          >
+            Confirm
+          </Button>
+        </div>
+      </ResizableDialog>
     </div>
   );
 };
