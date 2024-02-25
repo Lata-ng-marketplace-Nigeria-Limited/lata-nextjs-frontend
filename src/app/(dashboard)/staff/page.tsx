@@ -1,13 +1,39 @@
-import { getProtectedSellerApi } from "@/api/admin";
-import ProtectedSellerProfile from "@/components/admin/ProtectedSellerProfile";
-import React from "react";
+import { getAllStaffAdminApi } from "@/api/admin";
+import AllStaff from "@/components/admin/AllStaff";
+import { GetUser } from "@/components/atom/GetUser";
+import { authConfig } from "@authConfig";
+import { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import React, { Suspense } from "react";
 
-async function Page() {
+export const metadata: Metadata = {
+  title: "Staff",
+};
+
+export default async function Protected({
+  searchParams,
+}: {
+  searchParams: {
+    page: string;
+    limit: string;
+  };
+}) {
+  const session = await getServerSession(authConfig);
+  if (!session || !session.user || session.role !== "ADMIN") {
+    redirect("/");
+  }
+
+  const page = searchParams?.page || "";
+  const limit = searchParams?.limit || "";
+  const response = await getAllStaffAdminApi({ page, limit });
+
   return (
     <div>
-      <ProtectedSellerProfile />
+      <Suspense>
+        <GetUser />
+      </Suspense>
+      <AllStaff data={response.data} meta={response.meta} />
     </div>
   );
 }
-
-export default Page;

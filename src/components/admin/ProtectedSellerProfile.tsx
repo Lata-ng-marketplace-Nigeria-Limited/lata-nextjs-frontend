@@ -1,6 +1,4 @@
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
-import Button from "@components/atom/Button";
-import UserImage from "@components/staff/download (1).jpeg";
 import UserBanner from "@components/staff/UserBanner";
 import { DateTime } from "luxon";
 import ProductGridList from "@components/atom/ProductGridList";
@@ -36,7 +34,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
         <div className="sl:basis-[70%]">
           <UserBanner
             name={response?.data?.name || "No name"}
-            imgSrc={response?.data?.avatar || UserImage}
+            imgSrc={response?.data?.avatar}
             btnText="Send Message to seller"
           />
 

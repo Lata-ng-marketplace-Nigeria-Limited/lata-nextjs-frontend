@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import {
   ADMIN_ALL_POSTS,
   ADMIN_ALL_SELLERS_ROUTE,
-  ADMIN_ALL_STAFF_ROUTE,
+  DASHBOARD_STAFF_ROUTE,
   ADMIN_PAID_SELLERS_ROUTE,
 } from "@/constants/routes";
 
@@ -47,7 +47,7 @@ const AdminAnalyticsWrapper = (props: Props) => {
         title="Staff accounts"
         number={totalStaff}
         isClickable
-        onClick={() => router?.push(ADMIN_ALL_STAFF_ROUTE)}
+        onClick={() => router?.push(DASHBOARD_STAFF_ROUTE)}
         description="The total number of registered staff"
       />
       <AnalyticsTopCards

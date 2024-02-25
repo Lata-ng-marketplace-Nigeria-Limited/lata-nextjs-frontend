@@ -12,6 +12,7 @@ import Button from "../atom/Button";
 import { deleteFeedbackApi } from "@/api/auth.client";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   feedback?: IFeedback;
@@ -21,6 +22,7 @@ interface Props {
 const FeedbackContent = (props: Props) => {
   const [openModal, setOpenModal] = React.useState(false);
   const { refresh } = useRouter();
+  const { user } = useUser();
 
   const feedbackRating = {
     1: "negative" as const,
@@ -54,16 +56,18 @@ const FeedbackContent = (props: Props) => {
 
   return (
     <div className="mb-4 rounded-xl border border-grey2 px-5 py-4 tablet:mb-6 tablet:px-10 tablet:py-6">
-      <div className="flex justify-between">
+      <div className={cn({ "flex justify-between": user?.role === "ADMIN" })}>
         <FeedbackButton
           isActive
           type={feedbackRating[props.feedback?.rating || 2]}
           className="pointer-events-none !mb-2 !max-w-max tablet:!mb-5"
         />
-        <DeleteIcon
-          className="cursor-pointer"
-          onClick={() => setOpenModal(!openModal)}
-        />
+        {user?.role === "ADMIN" ? (
+          <DeleteIcon
+            className="cursor-pointer"
+            onClick={() => setOpenModal(!openModal)}
+          />
+        ) : null}
       </div>
 
       <h2 className="mb-2 text-base font-semibold text-grey9 tablet:mb-5 tablet:text-xl">

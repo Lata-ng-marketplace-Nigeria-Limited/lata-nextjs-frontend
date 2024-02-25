@@ -39,6 +39,7 @@ export interface User {
   expires_at: string;
   managerId: string;
   totalSubscriptions?: number;
+  bankAccount?: BankAccount;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";
@@ -95,4 +96,15 @@ export interface ISubscribedUser {
   total_transactions: number;
   transaction_actual_amount: number;
   plan_name: string;
+}
+
+export interface BankAccount {
+  id: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+  meta: null;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
 }
