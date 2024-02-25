@@ -40,14 +40,12 @@ const ChangeManager = (props: Props) => {
         toast({
           title: response.message,
           variant: "success",
-          duration: 1000,
         });
         refresh();
       } else {
         toast({
           title: "Something went wrong",
           variant: "destructive",
-          duration: 1000,
         });
       }
       props.setOpenModal(false);

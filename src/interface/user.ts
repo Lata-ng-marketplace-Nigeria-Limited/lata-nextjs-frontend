@@ -37,7 +37,8 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   expires_at: string;
-  managedBy: string;
+  managerId: string;
+  totalSubscriptions?: number;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";
@@ -50,8 +51,8 @@ export interface UserMeta {
   [key: string]: any;
 }
 
-export interface IAddedUserMeta{
-  manager: User
+export interface IAddedUserMeta {
+  manager: User;
 }
 
 export interface Settings {
@@ -83,9 +84,9 @@ export interface ISubscribedUser {
   name: string;
   email: string;
   phone_number: string | null;
-  subscription_status: 'NEW' | 'ACTIVE' | 'DUE' | 'UNSUBSCRIBED';
-  subscription_expiry_date: string; 
-  subscription_paid_at: string; 
+  subscription_status: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED";
+  subscription_expiry_date: string;
+  subscription_paid_at: string;
   address: string | null;
   avatar: string | null;
   subscription_name: string;

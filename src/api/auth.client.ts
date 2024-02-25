@@ -174,3 +174,16 @@ export const deleteFeedbackApi = async (
     throw error.response;
   }
 };
+
+export const blockUserApi = async ({
+  userId,
+}: {
+  userId: string;
+}): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await $http.get(`/users/block/${userId}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};

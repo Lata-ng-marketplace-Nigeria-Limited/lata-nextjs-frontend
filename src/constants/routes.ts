@@ -48,3 +48,4 @@ export const ADMIN_PAID_SELLERS_ROUTE = "/admin/paid-sellers";
 export const ADMIN_ALL_BUYERS = "/admin/buyers";
 export const DASHBOARD_PROTECTED_SELLER_ROUTE = "/protected-seller";
 export const ADMIN_UPLOAD_PRODUCT_ROUTE = "/admin/create-product";
+export const ADMIN_SUBSCRIPTIONS_ROUTE = "/admin/subscriptions";

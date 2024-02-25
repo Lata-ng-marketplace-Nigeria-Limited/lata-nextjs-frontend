@@ -7,6 +7,7 @@ import { useUser } from "@hooks/useUser";
 
 interface Props {
   subscriptions: Subscription[];
+  sellerId?: string;
 }
 export const Subscriptions = ({ subscriptions }: Props) => {
   const [selectedSubscription, setSelectedSubscription] =

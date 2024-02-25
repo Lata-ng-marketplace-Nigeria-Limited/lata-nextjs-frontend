@@ -47,7 +47,13 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
                 title="Email"
                 description={response?.data?.email || "No email"}
               />
-              <UserDetail hasGreyTitle title="Location" description="Lagos" />
+              <UserDetail
+                hasGreyTitle
+                title="Subscriptions"
+                description={
+                  response?.data?.totalSubscriptions?.toLocaleString() || "O"
+                }
+              />
               <UserDetail
                 hasGreyTitle
                 title="Phone"
@@ -126,6 +132,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
           <SellerActionBtns
             managers={response?.managers || []}
             sellerId={sellerId}
+            sellerName={response?.data?.name || "No name"}
           />
         </div>
       </div>
