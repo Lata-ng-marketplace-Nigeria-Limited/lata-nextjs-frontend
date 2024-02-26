@@ -6,10 +6,10 @@ import SearchInput from "./SearchInput";
 import Image from "next/image";
 import AppAvatar from "../molecule/Avatar";
 import Button from "../atom/Button";
-import { changeManagerApi } from "@/api/auth.client";
 import { cn } from "@/utils";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { changeManagerApi } from "@/api/admin.client";
 
 interface Props {
   sellerId: string;

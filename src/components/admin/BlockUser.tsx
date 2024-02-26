@@ -1,8 +1,8 @@
-import { blockUserApi } from "@/api/auth.client";
 import React from "react";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import Button from "../atom/Button";
+import { blockUserApi } from "@/api/admin.client";
 
 interface Props {
   userId: string;

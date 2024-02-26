@@ -2,8 +2,8 @@ import React from "react";
 import Button from "../atom/Button";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
-import { deleteUserApi } from "@/api/auth.client";
 import { LANDING_ROUTE } from "@/constants/routes";
+import { deleteUserApi } from "@/api/admin.client";
 
 interface Props {
   userId: string;

@@ -9,10 +9,10 @@ import { cn } from "@/utils";
 import DeleteIcon from "../atom/icons/Delete";
 import ResizableDialog from "../admin/ResizableDialog";
 import Button from "../atom/Button";
-import { deleteFeedbackApi } from "@/api/auth.client";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
+import { deleteFeedbackApi } from "@/api/admin.client";
 
 interface Props {
   feedback?: IFeedback;
