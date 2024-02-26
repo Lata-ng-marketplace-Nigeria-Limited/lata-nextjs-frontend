@@ -121,7 +121,7 @@ export const LoginForm = () => {
       </div>
 
       <div className={"flex flex-col items-center"}>
-        <div className={"w-full flex flex-col gap-y-2"}>
+        <div className={"flex w-full flex-col gap-y-2"}>
           <Button
             type={"submit"}
             disabled={loading}
