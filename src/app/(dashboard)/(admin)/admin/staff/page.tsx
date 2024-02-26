@@ -1,7 +1,6 @@
 import { getAllStaffAdminApi } from "@/api/admin";
 import AllStaff from "@/components/admin/AllStaff";
 import { GetUser } from "@/components/atom/GetUser";
-import RollerSpinner from "@/components/molecule/RollerSpinner";
 import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -21,7 +20,7 @@ export default async function Protected({
   };
 }) {
   const session = await getServerSession(authConfig);
-  if (!session || !session.user || session.role !== "ADMIN") {
+  if (!session || !session.user || (session.role === "BUYER" || session.role !== "SELLER"   )) {
     redirect("/");
   }
 

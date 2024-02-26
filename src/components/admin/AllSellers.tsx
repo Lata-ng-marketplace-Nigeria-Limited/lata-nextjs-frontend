@@ -12,11 +12,7 @@ import BadgeWithCount from "../atom/BadgeWithCount";
 import { IBadgeVariants } from "../atom/Badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import {
-  DASHBOARD_PROTECTED_SELLER_ROUTE,
-  DASHBOARD_SELLER_PROFILE_ROUTE,
-} from "@/constants/routes";
-import Image from "next/image";
+import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
 import AppAvatar from "../molecule/Avatar";
 
 interface Props {

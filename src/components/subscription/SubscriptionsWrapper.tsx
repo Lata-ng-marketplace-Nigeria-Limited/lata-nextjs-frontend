@@ -1,16 +1,8 @@
 import { getAllSubscriptionsApi } from "@/api/subscription";
 import { Subscriptions } from "@components/subscription/Subscriptions";
 
-interface Props {
-  sellerId?: string;
-}
-export const SubscriptionsWrapper = async (props: Props) => {
+export const SubscriptionsWrapper = async () => {
   const subscriptions = await getAllSubscriptionsApi();
 
-  return (
-    <Subscriptions
-      subscriptions={subscriptions?.subscriptions}
-      sellerId={props.sellerId}
-    />
-  );
+  return <Subscriptions subscriptions={subscriptions?.subscriptions} />;
 };
