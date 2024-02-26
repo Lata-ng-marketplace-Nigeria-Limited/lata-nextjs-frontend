@@ -40,6 +40,7 @@ export interface User {
   managerId: string;
   totalSubscriptions?: number;
   bankAccount?: BankAccount;
+  isBlocked?: boolean;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";

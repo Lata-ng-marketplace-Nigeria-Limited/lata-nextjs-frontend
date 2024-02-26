@@ -11,6 +11,7 @@ interface IGetStaffApi {
   message?: string;
   success?: boolean;
   isError?: boolean;
+  totalSellers?: number;
 }
 export const getStaffApi = async ({
   staffId,

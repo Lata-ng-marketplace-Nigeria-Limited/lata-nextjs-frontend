@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { User } from "@/interface/user";
 import ResizableDialog from "./ResizableDialog";
 import BlockUser from "./BlockUser";
+import DeleteUser from "./DeleteUser";
 
 interface Props {
   managers: User[];
@@ -19,6 +20,7 @@ const SellerActionBtns = (props: Props) => {
   const { push } = useRouter();
   const [openModal, setOpenModal] = React.useState(false);
   const [isBlockUser, setIsBlockUser] = React.useState(false);
+  const [isDeleteUserModal, setIsDeleteUserModal] = React.useState(false);
 
   return (
     <div className="mb-6 rounded-xl border border-grey2 p-6">
@@ -50,12 +52,27 @@ const SellerActionBtns = (props: Props) => {
       >
         Block User
       </Button>
-      <Button format="danger" className="mb-8 block w-full">
+      <Button
+        format="danger"
+        className="mb-8 block w-full"
+        onClick={() => setIsDeleteUserModal(true)}
+      >
         Delete Seller
       </Button>
 
       <ResizableDialog isShown={isBlockUser} setIsShown={setIsBlockUser}>
         <BlockUser setIsBlockUser={setIsBlockUser} userId={props.sellerId} />
+      </ResizableDialog>
+
+      <ResizableDialog
+        isShown={isDeleteUserModal}
+        setIsShown={setIsDeleteUserModal}
+      >
+        <DeleteUser
+          setIsDeleteUser={setIsDeleteUserModal}
+          userId={props.sellerId}
+          name={props.sellerName}
+        />
       </ResizableDialog>
 
       <ResizableDialog isShown={openModal} setIsShown={setOpenModal}>

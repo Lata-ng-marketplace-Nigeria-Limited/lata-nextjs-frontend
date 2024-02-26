@@ -6,14 +6,14 @@ import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import CheckBoxPurple from "@components/atom/icons/CheckBoxPurple";
 import { getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
+import { User } from "@/interface/user";
 
 interface Props {
   staffId: string;
+  data: User;
+  totalSellers?: number;
 }
-const StaffProfileWrapper = async (props: Props) => {
-  const response = await getStaffApi({ staffId: props.staffId });
-  console.log("response", props.staffId);
-  console.log(response.data);
+const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
   const grades = [
     { grade: "Grade A", price: "500k" },
     { grade: "Grade B", price: "399k" },
@@ -34,9 +34,9 @@ const StaffProfileWrapper = async (props: Props) => {
       <div className="sl:flex sl:gap-8">
         <div className="sl:basis-[70%]">
           <UserBanner
-            imgSrc={response?.data?.avatar}
+            imgSrc={data?.avatar}
             btnText="Send Message"
-            name={response?.data?.name}
+            name={data?.name}
           />
 
           <UserDetailContainer heading="About">
@@ -44,25 +44,29 @@ const StaffProfileWrapper = async (props: Props) => {
               <UserDetail
                 hasGreyTitle
                 title="Email"
-                description={response?.data?.email}
+                description={data?.email}
               />
-              <UserDetail hasGreyTitle title="Sellers" description={"O"} />
+              <UserDetail
+                hasGreyTitle
+                title="Sellers"
+                description={totalSellers?.toLocaleString() || "O"}
+              />
               <UserDetail
                 hasGreyTitle
                 title="Phone"
-                description={response?.data?.phoneNumber || "No Phone number"}
+                description={data?.phoneNumber || "No Phone number"}
               />
               <UserDetail
                 hasGreyTitle
                 title="Admin"
-                description={response?.data?.meta?.manager?.name || "No Admin"}
+                description={data?.meta?.manager?.name || "No Admin"}
               />
             </div>
           </UserDetailContainer>
 
           <UserDetailContainer heading="Address">
             <p className="font-normal text-grey6">
-              {response?.data?.address || "No address"}
+              {data?.address || "No address"}
             </p>
           </UserDetailContainer>
         </div>
@@ -70,21 +74,21 @@ const StaffProfileWrapper = async (props: Props) => {
           <UserDetailContainer heading="Bank account details">
             <UserDetail
               hasGreyDescription
-              title={response?.data?.bankAccount?.accountNumber || ""}
-              description="Account number"
+              title="Account number"
+              description={data?.bankAccount?.accountNumber || ""}
             />
             <UserDetail
               hasGreyDescription
-              title={response?.data?.bankAccount?.accountNumber || ""}
-              description="First Bank"
+              title="First Bank"
+              description={data?.bankAccount?.accountNumber || ""}
             />
             <UserDetail
               hasGreyDescription
-              title={response?.data?.bankAccount?.accountName || ""}
-              description="Account name"
+              title="Account name"
+              description={data?.bankAccount?.accountName || ""}
             />
           </UserDetailContainer>
-          <StaffBtnActions staffId={props.staffId} />
+          <StaffBtnActions staffId={staffId} staffName={data?.name} />
         </div>
       </div>
       <div>

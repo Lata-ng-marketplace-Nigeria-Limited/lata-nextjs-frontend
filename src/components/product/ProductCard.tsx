@@ -5,12 +5,8 @@ import { SavedIcon } from "@atom/icons/Saved";
 import Button from "@atom/Button";
 import { Product } from "@/interface/products";
 import { DASHBOARD_PRODUCT_ROUTE } from "@/constants/routes";
-// import { useUser } from "@/hooks/useUser";
-// import { userState } from "@/store/states/userState";
-// import { toast } from "./Toaster";
-// import { saveAProductApi, unSaveAProductApi } from "@/api/productApi";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 import Image from "next/image";
 import { saveAProductApi, unSaveAProductApi } from "@/api/product";
@@ -20,9 +16,6 @@ import Link from "next/link";
 import { IMAGE_BLUR_URL } from "@/constants/others";
 import { generateSellerAnalyticsApi } from "@/api/view";
 import PercentageOff from "../atom/PercentageOff";
-import { useDiscount } from "@/hooks/useDiscount";
-
-// import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
 
 type Props = {
   imageSrc?: string;
@@ -56,6 +49,8 @@ export default function ProductCard(props: Props) {
   const [image, setImage] = useState("");
   const [planName, setPlanName] = useState("");
   const [placeHolderUrl, setPlaceHolderUrl] = useState("");
+  const [initialAmount, setInitialAmount] = useState(0);
+  const [discountedAmount, setDiscountedAmount] = useState(0);
 
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
@@ -87,10 +82,16 @@ export default function ProductCard(props: Props) {
   }, [props.product?.id, user?.id, props.product?.userId]);
 
   useEffect(() => {
-    if (!isVisible) return;
-    registerView();
-    if (image) return;
-    handleImage();
+    const handleImageIfNeeded = () => {
+      if (!image) {
+        handleImage();
+      }
+    };
+
+    if (isVisible) {
+      registerView();
+      handleImageIfNeeded();
+    }
   }, [isVisible, image, handleImage, registerView]);
 
   useEffect(() => {
@@ -174,18 +175,27 @@ export default function ProductCard(props: Props) {
     }
   };
 
-  const priceDetails = {
-    amount: props.product?.price || 0,
-    discount: Number(props.product?.discount) || Number("0"),
-  };
+  const handleDiscount = useCallback(() => {
+    const amount = props.product?.price || 0;
+    const discount = Number(props.product?.discount) || Number("0");
+    if (discount) {
+      setDiscountedAmount(amount - (amount * discount) / 100);
+      setInitialAmount(amount);
+    } else {
+      setDiscountedAmount(amount || 0);
+      setInitialAmount(0);
+    }
+  }, [props.product?.price, props.product?.discount]);
 
-  const { initialAmount, discountedAmount } = useDiscount(priceDetails);
+  useEffect(() => {
+    handleDiscount();
+  }, [handleDiscount]);
 
   const handlDisplayedPrice = () => {
     if (props.createProductPreview) {
       return !props?.price ? "Product price" : props?.price;
     } else {
-      return discountedAmount;
+      return formatPrice(discountedAmount);
     }
   };
 

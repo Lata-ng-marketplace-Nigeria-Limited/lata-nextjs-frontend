@@ -187,3 +187,16 @@ export const blockUserApi = async ({
     throw error.response;
   }
 };
+
+export const deleteUserApi = async ({
+  id,
+}: {
+  id: string;
+}): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await $http.delete(`/users/delete/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};

@@ -17,6 +17,9 @@ export const useUser = () => {
   const { replace } = useRouter();
 
   useEffect(() => {
+    // if (user?.isBlocked) {
+    //   logoutUser(clear, false, );
+    // }
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }

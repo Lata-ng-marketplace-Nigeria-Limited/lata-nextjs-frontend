@@ -27,7 +27,7 @@ export const UserDetail = (props: Props) => {
       <p
         className={cn({
           "text-sm font-semibold": !props.hasGreyDescription,
-          "font-normal text-grey6": props.hasGreyDescription,
+          "text-sm font-normal text-grey6": props.hasGreyDescription,
         })}
       >
         {props.description}

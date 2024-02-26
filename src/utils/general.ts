@@ -230,6 +230,7 @@ export async function copyTextToClipboard({
 export const logoutUser = async (
   clear: () => void,
   sessionTimeout: boolean = false,
+  isBlocked?: boolean,
 ) => {
   if (sessionTimeout) {
     toast({
@@ -239,11 +240,21 @@ export const logoutUser = async (
       duration: 15000,
     });
   }
+  if (isBlocked) {
+    toast({
+      title: "Account Blocked",
+      variant: "destructive",
+      duration: 15000,
+    });
+  }
   localStorage.clear();
   sessionStorage.clear();
   clearAllCookies();
   clear();
-  await signOut({ redirect: true, callbackUrl: "/auth" + LOGIN_ROUTE });
+  await signOut({
+    redirect: true,
+    callbackUrl: isBlocked ? "/blocked" : "/auth" + LOGIN_ROUTE,
+  });
 };
 
 export function formatNumber(num: number) {
