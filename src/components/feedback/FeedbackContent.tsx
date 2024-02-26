@@ -91,7 +91,7 @@ const FeedbackContent = (props: Props) => {
           <span className="font-semibold text-primary">
             {props?.feedback?.product?.user?.name}{" "}
           </span>
-          . Click on "Confirm" to proceed.
+          . Click on &ldquo;Confirm&rdquo; to proceed.
         </p>
         <div className="flex items-center justify-end gap-5">
           <Button format="secondary" onClick={() => setOpenModal(false)}>

@@ -39,14 +39,11 @@ const DeleteUser = (props: Props) => {
       {" "}
       <h2 className="mb-2 text-lg font-semibold">
         Delete Account
-        {/* <span className="text-lg font-semibold text-primary">
-          {props.userId || "User"}
-        </span> */}
       </h2>
       <div className="mb-3">
         <p className="mb-1 font-bold">
           Are you sure you want to delete{" "}
-          <span className="font-semibold text-primary">{props.name}'s</span>{" "}
+          <span className="font-semibold text-primary">{props.name}&rsquo;s</span>{" "}
           Lata account?
         </p>
         <p className="font-semibold text-danger">

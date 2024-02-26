@@ -43,7 +43,7 @@ const BlockUser = (props: Props) => {
       </h2>
       <p className="mb-4">
         By blocking this user, their account will be temporarily suspended, and
-        they won't be able to access the platform. Please click "Block" to proceed with
+        they won&rsquo;t be able to access the platform. Please click  &ldquo;Block&rdquo; to proceed with
         this action.
       </p>
       <div className="flex items-center justify-end gap-5">
