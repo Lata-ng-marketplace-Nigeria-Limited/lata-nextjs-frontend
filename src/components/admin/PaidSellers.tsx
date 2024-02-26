@@ -9,7 +9,7 @@ import { ISubscribedUser } from "@/interface/user";
 import { DateTime } from "luxon";
 import { formatPrice } from "@/utils";
 import Badge, { IBadgeVariants } from "@components/atom/Badge";
-import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
+import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
 import HeaderText from "../atom/HeaderText";
 import SearchInput from "./SearchInput";
 
@@ -166,7 +166,7 @@ const PaidSellers = (props: Props) => {
                   className="flex cursor-pointer items-center gap-2"
                   onClick={() =>
                     router.push(
-                      DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id,
+                      DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id,
                     )
                   }
                 >

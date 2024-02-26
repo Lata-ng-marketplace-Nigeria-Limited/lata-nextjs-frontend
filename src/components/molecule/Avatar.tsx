@@ -7,6 +7,8 @@ interface Props {
   name?: string;
   type?: "user" | "message";
   className?: string;
+  initialsClass?: string;
+  imageClass?: string;
 }
 
 export default function AppAvatar(props: Props) {
@@ -22,50 +24,57 @@ export default function AppAvatar(props: Props) {
     setBackgroundColor(background);
     setInitials(init);
   }, [props.name]);
+
   return (
     <Avatar
       className={cn(
         `
         inline-flex
+        shrink-0
+        select-none
         items-center
         justify-center
-        select-none
         rounded-full
         bg-neutral-100
-        shrink-0
       `,
         {
-          "w-[40px] h-[40px] lg:w-[60px] lg:h-[60px]": props.type === "message",
-          "w-[30px] h-[30px] sm:w-[40px] sm:h-[40px]":
+          "h-[40px] w-[40px] lg:h-[60px] lg:w-[60px]": props.type === "message",
+          "h-[30px] w-[30px] sm:h-[40px] sm:w-[40px]":
             props.type === "user" || !props.type,
         },
         props.className,
       )}
     >
       <AvatarImage
-        className={cn(`
-          rounded-full
-          w-full
+        className={cn(
+          `
           h-full
-          object-cover
+          w-full
           shrink-0
-        `)}
+          rounded-full
+          object-cover
+        `,
+          props.imageClass,
+        )}
         src={props.src}
         alt={props.name}
       />
       <AvatarFallback
-        className={cn(`
-        rounded-full
-        w-full
-        h-full
+        className={cn(
+          `
         flex
+        h-full
+        w-full
+        shrink-0
         items-center
         justify-center
+        rounded-full
         text-sm
-        sm:text-base
         font-medium
-        shrink-0
-        `)}
+        sm:text-base
+        `,
+          props.initialsClass,
+        )}
         style={{
           color: textColor,
           backgroundColor: backgroundColor,

@@ -33,6 +33,7 @@ import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
 import { nigerianStatesAndCities } from "@/store/data/location";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   product?: Product;
@@ -41,6 +42,7 @@ interface Props {
   >;
   selectedPhotos?: SelectedImagePreview;
   setProductInfo: React.Dispatch<SetStateAction<ProductFormProductInfo>>;
+  sellerId?: string;
 }
 
 export default function ProductForm({
@@ -48,6 +50,7 @@ export default function ProductForm({
   setProductInfo,
   setSelectedPhotos,
   selectedPhotos,
+  sellerId,
 }: Props) {
   const [files, setFiles] = useState<FileList>();
   const [loading, setLoading] = useState(true);
@@ -86,6 +89,7 @@ export default function ProductForm({
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
   const [hasSelectedState, setHasSelectedState] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
     if (!product) {
@@ -176,6 +180,7 @@ export default function ProductForm({
       ...values,
       files: files!,
       price: Number(values.price),
+      userId: user?.role === "ADMIN" ? sellerId : user?.id,
       discount: Number(values.discount || 0),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(

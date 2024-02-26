@@ -1,5 +1,6 @@
 "use server";
 
+import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
@@ -281,7 +282,6 @@ export const getAllPosts = async ({
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
@@ -308,6 +308,57 @@ export const getAllPosts = async ({
         isError: true,
         message: "Empty response",
       } as IGetAllPosts;
+    }
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
+
+interface IGetProtectedSellerApi {
+  data: User & {
+    approvedPosts: number;
+    cancelledPosts: number;
+    totalPosts: number;
+    planDuration: string;
+    planName: string;
+    managerName: string;
+  };
+  isError?: boolean;
+  message?: string;
+  feedbacks?: IFeedback[];
+  managers?: User[];
+}
+export const getProtectedSellerApi = async ({
+  sellerId,
+}: {
+  sellerId: string;
+}): Promise<IGetProtectedSellerApi> => {
+  try {
+    unstable_noStore();
+    const session = await getServerSession(authConfig);
+
+    const res = await fetch(getApiUrl(`/admin/seller/${sellerId}`), {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+      cache: "no-cache",
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      return {
+        ...data,
+        isError: true,
+      };
+    }
+    const json = await res.text();
+
+    if (json) {
+      return JSON.parse(json);
+    } else {
+      return {
+        isError: true,
+        message: "Empty response",
+      } as IGetProtectedSellerApi;
     }
   } catch (error: any) {
     throw error.response || error;

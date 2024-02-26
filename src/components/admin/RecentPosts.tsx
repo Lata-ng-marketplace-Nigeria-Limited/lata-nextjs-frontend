@@ -7,6 +7,7 @@ import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import { FetchMeta } from "@/interface/general";
 import {
   DASHBOARD_PRODUCT_ROUTE,
+  DASHBOARD_PROTECTED_SELLER_ROUTE,
   DASHBOARD_SELLER_PROFILE_ROUTE,
 } from "@/constants/routes";
 
@@ -35,7 +36,7 @@ const RecentPosts = async (props: Props) => {
                   className="rounded-full"
                 />
                 <Link
-                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + post.user?.id}
+                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + post.user?.id}
                   className="font-semibold hover:text-primary"
                 >
                   {post?.user?.name}

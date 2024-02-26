@@ -15,6 +15,7 @@ interface LoginInput {
 interface LoginResponse {
   authorized: boolean;
   isEmailVerified: boolean;
+  isBlocked: boolean;
   publicToken?: string;
   message?: string;
   email?: string;
@@ -43,6 +44,7 @@ export const loginApi = async (data?: LoginInput): Promise<LoginResponse> => {
       return {
         authorized: false,
         isEmailVerified: false,
+        isBlocked: false,
         message: "Invalid credentials",
         error: await res.json(),
       };

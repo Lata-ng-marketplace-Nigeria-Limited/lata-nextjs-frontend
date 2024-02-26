@@ -239,11 +239,15 @@ export const logoutUser = async (
       duration: 15000,
     });
   }
+
   localStorage.clear();
   sessionStorage.clear();
   clearAllCookies();
   clear();
-  await signOut({ redirect: true, callbackUrl: "/auth" + LOGIN_ROUTE });
+  await signOut({
+    redirect: true,
+    callbackUrl: "/auth" + LOGIN_ROUTE,
+  });
 };
 
 export function formatNumber(num: number) {

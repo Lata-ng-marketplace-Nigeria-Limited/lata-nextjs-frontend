@@ -214,9 +214,6 @@ const AddSellerForm = (props: Props) => {
               isPassword
               disabled={loading}
               name={"field.name"}
-              // wrapperClass={cn({
-              //   hidden: shouldCompleteForm,
-              // })}
               errorMessage={errors.password?.message}
             />
           </FormTopLabel>

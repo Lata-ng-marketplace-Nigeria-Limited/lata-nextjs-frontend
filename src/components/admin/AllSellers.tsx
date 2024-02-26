@@ -12,8 +12,8 @@ import BadgeWithCount from "../atom/BadgeWithCount";
 import { IBadgeVariants } from "../atom/Badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
-import Image from "next/image";
+import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
+import AppAvatar from "../molecule/Avatar";
 
 interface Props {
   data: User[];
@@ -118,15 +118,14 @@ const AllSellers = (props: Props) => {
           return {
             name: (
               <div className="flex items-center gap-2">
-                <Image
-                  src={seller?.avatar || ""}
-                  alt={"image of " + seller?.name}
-                  width={20}
-                  height={20}
-                  className="aspect-square rounded-full object-cover"
+                <AppAvatar
+                  name={seller?.name}
+                  src={seller?.avatar}
+                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                  initialsClass="font-normal text-xs sm:text-xs"
                 />
                 <Link
-                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id}
+                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
                   className="hover:text-primary"
                 >
                   {seller?.name}
