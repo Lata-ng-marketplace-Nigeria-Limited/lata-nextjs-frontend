@@ -33,7 +33,11 @@ const StaffBtnActions = (props: Props) => {
         </Button>
       </div>
       <ResizableDialog isShown={isBlockUser} setIsShown={setIsBlockUser}>
-        <BlockUser setIsBlockUser={setIsBlockUser} userId={props.staffId} />
+        <BlockUser
+          setIsBlockUser={setIsBlockUser}
+          userId={props.staffId}
+          name={props.staffName}
+        />
       </ResizableDialog>
 
       <ResizableDialog

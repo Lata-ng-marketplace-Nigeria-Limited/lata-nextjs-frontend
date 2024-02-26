@@ -1,6 +1,7 @@
 import { getAllStaffAdminApi } from "@/api/admin";
 import AllStaff from "@/components/admin/AllStaff";
 import { GetUser } from "@/components/atom/GetUser";
+import RollerSpinner from "@/components/molecule/RollerSpinner";
 import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -33,7 +34,9 @@ export default async function Protected({
       <Suspense>
         <GetUser />
       </Suspense>
-      <AllStaff data={response.data} meta={response.meta} />
+      <Suspense fallback={<h2>Loading...</h2>}>
+        <AllStaff data={response.data} meta={response.meta} />
+      </Suspense>
     </div>
   );
 }

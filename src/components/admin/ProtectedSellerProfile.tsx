@@ -49,7 +49,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
                 hasGreyTitle
                 title="Subscriptions"
                 description={
-                  response?.data?.totalSubscriptions?.toLocaleString() || "O"
+                  response?.data?.totalSubscriptions?.toLocaleString() || "0"
                 }
               />
               <UserDetail

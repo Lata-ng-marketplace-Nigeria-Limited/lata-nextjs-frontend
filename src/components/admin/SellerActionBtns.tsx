@@ -61,7 +61,11 @@ const SellerActionBtns = (props: Props) => {
       </Button>
 
       <ResizableDialog isShown={isBlockUser} setIsShown={setIsBlockUser}>
-        <BlockUser setIsBlockUser={setIsBlockUser} userId={props.sellerId} />
+        <BlockUser
+          setIsBlockUser={setIsBlockUser}
+          userId={props.sellerId}
+          name={props.sellerName}
+        />
       </ResizableDialog>
 
       <ResizableDialog

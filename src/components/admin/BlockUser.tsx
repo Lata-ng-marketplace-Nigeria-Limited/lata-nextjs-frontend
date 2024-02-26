@@ -6,10 +6,11 @@ import Button from "../atom/Button";
 
 interface Props {
   userId: string;
+  name: string;
   setIsBlockUser: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const BlockUser = (props: Props) => {
-  const { push, refresh } = useRouter();
+  const { refresh } = useRouter();
 
   const handleBlockUser = async () => {
     try {
@@ -37,12 +38,13 @@ const BlockUser = (props: Props) => {
       <h2 className="mb-2 text-lg font-semibold">
         Block{" "}
         <span className="text-lg font-semibold text-primary">
-          {props.userId || "User"}
+          {props.name || "User"}
         </span>
       </h2>
-      <p className="mb-2">
-        You are about to block this user. Their account will remain inactive
-        until they are unblocked. Click on "Block" to Proceed
+      <p className="mb-4">
+        By blocking this user, their account will be temporarily suspended, and
+        they won't be able to access the platform. Please click "Block" to proceed with
+        this action.
       </p>
       <div className="flex items-center justify-end gap-5">
         <Button format="secondary" onClick={() => props.setIsBlockUser(false)}>

@@ -17,6 +17,7 @@ async function Page({
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }
+
   const response = await getStaffApi({ staffId });
 
   return (
@@ -25,7 +26,7 @@ async function Page({
         <GetUser />
       </Suspense>
 
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<div>Loading...</div>}>
         <StaffProfileWrapper
           data={response.data}
           staffId={staffId}
