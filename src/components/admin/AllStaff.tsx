@@ -66,7 +66,8 @@ const AllStaff = (props: Props) => {
                 <AppAvatar
                   name={staff?.name}
                   src={staff?.avatar}
-                  className="h-[20px] w-[20px]"
+                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                  initialsClass="font-normal text-xs sm:text-xs"
                 />
                 <Link href={`${DASHBOARD_STAFF_ROUTE}/${staff.id}`}>
                   {staff?.name}

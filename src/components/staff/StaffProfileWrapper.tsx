@@ -31,8 +31,8 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
 
   return (
     <div>
-      <div className="sl:flex sl:gap-8">
-        <div className="sl:basis-[70%]">
+      <div className="sm:flex sm:gap-8">
+        <div className="sm:basis-[70%]">
           <UserBanner
             imgSrc={data?.avatar}
             btnText="Send Message"
@@ -40,7 +40,7 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
           />
 
           <UserDetailContainer heading="About">
-            <div className="sl:flex sl:items-center sl:gap-20">
+            <div className="sm:flex sm:items-center sm:gap-20">
               <UserDetail
                 hasGreyTitle
                 title="Email"
@@ -70,7 +70,7 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
             </p>
           </UserDetailContainer>
         </div>
-        <div className="mb-10 text-xl sl:basis-[30%]">
+        <div className="mb-10 text-xl sm:basis-[30%]">
           <UserDetailContainer heading="Bank account details">
             <UserDetail
               hasGreyDescription
@@ -122,7 +122,7 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
         </AnalyticsTopCardsHOC>
       </div>
       <UserDetailContainer heading="Grades">
-        <div className="grid grid-cols-2 items-center gap-2 sl:grid-cols-4 lg:grid-cols-5 lg:gap-1">
+        <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-4 lg:grid-cols-5 lg:gap-1">
           {grades.map(({ grade, price }, index) => (
             <div className="flex items-center gap-3" key={index}>
               <CheckBoxPurple />
@@ -134,7 +134,7 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
         </div>
       </UserDetailContainer>
       <UserDetailContainer heading="Grades">
-        <div className="grid grid-cols-2 items-center gap-2 sl:grid-cols-4">
+        <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-4">
           {bonuses.map((bonus, index) => (
             <p className="text-lg font-normal" key={index}>
               {bonus.interval} {bonus.period} bonus = {bonus.amount}
