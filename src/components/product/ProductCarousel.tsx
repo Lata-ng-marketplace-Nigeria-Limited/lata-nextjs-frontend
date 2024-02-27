@@ -95,6 +95,7 @@ export default function ProductCarousel(props: Props) {
               style={{
                 objectFit: "contain",
               }}
+              unoptimized
             />
           </CarouselItem>
         ))}

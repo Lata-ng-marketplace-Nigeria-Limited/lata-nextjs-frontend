@@ -14,7 +14,7 @@ export interface User {
   address?: string;
   avatar?: string;
   aboutBusiness?: string;
-  meta?: UserMeta;
+  meta?: UserMeta | IAddedUserMeta;
   googleIntegration?: string;
   emailVerified?: boolean;
   phoneNumberVerified?: boolean;
@@ -37,6 +37,10 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   expires_at: string;
+  managerId: string;
+  totalSubscriptions?: number;
+  bankAccount?: BankAccount;
+  isBlocked?: boolean;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";
@@ -47,6 +51,10 @@ export interface UserMeta {
   user_agent?: string;
   logged_in_at?: string;
   [key: string]: any;
+}
+
+export interface IAddedUserMeta {
+  manager: User;
 }
 
 export interface Settings {
@@ -71,4 +79,33 @@ export interface AuthorizeResponse {
   avatar?: string;
   token?: string;
   shouldCompleteProfile?: boolean;
+}
+
+export interface ISubscribedUser {
+  id: string;
+  name: string;
+  email: string;
+  phone_number: string | null;
+  subscription_status: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED";
+  subscription_expiry_date: string;
+  subscription_paid_at: string;
+  address: string | null;
+  avatar: string | null;
+  subscription_name: string;
+  plan_duration: number;
+  transaction_provider: string;
+  total_transactions: number;
+  transaction_actual_amount: number;
+  plan_name: string;
+}
+
+export interface BankAccount {
+  id: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+  meta: null;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
 }

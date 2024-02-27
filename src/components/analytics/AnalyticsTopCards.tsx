@@ -6,23 +6,47 @@ interface Props {
   number: number | string;
   title: string;
   description: string;
+  onClick?: () => void;
+  isClickable?: boolean;
 }
 const AnalyticsTopCards = ({
   isTotalViews,
   number,
   title,
   description,
+  onClick,
+  isClickable,
 }: Props) => {
   return (
     <div
       className={cn(
-        { "border-0 bg-primary text-white shadow-none": isTotalViews },
-        "px-6 pb-7 pt-[1.81rem] rounded-lg border-solid shadow-black/10 border border-grey2"
+        {
+          "border-0 bg-primary text-white shadow-none": isTotalViews,
+          "cursor-pointer": isClickable,
+        },
+        "rounded-lg border border-solid border-grey2 px-6 pb-7 pt-[1.81rem] shadow-black/10",
       )}
+      onClick={onClick}
     >
-      <p className="tablet:mb-4 mb-2 text-sm font-normal">{title}</p>
-      <p className="tablet:mb-4 mb-2 font-semibold text-2xl tablet:text-xl">{number || 0}</p>
-      <p className="text-xs font-normal">{description}</p>
+      <p
+        className={cn(
+          { "text-grey10": !isTotalViews },
+          "mb-2 text-sm font-normal tablet:mb-4",
+        )}
+      >
+        {title}
+      </p>
+      <p
+        className={cn(
+          { "text-grey9": !isTotalViews },
+          "mb-2 text-2xl font-semibold tablet:mb-4 tablet:text-xl",
+        )}
+      >
+        {number || 0}
+      </p>
+      <p className={cn({ "text-grey7": !isTotalViews }, "text-xs font-normal")}>
+        {description}
+      </p>
     </div>
   );
 };

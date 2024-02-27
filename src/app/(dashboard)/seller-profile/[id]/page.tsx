@@ -22,16 +22,16 @@ export async function generateMetadata(
   const previousImages = (await parent).openGraph?.images || [];
 
   return {
-    title: seller.name || "Seller not found",
+    title: seller?.name || "Seller not found",
     openGraph: {
       images: [
-        seller.avatar ||
+        seller?.avatar ||
           "https://res.cloudinary.com/dg9by7oca/image/upload/v1693411084/oggg_image_u5mv8f.webp",
       ],
-      title: seller.name,
-      description: seller.aboutBusiness,
+      title: seller?.name,
+      description: seller?.aboutBusiness,
       url: `https://lata.ng/seller-profile/${id}`,
-      phoneNumbers: [seller.phoneNumber || ""],
+      phoneNumbers: [seller?.phoneNumber || ""],
     },
   };
 }
