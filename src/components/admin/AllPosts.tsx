@@ -5,7 +5,6 @@ import { Product } from "@/interface/products";
 import React, { useEffect, useState } from "react";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import { DateTime } from "luxon";
-import Image from "next/image";
 import TableTopArea from "./TableTopArea";
 import Link from "next/link";
 import {

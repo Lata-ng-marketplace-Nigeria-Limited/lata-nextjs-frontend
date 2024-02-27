@@ -1,15 +1,16 @@
+"use client";
+
 import React from "react";
 import { Product } from "@/interface/products";
 import { DateTime } from "luxon";
-import Image from "next/image";
 import Link from "next/link";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import { FetchMeta } from "@/interface/general";
 import {
   DASHBOARD_PRODUCT_ROUTE,
   DASHBOARD_PROTECTED_SELLER_ROUTE,
-  DASHBOARD_SELLER_PROFILE_ROUTE,
 } from "@/constants/routes";
+import AppAvatar from "../molecule/Avatar";
 
 interface Props {
   reposts: Product[];
@@ -28,13 +29,13 @@ const RecentPosts = async (props: Props) => {
           return {
             poster: (
               <div className="flex items-center gap-2">
-                <Image
-                  src={post?.user?.avatar || ""}
-                  alt={"image of " + post?.user?.name}
-                  width={20}
-                  height={20}
-                  className="rounded-full"
+                <AppAvatar
+                  name={post?.user?.name}
+                  src={post?.user?.avatar}
+                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                  initialsClass="font-normal text-xs sm:text-xs"
                 />
+
                 <Link
                   href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + post.user?.id}
                   className="font-semibold hover:text-primary"
