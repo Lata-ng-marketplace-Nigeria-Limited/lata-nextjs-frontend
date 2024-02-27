@@ -5,13 +5,13 @@ import { Product } from "@/interface/products";
 import React, { useEffect, useState } from "react";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import { DateTime } from "luxon";
-import Image from "next/image";
 import TableTopArea from "./TableTopArea";
 import Link from "next/link";
 import {
   DASHBOARD_PRODUCT_ROUTE,
   DASHBOARD_SELLER_PROFILE_ROUTE,
 } from "@/constants/routes";
+import AppAvatar from "../molecule/Avatar";
 
 interface Props {
   data: Product[];
@@ -52,12 +52,11 @@ const AllPosts = (props: Props) => {
           return {
             poster: (
               <div className="flex items-center gap-2">
-                <Image
-                  src={post?.user?.avatar || ""}
-                  alt={"image of " + post?.user?.name}
-                  width={20}
-                  height={20}
-                  className="aspect-square rounded-full object-cover"
+                <AppAvatar
+                  name={post?.user?.name}
+                  src={post?.user?.avatar}
+                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                  initialsClass="font-normal text-xs sm:text-xs"
                 />
                 <Link
                   href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + post.user?.id}

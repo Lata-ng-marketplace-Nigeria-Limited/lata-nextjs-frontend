@@ -20,7 +20,7 @@ import { toast } from "../ui/use-toast";
 import FormTopLabel from "../input/FormTopLabel";
 
 interface Props {
-  setShowAddSellerModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowAddStaffModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AddStaffForm = (props: Props) => {
@@ -85,7 +85,7 @@ const AddStaffForm = (props: Props) => {
         duration: 15000,
       });
       console.log("response", response);
-      props.setShowAddSellerModal?.(false);
+      props.setShowAddStaffModal?.(false);
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<z.infer<typeof staffSignUpSchema>> =
         error;
@@ -253,6 +253,16 @@ const AddStaffForm = (props: Props) => {
                   onClick={() => setFormState("two")}
                 >
                   Continue
+                </Button>
+              </div>
+              <div className={"flex w-full flex-col gap-y-2"}>
+                <Button
+                  type={"button"}
+                  format={"secondary"}
+                  className={"w-full"}
+                  onClick={() => props.setShowAddStaffModal?.(false)}
+                >
+                  Cancel
                 </Button>
               </div>
             </div>

@@ -17,6 +17,7 @@ export interface CreateProductApiInput {
   selectedImage?: string;
   deleteImages?: string;
   selectedCategory?: string;
+  userId?: string;
 }
 
 interface CreateProductApiOutput {

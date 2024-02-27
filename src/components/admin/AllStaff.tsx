@@ -10,6 +10,8 @@ import AddStaffForm from "./AddStaffForm";
 import ResizableDialog from "./ResizableDialog";
 import Link from "next/link";
 import Image from "next/image";
+import AppAvatar from "../molecule/Avatar";
+import { DASHBOARD_STAFF_ROUTE } from "@/constants/routes";
 
 interface Props {
   data: User[];
@@ -61,14 +63,15 @@ const AllStaff = (props: Props) => {
           return {
             name: (
               <div className="flex items-center gap-2">
-                <Image
-                  src={staff?.avatar || ""}
-                  alt={"image of " + staff?.name}
-                  width={20}
-                  height={20}
-                  className="aspect-square rounded-full object-cover"
+                <AppAvatar
+                  name={staff?.name}
+                  src={staff?.avatar}
+                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                  initialsClass="font-normal text-xs sm:text-xs"
                 />
-                <Link href={"#"}>{staff?.name}</Link>
+                <Link href={`${DASHBOARD_STAFF_ROUTE}/${staff.id}`}>
+                  {staff?.name}
+                </Link>
               </div>
             ),
             location: staff?.address,
@@ -86,7 +89,7 @@ const AllStaff = (props: Props) => {
         isShown={showAddStaffModal}
         setIsShown={setShowAddStaffModal}
       >
-        <AddStaffForm setShowAddSellerModal={setShowAddStaffModal} />
+        <AddStaffForm setShowAddStaffModal={setShowAddStaffModal} />
       </ResizableDialog>
     </>
   );

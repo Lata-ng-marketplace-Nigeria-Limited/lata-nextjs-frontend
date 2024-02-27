@@ -20,7 +20,7 @@ export default async function Protected({
   };
 }) {
   const session = await getServerSession(authConfig);
-  if (!session || !session.user || (session.role === "BUYER" || session.role !== "SELLER"   )) {
+  if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }
 
@@ -33,9 +33,7 @@ export default async function Protected({
       <Suspense>
         <GetUser />
       </Suspense>
-      <Suspense fallback={<h2>Loading...</h2>}>
-        <AllStaff data={response.data} meta={response.meta} />
-      </Suspense>
+      <AllStaff data={response.data} meta={response.meta} />
     </div>
   );
 }

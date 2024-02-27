@@ -12,14 +12,15 @@ import BadgeWithCount from "../atom/BadgeWithCount";
 import { IBadgeVariants } from "../atom/Badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
-import Image from "next/image";
+import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
+import AppAvatar from "../molecule/Avatar";
 
 interface Props {
   data: User[];
   meta: FetchMeta;
   countVerifiedSellers?: number;
   countUnverifiedSellers?: number;
+  usersWithNoUploadsCount?: number;
 }
 const AllSellers = (props: Props) => {
   const [showAddSellerModal, setShowAddSellerModal] = useState(false);
@@ -38,17 +39,17 @@ const AllSellers = (props: Props) => {
   useEffect(() => {
     const filter = props.data.filter(
       (seller) =>
-        // search by nam
-        seller?.name.toLowerCase().includes(search) ||
+        // search by name
+        seller?.name?.toLowerCase().includes(search) ||
         // search by manager
-        (seller?.meta as IAddedUserMeta)?.manager?.name
-          .toLowerCase()
+        ((seller?.meta as IAddedUserMeta) || {})?.manager?.name
+          ?.toLowerCase()
           .includes(search) ||
         // search by location
-        (seller?.address as string).toLowerCase().includes(search) ||
+        seller?.address?.toLowerCase().includes(search) ||
         // search by reg date
         DateTime.fromISO(seller?.createdAt)
-          .toFormat("dd LLL, yyyy")
+          ?.toFormat("dd LLL, yyyy")
           .toLowerCase()
           .includes(search),
     );
@@ -96,7 +97,7 @@ const AllSellers = (props: Props) => {
         />
 
         <BadgeWithCount
-          count={props?.countUnverifiedSellers || 0}
+          count={props?.usersWithNoUploadsCount || 0}
           activeVariant={activeButtonVariant()}
           className="max-xs:text-[10px]"
           variant="normal"
@@ -117,15 +118,14 @@ const AllSellers = (props: Props) => {
           return {
             name: (
               <div className="flex items-center gap-2">
-                <Image
-                  src={seller?.avatar || ""}
-                  alt={"image of " + seller?.name}
-                  width={20}
-                  height={20}
-                  className="aspect-square rounded-full object-cover"
+                <AppAvatar
+                  name={seller?.name}
+                  src={seller?.avatar}
+                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                  initialsClass="font-normal text-xs sm:text-xs"
                 />
                 <Link
-                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id}
+                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
                   className="hover:text-primary"
                 >
                   {seller?.name}

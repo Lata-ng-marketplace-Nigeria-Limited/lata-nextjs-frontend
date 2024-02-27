@@ -79,7 +79,6 @@ const AddSellerForm = (props: Props) => {
         variant: "success",
         duration: 15000,
       });
-      console.log("response", response);
       props.setShowAddSellerModal?.(false);
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<
@@ -87,18 +86,18 @@ const AddSellerForm = (props: Props) => {
       > = error;
       const errorObj = getFormErrorObject(errorResponse);
 
-        if (errorObj) {
-          setLoading(false);
-          if (errorObj.file) setImageErrorMessage(errorObj.file);
-          const errorArray = Object.entries(errorObj);
-          errorArray.forEach(([key, value]) => {
-            setError(key as keyof z.infer<typeof sellerSignUpSchema>, {
-              type: "manual",
-              message: value,
-            });
+      if (errorObj) {
+        setLoading(false);
+        if (errorObj.file) setImageErrorMessage(errorObj.file);
+        const errorArray = Object.entries(errorObj);
+        errorArray.forEach(([key, value]) => {
+          setError(key as keyof z.infer<typeof sellerSignUpSchema>, {
+            type: "manual",
+            message: value,
           });
-          return;
-        }
+        });
+        return;
+      }
 
       setLoading(false);
       toast({
@@ -215,9 +214,6 @@ const AddSellerForm = (props: Props) => {
               isPassword
               disabled={loading}
               name={"field.name"}
-              // wrapperClass={cn({
-              //   hidden: shouldCompleteForm,
-              // })}
               errorMessage={errors.password?.message}
             />
           </FormTopLabel>
@@ -235,6 +231,16 @@ const AddSellerForm = (props: Props) => {
             className={"w-full"}
           >
             Create account
+          </Button>
+        </div>
+        <div className={"flex w-full flex-col gap-y-2"}>
+          <Button
+            type={"button"}
+            format={"secondary"}
+            className={"w-full"}
+            onClick={() => props.setShowAddSellerModal?.(false)}
+          >
+            Cancel
           </Button>
         </div>
       </div>

@@ -8,13 +8,14 @@ import { Plan } from "@/interface/payment";
 import { SessionData } from "@/interface/next-auth";
 import { useUserStore } from "@/store/states/userState";
 import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 
 export const useUser = () => {
   const { user, updateUser, clear, setUser } = useLocalStore();
   const [activePlan, setActivePlan] = useState<Plan>();
   const { data, status, update } = useSession();
   const isSocketConnected = useUserStore((state) => state.isSocketConnected);
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
 
   useEffect(() => {
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
@@ -93,6 +94,17 @@ export const useUser = () => {
             error: true,
             message: "Something went wrong",
           };
+        }
+
+        if (authCallback.isBlocked) {
+          toast({
+            title: "Account Locked",
+            description:
+              "You have been temporarily locked. Please fill out the form on the redirected page to unlock your account.",
+            variant: "destructive",
+          });
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          push("/blocked");
         }
 
         if (isUpgrading) {

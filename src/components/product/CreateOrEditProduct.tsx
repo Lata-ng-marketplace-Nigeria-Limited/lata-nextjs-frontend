@@ -11,9 +11,10 @@ import { FindAProductData } from "@/interface/products";
 
 interface Props {
   data?: FindAProductData | null;
+  sellerId?: string;
 }
 
-export const CreateOrEditProduct = ({ data }: Props) => {
+export const CreateOrEditProduct = ({ data, sellerId }: Props) => {
   const [productInfo, setProductInfo] = useState<ProductFormProductInfo>({
     name: "",
     description: "",
@@ -30,13 +31,13 @@ export const CreateOrEditProduct = ({ data }: Props) => {
     <div
       className={cn(`
         flex
-        flex-col
-        sm:flex-row
-        gap-x-4
-        gap-y-6
-        justify-between
         h-full
         w-full
+        flex-col
+        justify-between
+        gap-x-4
+        gap-y-6
+        sm:flex-row
       `)}
     >
       <NewProductPreview
@@ -49,6 +50,7 @@ export const CreateOrEditProduct = ({ data }: Props) => {
         setSelectedPhotos={setSelectedPhotos}
         setProductInfo={setProductInfo}
         product={data?.product}
+        sellerId={sellerId}
       />
     </div>
   );

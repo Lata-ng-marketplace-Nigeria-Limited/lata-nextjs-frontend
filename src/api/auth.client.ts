@@ -31,7 +31,7 @@ type RegisterApiInput = {
   name: string;
   email: string;
   password: string;
-} & (BuyerRegisterApiInput | SellerRegisterApiInput | StaffRegisterApiInput );
+} & (BuyerRegisterApiInput | SellerRegisterApiInput | StaffRegisterApiInput);
 
 export const registerApi = async (
   data: RegisterApiInput,

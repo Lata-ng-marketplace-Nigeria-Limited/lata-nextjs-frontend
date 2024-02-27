@@ -56,7 +56,7 @@ const BadgeWithCount = (props: Props) => {
           "text-success":
             props.variant === "success" && props.variant !== props.activeVariant,
         },
-        "cursor-pointer capitalize",
+        "cursor-pointer capitalize outline-0",
       )}
       onClick={props.onClick}
     >{`${props.text}(${props.count || "0"})`}</Button>

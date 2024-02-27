@@ -8,8 +8,8 @@ import TableWithRowGaps from "../table/TableWithRowGaps";
 import { ISubscribedUser } from "@/interface/user";
 import { DateTime } from "luxon";
 import { formatPrice } from "@/utils";
-import Badge from "@components/atom/Badge";
-import { DASHBOARD_SELLER_PROFILE_ROUTE } from "@/constants/routes";
+import Badge, { IBadgeVariants } from "@components/atom/Badge";
+import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
 import HeaderText from "../atom/HeaderText";
 import SearchInput from "./SearchInput";
 
@@ -18,6 +18,7 @@ interface Props {
   activeSubscriptionCount: number;
   dueSubscriptionCount: number;
   newSubscriptionCount: number;
+  returningSubscribersCount: number;
   transactionStatus?: string;
   meta: FetchMeta;
 }
@@ -52,7 +53,7 @@ const PaidSellers = (props: Props) => {
   const params = new URLSearchParams(searchParams);
 
   const handleClick = (
-    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED",
+    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "RETURNING",
   ) => {
     if (transactionStatus) {
       params.set("transactionStatus", transactionStatus);
@@ -66,51 +67,51 @@ const PaidSellers = (props: Props) => {
     return DateTime.fromISO(date).toFormat("dd LLL, yyyy");
   };
 
-  const activeButtonVariant = () => {
-    if (params.get("transactionStatus") === "NEW") {
-      return "primary";
-    } else if (params.get("transactionStatus") === "ACTIVE") {
-      return "success";
-    } else if (params.get("transactionStatus") === "UNSUBSCRIBED") {
-      return "normal";
-    } else if (params.get("transactionStatus") === "DUE") {
-      return "warning";
-    } else {
-      return "success";
+  const getBadgeVariant = (): IBadgeVariants => {
+    switch (params.get("transactionStatus")) {
+      case "NEW":
+        return "primary";
+      case "ACTIVE":
+        return "success";
+      case "RETURNING":
+        return "normal";
+      case "DUE":
+        return "danger";
+      default:
+        return "success";
     }
   };
 
-  const activeSideButton = (
-    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "UNSUBSCRIBED",
-  ) => {
-    if (params.get("transactionStatus") === "NEW") {
-      return "primary";
-    } else if (params.get("transactionStatus") === "ACTIVE") {
-      return "success";
-    } else if (params.get("transactionStatus") === "UNSUBSCRIBED") {
-      return "normal";
-    } else if (params.get("transactionStatus") === "DUE") {
-      return "danger";
+  const sideBtnDisplay = () => {
+    const status = params.get("transactionStatus");
+    return (status?.toLowerCase() === "active" ? "on" : status) || "active";
+  };
+
+  const duration = (seller: ISubscribedUser) => {
+    if (seller?.subscription_paid_at && seller?.subscription_expiry_date) {
+      return (
+        <p>
+          {formatDate(seller?.subscription_paid_at)} -{" "}
+          {formatDate(seller?.subscription_expiry_date)}
+        </p>
+      );
+    } else if (
+      !seller?.subscription_paid_at &&
+      seller?.subscription_expiry_date
+    ) {
+      return <p>{formatDate(seller?.subscription_expiry_date)}</p>;
     } else {
-      return "success";
+      return "Due";
     }
   };
 
   return (
     <div>
       <div className="mb-7 flex justify-end">
-        <SearchInput
-          placeholder={"Search Sellers"}
-          wrapperClass="max-w-max"
-          setSearch={setSearch}
-        />
-      </div>
-      <div className="mb-7 flex items-center justify-between">
-        <HeaderText title>{"Paid Sellers"}</HeaderText>
-        <div className="flex justify-end gap-4 sl:gap-6">
+        <div className="flex justify-end gap-4 overflow-x-auto sl:gap-6">
           <BadgeWithCount
             count={props.activeSubscriptionCount}
-            activeVariant={activeButtonVariant()}
+            activeVariant={getBadgeVariant()}
             className="max-xs:text-[10px]"
             text="active"
             variant="success"
@@ -119,7 +120,7 @@ const PaidSellers = (props: Props) => {
 
           <BadgeWithCount
             count={props.newSubscriptionCount}
-            activeVariant={activeButtonVariant()}
+            activeVariant={getBadgeVariant()}
             className="max-xs:text-[10px]"
             variant="primary"
             text="new"
@@ -127,14 +128,31 @@ const PaidSellers = (props: Props) => {
           />
 
           <BadgeWithCount
+            count={props.returningSubscribersCount}
+            activeVariant={getBadgeVariant()}
+            className="max-xs:text-[10px]"
+            text="returning"
+            variant="normal"
+            onClick={() => handleClick("RETURNING")}
+          />
+
+          <BadgeWithCount
             count={props.dueSubscriptionCount}
-            activeVariant={activeButtonVariant()}
+            activeVariant={getBadgeVariant()}
             className="max-xs:text-[10px]"
             text="due"
             variant="danger"
             onClick={() => handleClick("DUE")}
           />
         </div>
+      </div>
+      <div className="mb-7 flex items-center justify-between">
+        <HeaderText title>{"Paid Sellers"}</HeaderText>
+        <SearchInput
+          placeholder={"Search Sellers"}
+          wrapperClass="max-w-max"
+          setSearch={setSearch}
+        />
       </div>
 
       <div>
@@ -148,20 +166,11 @@ const PaidSellers = (props: Props) => {
                   className="flex cursor-pointer items-center gap-2"
                   onClick={() =>
                     router.push(
-                      DASHBOARD_SELLER_PROFILE_ROUTE + "/" + seller?.id,
+                      DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id,
                     )
                   }
                 >
-                  <Badge
-                    variant={activeSideButton(seller?.subscription_status)}
-                    text={
-                      seller?.subscription_status === "ACTIVE" ||
-                      (seller?.subscription_status === "NEW" &&
-                        params.get("transactionStatus") === "ACTIVE")
-                        ? "on"
-                        : seller?.subscription_status
-                    }
-                  />
+                  <Badge variant={getBadgeVariant()} text={sideBtnDisplay()} />
                   <p className="capitalize">{seller?.name}</p>
                 </div>
               ),
@@ -178,14 +187,7 @@ const PaidSellers = (props: Props) => {
                   "-"
                 ),
               product: seller?.subscription_name || "-",
-              duration: seller?.subscription_paid_at ? (
-                <p>
-                  {formatDate(seller?.subscription_paid_at)} -{" "}
-                  {formatDate(seller?.subscription_expiry_date)}
-                </p>
-              ) : (
-                "Due"
-              ),
+              duration: duration(seller),
               amount: <p>{formatPrice(seller?.transaction_actual_amount)}</p>,
             };
           })}
