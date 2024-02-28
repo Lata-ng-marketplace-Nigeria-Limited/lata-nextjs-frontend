@@ -11,6 +11,7 @@ import { loginApi, resendOtpApi } from "@/api/auth";
 import { useFastLocalStore } from "@/store/states/localStore";
 import { useUser } from "@/hooks/useUser";
 import ResendEmail from "@molecule/ResendEmail";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -22,6 +23,7 @@ export const LoginForm = () => {
   const [resendError, setResendError] = useState("");
   const { loginUser } = useUser();
   const { setSelectedRole } = useFastLocalStore();
+  const { push } = useRouter();
 
   useEffect(() => {
     setSelectedRole(undefined);
@@ -41,6 +43,11 @@ export const LoginForm = () => {
       if (loginRes.error) {
         setErrorMessage(loginRes.error.errorInfo);
         setLoading(false);
+        return;
+      }
+
+      if (loginRes.isBlocked) {
+        push("/blocked");
         return;
       }
 

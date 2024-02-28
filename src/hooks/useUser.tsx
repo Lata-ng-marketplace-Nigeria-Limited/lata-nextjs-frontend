@@ -93,9 +93,8 @@ export const useUser = () => {
           return {
             error: true,
             message: "Something went wrong",
-          }
+          };
         }
-
 
         if (isUpgrading) {
           setUser(getUserFromAuthCallback(authCallback));
@@ -110,7 +109,7 @@ export const useUser = () => {
           return {
             error: false,
             message: "Success",
-          } 
+          };
         }
 
         if (authCallback.isBlocked) {
@@ -122,7 +121,10 @@ export const useUser = () => {
           });
           await new Promise((resolve) => setTimeout(resolve, 2000));
           push("/blocked");
-          return;
+          return {
+            error: true,
+            message: "Account Blocked",
+          };
         }
 
         setUser(getUserFromAuthCallback(authCallback));
