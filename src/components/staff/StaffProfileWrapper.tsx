@@ -79,8 +79,8 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
             />
             <UserDetail
               hasGreyDescription
-              title="First Bank"
-              description={data?.bankAccount?.accountNumber || ""}
+              title="Bank name"
+              description={data?.bankAccount?.bankName || ""}
             />
             <UserDetail
               hasGreyDescription
