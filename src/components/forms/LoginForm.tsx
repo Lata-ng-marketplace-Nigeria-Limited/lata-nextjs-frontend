@@ -12,6 +12,7 @@ import { useFastLocalStore } from "@/store/states/localStore";
 import { useUser } from "@/hooks/useUser";
 import ResendEmail from "@molecule/ResendEmail";
 import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
 export const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,8 +48,14 @@ export const LoginForm = () => {
       }
 
       if (loginRes.isBlocked) {
-        push("/blocked");
-        return;
+        toast({
+          title: "Account Locked",
+          description:
+            "You have been temporarily locked. Please fill out the form on the redirected page to unlock your account.",
+          variant: "destructive",
+        });
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        push("/blocked");        return;
       }
 
       if (!loginRes.isEmailVerified) {
