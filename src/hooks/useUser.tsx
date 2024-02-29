@@ -7,7 +7,7 @@ import { authCallbackApi } from "@/api/auth";
 import { Plan } from "@/interface/payment";
 import { SessionData } from "@/interface/next-auth";
 import { useUserStore } from "@/store/states/userState";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 
 export const useUser = () => {
@@ -26,6 +26,10 @@ export const useUser = () => {
       (user && new Date() > new Date(user?.expires_at)) ||
       (user && !user?.expires_at)
     ) {
+      logoutUser(clear, true);
+    }
+
+    if (!user) {
       logoutUser(clear, true);
     }
   }, [user?.plan, user?.subscriptionStatus]);
