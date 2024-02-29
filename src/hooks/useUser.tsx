@@ -7,7 +7,7 @@ import { authCallbackApi } from "@/api/auth";
 import { Plan } from "@/interface/payment";
 import { SessionData } from "@/interface/next-auth";
 import { useUserStore } from "@/store/states/userState";
-import { redirect, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 
 export const useUser = () => {
@@ -21,13 +21,9 @@ export const useUser = () => {
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
-    console.log(data);
-    const nextAuthExpiresAt = data?.expires;
-    console.log(nextAuthExpiresAt);
 
     if (
       (user && new Date() > new Date(user?.expires_at)) ||
-      new Date() > new Date(nextAuthExpiresAt || "") ||
       (user && !user?.expires_at)
     ) {
       logoutUser(clear, true);

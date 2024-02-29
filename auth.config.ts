@@ -62,7 +62,6 @@ export const authConfig: NextAuthOptions = {
       } as any;
     },
     async session({ session, token }) {
-      // console.log("session", token, user);
       session.user = token as any;
       session.role = (token.role as any) || "";
       session.token = (token.token as string) || undefined;

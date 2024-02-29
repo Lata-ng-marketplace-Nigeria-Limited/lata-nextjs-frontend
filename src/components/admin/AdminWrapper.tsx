@@ -70,8 +70,8 @@ export default async function AdminDashboardWrapper(props: Props) {
         </HeaderText>
 
         <RecentPosts
-          reposts={response?.recentPosts.data}
-          meta={response.recentPosts.meta}
+          reposts={response?.recentPosts?.data}
+          meta={response.recentPosts?.meta}
         />
       </div>
     </div>
