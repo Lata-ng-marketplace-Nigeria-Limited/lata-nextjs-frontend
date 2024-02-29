@@ -21,9 +21,13 @@ export const useUser = () => {
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
+    console.log(data);
+    const nextAuthExpiresAt = data?.expires;
+    console.log(nextAuthExpiresAt);
 
     if (
       (user && new Date() > new Date(user?.expires_at)) ||
+      new Date() > new Date(nextAuthExpiresAt || "") ||
       (user && !user?.expires_at)
     ) {
       logoutUser(clear, true);
