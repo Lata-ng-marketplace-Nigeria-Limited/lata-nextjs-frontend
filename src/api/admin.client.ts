@@ -41,8 +41,8 @@ export const blockUserApi = async ({
   userId: string;
 }): Promise<{ success: boolean; message: string }> => {
   try {
-    // const response = await $http.get(`/users/block/${userId}`);
-    const response = await $http.post(`/block`, { userId });
+    const response = await $http.get(`/users/block/${userId}`);
+    // const response = await $http.post(`/block`, { userId });
 
     return response.data;
   } catch (error: any) {
