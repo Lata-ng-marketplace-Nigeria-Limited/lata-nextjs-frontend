@@ -6,14 +6,13 @@ import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import CheckBoxPurple from "@components/atom/icons/CheckBoxPurple";
 import { getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
-import { User } from "@/interface/user";
 
 interface Props {
   staffId: string;
-  data: User;
-  totalSellers?: number;
 }
-const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
+const StaffProfileWrapper = async ({ staffId }: Props) => {
+  const staffResponse = await getStaffApi({ staffId });
+
   const grades = [
     { grade: "Grade A", price: "500k" },
     { grade: "Grade B", price: "399k" },
@@ -34,9 +33,9 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
       <div className="sm:flex sm:gap-8">
         <div className="sm:basis-[70%]">
           <UserBanner
-            imgSrc={data?.avatar}
+            imgSrc={staffResponse?.data?.avatar}
             btnText="Send Message"
-            name={data?.name}
+            name={staffResponse?.data?.name}
           />
 
           <UserDetailContainer heading="About">
@@ -44,29 +43,33 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
               <UserDetail
                 hasGreyTitle
                 title="Email"
-                description={data?.email}
+                description={staffResponse?.data?.email}
               />
               <UserDetail
                 hasGreyTitle
                 title="Sellers"
-                description={totalSellers?.toLocaleString() || "O"}
+                description={
+                  staffResponse?.totalSellers?.toLocaleString() || "O"
+                }
               />
               <UserDetail
                 hasGreyTitle
                 title="Phone"
-                description={data?.phoneNumber || "No Phone number"}
+                description={
+                  staffResponse?.data?.phoneNumber || "No Phone number"
+                }
               />
               <UserDetail
                 hasGreyTitle
                 title="Admin"
-                description={data?.meta?.manager?.name || "No Admin"}
+                description={staffResponse?.admin?.name || "No Admin"}
               />
             </div>
           </UserDetailContainer>
 
           <UserDetailContainer heading="Address">
             <p className="font-normal text-grey6">
-              {data?.address || "No address"}
+              {staffResponse?.data?.address || "No address"}
             </p>
           </UserDetailContainer>
         </div>
@@ -75,20 +78,25 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
             <UserDetail
               hasGreyDescription
               title="Account number"
-              description={data?.bankAccount?.accountNumber || ""}
+              description={
+                staffResponse?.data?.bankAccount?.accountNumber || ""
+              }
             />
             <UserDetail
               hasGreyDescription
               title="Bank name"
-              description={data?.bankAccount?.bankName || ""}
+              description={staffResponse?.data?.bankAccount?.bankName || ""}
             />
             <UserDetail
               hasGreyDescription
               title="Account name"
-              description={data?.bankAccount?.accountName || ""}
+              description={staffResponse?.data?.bankAccount?.accountName || ""}
             />
           </UserDetailContainer>
-          <StaffBtnActions staffId={staffId} staffName={data?.name} />
+          <StaffBtnActions
+            staffId={staffId}
+            staffName={staffResponse?.data?.name}
+          />
         </div>
       </div>
       <div>
@@ -97,37 +105,37 @@ const StaffProfileWrapper = async ({ staffId, data, totalSellers }: Props) => {
           <AnalyticsTopCards
             isTotalViews
             title="Commission"
-            description="25% of your total sales"
+            description="20% of your total sales"
             isClickable
-            number={"25,000"}
+            number={"0"}
           />
           <AnalyticsTopCards
             title="Allowance"
-            description="#5K for every two sales and above"
+            description="#5K for every three sales and above"
             isClickable
-            number={"#5,000"}
+            number={"0"}
           />
           <AnalyticsTopCards
             title="Grade pay"
             description="Salary pay for meeting your grade point"
             isClickable
-            number={"#100,000"}
+            number={"0"}
           />
           <AnalyticsTopCards
             title="Total sales"
             description="Total sales for the month of August"
             isClickable
-            number={"#120k"}
+            number={"0"}
           />
         </AnalyticsTopCardsHOC>
       </div>
       <UserDetailContainer heading="Grades">
         <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-4 lg:grid-cols-5 lg:gap-1">
-          {grades.map(({ grade, price }, index) => (
+          {grades?.map((grade, index) => (
             <div className="flex items-center gap-3" key={index}>
               <CheckBoxPurple />
               <p className="text-lg font-normal">
-                {grade}, {price}
+                Grade {grade?.grade}, {grade?.price}
               </p>
             </div>
           ))}

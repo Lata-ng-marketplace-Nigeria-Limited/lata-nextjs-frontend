@@ -8,6 +8,7 @@ import { unstable_noStore } from "next/cache";
 
 interface IGetStaffApi {
   data: User;
+  admin: User;
   message?: string;
   success?: boolean;
   isError?: boolean;

@@ -41,6 +41,7 @@ export interface User {
   totalSubscriptions?: number;
   bankAccount?: BankAccount;
   isBlocked?: boolean;
+  managerName?: string;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";

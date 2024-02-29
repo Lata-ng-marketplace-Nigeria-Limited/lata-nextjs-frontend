@@ -250,7 +250,10 @@ export const logoutUser = async (
   });
 };
 
-export function formatNumber(num: number) {
+export function formatNumber(num: number, abbThousand?: boolean) {
+  if (num > 1e3 && abbThousand) {
+    return (num / 1e3).toFixed(0) + "k";
+  }
   if (num < 1000000) {
     return num.toLocaleString(); // Display the number with commas for thousands separator
   }

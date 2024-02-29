@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
-import { IAddedUserMeta, User } from "@/interface/user";
+import { User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
 import TableWithRowGaps from "../table/TableWithRowGaps";
 import TableTopArea from "./TableTopArea";
 import AddStaffForm from "./AddStaffForm";
 import ResizableDialog from "./ResizableDialog";
 import Link from "next/link";
-import Image from "next/image";
 import AppAvatar from "../molecule/Avatar";
 import { DASHBOARD_STAFF_ROUTE } from "@/constants/routes";
 
@@ -30,13 +29,11 @@ const AllStaff = (props: Props) => {
     const filter = props.data.filter(
       (staff) =>
         // search by name
-        staff?.name.toLowerCase().includes(search) ||
+        staff?.name?.toLowerCase().includes(search) ||
         // search by admin
-        (staff?.meta as IAddedUserMeta)?.manager?.name
-          .toLowerCase()
-          .includes(search) ||
+        staff?.managerName?.toLowerCase().includes(search) ||
         // search by location
-        (staff?.address as string).toLowerCase().includes(search) ||
+        (staff?.address || "").toLowerCase().includes(search) ||
         // search by reg date
         DateTime.fromISO(staff?.createdAt)
           .toFormat("dd LLL, yyyy")
@@ -78,7 +75,7 @@ const AllStaff = (props: Props) => {
             "reg Date": DateTime.fromISO(staff?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            admin: (staff?.meta as IAddedUserMeta)?.manager?.name || "-",
+            admin: staff?.managerName || "-",
           };
         })}
         usePaginate
