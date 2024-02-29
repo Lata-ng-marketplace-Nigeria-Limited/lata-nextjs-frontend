@@ -18,8 +18,6 @@ async function Page({
     redirect("/");
   }
 
-  const response = await getStaffApi({ staffId });
-
   return (
     <div>
       <Suspense>
@@ -27,11 +25,7 @@ async function Page({
       </Suspense>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <StaffProfileWrapper
-          data={response.data}
-          staffId={staffId}
-          totalSellers={response?.totalSellers || 0}
-        />
+        <StaffProfileWrapper staffId={staffId} />
       </Suspense>
     </div>
   );

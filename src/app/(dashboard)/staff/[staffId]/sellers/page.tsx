@@ -1,4 +1,3 @@
-import { getStaffApi } from "@/api/staff";
 import { GetUser } from "@/components/atom/GetUser";
 import StaffProfileWrapper from "@/components/staff/StaffProfileWrapper";
 import { authConfig } from "@authConfig";
@@ -17,7 +16,6 @@ async function Page({
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }
-  const response = await getStaffApi({ staffId });
 
   return (
     <div>
@@ -26,11 +24,7 @@ async function Page({
       </Suspense>
 
       <Suspense fallback={<p>Loading...</p>}>
-        <StaffProfileWrapper
-          data={response.data}
-          staffId={staffId}
-          totalSellers={response?.totalSellers || 0}
-        />
+        <StaffProfileWrapper staffId={staffId} />
       </Suspense>
     </div>
   );
