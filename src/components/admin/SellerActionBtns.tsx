@@ -3,12 +3,16 @@
 import React from "react";
 import ChangeManager from "./ChangeManager";
 import Button from "../atom/Button";
-import { ADMIN_UPLOAD_PRODUCT_ROUTE } from "@/constants/routes";
+import {
+  ADMIN_UPLOAD_PRODUCT_ROUTE,
+  ADMIN_VERIFY_TRANSFERS_ROUTE,
+} from "@/constants/routes";
 import { useRouter } from "next/navigation";
 import { User } from "@/interface/user";
 import ResizableDialog from "./ResizableDialog";
 import BlockUser from "./BlockUser";
 import DeleteUser from "./DeleteUser";
+import { useBlockedUser } from "@/store/states/localStore";
 
 interface Props {
   managers: User[];
@@ -21,6 +25,7 @@ const SellerActionBtns = (props: Props) => {
   const [openModal, setOpenModal] = React.useState(false);
   const [isBlockUser, setIsBlockUser] = React.useState(false);
   const [isDeleteUserModal, setIsDeleteUserModal] = React.useState(false);
+  const { hasBlockedUser } = useBlockedUser();
 
   return (
     <div className="mb-6 rounded-xl border border-grey2 p-6">
@@ -34,7 +39,7 @@ const SellerActionBtns = (props: Props) => {
       <Button
         format="secondary"
         className="mb-8 block w-full"
-        // onClick={() => push(DASHBOARD_SUBSCRIPTIONS_ROUTE)}
+        onClick={() => push(ADMIN_VERIFY_TRANSFERS_ROUTE)}
       >
         Activate Subscription
       </Button>
@@ -50,7 +55,7 @@ const SellerActionBtns = (props: Props) => {
         className="mb-8 block w-full"
         onClick={() => setIsBlockUser(!isBlockUser)}
       >
-        Block User
+        {hasBlockedUser ? "Unblock" : "Block"} User
       </Button>
       <Button
         format="danger"
