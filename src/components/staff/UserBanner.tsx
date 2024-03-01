@@ -4,14 +4,27 @@ import Image, { StaticImageData } from "next/image";
 import React from "react";
 import Button from "../atom/Button";
 import AppAvatar from "../molecule/Avatar";
+import { useRouter } from "next/navigation";
+import { ADMIN_ALL_SELLERS_ROUTE, DASHBOARD_MY_SHOP_ROUTE } from "@/constants/routes";
+import { User } from "@/interface/user";
 
 interface Props {
   name: string;
   imgSrc: string | undefined;
   btnText: string;
+  role: User['role']
+  userId?: string;
   onBtnClick?: () => void;
 }
 const UserBanner = (props: Props) => {
+  const {push} = useRouter()
+
+  const handleBtnClick = () => {
+    if(props.role === "SELLER"){
+      push(`${ADMIN_ALL_SELLERS_ROUTE}/${props.userId}/shop`)
+    }
+  }
+
   return (
     <div className="mb-6 rounded-xl border border-grey2 p-4 xlg:p-6">
       <div className="h-[7rem] w-full rounded-t-xl bg-purp3 xlg:h-[9rem]"></div>
@@ -34,7 +47,7 @@ const UserBanner = (props: Props) => {
           <h2 className="mb-3 text-3xl font-medium text-grey10 max-xlg:hidden">
             {props.name}
           </h2>
-          <Button format="primary" onClick={props.onBtnClick}>
+          <Button format="primary" onClick={handleBtnClick}>
             {props.btnText}
           </Button>
         </div>

@@ -34,8 +34,10 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
         <div className="sm:basis-[70%]">
           <UserBanner
             name={response?.data?.name || "No name"}
+            role={response?.data?.role || ""}
             imgSrc={response?.data?.avatar}
-            btnText="Send Message to seller"
+            userId={response?.data?.id}
+            btnText="See shop"
           />
 
           <UserDetailContainer heading="About">
