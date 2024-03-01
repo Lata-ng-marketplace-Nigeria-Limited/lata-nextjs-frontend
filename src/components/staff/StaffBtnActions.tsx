@@ -5,6 +5,8 @@ import Button from "@components/atom/Button";
 import ResizableDialog from "../admin/ResizableDialog";
 import BlockUser from "../admin/BlockUser";
 import DeleteUser from "../admin/DeleteUser";
+import { DASHBOARD_STAFF_ROUTE } from "@/constants/routes";
+import { useRouter } from "next/navigation";
 
 interface Props {
   staffId: string;
@@ -14,11 +16,16 @@ interface Props {
 const StaffBtnActions = (props: Props) => {
   const [isBlockUser, setIsBlockUser] = React.useState(false);
   const [isDeleteUserModal, setIsDeleteUserModal] = React.useState(false);
+  const { push } = useRouter();
 
   return (
     <React.Fragment>
       <div className="mb-6 rounded-xl border border-grey2 p-6">
-        <Button format="primary" className="mb-8 block w-full">
+        <Button
+          format="primary"
+          className="mb-8 block w-full"
+          onClick={() => push(`${DASHBOARD_STAFF_ROUTE}/${props.staffId}/sellers`)}
+        >
           See Sellers
         </Button>
         <Button format="secondary" className="mb-8 block w-full">
