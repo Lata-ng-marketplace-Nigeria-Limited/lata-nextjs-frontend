@@ -75,7 +75,7 @@ export const authCallbackApi = async (
     if (!res.ok) {
       return null;
     }
-    return await res.json();
+    return await res?.json();
   } catch (error: any) {
     throw error.response || error;
   }
@@ -96,10 +96,10 @@ export const getUserLatestDataApi = async (): Promise<User | null> => {
       },
     });
 
-    if (!res.ok) {
+    if (!res?.ok) {
       return null;
     }
-    return await res.json();
+    return await res?.json();
   } catch (error: any) {
     throw error.response || error;
   }

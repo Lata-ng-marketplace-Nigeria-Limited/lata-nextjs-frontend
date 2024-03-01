@@ -37,7 +37,7 @@ const RecentPosts = async (props: Props) => {
                 />
 
                 <Link
-                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + post.user?.id}
+                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + post?.user?.id}
                   className="font-semibold hover:text-primary"
                 >
                   {post?.user?.name}
@@ -48,7 +48,7 @@ const RecentPosts = async (props: Props) => {
             date: DateTime.fromISO(post?.createdAt).toFormat("dd LLL, yyyy"),
             posts: (
               <Link
-                href={`${DASHBOARD_PRODUCT_ROUTE}/${post.id}`}
+                href={`${DASHBOARD_PRODUCT_ROUTE}/${post?.id}`}
                 className="cursor-pointer text-primary"
               >
                 see post

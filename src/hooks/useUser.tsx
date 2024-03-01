@@ -22,14 +22,11 @@ export const useUser = () => {
       setActivePlan(user.plan);
     }
 
+
     if (
       (user && new Date() > new Date(user?.expires_at)) ||
       (user && !user?.expires_at)
     ) {
-      logoutUser(clear, true);
-    }
-
-    if (!user) {
       logoutUser(clear, true);
     }
   }, [user?.plan, user?.subscriptionStatus]);
