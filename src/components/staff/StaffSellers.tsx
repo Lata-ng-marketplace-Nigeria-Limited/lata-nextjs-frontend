@@ -1,100 +1,52 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { IAddedUserMeta, User } from "@/interface/user";
+import { User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
 import { DateTime } from "luxon";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import TableTopArea from "@components/admin/TableTopArea";
-import BadgeWithCount from "../atom/BadgeWithCount";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { IBadgeVariants } from "../atom/Badge";
+import AppAvatar from "../molecule/Avatar";
+import Link from "next/link";
+import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
 
 interface Props {
   data: User[];
+  staff?: User;
   meta: FetchMeta;
-  countVerifiedBuyers: number;
-  countUnverifiedBuyers: number;
 }
 const StaffSellers = (props: Props) => {
   const [showAddBuyerModal, setShowAddBuyerModal] = useState(false);
   const [filteredData, setFilteredData] = useState<User[]>(props.data);
   const [search, setSearch] = useState("");
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
 
   const handleAddBuyer = () => {
     setShowAddBuyerModal(!showAddBuyerModal);
   };
 
-  useEffect(() => {
-    const filter = props.data.filter(
-      (buyer) =>
-        // search by name
-        buyer?.name.toLowerCase().includes(search) ||
-        // search by location
-        (buyer?.address &&
-          (buyer?.address as string).toLowerCase().includes(search)) ||
-        //search by email
-        buyer?.email.toLowerCase().includes(search) ||
-        // search by reg date
-        DateTime.fromISO(buyer?.createdAt)
-          .toFormat("dd LLL, yyyy")
-          .toLowerCase()
-          .includes(search),
-    );
-    setFilteredData(filter);
-  }, [search, props.data]);
-
-  const params = new URLSearchParams(searchParams);
-
-  const activeButtonVariant = (): IBadgeVariants => {
-    if (params.get("verified") === "0") {
-      return "warning";
-    } else {
-      return "primary";
-    }
-  };
-
-  useEffect(() => {
-    if (!params.get("verified")) {
-      params.set("verified", "1");
-    }
-  }, []);
-
-  const handleClick = (verified: "0" | "1") => {
-    if (verified) {
-      params.set("verified", verified);
-    } else {
-      params.delete("verified", verified);
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-  };
+  // useEffect(() => {
+  //   const filter = props.data.filter(
+  //     (buyer) =>
+  //       // search by name
+  //       buyer?.name.toLowerCase().includes(search) ||
+  //       // search by location
+  //       (buyer?.address &&
+  //         (buyer?.address as string).toLowerCase().includes(search)) ||
+  //       //search by email
+  //       buyer?.email.toLowerCase().includes(search) ||
+  //       // search by reg date
+  //       DateTime.fromISO(buyer?.createdAt)
+  //         .toFormat("dd LLL, yyyy")
+  //         .toLowerCase()
+  //         .includes(search),
+  //   );
+  //   setFilteredData(filter);
+  // }, [search, props.data]);
 
   return (
     <div>
-      <div className="mb-7 flex justify-end gap-4 sl:gap-6">
-        <BadgeWithCount
-          count={props?.countVerifiedBuyers}
-          activeVariant={activeButtonVariant()}
-          className="max-xs:text-[10px]"
-          text="verified"
-          variant="primary"
-          onClick={() => handleClick("1")}
-        />
-
-        <BadgeWithCount
-          count={props?.countUnverifiedBuyers}
-          activeVariant={activeButtonVariant()}
-          className="max-xs:text-[10px]"
-          variant="warning"
-          text="unverified"
-          onClick={() => handleClick("0")}
-        />
-      </div>
       <TableTopArea
-        title="All Buyers"
+        title={props.staff?.name + " Sellers"}
         buttonText="+ Add Buyer"
         placeholder="Search buyers"
         onClick={handleAddBuyer}
@@ -102,14 +54,29 @@ const StaffSellers = (props: Props) => {
       />
       <TableWithRowGaps
         isClickable
-        tableData={filteredData.map((buyer) => {
+        tableData={props?.data?.map((seller) => {
           return {
-            name: buyer?.name,
-            email: buyer?.email,
-            "reg Date": DateTime.fromISO(buyer?.createdAt).toFormat(
+            name: (
+              <div className="flex items-center gap-2">
+                <AppAvatar
+                  name={seller?.name}
+                  src={seller?.avatar}
+                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                  initialsClass="font-normal text-xs sm:text-xs"
+                />
+                <Link
+                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
+                  className="hover:text-primary"
+                >
+                  {seller?.name}
+                </Link>
+              </div>
+            ),
+            location: seller?.address,
+            "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            phone: buyer?.phoneNumber || "-",
+            manager: props.staff?.name || "-",
           };
         })}
         usePaginate

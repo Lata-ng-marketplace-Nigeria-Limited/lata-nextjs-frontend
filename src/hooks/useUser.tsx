@@ -22,6 +22,7 @@ export const useUser = () => {
       setActivePlan(user.plan);
     }
 
+
     if (
       (user && new Date() > new Date(user?.expires_at)) ||
       (user && !user?.expires_at)
@@ -96,17 +97,6 @@ export const useUser = () => {
           };
         }
 
-        if (authCallback.isBlocked) {
-          toast({
-            title: "Account Locked",
-            description:
-              "You have been temporarily locked. Please fill out the form on the redirected page to unlock your account.",
-            variant: "destructive",
-          });
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          push("/blocked");
-        }
-
         if (isUpgrading) {
           setUser(getUserFromAuthCallback(authCallback));
           await handleUpdate(
@@ -120,6 +110,21 @@ export const useUser = () => {
           return {
             error: false,
             message: "Success",
+          };
+        }
+
+        if (authCallback.isBlocked) {
+          toast({
+            title: "Account Locked",
+            description:
+              "You have been temporarily locked. Please fill out the form on the redirected page to unlock your account.",
+            variant: "destructive",
+          });
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          push("/blocked");
+          return {
+            error: true,
+            message: "Account Blocked",
           };
         }
 

@@ -42,9 +42,7 @@ const AllSellers = (props: Props) => {
         // search by name
         seller?.name?.toLowerCase().includes(search) ||
         // search by manager
-        ((seller?.meta as IAddedUserMeta) || {})?.manager?.name
-          ?.toLowerCase()
-          .includes(search) ||
+        seller?.managerName?.toLowerCase().includes(search) ||
         // search by location
         seller?.address?.toLowerCase().includes(search) ||
         // search by reg date
@@ -136,7 +134,7 @@ const AllSellers = (props: Props) => {
             "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
               "dd LLL, yyyy",
             ),
-            manager: (seller?.meta as IAddedUserMeta)?.manager?.name || "-",
+            manager: seller?.managerName || "-",
           };
         })}
         usePaginate

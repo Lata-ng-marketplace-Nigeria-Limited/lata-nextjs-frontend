@@ -2,7 +2,7 @@
 
 import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
-import { Product } from "@/interface/products";
+import { IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
 import { getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
@@ -360,6 +360,55 @@ export const getProtectedSellerApi = async ({
         message: "Empty response",
       } as IGetProtectedSellerApi;
     }
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
+
+interface IFindAllSellerProductsApi {
+  data: Product[];
+  seller: User;
+  meta: FetchMeta;
+  message: string;
+  isEmpty: boolean;
+  statusCounts: IProductStatusCount;
+}
+
+export const findAllSellerProductsApi = async ({
+  page,
+  limit,
+  status,
+  sellerId,
+}: SearchQuery & {
+  sellerId: string;
+  status?: string;
+}): Promise<IFindAllSellerProductsApi> => {
+  try {
+    unstable_noStore();
+    const session = await getServerSession(authConfig);
+    const params = new URLSearchParams();
+
+    if (status) {
+      params.append("status", status || "");
+    }
+    params.append("page", String(page || 1));
+    params.append("limit", String(limit || 10));
+
+    const res = await fetch(
+      getApiUrl(`/admin/seller-shop/${sellerId}?${params.toString()}`),
+      {
+        headers: {
+          Authorization: "Bearer " + session?.token,
+        },
+        cache: "no-cache",
+      },
+    );
+
+    if (!res.ok) {
+      throw await res.json();
+    }
+
+    return await res.json();
   } catch (error: any) {
     throw error.response || error;
   }

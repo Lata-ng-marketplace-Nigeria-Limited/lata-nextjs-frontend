@@ -35,13 +35,12 @@ export const deleteFeedbackApi = async (
   }
 };
 
-export const blockUserApi = async ({
-  userId,
-}: {
+export const blockUserApi = async (payload: {
   userId: string;
+  block: boolean;
 }): Promise<{ success: boolean; message: string }> => {
   try {
-    const response = await $http.get(`/users/block/${userId}`);
+    const response = await $http.post("/block", payload);
     return response.data;
   } catch (error: any) {
     throw error.response;

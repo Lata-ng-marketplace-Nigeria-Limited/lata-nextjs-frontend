@@ -34,12 +34,12 @@ const AllBuyers = (props: Props) => {
     const filter = props.data.filter(
       (buyer) =>
         // search by name
-        buyer?.name.toLowerCase().includes(search) ||
+        buyer?.name?.toLowerCase().includes(search) ||
         // search by location
         (buyer?.address &&
-          (buyer?.address as string).toLowerCase().includes(search)) ||
+          (buyer?.address as string)?.toLowerCase().includes(search)) ||
         //search by email
-        buyer?.email.toLowerCase().includes(search) ||
+        buyer?.email?.toLowerCase().includes(search) ||
         // search by reg date
         DateTime.fromISO(buyer?.createdAt)
           .toFormat("dd LLL, yyyy")

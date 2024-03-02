@@ -29,13 +29,15 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
   };
 
   return (
-    <div>
-      <div className="sm:flex sm:gap-8">
-        <div className="sm:basis-[70%]">
+    <div className="">
+      <div className="sm:flex sm:justify-between gap-4 max-w-full">
+        <div className="sm:basis-[60%]">
           <UserBanner
             name={response?.data?.name || "No name"}
+            role={response?.data?.role || ""}
             imgSrc={response?.data?.avatar}
-            btnText="Send Message to seller"
+            userId={response?.data?.id}
+            btnText="See shop"
           />
 
           <UserDetailContainer heading="About">
@@ -78,7 +80,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
           </UserDetailContainer>
         </div>
 
-        <div className="sm:basis-[30%]">
+        <div className="sm:basis-[35%]">
           <UserDetailContainer heading="Posts">
             <UserDetail
               hasGreyDescription
