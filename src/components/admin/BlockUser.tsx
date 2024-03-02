@@ -25,7 +25,7 @@ const BlockUser = (props: Props) => {
       refresh();
     } else {
       toast({
-        title: "Something went wrong",
+        title: response.message || "Something went wrong",
         variant: "destructive",
       });
     }
