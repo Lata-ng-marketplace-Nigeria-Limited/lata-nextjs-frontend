@@ -16,7 +16,6 @@ import {
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import GoogleAnalytics from "../analytics/GoogleAnalytics";
 import { IEnv } from "@/interface/general";
-import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -64,21 +63,21 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig);
   return (
     <html lang="en">
-      <Head key="google-adsense">
+      <head key="google-adsense">
         <meta
           name="google-adsense-account"
           content={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
         />
-      </Head>
+      </head>
       <GoogleAnalytics
         GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS as IEnv}
       />
-      <Script
+      {/* <Script
         async
         src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
         crossOrigin="anonymous"
         strategy="lazyOnload"
-      />
+      /> */}
 
       <Script
         type="application/ld+json"

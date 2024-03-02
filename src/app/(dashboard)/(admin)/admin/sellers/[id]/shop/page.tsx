@@ -10,10 +10,6 @@ import { authConfig } from "@authConfig";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 import { findAllSellerProductsApi } from "@/api/admin";
 
-export const metadata: Metadata = {
-  title: "My Shop",
-};
-
 interface IPageProps {
   searchParams?: {
     page?: string;
@@ -21,6 +17,26 @@ interface IPageProps {
   };
   params: {
     id: string;
+  };
+}
+
+export async function generateMetadata({
+  searchParams,
+  params: { id },
+}: IPageProps): Promise<Metadata> {
+  const page = searchParams?.page || "";
+  const status = searchParams?.status || "";
+
+  const info = {
+    page,
+    status,
+    sellerId: id,
+  };
+
+  const products = await findAllSellerProductsApi(info);
+
+  return {
+    title: products?.seller?.name + " Shop",
   };
 }
 
