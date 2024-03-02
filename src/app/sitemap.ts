@@ -22,10 +22,24 @@ export default async function sitemap(): Promise<Sitemap> {
   const products: Sitemap =
     response?.trendingProducts?.map((product) => ({
       url: `https://lata.ng/product/${product?.id}`,
-      lastModified: new Date().toISOString(), // Ensure lastModified is a string
-      changeFrequency: "always",
-      priority: 1,
+      lastModified: new Date(product?.updatedAt),
+      changeFrequency: "daily",
+      priority: 0.8,
     })) || [];
 
-  return products;
+  return [
+    {
+      url: `https://lata.ng`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "daily",
+      priority: 1,
+    },
+    {
+      url: `https://lata.ng/about-us`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "daily",
+      priority: 0.6,
+    },
+    ...products,
+  ];
 }

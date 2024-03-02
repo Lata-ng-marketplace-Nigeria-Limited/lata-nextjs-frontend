@@ -16,6 +16,7 @@ import {
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import GoogleAnalytics from "../analytics/GoogleAnalytics";
 import { IEnv } from "@/interface/general";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     },
   },
   robots: {
-    index: false,
+    // index: false,
     follow: true,
     nocache: true,
     googleBot: {
@@ -63,6 +64,12 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig);
   return (
     <html lang="en">
+      <Head key="google-adsense">
+        <meta
+          name="google-adsense-account"
+          content={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
+        />
+      </Head>
       <GoogleAnalytics
         GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS as IEnv}
       />
@@ -88,7 +95,7 @@ export default async function RootLayout({
         id={"website-structured-data"}
       />
 
-      <body className={cn(inter.className, "antialiased h-full")}>
+      <body className={cn(inter.className, "h-full antialiased")}>
         <NextAuthProvider session={session as any}>{children}</NextAuthProvider>
         <Toaster />
         <SpeedInsights />
