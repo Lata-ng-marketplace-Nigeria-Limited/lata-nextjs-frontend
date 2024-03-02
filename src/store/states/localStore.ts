@@ -55,8 +55,8 @@ export const useLocalStore = create(
     {
       name: "lata.ng-async-store",
       storage: createStore(() => localForage as any),
-    }
-  )
+    },
+  ),
 );
 
 interface IFastLocalStore {
@@ -83,7 +83,26 @@ export const useFastLocalStore = create(
     {
       name: "lata.ng-fast-store",
       storage: createStore(() => localStorage),
-    }
-  )
+    },
+  ),
 );
 
+interface IBlockedUser {
+  hasBlockedUser: boolean;
+  setBlockUser: () => void;
+  unblockUser: () => void;
+}
+
+export const useBlockedUser = create(
+  persist<IBlockedUser>(
+    (set) => ({
+      hasBlockedUser: false,
+      setBlockUser: () => set({ hasBlockedUser: true }),
+      unblockUser: () => set({ hasBlockedUser: false }),
+    }),
+    {
+      name: "lata.ng-blocked-user",
+      storage: createStore(() => localStorage),
+    },
+  ),
+);

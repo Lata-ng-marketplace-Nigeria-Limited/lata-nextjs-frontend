@@ -36,6 +36,7 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
             imgSrc={staffResponse?.data?.avatar}
             btnText="Send Message"
             name={staffResponse?.data?.name}
+            role={staffResponse?.data?.role}
           />
 
           <UserDetailContainer heading="About">
