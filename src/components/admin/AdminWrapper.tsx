@@ -10,12 +10,15 @@ import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
 import { formatNumber } from "@/utils";
 import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
 import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
+// import { bonusApi } from "@/api/staff";
+import ProductInsights from "../analytics/ProductInsights";
 
 interface Props {
   username: string;
+  month: string;
 }
 export default async function AdminDashboardWrapper(props: Props) {
-  const response = await getAdminAnalyticsApi();
+  const response = await getAdminAnalyticsApi(props.month);
   const chartsData = await getAnalyticsClicksAndViews();
 
   return (
@@ -35,9 +38,11 @@ export default async function AdminDashboardWrapper(props: Props) {
       <AdminAnalyticsWrapper analyticsCount={response?.counts} />
 
       <div className="mb-8">
-        <HeaderText title className="mb-7 md:mb-7">
-          Analytics Chart
-        </HeaderText>
+        <ProductInsights
+          selectedMonth={props.month}
+          title="Analytics Chart"
+          titleClass="!text-sm md:!text-[1.1rem] text-grey10 font-semibold md:font-medium"
+        />
 
         <AnalyticsChartAreaHOC>
           <AnalyticsChart chartsData={chartsData} />
@@ -46,8 +51,9 @@ export default async function AdminDashboardWrapper(props: Props) {
             <AnalyticsSideCard
               title="Monthly Sales"
               titleClassName="text-success"
+              isMoney
               clicksCount={
-                "₦" + formatNumber(Number(response?.sales?.monthlySales)) || 0
+                formatNumber(Number(response?.sales?.monthlySales)) || 0
               }
               description={response?.sales?.month}
             />

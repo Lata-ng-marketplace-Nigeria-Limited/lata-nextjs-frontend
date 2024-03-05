@@ -31,11 +31,13 @@ export default async function Home({
     category?: string;
     subcategory?: string;
     page?: string;
+    month?: string;
   };
 }) {
   const session = await getServerSession(authConfig);
   const query = searchParams?.category || "";
   const subcategory = searchParams?.subcategory || "";
+  const selectedMonth = searchParams?.month || "";
 
   return (
     <main className="">
@@ -54,7 +56,10 @@ export default async function Home({
         </>
       ) : (
         <Suspense fallback={<p>Loading...</p>}>
-          <AdminDashboardWrapper username={session?.user?.name || "Admin"} />
+          <AdminDashboardWrapper
+            username={session?.user?.name || "Admin"}
+            month={selectedMonth}
+          />
         </Suspense>
       )}
     </main>
