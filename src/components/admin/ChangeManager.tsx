@@ -71,13 +71,13 @@ const ChangeManager = (props: Props) => {
         {filteredManagers.length > 0 ? (
           filteredManagers.map((manager) => (
             <div
-              key={manager.id}
+              key={manager?.id}
               onClick={() => setSelectedManager(manager)}
               className={cn(
                 "mb-4 flex cursor-pointer items-center gap-3 rounded-md hover:bg-purp1",
                 {
                   "bg-primary text-white hover:bg-primary hover:text-white":
-                    selectedManager?.name === manager.name,
+                    selectedManager?.name === manager?.name,
                 },
               )}
             >

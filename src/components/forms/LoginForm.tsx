@@ -55,7 +55,8 @@ export const LoginForm = () => {
           variant: "destructive",
         });
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        push("/blocked");        return;
+        push("/blocked");
+        return;
       }
 
       if (!loginRes.isEmailVerified) {
