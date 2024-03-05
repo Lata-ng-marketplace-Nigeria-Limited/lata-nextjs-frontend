@@ -37,3 +37,13 @@ export function getTimeFromNow(dateString: string): string {
 
   return "few seconds";
 }
+
+export function getMonthInGMTPlus1() {
+  const date = new Date();
+  const utcMonth = date.getUTCMonth(); // Get current UTC month
+  const currentYear = date.getUTCFullYear(); // Get current year in UTC
+  const gmtPlus1Date = new Date(Date.UTC(currentYear, utcMonth, 1, 1)); // Create GMT+1 date
+  const gmtPlus1Month = gmtPlus1Date.getUTCMonth(); // Get GMT+1 month
+
+  return gmtPlus1Month + 1; // Adding 1 to match month indexing (0-indexed to 1-indexed)
+}

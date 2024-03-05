@@ -6,6 +6,7 @@ interface Props {
   title: string;
   description: string;
   titleClassName?: string
+  isMoney?: boolean;
 }
 
 const AnalyticsSideCard = (props: Props) => {
@@ -14,7 +15,7 @@ const AnalyticsSideCard = (props: Props) => {
       <p className={cn("text-grey6 mb-3 font-medium text-base", props.titleClassName)}>
         {props.title}
       </p>
-      <p className="mb-3 font-semibold text-xl">{props.clicksCount}</p>
+      <p className="mb-3 font-semibold text-xl">{props.isMoney ? "₦" : ""}{props.clicksCount || 0}</p>
       <p className="text-grey6 font-normal text-sm tablet:text-base">{props.description}</p>
     </div>
   );

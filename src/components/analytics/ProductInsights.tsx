@@ -1,15 +1,18 @@
 "use client";
 
 import React from "react";
-import { SelectInput } from "@components/input/SelectInput"; 
+import { SelectInput } from "@components/input/SelectInput";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { months } from "@/store/data/analytics";
+import clsx from "clsx";
 
 interface Props {
   selectedMonth: string;
+  title?: string;
+  titleClass?: string;
 }
 
-const ProductInsights = ({ selectedMonth }: Props) => {
+const ProductInsights = ({ selectedMonth, title, titleClass }: Props) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -21,9 +24,14 @@ const ProductInsights = ({ selectedMonth }: Props) => {
   };
 
   return (
-    <div className="flex justify-between items-center flex-auto mb-6">
-      <h1 className="text-base tablet:text-2xl font-semibold whitespace-nowrap basis-1/2">
-        Products Insight
+    <div className="mb-6 flex flex-auto items-center justify-between">
+      <h1
+        className={clsx(
+          "basis-1/2 whitespace-nowrap text-base font-semibold tablet:text-2xl",
+          titleClass,
+        )}
+      >
+        {title || "Products Insight"}
       </h1>
       <SelectInput
         wrapperClass="basis-1/4"

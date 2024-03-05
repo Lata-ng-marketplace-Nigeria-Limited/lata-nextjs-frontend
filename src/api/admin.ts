@@ -4,7 +4,7 @@ import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
-import { getApiUrl } from "@/utils";
+import { getApiUrl, getMonthInGMTPlus1 } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
 import { unstable_noStore } from "next/cache";
@@ -30,12 +30,16 @@ export interface IAdminAnalytics {
   message?: string;
 }
 
-export const getAdminAnalyticsApi = async (): Promise<IAdminAnalytics> => {
+export const getAdminAnalyticsApi = async (
+  selectedMonth?: string,
+): Promise<IAdminAnalytics> => {
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
 
-    const res = await fetch(getApiUrl("/admin/analytics"), {
+    const month = selectedMonth || getMonthInGMTPlus1().toString();
+
+    const res = await fetch(getApiUrl(`/admin/analytics?month=${month}`), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
