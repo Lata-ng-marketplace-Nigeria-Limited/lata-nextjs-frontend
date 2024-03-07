@@ -18,6 +18,7 @@ import Button from "../atom/Button";
 import ImageUploader from "../input/ImageUploader";
 import { toast } from "../ui/use-toast";
 import FormTopLabel from "../input/FormTopLabel";
+import { useRouter } from "next/navigation";
 
 interface Props {
   setShowAddStaffModal?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +30,7 @@ const AddStaffForm = (props: Props) => {
   const [imageErrorMessage, setImageErrorMessage] = useState("");
   const [avatar, setAvatar] = useState("");
   const [formState, setFormState] = useState<"one" | "two">("one");
+  const { refresh } = useRouter();
 
   const {
     formState: { errors },
@@ -84,7 +86,7 @@ const AddStaffForm = (props: Props) => {
         variant: "success",
         duration: 15000,
       });
-      console.log("response", response);
+      refresh?.();
       props.setShowAddStaffModal?.(false);
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<z.infer<typeof staffSignUpSchema>> =

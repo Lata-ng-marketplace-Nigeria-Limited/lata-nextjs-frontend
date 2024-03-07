@@ -6,14 +6,11 @@ import { getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
 
-interface IGetGrades {
-  data: IGrade[];
-  meta: FetchMeta;
-}
-export const getGradesApi = async (): Promise<IGetGrades> => {
+const fetchData = async (url: string) => {
   try {
     const session = await getServerSession(authConfig);
-    const res = await fetch(getApiUrl("/grades"), {
+
+    const res = await fetch(getApiUrl(url), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
@@ -26,4 +23,17 @@ export const getGradesApi = async (): Promise<IGetGrades> => {
   } catch (error: any) {
     throw error.response || error;
   }
+};
+
+interface IGetGrades {
+  grades: IGrade[];
+  monthlySales: number;
+  meta: FetchMeta;
+}
+export const monthlySales = async ({
+  staffId,
+}: {
+  staffId: string;
+}): Promise<IGetGrades> => {
+  return fetchData(`/grades/${staffId}`);
 };

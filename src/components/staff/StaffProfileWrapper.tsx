@@ -3,30 +3,18 @@ import UserBanner from "@components/staff/UserBanner";
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
 import AnalyticsTopCardsHOC from "@components//analytics/AnalyticsTopCardsHOC";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
-import CheckBoxPurple from "@components/atom/icons/CheckBoxPurple";
 import { getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
+import { monthlySales } from "@/api/grade";
+import Grades from "@components/staff/Grades";
+import Bonuses from "@components/staff/Bonuses";
 
 interface Props {
   staffId: string;
 }
 const StaffProfileWrapper = async ({ staffId }: Props) => {
   const staffResponse = await getStaffApi({ staffId });
-
-  const grades = [
-    { grade: "Grade A", price: "500k" },
-    { grade: "Grade B", price: "399k" },
-    { grade: "Grade C", price: "250k" },
-    { grade: "Grade D", price: "100k" },
-    { grade: "Grade E", price: "50k" },
-  ];
-
-  const bonuses = [
-    { interval: "Week", period: 1, amount: 1000 },
-    { interval: "Week", period: 2, amount: 1000 },
-    { interval: "Week", period: 3, amount: 1000 },
-    { interval: "Year", period: 4, amount: 1000 },
-  ];
+  const data = await monthlySales({ staffId });
 
   return (
     <div>
@@ -130,27 +118,8 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
           />
         </AnalyticsTopCardsHOC>
       </div>
-      <UserDetailContainer heading="Grades">
-        <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-4 lg:grid-cols-5 lg:gap-1">
-          {grades?.map((grade, index) => (
-            <div className="flex items-center gap-3" key={index}>
-              <CheckBoxPurple />
-              <p className="text-lg font-normal">
-                Grade {grade?.grade}, {grade?.price}
-              </p>
-            </div>
-          ))}
-        </div>
-      </UserDetailContainer>
-      <UserDetailContainer heading="Grades">
-        <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-4">
-          {bonuses.map((bonus, index) => (
-            <p className="text-lg font-normal" key={index}>
-              {bonus.interval} {bonus.period} bonus = {bonus.amount}
-            </p>
-          ))}
-        </div>
-      </UserDetailContainer>
+      <Grades grades={data?.grades} sales={data?.monthlySales} />
+      <Bonuses />
     </div>
   );
 };

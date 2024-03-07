@@ -26,6 +26,10 @@ const UserBanner = (props: Props) => {
     if (props.role === "SELLER") {
       push(`${ADMIN_ALL_SELLERS_ROUTE}/${props.userId}/shop`);
     }
+
+    if(props.onBtnClick) {
+      props.onBtnClick();
+    }
   };
 
   return (

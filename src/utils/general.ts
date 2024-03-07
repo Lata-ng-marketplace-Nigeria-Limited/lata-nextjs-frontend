@@ -251,7 +251,7 @@ export const logoutUser = async (
 };
 
 export function formatNumber(num: number, abbThousand?: boolean) {
-  if (num > 1e3 && abbThousand) {
+  if (num >= 1e3 && abbThousand) {
     return (num / 1e3).toFixed(0) + "k";
   }
   if (num < 1000000) {
@@ -266,4 +266,15 @@ export function formatNumber(num: number, abbThousand?: boolean) {
   if (num >= 1e6) {
     return (num / 1e6).toFixed(1) + "M";
   }
+}
+
+export function formatPriceCompact(price: number) {
+  if (isNaN(Number(price))) return;
+
+  const formattedPrice = Intl.NumberFormat("en-NG", {
+    notation: "compact",
+    compactDisplay: "short",
+    maximumFractionDigits: 3,
+  }).format(price);
+  return formattedPrice;
 }

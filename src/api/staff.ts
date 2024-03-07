@@ -104,3 +104,27 @@ export const getSellersUnderStaffApi = async ({
     throw error.response || error;
   }
 };
+
+export const bonusApi = async ({userId}: {userId: string}) => {
+  try {
+    unstable_noStore();
+    const session = await getServerSession(authConfig);
+    const res = await fetch(
+      getApiUrl(`/bonus/${userId}`),
+      {
+        headers: {
+          Authorization: "Bearer " + session?.token,
+        },
+        cache: "no-cache",
+      },
+    );
+
+    if (!res.ok) {
+      throw await res.json();
+    }
+
+    return await res.json();
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
