@@ -44,8 +44,8 @@ export const metadata: Metadata = {
     nocache: true,
     googleBot: {
       index: true,
-      follow: false,
-      noimageindex: true,
+      follow: true,
+      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
@@ -63,12 +63,6 @@ export default async function RootLayout({
   const session = await getServerSession(authConfig);
   return (
     <html lang="en">
-      {/* <head key="google-adsense">
-        <meta
-          name="google-adsense-account"
-          content={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
-        />
-      </head> */}
       <GoogleAnalytics
         GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS as IEnv}
       />
@@ -76,7 +70,7 @@ export default async function RootLayout({
         async
         src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
         crossOrigin="anonymous"
-        // strategy="lazyOnload"
+        strategy="lazyOnload"
       />
 
       <Script
