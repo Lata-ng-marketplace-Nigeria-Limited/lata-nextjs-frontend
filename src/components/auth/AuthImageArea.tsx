@@ -12,12 +12,12 @@ export default function AuthImageArea(props: Props) {
     <section
       className={cn(
         `
-        w-full 
-        bg-primary 
+        hidden 
         min-h-screen 
+        w-full 
         items-center 
         justify-center
-        hidden 
+        bg-primary 
         sm:flex 
       `,
         props.wrapperClass,
@@ -26,7 +26,7 @@ export default function AuthImageArea(props: Props) {
       <Image
         src={props.href}
         className={cn(
-          "max-h-screen h-full object-contain lg:object-cover ",
+          "h-full max-h-screen object-contain lg:object-cover ",
           props.imgClass,
         )}
         alt={"lata"}
@@ -34,6 +34,7 @@ export default function AuthImageArea(props: Props) {
         height={0}
         sizes="100vw"
         style={{ width: "100%", height: "100%" }} // optional
+        unoptimized
       />
     </section>
   );
