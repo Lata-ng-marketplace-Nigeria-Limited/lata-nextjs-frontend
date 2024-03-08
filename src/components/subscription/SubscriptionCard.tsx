@@ -40,6 +40,7 @@ export default function SubscriptionCard(props: SubscriptionCardProps) {
           alt={props.name}
           width={isSm ? 120 : 80}
           height={isSm ? 120 : 80}
+          unoptimized
         />
       </div>
       <div className={"text-white"}>
