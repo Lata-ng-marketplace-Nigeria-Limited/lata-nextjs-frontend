@@ -81,13 +81,22 @@ const AddStaffForm = (props: Props) => {
         role: "STAFF",
       });
 
-      toast({
-        description: `Staff account created successfully`,
-        variant: "success",
-        duration: 15000,
-      });
-      refresh?.();
-      props.setShowAddStaffModal?.(false);
+      if (response.success) {
+        toast({
+          description: `Staff account created successfully`,
+          variant: "success",
+          duration: 15000,
+        });
+        setLoading(false);
+        refresh?.();
+        props.setShowAddStaffModal?.(false);
+      } else {
+        setLoading(false);
+        toast({
+          description: `Something went wrong`,
+          variant: "destructive",
+        });
+      }
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<z.infer<typeof staffSignUpSchema>> =
         error;
@@ -115,6 +124,10 @@ const AddStaffForm = (props: Props) => {
   };
 
   const formStyle = cn("flex flex-col gap-y-6");
+
+  // const goToFormTwo = () => {
+  //   if()
+  // }
 
   return (
     <form className="text-grey9" onSubmit={handleSubmit(onSubmit)}>
