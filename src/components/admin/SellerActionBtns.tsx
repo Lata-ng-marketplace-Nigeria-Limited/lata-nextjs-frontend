@@ -13,6 +13,7 @@ import ResizableDialog from "./ResizableDialog";
 import BlockUser from "./BlockUser";
 import DeleteUser from "./DeleteUser";
 import { useBlockedUser } from "@/store/states/localStore";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   managers: User[];
@@ -26,45 +27,61 @@ const SellerActionBtns = (props: Props) => {
   const [isBlockUser, setIsBlockUser] = React.useState(false);
   const [isDeleteUserModal, setIsDeleteUserModal] = React.useState(false);
   const { hasBlockedUser } = useBlockedUser();
+  const { user } = useUser();
 
-  
   return (
     <div className="mb-6 rounded-xl border border-grey2 p-6">
-      <Button
-        format="primary"
-        className="mb-8 block w-full"
-        onClick={() => setOpenModal(!openModal)}
-      >
-        Change Manager
-      </Button>
-      <Button
-        format="secondary"
-        className="mb-8 block w-full"
-        onClick={() => push(ADMIN_VERIFY_TRANSFERS_ROUTE)}
-      >
-        Activate Subscription
-      </Button>
-      <Button
-        format="secondary"
-        className="mb-8 block w-full"
-        onClick={() => push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.sellerId}`)}
-      >
-        Upload Product
-      </Button>
-      <Button
-        format="secondary"
-        className="mb-8 block w-full"
-        onClick={() => setIsBlockUser(!isBlockUser)}
-      >
-        {hasBlockedUser ? "Unblock" : "Block"} User
-      </Button>
-      <Button
-        format="danger"
-        className="mb-8 block w-full"
-        onClick={() => setIsDeleteUserModal(true)}
-      >
-        Delete Seller
-      </Button>
+      {user?.role === "ADMIN" ? (
+        <>
+          <Button
+            format="primary"
+            className="mb-8 block w-full"
+            onClick={() => setOpenModal(!openModal)}
+          >
+            Change Manager
+          </Button>
+          <Button
+            format="secondary"
+            className="mb-8 block w-full"
+            onClick={() => push(ADMIN_VERIFY_TRANSFERS_ROUTE)}
+          >
+            Activate Subscription
+          </Button>
+          <Button
+            format="secondary"
+            className="mb-8 block w-full"
+            onClick={() =>
+              push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.sellerId}`)
+            }
+          >
+            Upload Product
+          </Button>
+          <Button
+            format="secondary"
+            className="mb-8 block w-full"
+            onClick={() => setIsBlockUser(!isBlockUser)}
+          >
+            {hasBlockedUser ? "Unblock" : "Block"} User
+          </Button>
+          <Button
+            format="danger"
+            className="mb-8 block w-full"
+            onClick={() => setIsDeleteUserModal(true)}
+          >
+            Delete Seller
+          </Button>
+        </>
+      ) : (
+        <Button
+          format="secondary"
+          className="mb-8 block w-full"
+          onClick={() =>
+            push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.sellerId}`)
+          }
+        >
+          Upload Product
+        </Button>
+      )}
 
       <ResizableDialog isShown={isBlockUser} setIsShown={setIsBlockUser}>
         <BlockUser
