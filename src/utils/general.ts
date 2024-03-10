@@ -284,7 +284,7 @@ export function formatPriceCompact(
     notation: useFullAmount ? "standard" : "compact",
     style: "currency",
     currency: "NGN",
-    maximumFractionDigits: 1,
-  }).format(Number(value));
+    maximumFractionDigits: 0,
+  }).format(value);
   return formattedPrice;
 }
