@@ -3,7 +3,7 @@ import UserBanner from "@components/staff/UserBanner";
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
 import { getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
-import { staffPerformance } from "@/api/grade";
+import { staffPerformance } from "@/api/staff";
 import Grades from "@components/staff/Grades";
 import Bonuses from "@components/staff/Bonuses";
 import StaffTopCards from "./StaffTopCards";

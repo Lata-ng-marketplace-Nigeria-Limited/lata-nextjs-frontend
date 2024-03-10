@@ -1,6 +1,6 @@
 import React from "react";
 import StaffTopCards from "./StaffTopCards";
-import { staffPerformance } from "@/api/grade";
+import { staffPerformance } from "@/api/staff";
 import AnalyticsSideCard from "../analytics/AnalyticsSideCard";
 import AnalyticsSideCardsHOC from "../analytics/AnalyticsSideCardsHOC";
 import AnalyticsChart from "../analytics/AnalyticsChart";
@@ -36,24 +36,30 @@ const StaffDashboard = async (props: Props) => {
             <AnalyticsSideCard
               title="Total Sales"
               isMoney
-              clicksCount={0}
-              description={"March"}
+              clicksCount={
+                formatNumber(staffPerf?.statsOverView?.monthlySales) || 0
+              }
+              description={staffPerf?.statsOverView?.month || ""}
             />
 
             <AnalyticsSideCard
               title="Best Month"
               isMoney
               titleClassName="text-success"
-              clicksCount={0}
-              description="March"
+              clicksCount={
+                formatNumber(staffPerf?.statsOverView?.highestSales || 0) || 0
+              }
+              description={staffPerf?.statsOverView?.bestMonth || ""}
             />
 
             <AnalyticsSideCard
               title="Worst Month"
               isMoney
               titleClassName="text-danger"
-              clicksCount={0}
-              description="March"
+              clicksCount={
+                formatNumber(staffPerf?.statsOverView?.lowestSales || 0) || 0
+              }
+              description={staffPerf?.statsOverView?.worstMonth || ""}
             />
           </AnalyticsSideCardsHOC>
         </AnalyticsChartAreaHOC>
@@ -64,7 +70,7 @@ const StaffDashboard = async (props: Props) => {
           wrapperClass="basis-[50%]"
           grades={staffPerf?.grades}
           sales={staffPerf?.data?.amount}
-          gradePay={JSON.parse(staffPerf?.data?.gradeInformation)}
+          gradePay={JSON.parse(staffPerf?.data?.gradeInformation || "{}")}
         />
         <Bonuses wrapperClass="basis-[50%]" />
       </div>

@@ -30,11 +30,18 @@ interface IGetGrades {
   success?: boolean;
   isError?: boolean;
   data: IGradeTransaction;
+  statsOverView: {
+    totalSales: number;
+    highestSales: number;
+    lowestSales: number;
+    bestMonth: string;
+    worstMonth: string;
+  };
 }
-export const staffPerformance = async ({
-  staffId,
-}: {
-  staffId: string;
-}): Promise<IGetGrades> => {
-  return fetchData(`/grades/${staffId}`);
-};
+// export const staffPerformance = async ({
+//   staffId,
+// }: {
+//   staffId: string;
+// }): Promise<IGetGrades> => {
+//   return fetchData(`/grades/${staffId}`);
+// };

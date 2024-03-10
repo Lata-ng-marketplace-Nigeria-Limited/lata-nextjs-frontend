@@ -13,6 +13,7 @@ interface Props {
 }
 
 const Grades = (props: Props) => {
+
   return (
     <UserDetailContainer
       wrapperClass={cn(props.wrapperClass)}
@@ -21,7 +22,10 @@ const Grades = (props: Props) => {
     >
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 lg:grid-cols-5 lg:gap-1">
         {props?.grades?.map((grade, index) => (
-          <div className="flex items-center gap-2 mb-10 sm:mb-0 sl:gap-3" key={index}>
+          <div
+            className="mb-10 flex items-center gap-2 sm:mb-0 sl:gap-3"
+            key={index}
+          >
             {props.gradePay?.id === grade.id ? (
               <CheckedboxPurple className="h-[16px] w-[16px]" />
             ) : (
