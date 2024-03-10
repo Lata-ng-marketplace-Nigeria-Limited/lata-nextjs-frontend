@@ -1,7 +1,6 @@
 "use server";
 
-import { FetchMeta } from "@/interface/general";
-import { IGrade } from "@/interface/grade";
+import { IGrade, IGradeTransaction } from "@/interface/grade";
 import { getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
@@ -27,10 +26,12 @@ const fetchData = async (url: string) => {
 
 interface IGetGrades {
   grades: IGrade[];
-  monthlySales: number;
-  meta: FetchMeta;
+  message?: string;
+  success?: boolean;
+  isError?: boolean;
+  data: IGradeTransaction;
 }
-export const monthlySales = async ({
+export const staffPerformance = async ({
   staffId,
 }: {
   staffId: string;

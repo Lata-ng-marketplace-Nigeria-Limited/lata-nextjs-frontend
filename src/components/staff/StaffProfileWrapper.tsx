@@ -5,21 +5,24 @@ import AnalyticsTopCardsHOC from "@components//analytics/AnalyticsTopCardsHOC";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import { getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
-import { monthlySales } from "@/api/grade";
+import { staffPerformance } from "@/api/grade";
 import Grades from "@components/staff/Grades";
 import Bonuses from "@components/staff/Bonuses";
+import { formatPriceCompact } from "@/utils";
+import { DateTime } from "luxon";
 
 interface Props {
   staffId: string;
 }
+
 const StaffProfileWrapper = async ({ staffId }: Props) => {
   const staffResponse = await getStaffApi({ staffId });
-  const data = await monthlySales({ staffId });
+  const staffPerf = await staffPerformance({ staffId });
 
   return (
-    <div>
-      <div className="sm:flex sm:gap-8">
-        <div className="sm:basis-[70%]">
+    <div className="">
+      <div className="max-sm:gap-8 sm:grid sm:grid-cols-3 sm:gap-2 sl:gap-8">
+        <div className="col-span-2">
           <UserBanner
             imgSrc={staffResponse?.data?.avatar}
             btnText="Send Message"
@@ -28,7 +31,7 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
           />
 
           <UserDetailContainer heading="About">
-            <div className="sm:flex sm:items-center sm:gap-20">
+            <div className="sm:flex sm:items-center sm:justify-between">
               <UserDetail
                 hasGreyTitle
                 title="Email"
@@ -62,8 +65,8 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
             </p>
           </UserDetailContainer>
         </div>
-        <div className="mb-10 text-xl sm:basis-[30%]">
-          <UserDetailContainer heading="Bank account details">
+        <div className="col-span-1 mb-10 text-xl ">
+          <UserDetailContainer heading="Bank account details" wrapperClass="p-6 tablet:p-3 sl:p-6">
             <UserDetail
               hasGreyDescription
               title="Account number"
@@ -96,11 +99,13 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
             title="Commission"
             description="20% of your total sales"
             isClickable
-            number={"0"}
+            number={
+              formatPriceCompact(staffPerf?.data?.commission, true) || "0"
+            }
           />
           <AnalyticsTopCards
             title="Allowance"
-            description="#5K for every three sales and above"
+            description="₦5K for every three sales and above"
             isClickable
             number={"0"}
           />
@@ -108,18 +113,29 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
             title="Grade pay"
             description="Salary pay for meeting your grade point"
             isClickable
-            number={"0"}
+            number={
+              formatPriceCompact(staffPerf?.data?.gradeSalary, true) || "0"
+            }
           />
           <AnalyticsTopCards
             title="Total sales"
-            description="Total sales for the month of August"
+            description={`Total sales for the month of ${
+              staffPerf?.data?.month || DateTime.now().monthLong
+            }`}
             isClickable
-            number={"0"}
+            number={formatPriceCompact(staffPerf?.data?.amount, true) || "0"}
           />
         </AnalyticsTopCardsHOC>
       </div>
-      <Grades grades={data?.grades} sales={data?.monthlySales} />
-      <Bonuses />
+      <div className="gap-3 xms:flex sm:block">
+        <Grades
+          wrapperClass="basis-[50%]"
+          grades={staffPerf?.grades}
+          sales={staffPerf?.data?.amount}
+          gradePay={JSON.parse(staffPerf?.data?.gradeInformation)}
+        />
+        <Bonuses wrapperClass="basis-[50%]" />
+      </div>
     </div>
   );
 };

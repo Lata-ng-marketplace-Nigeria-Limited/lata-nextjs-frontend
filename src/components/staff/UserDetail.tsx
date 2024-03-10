@@ -39,11 +39,13 @@ export const UserDetail = (props: Props) => {
 interface IContanerProps {
   heading: string;
   children: React.ReactNode;
+  headingClass?: string;
+  wrapperClass?: string;
 }
 export const UserDetailContainer = (props: IContanerProps) => {
   return (
-    <div className="mb-6 rounded-xl border border-grey2 p-6">
-      <h2 className={cn("mb-6 text-xl font-semibold")}>{props.heading}</h2>
+    <div className={cn("mb-6 rounded-xl border border-grey2 p-6", props.wrapperClass)}>
+      <h2 className={cn("mb-6 text-xl font-semibold", props.headingClass)}>{props.heading}</h2>
       {props.children}
     </div>
   );
