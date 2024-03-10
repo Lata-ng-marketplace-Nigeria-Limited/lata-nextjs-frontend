@@ -4,7 +4,7 @@ import React from "react";
 import Button from "../atom/Button";
 import AppAvatar from "../molecule/Avatar";
 import { useRouter } from "next/navigation";
-import { ADMIN_ALL_SELLERS_ROUTE } from "@/constants/routes";
+import { VIEW_SELLERS_ROUTE } from "@/constants/routes";
 import { User } from "@/interface/user";
 
 interface Props {
@@ -20,7 +20,7 @@ const UserBanner = (props: Props) => {
 
   const handleBtnClick = () => {
     if (props.role === "SELLER") {
-      push(`${ADMIN_ALL_SELLERS_ROUTE}/${props.userId}/shop`);
+      push(`${VIEW_SELLERS_ROUTE}/${props.userId}/shop`);
     }
 
     if (props.onBtnClick) {

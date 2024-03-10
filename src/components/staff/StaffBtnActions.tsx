@@ -5,7 +5,7 @@ import Button from "@components/atom/Button";
 import ResizableDialog from "../admin/ResizableDialog";
 import BlockUser from "../admin/BlockUser";
 import DeleteUser from "../admin/DeleteUser";
-import { DASHBOARD_STAFF_ROUTE } from "@/constants/routes";
+import { MANAGED_SELLERS_ROUTE, VIEW_STAFF_ROUTE } from "@/constants/routes";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -24,9 +24,7 @@ const StaffBtnActions = (props: Props) => {
         <Button
           format="primary"
           className="mb-8 block w-full text-base sl:text-lg"
-          onClick={() =>
-            push(`${DASHBOARD_STAFF_ROUTE}/${props.staffId}/sellers`)
-          }
+          onClick={() => push(`${VIEW_STAFF_ROUTE}/${props.staffId}/${MANAGED_SELLERS_ROUTE}`)}
         >
           See Sellers
         </Button>

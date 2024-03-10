@@ -2,17 +2,13 @@
 
 import { FetchMeta } from "@/interface/general";
 import { User } from "@/interface/user";
-import { getApiUrl } from "@/utils";
-import { authConfig } from "@authConfig";
-import { getServerSession } from "next-auth";
-import { unstable_noStore } from "next/cache";
+import { fetchData } from "./_helper";
 
 interface IGetStaffApi {
   data: User;
   admin: User;
   message?: string;
   success?: boolean;
-  isError?: boolean;
   totalSellers?: number;
 }
 export const getStaffApi = async ({
@@ -20,36 +16,7 @@ export const getStaffApi = async ({
 }: {
   staffId: string;
 }): Promise<IGetStaffApi> => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const res = await fetch(getApiUrl(`/staff/${staffId}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetStaffApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/staff/profile/${staffId}`);
 };
 
 interface IGetSellersUnderStaffeApi {
@@ -58,73 +25,13 @@ interface IGetSellersUnderStaffeApi {
   meta: FetchMeta;
   message?: string;
   success?: boolean;
-  isError?: boolean;
 }
 
-export const getSellersUnderStaffApi = async ({
-  staffId,
-}: {
-  staffId: string;
-}): Promise<IGetSellersUnderStaffeApi> => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
+export const getSellersUnderStaffApi =
+  async (): Promise<IGetSellersUnderStaffeApi> => {
+    return fetchData("/staff/sellers");
+  };
 
-    if (!staffId) {
-      return {
-        isError: true,
-        message: "Staff Id is required",
-      } as IGetSellersUnderStaffeApi;
-    }
-
-    const res = await fetch(getApiUrl(`/staff/${staffId}/sellers`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetSellersUnderStaffeApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
-};
-
-export const bonusApi = async ({userId}: {userId: string}) => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-    const res = await fetch(
-      getApiUrl(`/bonus/${userId}`),
-      {
-        headers: {
-          Authorization: "Bearer " + session?.token,
-        },
-        cache: "no-cache",
-      },
-    );
-
-    if (!res.ok) {
-      throw await res.json();
-    }
-
-    return await res.json();
-  } catch (error: any) {
-    throw error.response || error;
-  }
+export const bonusApi = async ({ userId }: { userId: string }) => {
+  return fetchData(`/bonus/${userId}`);
 };

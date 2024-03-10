@@ -1,15 +1,12 @@
 import React from "react";
 import UserBanner from "@components/staff/UserBanner";
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
-import AnalyticsTopCardsHOC from "@components//analytics/AnalyticsTopCardsHOC";
-import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import { getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
 import { staffPerformance } from "@/api/grade";
 import Grades from "@components/staff/Grades";
 import Bonuses from "@components/staff/Bonuses";
-import { formatPriceCompact } from "@/utils";
-import { DateTime } from "luxon";
+import StaffTopCards from "./StaffTopCards";
 
 interface Props {
   staffId: string;
@@ -66,7 +63,10 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
           </UserDetailContainer>
         </div>
         <div className="col-span-1 mb-10 text-xl ">
-          <UserDetailContainer heading="Bank account details" wrapperClass="p-6 tablet:p-3 sl:p-6">
+          <UserDetailContainer
+            heading="Bank account details"
+            wrapperClass="p-6 tablet:p-3 sl:p-6"
+          >
             <UserDetail
               hasGreyDescription
               title="Account number"
@@ -93,39 +93,7 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
       </div>
       <div>
         <h2 className="mb-6 font-semibold">Staff KPI</h2>
-        <AnalyticsTopCardsHOC>
-          <AnalyticsTopCards
-            isTotalViews
-            title="Commission"
-            description="20% of your total sales"
-            isClickable
-            number={
-              formatPriceCompact(staffPerf?.data?.commission, true) || "0"
-            }
-          />
-          <AnalyticsTopCards
-            title="Allowance"
-            description="₦5K for every three sales and above"
-            isClickable
-            number={"0"}
-          />
-          <AnalyticsTopCards
-            title="Grade pay"
-            description="Salary pay for meeting your grade point"
-            isClickable
-            number={
-              formatPriceCompact(staffPerf?.data?.gradeSalary, true) || "0"
-            }
-          />
-          <AnalyticsTopCards
-            title="Total sales"
-            description={`Total sales for the month of ${
-              staffPerf?.data?.month || DateTime.now().monthLong
-            }`}
-            isClickable
-            number={formatPriceCompact(staffPerf?.data?.amount, true) || "0"}
-          />
-        </AnalyticsTopCardsHOC>
+        <StaffTopCards data={staffPerf?.data} />
       </div>
       <div className="gap-3 xms:flex sm:block">
         <Grades
