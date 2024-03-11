@@ -57,6 +57,7 @@ export const adminOrStaffAddUserApi = async (
   authorized?: boolean;
   isEmailVerified?: boolean;
   publicToken?: string;
+  success?: boolean;
 }> => {
   try {
     const formData = createFormData(data);

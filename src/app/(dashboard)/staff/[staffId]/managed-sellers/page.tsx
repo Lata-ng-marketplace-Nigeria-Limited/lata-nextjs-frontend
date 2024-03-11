@@ -1,4 +1,4 @@
-import { getSellersUnderStaffApi } from "@/api/staff";
+import { adminFetchSellersUnderStaff } from "@/api/admin";
 import { GetUser } from "@/components/atom/GetUser";
 import StaffSellers from "@/components/staff/StaffSellers";
 import { authConfig } from "@authConfig";
@@ -17,8 +17,8 @@ async function Page({
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }
+  const response = await adminFetchSellersUnderStaff({ staffId });
 
-  const response = await getSellersUnderStaffApi({ staffId });
   return (
     <div>
       <Suspense>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const CheckBoxPurple = (props: React.SVGProps<SVGSVGElement>) => {
+const UnCheckedBoxPurple = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -23,4 +23,4 @@ const CheckBoxPurple = (props: React.SVGProps<SVGSVGElement>) => {
   );
 };
 
-export default CheckBoxPurple;
+export default UnCheckedBoxPurple;

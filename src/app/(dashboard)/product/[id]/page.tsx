@@ -25,6 +25,7 @@ export async function generateMetadata(
 
   return {
     title: data?.product.name || "Product not found",
+    description: data?.product.description || "",
     openGraph: {
       images: [data?.product.files?.[0]?.url || previousImages[0]],
       title: data?.product.name,

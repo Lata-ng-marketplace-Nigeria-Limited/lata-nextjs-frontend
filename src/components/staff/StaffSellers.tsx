@@ -9,6 +9,9 @@ import TableTopArea from "@components/admin/TableTopArea";
 import AppAvatar from "../molecule/Avatar";
 import Link from "next/link";
 import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
+import { useUser } from "@/hooks/useUser";
+import ResizableDialog from "../admin/ResizableDialog";
+import AddSellerForm from "../admin/AddSeller";
 
 interface Props {
   data: User[];
@@ -16,40 +19,21 @@ interface Props {
   meta: FetchMeta;
 }
 const StaffSellers = (props: Props) => {
-  const [showAddBuyerModal, setShowAddBuyerModal] = useState(false);
-  const [filteredData, setFilteredData] = useState<User[]>(props.data);
+  const [showAddSellerModal, setShowAddSellerModal] = useState(false);
   const [search, setSearch] = useState("");
+  const { user } = useUser();
 
-  const handleAddBuyer = () => {
-    setShowAddBuyerModal(!showAddBuyerModal);
+  const handleAddSeller = () => {
+    setShowAddSellerModal(!showAddSellerModal);
   };
-
-  // useEffect(() => {
-  //   const filter = props.data.filter(
-  //     (buyer) =>
-  //       // search by name
-  //       buyer?.name.toLowerCase().includes(search) ||
-  //       // search by location
-  //       (buyer?.address &&
-  //         (buyer?.address as string).toLowerCase().includes(search)) ||
-  //       //search by email
-  //       buyer?.email.toLowerCase().includes(search) ||
-  //       // search by reg date
-  //       DateTime.fromISO(buyer?.createdAt)
-  //         .toFormat("dd LLL, yyyy")
-  //         .toLowerCase()
-  //         .includes(search),
-  //   );
-  //   setFilteredData(filter);
-  // }, [search, props.data]);
 
   return (
     <div>
       <TableTopArea
-        title={props.staff?.name + " Sellers"}
-        buttonText="+ Add Buyer"
+        title={(user?.role === "STAFF" ? "My" : props.staff?.name) + " Sellers"}
+        buttonText="+ Add Seller"
         placeholder="Search buyers"
-        onClick={handleAddBuyer}
+        onClick={handleAddSeller}
         setSearch={setSearch}
       />
       <TableWithRowGaps
@@ -82,6 +66,12 @@ const StaffSellers = (props: Props) => {
         usePaginate
         meta={props.meta}
       />
+      <ResizableDialog
+        isShown={showAddSellerModal}
+        setIsShown={setShowAddSellerModal}
+      >
+        <AddSellerForm setShowAddSellerModal={setShowAddSellerModal} />
+      </ResizableDialog>
     </div>
   );
 };

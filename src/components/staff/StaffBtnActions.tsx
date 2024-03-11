@@ -5,7 +5,7 @@ import Button from "@components/atom/Button";
 import ResizableDialog from "../admin/ResizableDialog";
 import BlockUser from "../admin/BlockUser";
 import DeleteUser from "../admin/DeleteUser";
-import { DASHBOARD_STAFF_ROUTE } from "@/constants/routes";
+import { MANAGED_SELLERS_ROUTE, VIEW_STAFF_ROUTE } from "@/constants/routes";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -20,20 +20,23 @@ const StaffBtnActions = (props: Props) => {
 
   return (
     <React.Fragment>
-      <div className="mb-6 rounded-xl border border-grey2 p-6">
+      <div className="mb-6 rounded-xl border border-grey2 p-6 tablet:p-3 sl:p-6 ">
         <Button
           format="primary"
-          className="mb-8 block w-full"
-          onClick={() => push(`${DASHBOARD_STAFF_ROUTE}/${props.staffId}/sellers`)}
+          className="mb-8 block w-full text-base sl:text-lg"
+          onClick={() => push(`${VIEW_STAFF_ROUTE}/${props.staffId}/${MANAGED_SELLERS_ROUTE}`)}
         >
           See Sellers
         </Button>
-        <Button format="secondary" className="mb-8 block w-full">
+        <Button
+          format="secondary"
+          className="mb-8 block w-full text-base sl:text-lg"
+        >
           Block User
         </Button>
         <Button
           format="danger"
-          className="mb-8 block w-full"
+          className="mb-8 block w-full text-base sl:text-lg"
           onClick={() => setIsDeleteUserModal(true)}
         >
           Delete Seller
