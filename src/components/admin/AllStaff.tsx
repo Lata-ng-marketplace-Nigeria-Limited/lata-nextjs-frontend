@@ -10,7 +10,7 @@ import AddStaffForm from "./AddStaffForm";
 import ResizableDialog from "./ResizableDialog";
 import Link from "next/link";
 import AppAvatar from "../molecule/Avatar";
-import { DASHBOARD_STAFF_ROUTE } from "@/constants/routes";
+import { VIEW_STAFF_ROUTE } from "@/constants/routes";
 
 interface Props {
   data: User[];
@@ -66,7 +66,7 @@ const AllStaff = (props: Props) => {
                   className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
                   initialsClass="font-normal text-xs sm:text-xs"
                 />
-                <Link href={`${DASHBOARD_STAFF_ROUTE}/${staff.id}`}>
+                <Link href={`${VIEW_STAFF_ROUTE}/${staff.id}`}>
                   {staff?.name}
                 </Link>
               </div>

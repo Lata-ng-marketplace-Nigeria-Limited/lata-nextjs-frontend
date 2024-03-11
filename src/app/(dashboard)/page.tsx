@@ -3,9 +3,12 @@ import HeroImage from "@/components/molecule/HeroImage";
 import HomeProducts from "@components/product/HomeProducts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { DashboardSelectCategories } from "@molecule/DashboardSelectCategories";
-import { getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
 import AdminDashboardWrapper from "@/components/admin/AdminWrapper";
+import StaffDashboard from "@/components/staff/StaffDashboard";
+import HeaderText from "@/components/atom/HeaderText";
+import HeaderSubText from "@/components/atom/HeaderSubText";
 
 export const metadata = {
   title: "Buy, sell, or rent products or search for your dream job on Lata.ng",
@@ -41,7 +44,20 @@ export default async function Home({
 
   return (
     <main className="">
-      {session?.role !== "ADMIN" ? (
+      {session?.role === "ADMIN" ? (
+        <Suspense fallback={<p>Loading...</p>}>
+          <AdminDashboardWrapper
+            username={session?.user?.name || "Admin"}
+            month={selectedMonth}
+          />
+        </Suspense>
+      ) : session?.role === "STAFF" ? (
+        <Suspense fallback={<p>Loading...</p>}>
+          <HeaderText title>Staff Dashboard</HeaderText>
+          <HeaderSubText>Hi {session?.user?.name}, Welcome back!</HeaderSubText>
+          <StaffDashboard staffId={session?.user?.id} month={selectedMonth} />
+        </Suspense>
+      ) : (
         <>
           <HeroImage
             src={
@@ -54,13 +70,6 @@ export default async function Home({
             <HomeProducts query={query} subcategory={subcategory} />
           </Suspense>
         </>
-      ) : (
-        <Suspense fallback={<p>Loading...</p>}>
-          <AdminDashboardWrapper
-            username={session?.user?.name || "Admin"}
-            month={selectedMonth}
-          />
-        </Suspense>
       )}
     </main>
   );

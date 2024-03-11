@@ -22,7 +22,7 @@ export default async function Page({
     redirect("/auth");
   }
 
-  if (session.role !== "ADMIN") {
+  if (session.role !== "ADMIN" && session.role !== "STAFF") {
     redirect("/");
   }
 

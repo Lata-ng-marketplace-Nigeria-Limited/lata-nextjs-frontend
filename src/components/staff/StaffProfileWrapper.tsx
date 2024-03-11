@@ -1,37 +1,25 @@
 import React from "react";
 import UserBanner from "@components/staff/UserBanner";
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
-import AnalyticsTopCardsHOC from "@components//analytics/AnalyticsTopCardsHOC";
-import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
-import CheckBoxPurple from "@components/atom/icons/CheckBoxPurple";
 import { getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
+import { staffPerformance } from "@/api/staff";
+import Grades from "@components/staff/Grades";
+import Bonuses from "@components/staff/Bonuses";
+import StaffTopCards from "./StaffTopCards";
 
 interface Props {
   staffId: string;
 }
+
 const StaffProfileWrapper = async ({ staffId }: Props) => {
   const staffResponse = await getStaffApi({ staffId });
-
-  const grades = [
-    { grade: "Grade A", price: "500k" },
-    { grade: "Grade B", price: "399k" },
-    { grade: "Grade C", price: "250k" },
-    { grade: "Grade D", price: "100k" },
-    { grade: "Grade E", price: "50k" },
-  ];
-
-  const bonuses = [
-    { interval: "Week", period: 1, amount: 1000 },
-    { interval: "Week", period: 2, amount: 1000 },
-    { interval: "Week", period: 3, amount: 1000 },
-    { interval: "Year", period: 4, amount: 1000 },
-  ];
+  const staffPerf = await staffPerformance({ staffId });
 
   return (
-    <div>
-      <div className="sm:flex sm:gap-8">
-        <div className="sm:basis-[70%]">
+    <div className="">
+      <div className="max-sm:gap-8 sm:grid sm:grid-cols-3 sm:gap-2 sl:gap-8">
+        <div className="col-span-2">
           <UserBanner
             imgSrc={staffResponse?.data?.avatar}
             btnText="Send Message"
@@ -40,7 +28,7 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
           />
 
           <UserDetailContainer heading="About">
-            <div className="sm:flex sm:items-center sm:gap-20">
+            <div className="sm:flex sm:items-center sm:justify-between">
               <UserDetail
                 hasGreyTitle
                 title="Email"
@@ -74,8 +62,11 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
             </p>
           </UserDetailContainer>
         </div>
-        <div className="mb-10 text-xl sm:basis-[30%]">
-          <UserDetailContainer heading="Bank account details">
+        <div className="col-span-1 mb-10 text-xl ">
+          <UserDetailContainer
+            heading="Bank account details"
+            wrapperClass="p-6 tablet:p-3 sl:p-6"
+          >
             <UserDetail
               hasGreyDescription
               title="Account number"
@@ -102,55 +93,17 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
       </div>
       <div>
         <h2 className="mb-6 font-semibold">Staff KPI</h2>
-        <AnalyticsTopCardsHOC>
-          <AnalyticsTopCards
-            isTotalViews
-            title="Commission"
-            description="20% of your total sales"
-            isClickable
-            number={"0"}
-          />
-          <AnalyticsTopCards
-            title="Allowance"
-            description="#5K for every three sales and above"
-            isClickable
-            number={"0"}
-          />
-          <AnalyticsTopCards
-            title="Grade pay"
-            description="Salary pay for meeting your grade point"
-            isClickable
-            number={"0"}
-          />
-          <AnalyticsTopCards
-            title="Total sales"
-            description="Total sales for the month of August"
-            isClickable
-            number={"0"}
-          />
-        </AnalyticsTopCardsHOC>
+        <StaffTopCards data={staffPerf?.data} />
       </div>
-      <UserDetailContainer heading="Grades">
-        <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-4 lg:grid-cols-5 lg:gap-1">
-          {grades?.map((grade, index) => (
-            <div className="flex items-center gap-3" key={index}>
-              <CheckBoxPurple />
-              <p className="text-lg font-normal">
-                Grade {grade?.grade}, {grade?.price}
-              </p>
-            </div>
-          ))}
-        </div>
-      </UserDetailContainer>
-      <UserDetailContainer heading="Grades">
-        <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-4">
-          {bonuses.map((bonus, index) => (
-            <p className="text-lg font-normal" key={index}>
-              {bonus.interval} {bonus.period} bonus = {bonus.amount}
-            </p>
-          ))}
-        </div>
-      </UserDetailContainer>
+      <div className="gap-3 xms:flex sm:block">
+        <Grades
+          wrapperClass="basis-[50%]"
+          grades={staffPerf?.grades}
+          sales={staffPerf?.data?.amount}
+          gradePay={JSON.parse(staffPerf?.data?.gradeInformation)}
+        />
+        <Bonuses wrapperClass="basis-[50%]" bonuses={staffPerf?.bonuses} />
+      </div>
     </div>
   );
 };
