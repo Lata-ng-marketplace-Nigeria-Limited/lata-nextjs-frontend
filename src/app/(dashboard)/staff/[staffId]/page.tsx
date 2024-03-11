@@ -1,4 +1,3 @@
-import { getStaffApi } from "@/api/staff";
 import { GetUser } from "@/components/atom/GetUser";
 import StaffProfileWrapper from "@/components/staff/StaffProfileWrapper";
 import { authConfig } from "@authConfig";
