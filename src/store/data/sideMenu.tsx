@@ -33,6 +33,7 @@ import {
   VIEW_STAFF_ROUTE,
   DASHBOARD_SUBSCRIPTIONS_ROUTE,
   VIEW_SELLERS_ROUTE,
+  ADMIN_EDIT_KPI_ROUTE,
 } from "@/constants/routes";
 import { NewProductIcon } from "@/components/atom/icons/Admin";
 import { EditIcon } from "@/components/atom/icons/Edit";
@@ -45,11 +46,13 @@ import {
   Truck,
   LockKeyhole,
   Pencil,
+  Edit,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
 import { ShoppingCartIcon } from "@/components/atom/icons/ShoppingCart";
 import SellersIcon from "@/components/atom/icons/Sellers";
+import PencilIcon from "@/components/atom/icons/Pencil";
 
 export const sideMenu: {
   title: string;
@@ -194,6 +197,18 @@ export const sideMenu: {
     fill: false,
     isAuth: true,
     href: ADMIN_EDIT_PLAN_ROUTE,
+  },
+  {
+    title: "Edit KPI",
+    icon: <Edit className={"w-4 h-4"} />,
+    isSeller: false,
+    isAdmin: true,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: false,
+    fill: false,
+    isAuth: true,
+    href: ADMIN_EDIT_KPI_ROUTE,
   },
   {
     title: "Legal Docs",

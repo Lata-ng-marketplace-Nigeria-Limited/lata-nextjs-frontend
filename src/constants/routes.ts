@@ -39,6 +39,7 @@ export const ADMIN_VERIFY_TRANSFERS_ROUTE = "/verify-transfer";
 export const ADMIN_LEGAL_DOCS_ROUTE = "/legal-docs";
 export const ADMIN_BLOCKED_ACCOUNTS_ROUTE = "/blocked-accounts";
 export const ADMIN_EDIT_CATEGORY_ROUTE = "/edit-category";
+export const ADMIN_EDIT_KPI_ROUTE = "/edit-kpi";
 export const ADMIN_EDIT_LOCATION_ROUTE = "/edit-location";
 export const ADMIN_RIDER_REQUESTS_ROUTE = "/rider-requests";
 export const VIEW_STAFF_ROUTE = "/staff";

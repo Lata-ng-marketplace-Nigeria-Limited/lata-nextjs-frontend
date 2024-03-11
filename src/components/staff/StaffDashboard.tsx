@@ -22,7 +22,10 @@ const StaffDashboard = async (props: Props) => {
 
   return (
     <div>
-      <StaffTopCards data={staffPerf?.data} />
+      <StaffTopCards
+        data={staffPerf?.data}
+        totalPaidSellers={staffPerf?.statsOverView?.totalPaidSellers}
+      />
       <div className="mb-8">
         <ProductInsights
           selectedMonth={props.month}
@@ -72,7 +75,7 @@ const StaffDashboard = async (props: Props) => {
           sales={staffPerf?.data?.amount}
           gradePay={JSON.parse(staffPerf?.data?.gradeInformation || "{}")}
         />
-        <Bonuses wrapperClass="basis-[50%]" />
+        <Bonuses wrapperClass="basis-[50%]" bonuses={staffPerf?.bonuses} />
       </div>
     </div>
   );
