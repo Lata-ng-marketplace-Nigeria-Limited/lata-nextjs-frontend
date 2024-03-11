@@ -102,7 +102,7 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
           sales={staffPerf?.data?.amount}
           gradePay={JSON.parse(staffPerf?.data?.gradeInformation)}
         />
-        <Bonuses wrapperClass="basis-[50%]" />
+        <Bonuses wrapperClass="basis-[50%]" bonuses={staffPerf?.bonuses} />
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ interface Props {
   meta: FetchMeta;
 }
 
-const RecentPosts = async (props: Props) => {
+const RecentPosts = (props: Props) => {
   return (
     <>
       <TableWithRowGaps
