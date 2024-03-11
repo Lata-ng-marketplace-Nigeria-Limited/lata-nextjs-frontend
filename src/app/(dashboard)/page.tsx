@@ -3,7 +3,7 @@ import HeroImage from "@/components/molecule/HeroImage";
 import HomeProducts from "@components/product/HomeProducts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { DashboardSelectCategories } from "@molecule/DashboardSelectCategories";
-import { getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
 import AdminDashboardWrapper from "@/components/admin/AdminWrapper";
 import StaffDashboard from "@/components/staff/StaffDashboard";
