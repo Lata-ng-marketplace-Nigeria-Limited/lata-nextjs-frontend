@@ -16,6 +16,9 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
   const staffResponse = await getStaffApi({ staffId });
   const staffPerf = await staffPerformance({ staffId });
 
+  console.log('staffResponse', staffResponse)
+  console.log('staffPerf', staffPerf)
+
   return (
     <div className="">
       <div className="max-sm:gap-8 sm:grid sm:grid-cols-3 sm:gap-2 sl:gap-8">

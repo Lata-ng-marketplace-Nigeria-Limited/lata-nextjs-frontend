@@ -13,7 +13,6 @@ interface Props {
 }
 
 const Grades = (props: Props) => {
-
   return (
     <UserDetailContainer
       wrapperClass={cn(props.wrapperClass)}
@@ -26,16 +25,13 @@ const Grades = (props: Props) => {
             className="mb-10 flex items-center gap-2 sm:mb-0 sl:gap-3"
             key={index}
           >
-            {props.gradePay?.id === grade.id ? (
+            {props.gradePay?.id === grade?.id ? (
               <CheckedboxPurple className="h-[16px] w-[16px]" />
             ) : (
               <UnCheckedBoxPurple className="h-[16px] w-[16px]" />
             )}
             <p className="text-sm font-normal sl:text-lg">
-              Grade {grade?.level},{" "}
-              {String(grade.amount).includes("399")
-                ? "399k"
-                : formatNumber(grade?.amount, true)}
+              Grade {grade?.level}, {formatNumber(grade?.amount, true)}
             </p>
           </div>
         ))}

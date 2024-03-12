@@ -16,6 +16,7 @@ interface IGetStaffApi {
 export const getStaffApi = async ({
   staffId,
 }: {
+  
   staffId: string;
 }): Promise<IGetStaffApi> => {
   return fetchData(`/staff/profile/${staffId}`);

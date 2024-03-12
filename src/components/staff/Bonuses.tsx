@@ -37,7 +37,7 @@ const Bonuses = (props: Props) => {
                 className="mb-10 text-sm font-normal capitalize sm:mb-0 sl:text-lg"
                 key={index}
               >
-                {bonus.interval} {bonus.period} bonus = {bonus.amount}
+                {bonus?.interval} {bonus?.period} bonus = {bonus?.amount}
               </p>
             ))}
       </div>
