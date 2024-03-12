@@ -1,7 +1,7 @@
 import React from "react";
 import UserBanner from "@components/staff/UserBanner";
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
-import { getStaffApi } from "@/api/staff";
+import { IGetGrades, getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
 import { staffPerformance } from "@/api/staff";
 import Grades from "@components/staff/Grades";
@@ -13,13 +13,8 @@ interface Props {
 }
 
 const StaffProfileWrapper = async ({ staffId }: Props) => {
-  console.log("staffId from child", staffId);
-
   const staffResponse = await getStaffApi({ staffId });
-  const staffPerf = await staffPerformance({ staffId });
-
-  console.log("staffResponse", staffResponse);
-  console.log("staffPerf", staffPerf);
+  const staffPerf: Partial<IGetGrades> = await staffPerformance({ staffId });
 
   return (
     <div className="">
@@ -99,18 +94,21 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
       <div>
         <h2 className="mb-6 font-semibold">Staff KPI</h2>
         <StaffTopCards
-          data={staffPerf?.data}
+          data={staffPerf?.data || JSON.parse("{}")}
           allowance={staffPerf?.statsOverView?.allowance || 0}
         />
       </div>
       <div className="gap-3 xms:flex sm:block">
         <Grades
           wrapperClass="basis-[50%]"
-          grades={staffPerf?.grades}
-          sales={staffPerf?.data?.amount}
-          gradePay={JSON.parse(staffPerf?.data?.gradeInformation)}
+          grades={staffPerf?.grades || []}
+          sales={staffPerf?.data?.amount || 0}
+          gradePay={JSON.parse(staffPerf?.data?.gradeInformation || "{}")}
         />
-        <Bonuses wrapperClass="basis-[50%]" bonuses={staffPerf?.bonuses} />
+        <Bonuses
+          wrapperClass="basis-[50%]"
+          bonuses={staffPerf?.bonuses || []}
+        />
       </div>
     </div>
   );
