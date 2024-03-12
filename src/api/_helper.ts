@@ -3,7 +3,7 @@ import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
 import { unstable_noStore } from "next/cache";
 
-interface IResponse {
+export interface IErrorResponse {
   isError?: boolean;
   message?: string;
 }
@@ -27,7 +27,7 @@ export const fetchData = async (url: string) => {
       return {
         isError: true,
         message: "Empty response",
-      } as IResponse;
+      } as IErrorResponse;
     }
   } catch (error: any) {
     throw error.response || error;
