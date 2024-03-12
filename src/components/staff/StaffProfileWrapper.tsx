@@ -13,6 +13,8 @@ interface Props {
 }
 
 const StaffProfileWrapper = async ({ staffId }: Props) => {
+  console.log("staffId from child", staffId);
+
   const staffResponse = await getStaffApi({ staffId });
   const staffPerf = await staffPerformance({ staffId });
 

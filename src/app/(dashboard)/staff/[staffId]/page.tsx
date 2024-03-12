@@ -17,6 +17,8 @@ async function Page({
     redirect("/");
   }
 
+  console.log("staffId from page", staffId);
+
   return (
     <div>
       <Suspense>
