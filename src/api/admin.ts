@@ -4,10 +4,8 @@ import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
-import { getApiUrl, getMonthInGMTPlus1 } from "@/utils";
-import { authConfig } from "@authConfig";
-import { getServerSession } from "next-auth";
-import { unstable_noStore } from "next/cache";
+import { getMonthInGMTPlus1 } from "@/utils";
+import { fetchData } from "./_helper";
 
 export interface IAdminAnalytics {
   success: boolean;
@@ -26,47 +24,16 @@ export interface IAdminAnalytics {
     monthlySales: number;
     month: string;
   };
-  isError?: boolean;
-  message?: string;
 }
 
 export const getAdminAnalyticsApi = async (
   selectedMonth?: string,
 ): Promise<IAdminAnalytics> => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const month = selectedMonth || getMonthInGMTPlus1().toString();
-
-    const res = await fetch(getApiUrl(`/admin/analytics?month=${month}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return { isError: true, message: "Empty response" } as IAdminAnalytics;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  const month = selectedMonth || getMonthInGMTPlus1().toString();
+  return fetchData(`/admin/analytics?month=${month}`);
 };
 
 interface IGetAllSellersAdminApi {
-  isError?: boolean;
-  message?: string;
   data: User[];
   meta: FetchMeta;
   countVerifiedSellers: number;
@@ -85,37 +52,7 @@ export const getAllSellersAdminApi = async ({
   if (verified) {
     params.append("verified", verified);
   }
-
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const res = await fetch(getApiUrl(`/admin/sellers?${params.toString()}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetAllSellersAdminApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/admin/sellers?${params.toString()}`);
 };
 
 export const getAllStaffAdminApi = async ({
@@ -126,41 +63,10 @@ export const getAllStaffAdminApi = async ({
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
 
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const res = await fetch(getApiUrl(`/admin/staff?${params.toString()}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetAllSellersAdminApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/admin/staff?${params.toString()}`);
 };
 
 interface IGetAllPaidSellersAdminApi {
-  isError?: boolean;
-  message?: string;
   data: ISubscribedUser[];
   meta: FetchMeta;
   activeSubscriptionCount: number;
@@ -184,44 +90,10 @@ export const getAllPaidSellersAdminApi = async ({
     params.append("transactionStatus", transactionStatus);
   }
 
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const res = await fetch(
-      getApiUrl(`/admin/paid-sellers?${params.toString()}`),
-      {
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-        cache: "no-cache",
-      },
-    );
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetAllPaidSellersAdminApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/admin/paid-sellers?${params.toString()}`);
 };
 
 interface IGetAllBuyersAdminApi {
-  isError?: boolean;
-  message?: string;
   data: User[];
   meta: FetchMeta;
   countVerifiedBuyers: number;
@@ -240,43 +112,12 @@ export const getAllBuyersAdminApi = async ({
     params.append("verified", verified);
   }
 
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const res = await fetch(getApiUrl(`/admin/buyers?${params.toString()}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetAllBuyersAdminApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/admin/buyers?${params.toString()}`);
 };
 
 interface IGetAllPosts {
   meta: FetchMeta;
   data: Product[];
-  isError?: boolean;
-  message?: string;
 }
 
 export const getAllPosts = async ({
@@ -286,36 +127,8 @@ export const getAllPosts = async ({
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
 
-    const res = await fetch(getApiUrl(`/admin/posts?${params.toString()}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetAllPosts;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/admin/posts?${params.toString()}`);
 };
 
 interface IGetProtectedSellerApi {
@@ -327,8 +140,6 @@ interface IGetProtectedSellerApi {
     planName: string;
     managerName: string;
   };
-  isError?: boolean;
-  message?: string;
   feedbacks?: IFeedback[];
   managers?: User[];
 }
@@ -337,36 +148,7 @@ export const getProtectedSellerApi = async ({
 }: {
   sellerId: string;
 }): Promise<IGetProtectedSellerApi> => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const res = await fetch(getApiUrl(`/admin/seller/${sellerId}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetProtectedSellerApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/admin/seller/${sellerId}`);
 };
 
 interface IFindAllSellerProductsApi {
@@ -387,33 +169,29 @@ export const findAllSellerProductsApi = async ({
   sellerId: string;
   status?: string;
 }): Promise<IFindAllSellerProductsApi> => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-    const params = new URLSearchParams();
+  const params = new URLSearchParams();
 
-    if (status) {
-      params.append("status", status || "");
-    }
-    params.append("page", String(page || 1));
-    params.append("limit", String(limit || 10));
-
-    const res = await fetch(
-      getApiUrl(`/admin/seller-shop/${sellerId}?${params.toString()}`),
-      {
-        headers: {
-          Authorization: "Bearer " + session?.token,
-        },
-        cache: "no-cache",
-      },
-    );
-
-    if (!res.ok) {
-      throw await res.json();
-    }
-
-    return await res.json();
-  } catch (error: any) {
-    throw error.response || error;
+  if (status) {
+    params.append("status", status || "");
   }
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  return fetchData(`/admin/seller-shop/${sellerId}?${params.toString()}`);
+};
+
+interface IAdminFetchSellersUnderStaffeApi {
+  data: User[];
+  staff?: User;
+  meta: FetchMeta;
+  message?: string;
+  success?: boolean;
+}
+
+export const adminFetchSellersUnderStaff = async ({
+  staffId,
+}: {
+  staffId: string;
+}): Promise<IAdminFetchSellersUnderStaffeApi> => {
+  return fetchData(`/admin/${staffId}/sellers`);
 };

@@ -23,6 +23,7 @@ export async function generateMetadata(
 
   return {
     title: seller?.name || "Seller not found",
+    description: seller?.aboutBusiness || "",
     openGraph: {
       images: [
         seller?.avatar ||

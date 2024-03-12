@@ -7,9 +7,9 @@ import AnalyticsTopCardsHOC from "../analytics/AnalyticsTopCardsHOC";
 import { useRouter } from "next/navigation";
 import {
   ADMIN_ALL_POSTS,
-  ADMIN_ALL_SELLERS_ROUTE,
-  DASHBOARD_STAFF_ROUTE,
-  ADMIN_PAID_SELLERS_ROUTE,
+  VIEW_SELLERS_ROUTE,
+  VIEW_STAFF_ROUTE,
+  PAID_SELLERS_ROUTE,
 } from "@/constants/routes";
 
 interface Props {
@@ -40,20 +40,20 @@ const AdminAnalyticsWrapper = (props: Props) => {
         title="All sellers"
         description="The total number of registered sellers"
         isClickable
-        onClick={() => router?.push(ADMIN_ALL_SELLERS_ROUTE)}
+        onClick={() => router?.push(VIEW_SELLERS_ROUTE)}
         number={totalSellersCount}
       />
       <AnalyticsTopCards
         title="Staff accounts"
         number={totalStaff}
         isClickable
-        onClick={() => router?.push(DASHBOARD_STAFF_ROUTE)}
+        onClick={() => router?.push(VIEW_STAFF_ROUTE)}
         description="The total number of registered staff"
       />
       <AnalyticsTopCards
         title="Paid Sellers"
         number={paidSellersCount}
-        onClick={() => router?.push(ADMIN_PAID_SELLERS_ROUTE)}
+        onClick={() => router?.push(PAID_SELLERS_ROUTE)}
         isClickable
         description="The total number of paid subscribers"
       />

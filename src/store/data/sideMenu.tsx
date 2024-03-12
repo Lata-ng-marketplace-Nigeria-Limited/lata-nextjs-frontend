@@ -30,7 +30,10 @@ import {
   DASHBOARD_SALES_AGREEMENT_ROUTE,
   DASHBOARD_SAVED_ROUTE,
   DASHBOARD_SETTINGS_ROUTE,
+  VIEW_STAFF_ROUTE,
   DASHBOARD_SUBSCRIPTIONS_ROUTE,
+  VIEW_SELLERS_ROUTE,
+  ADMIN_EDIT_KPI_ROUTE,
 } from "@/constants/routes";
 import { NewProductIcon } from "@/components/atom/icons/Admin";
 import { EditIcon } from "@/components/atom/icons/Edit";
@@ -43,10 +46,13 @@ import {
   Truck,
   LockKeyhole,
   Pencil,
+  Edit,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
 import { ShoppingCartIcon } from "@/components/atom/icons/ShoppingCart";
+import SellersIcon from "@/components/atom/icons/Sellers";
+import PencilIcon from "@/components/atom/icons/Pencil";
 
 export const sideMenu: {
   title: string;
@@ -71,6 +77,18 @@ export const sideMenu: {
     hideFromStaff: false,
     fill: false,
     href: "/",
+  },
+  {
+    title: "Sellers",
+    icon: <SellersIcon />,
+    isSeller: false,
+    isAdmin: false,
+    isAuth: true,
+    isStaff: true,
+    hideFromAdmin: true,
+    hideFromStaff: false,
+    fill: false,
+    href: `${VIEW_STAFF_ROUTE}${VIEW_SELLERS_ROUTE}`,
   },
   {
     title: "Messages",
@@ -179,6 +197,18 @@ export const sideMenu: {
     fill: false,
     isAuth: true,
     href: ADMIN_EDIT_PLAN_ROUTE,
+  },
+  {
+    title: "Edit KPI",
+    icon: <Edit className={"w-4 h-4"} />,
+    isSeller: false,
+    isAdmin: true,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: false,
+    fill: false,
+    isAuth: true,
+    href: ADMIN_EDIT_KPI_ROUTE,
   },
   {
     title: "Legal Docs",

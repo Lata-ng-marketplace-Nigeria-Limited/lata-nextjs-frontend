@@ -18,6 +18,7 @@ import Button from "../atom/Button";
 import ImageUploader from "../input/ImageUploader";
 import { toast } from "../ui/use-toast";
 import FormTopLabel from "../input/FormTopLabel";
+import { useRouter } from "next/navigation";
 
 interface Props {
   setShowAddStaffModal?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +30,7 @@ const AddStaffForm = (props: Props) => {
   const [imageErrorMessage, setImageErrorMessage] = useState("");
   const [avatar, setAvatar] = useState("");
   const [formState, setFormState] = useState<"one" | "two">("one");
+  const { refresh } = useRouter();
 
   const {
     formState: { errors },
@@ -79,13 +81,22 @@ const AddStaffForm = (props: Props) => {
         role: "STAFF",
       });
 
-      toast({
-        description: `Staff account created successfully`,
-        variant: "success",
-        duration: 15000,
-      });
-      console.log("response", response);
-      props.setShowAddStaffModal?.(false);
+      if (response.success) {
+        toast({
+          description: `Staff account created successfully`,
+          variant: "success",
+          duration: 15000,
+        });
+        setLoading(false);
+        refresh?.();
+        props.setShowAddStaffModal?.(false);
+      } else {
+        setLoading(false);
+        toast({
+          description: `Something went wrong`,
+          variant: "destructive",
+        });
+      }
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<z.infer<typeof staffSignUpSchema>> =
         error;
@@ -113,6 +124,10 @@ const AddStaffForm = (props: Props) => {
   };
 
   const formStyle = cn("flex flex-col gap-y-6");
+
+  // const goToFormTwo = () => {
+  //   if()
+  // }
 
   return (
     <form className="text-grey9" onSubmit={handleSubmit(onSubmit)}>

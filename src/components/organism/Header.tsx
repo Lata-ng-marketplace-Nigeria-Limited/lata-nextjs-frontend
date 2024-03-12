@@ -18,6 +18,7 @@ import { useRegistrationFormStore } from "@/store/states/userState";
 import { useRouter } from "next/navigation";
 import { getRecentSearchesApi } from "@/api/product";
 import { UserRole } from "@/interface/user";
+import ProfileSummary from "../staff/ProfileSummary";
 
 interface Props {
   noSideMenu?: boolean;
@@ -73,7 +74,12 @@ const Header = ({ noSideMenu, role }: Props) => {
         <SearchProductForm recentSearches={recentSearches} />
       </div>
 
-      {role === "ADMIN" ? null : (
+      {role === "ADMIN" ? null : role === "STAFF" ? (
+        <ProfileSummary
+          name={user?.name as string}
+          imgSrc={user?.avatar as string}
+        />
+      ) : (
         <Button
           type={"submit"}
           as={"link"}

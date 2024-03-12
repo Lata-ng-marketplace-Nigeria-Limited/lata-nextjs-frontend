@@ -1,5 +1,6 @@
+import { getSellersUnderStaffApi } from "@/api/staff";
 import { GetUser } from "@/components/atom/GetUser";
-import StaffProfileWrapper from "@/components/staff/StaffProfileWrapper";
+import StaffSellers from "@/components/staff/StaffSellers";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -13,20 +14,23 @@ async function Page({
   };
 }) {
   const session = await getServerSession(authConfig);
-  if (!session || !session.user || session.role !== "ADMIN") {
+  if (!session || !session.user || session.role !== "STAFF") {
     redirect("/");
   }
 
-  console.log("staffId from page", staffId);
-
+  const response = await getSellersUnderStaffApi();
   return (
     <div>
       <Suspense>
         <GetUser />
       </Suspense>
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <StaffProfileWrapper staffId={staffId} />
+      <Suspense fallback={<p>Loading...</p>}>
+        <StaffSellers
+          data={response?.data}
+          meta={response?.meta}
+          staff={response?.staff}
+        />
       </Suspense>
     </div>
   );

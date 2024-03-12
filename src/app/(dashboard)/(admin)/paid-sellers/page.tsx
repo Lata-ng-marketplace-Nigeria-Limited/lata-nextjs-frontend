@@ -21,7 +21,11 @@ export default async function Protected({
   };
 }) {
   const session = await getServerSession(authConfig);
-  if (!session || !session.user || session.role !== "ADMIN") {
+  if (
+    !session ||
+    !session.user ||
+    (session.role !== "ADMIN" && session.role !== "STAFF")
+  ) {
     redirect("/");
   }
 

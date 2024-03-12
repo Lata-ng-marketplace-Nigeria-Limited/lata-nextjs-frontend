@@ -180,7 +180,8 @@ export default function ProductForm({
       ...values,
       files: files!,
       price: Number(values.price),
-      userId: user?.role === "ADMIN" ? sellerId : user?.id,
+      userId:
+        user?.role === "ADMIN" || user?.role === "STAFF" ? sellerId : user?.id,
       discount: Number(values.discount || 0),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(

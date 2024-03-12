@@ -250,8 +250,11 @@ export const logoutUser = async (
   });
 };
 
-export function formatNumber(num: number, abbThousand?: boolean) {
-  if (num > 1e3 && abbThousand) {
+export function formatNumber(value: number | string, abbThousand?: boolean) {
+  if (isNaN(Number(value))) return;
+  const num = Number(value);
+
+  if (num >= 1e3 && abbThousand) {
     return (num / 1e3).toFixed(0) + "k";
   }
   if (num < 1000000) {
@@ -266,4 +269,22 @@ export function formatNumber(num: number, abbThousand?: boolean) {
   if (num >= 1e6) {
     return (num / 1e6).toFixed(1) + "M";
   }
+}
+
+export function formatPriceCompact(
+  price: number | string,
+  showFullAmount?: boolean,
+) {
+  if (isNaN(Number(price))) return;
+  const value = Number(price);
+
+  const useFullAmount = showFullAmount && value >= 1e3 && value < 1e6;
+
+  const formattedPrice = Intl.NumberFormat("en-NG", {
+    notation: useFullAmount ? "standard" : "compact",
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 0,
+  }).format(value);
+  return formattedPrice;
 }

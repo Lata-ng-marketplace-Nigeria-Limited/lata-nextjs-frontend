@@ -3,9 +3,9 @@
 import Image from "next/image";
 import React from "react";
 import Subcategory from "@components/product/Subcategory";
-import { Category } from "@/interface/products";
 import { cn } from "@/utils";
 import Modal from "../molecule/Modal";
+import type { Category } from "@/interface/products";
 
 interface Props {
   data: Category;

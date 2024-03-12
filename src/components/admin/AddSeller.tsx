@@ -18,6 +18,7 @@ import Button from "../atom/Button";
 import ImageUploader from "../input/ImageUploader";
 import { toast } from "../ui/use-toast";
 import FormTopLabel from "../input/FormTopLabel";
+import { useRouter } from "next/navigation";
 
 interface Props {
   setShowAddSellerModal?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,6 +29,7 @@ const AddSellerForm = (props: Props) => {
   const [file, setFile] = useState<FileList>();
   const [imageErrorMessage, setImageErrorMessage] = useState("");
   const [avatar, setAvatar] = useState("");
+  const {refresh} = useRouter()
 
   const {
     formState: { errors },
@@ -79,6 +81,7 @@ const AddSellerForm = (props: Props) => {
         variant: "success",
         duration: 15000,
       });
+      refresh?.()
       props.setShowAddSellerModal?.(false);
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<

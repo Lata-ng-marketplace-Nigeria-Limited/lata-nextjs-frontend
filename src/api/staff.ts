@@ -2,17 +2,15 @@
 
 import { FetchMeta } from "@/interface/general";
 import { User } from "@/interface/user";
-import { getApiUrl } from "@/utils";
-import { authConfig } from "@authConfig";
-import { getServerSession } from "next-auth";
-import { unstable_noStore } from "next/cache";
+import { fetchData } from "@/api/_helper";
+import { IGrade, IGradeTransaction } from "@/interface/grade";
+import { BonusTransaction, PerformanceOverview } from "@/interface/staff";
 
 interface IGetStaffApi {
   data: User;
   admin: User;
   message?: string;
   success?: boolean;
-  isError?: boolean;
   totalSellers?: number;
 }
 export const getStaffApi = async ({
@@ -20,36 +18,7 @@ export const getStaffApi = async ({
 }: {
   staffId: string;
 }): Promise<IGetStaffApi> => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
-
-    const res = await fetch(getApiUrl(`/staff/${staffId}`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetStaffApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
-  }
+  return fetchData(`/staff/profile/${staffId}`);
 };
 
 interface IGetSellersUnderStaffeApi {
@@ -58,49 +27,49 @@ interface IGetSellersUnderStaffeApi {
   meta: FetchMeta;
   message?: string;
   success?: boolean;
-  isError?: boolean;
 }
 
-export const getSellersUnderStaffApi = async ({
+export const getSellersUnderStaffApi =
+  async (): Promise<IGetSellersUnderStaffeApi> => {
+    return fetchData("/staff/sellers");
+  };
+
+export const bonusApi = async ({ userId }: { userId: string }) => {
+  return fetchData(`/bonus/${userId}`);
+};
+
+export interface IGetGrades {
+  grades: IGrade[];
+  message?: string;
+  success?: boolean;
+  isError?: boolean;
+  data: IGradeTransaction;
+  statsOverView: PerformanceOverview;
+  bonuses: Array<[string, BonusTransaction | null]>;
+  staffAnalytics: {
+    month: string;
+    totalSales: number;
+    gradePoint: number;
+  }[];
+}
+
+// bonuses: [
+//   [ 'week1', null ],
+//   [ 'week2', [Object] ],
+//   [ 'week3', null ],
+//   [ 'week4', null ]
+// ]
+export const staffPerformance = async ({
   staffId,
+  month,
 }: {
   staffId: string;
-}): Promise<IGetSellersUnderStaffeApi> => {
-  try {
-    unstable_noStore();
-    const session = await getServerSession(authConfig);
+  month?: string;
+}): Promise<IGetGrades> => {
+  const params = new URLSearchParams();
 
-    if (!staffId) {
-      return {
-        isError: true,
-        message: "Staff Id is required",
-      } as IGetSellersUnderStaffeApi;
-    }
-
-    const res = await fetch(getApiUrl(`/staff/${staffId}/sellers`), {
-      headers: {
-        Authorization: `Bearer ${session?.token}`,
-      },
-      cache: "no-cache",
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      return {
-        ...data,
-        isError: true,
-      };
-    }
-    const json = await res.text();
-
-    if (json) {
-      return JSON.parse(json);
-    } else {
-      return {
-        isError: true,
-        message: "Empty response",
-      } as IGetSellersUnderStaffeApi;
-    }
-  } catch (error: any) {
-    throw error.response || error;
+  if (month) {
+    params.append("month", month || "");
   }
+  return fetchData(`/staff/performance/${staffId}?${params.toString()}`);
 };
