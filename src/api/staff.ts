@@ -48,7 +48,7 @@ interface IGetGrades {
   bonuses: Array<[string, BonusTransaction | null]>;
   staffAnalytics: {
     month: string;
-    sales: number;
+    totalSales: number;
     gradePoint: number;
   }[];
 }

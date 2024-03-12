@@ -9,7 +9,7 @@ import {
   ADMIN_ALL_POSTS,
   VIEW_SELLERS_ROUTE,
   VIEW_STAFF_ROUTE,
-  ADMIN_PAID_SELLERS_ROUTE,
+  PAID_SELLERS_ROUTE,
 } from "@/constants/routes";
 
 interface Props {
@@ -53,7 +53,7 @@ const AdminAnalyticsWrapper = (props: Props) => {
       <AnalyticsTopCards
         title="Paid Sellers"
         number={paidSellersCount}
-        onClick={() => router?.push(ADMIN_PAID_SELLERS_ROUTE)}
+        onClick={() => router?.push(PAID_SELLERS_ROUTE)}
         isClickable
         description="The total number of paid subscribers"
       />

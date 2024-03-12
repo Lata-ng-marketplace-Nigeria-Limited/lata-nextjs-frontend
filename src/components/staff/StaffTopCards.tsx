@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
 import AnalyticsTopCards from "../analytics/AnalyticsTopCards";
 import AnalyticsTopCardsHOC from "../analytics/AnalyticsTopCardsHOC";
 import { formatPriceCompact } from "@/utils";
 import { IGradeTransaction } from "@/interface/grade";
-import { DateTime } from "luxon";
+import { PAID_SELLERS_ROUTE } from "@/constants/routes";
+import { useRouter } from "next/navigation";
 
 interface Props {
   data: IGradeTransaction;
@@ -11,6 +14,7 @@ interface Props {
   allowance: number;
 }
 const StaffTopCards = (props: Props) => {
+  const { push } = useRouter();
   return (
     <AnalyticsTopCardsHOC>
       <AnalyticsTopCards
@@ -38,6 +42,7 @@ const StaffTopCards = (props: Props) => {
         title="Paid sellers"
         description="The total numbers of your paid sellers"
         isClickable
+        onClick={() => push(PAID_SELLERS_ROUTE)}
         number={props?.totalPaidSellers?.toLocaleString() || "0"}
       />
     </AnalyticsTopCardsHOC>

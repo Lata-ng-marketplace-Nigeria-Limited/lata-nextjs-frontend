@@ -3,14 +3,13 @@ import StaffTopCards from "./StaffTopCards";
 import { staffPerformance } from "@/api/staff";
 import AnalyticsSideCard from "../analytics/AnalyticsSideCard";
 import AnalyticsSideCardsHOC from "../analytics/AnalyticsSideCardsHOC";
-import AnalyticsChart from "../analytics/AnalyticsChart";
 import AnalyticsChartAreaHOC from "../analytics/AnalyticsChartAreaHOC";
-import { getAnalyticsClicksAndViews } from "@/api/view";
 import { formatNumber } from "@/utils";
 import ProductInsights from "../analytics/ProductInsights";
 import Grades from "./Grades";
 import Bonuses from "./Bonuses";
 import StaffAnalytics from "./StaffAnalytics";
+import { months } from "@/store/data/analytics";
 
 interface Props {
   staffId: string;
@@ -22,6 +21,8 @@ const StaffDashboard = async (props: Props) => {
     staffId: props.staffId,
     month: props.month,
   });
+  const monthInFull =
+    months[Number(staffPerf?.statsOverView?.month) - 1]?.extra ?? "";
 
   return (
     <div>
@@ -33,7 +34,7 @@ const StaffDashboard = async (props: Props) => {
       <div className="mb-8">
         <ProductInsights
           selectedMonth={props.month}
-          title="Analytics Chart"
+          title="Sales Chart"
           titleClass="!text-sm md:!text-[1.1rem] text-grey10 font-semibold md:font-medium"
         />
         <AnalyticsChartAreaHOC>
@@ -46,7 +47,7 @@ const StaffDashboard = async (props: Props) => {
               clicksCount={
                 formatNumber(staffPerf?.statsOverView?.monthlySales) || 0
               }
-              description={staffPerf?.statsOverView?.month || ""}
+              description={monthInFull}
             />
 
             <AnalyticsSideCard
