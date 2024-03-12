@@ -5,7 +5,7 @@ import React from "react";
 import Subcategory from "@components/product/Subcategory";
 import { cn } from "@/utils";
 import Modal from "../molecule/Modal";
-import { Category } from "@/interface/products";
+import type { Category } from "@/interface/products";
 
 interface Props {
   data: Category;
