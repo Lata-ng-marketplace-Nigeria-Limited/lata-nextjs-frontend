@@ -2,6 +2,27 @@ import { months } from "@/store/data/analytics";
 
 const labels = months.map((month) => month.label);
 
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "bottom" as const,
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+    },
+    x: {
+      barPercentage: 1.9,
+      categoryPercentage: 0.5,
+      grid: {
+        display: false,
+      },
+    },
+  },
+};
+
 export const chartConfig = (
   productClicks: number[],
   productViews: number[],
@@ -45,27 +66,6 @@ export const chartConfig = (
         minBarThickness: 30,
       },
     ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom" as const,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-      x: {
-        barPercentage: 1.9,
-        categoryPercentage: 0.5,
-        grid: {
-          display: false,
-        },
-      },
-    },
   };
 
   return { data, options };

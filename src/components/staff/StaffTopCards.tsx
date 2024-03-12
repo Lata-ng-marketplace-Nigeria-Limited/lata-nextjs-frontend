@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 interface Props {
   data: IGradeTransaction;
   totalPaidSellers?: number;
+  allowance: number;
 }
 const StaffTopCards = (props: Props) => {
   return (
@@ -23,7 +24,9 @@ const StaffTopCards = (props: Props) => {
         title="Allowance"
         description="₦5K for every three sales and above"
         isClickable
-        number={ "0"}
+        number={
+          formatPriceCompact(props?.allowance as number, true || 0) || "0"
+        }
       />
       <AnalyticsTopCards
         title="Grade pay"

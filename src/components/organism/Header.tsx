@@ -73,7 +73,7 @@ const Header = ({ noSideMenu, role }: Props) => {
         <SearchProductForm recentSearches={recentSearches} />
       </div>
 
-      {role === "ADMIN" ? null : (
+      {role === "ADMIN" || role === "STAFF" ? null : (
         <Button
           type={"submit"}
           as={"link"}

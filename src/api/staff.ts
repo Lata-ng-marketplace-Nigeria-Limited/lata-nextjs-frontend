@@ -16,7 +16,6 @@ interface IGetStaffApi {
 export const getStaffApi = async ({
   staffId,
 }: {
-  
   staffId: string;
 }): Promise<IGetStaffApi> => {
   return fetchData(`/staff/profile/${staffId}`);
@@ -47,6 +46,11 @@ interface IGetGrades {
   data: IGradeTransaction;
   statsOverView: PerformanceOverview;
   bonuses: Array<[string, BonusTransaction | null]>;
+  staffAnalytics: {
+    month: string;
+    sales: number;
+    gradePoint: number;
+  }[];
 }
 
 // bonuses: [
@@ -57,8 +61,15 @@ interface IGetGrades {
 // ]
 export const staffPerformance = async ({
   staffId,
+  month,
 }: {
   staffId: string;
+  month?: string;
 }): Promise<IGetGrades> => {
-  return fetchData(`/staff/performance/${staffId}`);
+  const params = new URLSearchParams();
+
+  if (month) {
+    params.append("month", month || "");
+  }
+  return fetchData(`/staff/performance/${staffId}?${params.toString()}`);
 };

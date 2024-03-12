@@ -10,6 +10,7 @@ import { formatNumber } from "@/utils";
 import ProductInsights from "../analytics/ProductInsights";
 import Grades from "./Grades";
 import Bonuses from "./Bonuses";
+import StaffAnalytics from "./StaffAnalytics";
 
 interface Props {
   staffId: string;
@@ -17,14 +18,17 @@ interface Props {
 }
 
 const StaffDashboard = async (props: Props) => {
-  const staffPerf = await staffPerformance({ staffId: props.staffId });
-  const chartsData = await getAnalyticsClicksAndViews();
+  const staffPerf = await staffPerformance({
+    staffId: props.staffId,
+    month: props.month,
+  });
 
   return (
     <div>
       <StaffTopCards
         data={staffPerf?.data}
         totalPaidSellers={staffPerf?.statsOverView?.totalPaidSellers}
+        allowance={staffPerf?.statsOverView?.allowance || 0}
       />
       <div className="mb-8">
         <ProductInsights
@@ -33,7 +37,7 @@ const StaffDashboard = async (props: Props) => {
           titleClass="!text-sm md:!text-[1.1rem] text-grey10 font-semibold md:font-medium"
         />
         <AnalyticsChartAreaHOC>
-          <AnalyticsChart chartsData={chartsData} />
+          <StaffAnalytics data={staffPerf?.staffAnalytics} />
 
           <AnalyticsSideCardsHOC>
             <AnalyticsSideCard

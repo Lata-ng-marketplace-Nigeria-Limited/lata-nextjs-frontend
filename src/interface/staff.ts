@@ -18,4 +18,5 @@ export interface PerformanceOverview {
   month: string | null;
   monthlySales: number;
   totalPaidSellers: number;
+  allowance: number;
 }

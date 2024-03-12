@@ -18,8 +18,8 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
   const staffResponse = await getStaffApi({ staffId });
   const staffPerf = await staffPerformance({ staffId });
 
-  console.log('staffResponse', staffResponse)
-  console.log('staffPerf', staffPerf)
+  console.log("staffResponse", staffResponse);
+  console.log("staffPerf", staffPerf);
 
   return (
     <div className="">
@@ -98,7 +98,10 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
       </div>
       <div>
         <h2 className="mb-6 font-semibold">Staff KPI</h2>
-        <StaffTopCards data={staffPerf?.data} />
+        <StaffTopCards
+          data={staffPerf?.data}
+          allowance={staffPerf?.statsOverView?.allowance || 0}
+        />
       </div>
       <div className="gap-3 xms:flex sm:block">
         <Grades
