@@ -38,7 +38,7 @@ export const bonusApi = async ({ userId }: { userId: string }) => {
   return fetchData(`/bonus/${userId}`);
 };
 
-interface IGetGrades {
+export interface IGetGrades {
   grades: IGrade[];
   message?: string;
   success?: boolean;
