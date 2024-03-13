@@ -3,7 +3,7 @@
 import { FetchMeta } from "@/interface/general";
 import { User } from "@/interface/user";
 import { fetchData } from "@/api/_helper";
-import { IGrade, IGradeTransaction } from "@/interface/grade";
+import {  ITarget, ITargetTransaction } from "@/interface/target";
 import { BonusTransaction, PerformanceOverview } from "@/interface/staff";
 
 interface IGetStaffApi {
@@ -38,18 +38,18 @@ export const bonusApi = async ({ userId }: { userId: string }) => {
   return fetchData(`/bonus/${userId}`);
 };
 
-export interface IGetGrades {
-  grades: IGrade[];
+export interface IGetTargets {
+  targets: ITarget[];
   message?: string;
   success?: boolean;
   isError?: boolean;
-  data: IGradeTransaction;
+  data: ITargetTransaction;
   statsOverView: PerformanceOverview;
   bonuses: Array<[string, BonusTransaction | null]>;
   staffAnalytics: {
     month: string;
     totalSales: number;
-    gradePoint: number;
+    targetPoint: number;
   }[];
 }
 
@@ -65,7 +65,7 @@ export const staffPerformance = async ({
 }: {
   staffId: string;
   month?: string;
-}): Promise<IGetGrades> => {
+}): Promise<IGetTargets> => {
   const params = new URLSearchParams();
 
   if (month) {

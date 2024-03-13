@@ -1,6 +1,6 @@
 "use server";
 
-import { IGrade, IGradeTransaction } from "@/interface/grade";
+import { ITarget, ITargetTransaction } from "@/interface/target";
 import { getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
@@ -24,12 +24,12 @@ const fetchData = async (url: string) => {
   }
 };
 
-interface IGetGrades {
-  grades: IGrade[];
+interface IGetTarget {
+  targets: ITarget[];
   message?: string;
   success?: boolean;
   isError?: boolean;
-  data: IGradeTransaction;
+  data: ITargetTransaction;
   statsOverView: {
     totalSales: number;
     highestSales: number;

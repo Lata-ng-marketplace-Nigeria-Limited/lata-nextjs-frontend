@@ -6,8 +6,8 @@ import AnalyticsSideCardsHOC from "../analytics/AnalyticsSideCardsHOC";
 import AnalyticsChartAreaHOC from "../analytics/AnalyticsChartAreaHOC";
 import { formatNumber } from "@/utils";
 import ProductInsights from "../analytics/ProductInsights";
-import Grades from "./Grades";
-import Bonuses from "./Bonuses";
+import Targets from "@components/staff/Targets";
+import Bonuses from "@components/staff/Bonuses";
 import StaffAnalytics from "./StaffAnalytics";
 import { months } from "@/store/data/analytics";
 
@@ -74,11 +74,11 @@ const StaffDashboard = async (props: Props) => {
       </div>
 
       <div className="gap-3 xms:flex sm:block">
-        <Grades
+        <Targets
           wrapperClass="basis-[50%]"
-          grades={staffPerf?.grades}
+          targets={staffPerf?.targets}
           sales={staffPerf?.data?.amount}
-          gradePay={JSON.parse(staffPerf?.data?.gradeInformation || "{}")}
+          targetPay={JSON.parse(staffPerf?.data?.targetInformation || "{}")}
         />
         <Bonuses wrapperClass="basis-[50%]" bonuses={staffPerf?.bonuses} />
       </div>

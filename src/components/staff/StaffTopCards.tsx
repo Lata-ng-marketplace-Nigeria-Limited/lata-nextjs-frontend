@@ -4,12 +4,12 @@ import React from "react";
 import AnalyticsTopCards from "../analytics/AnalyticsTopCards";
 import AnalyticsTopCardsHOC from "../analytics/AnalyticsTopCardsHOC";
 import { formatPriceCompact } from "@/utils";
-import { IGradeTransaction } from "@/interface/grade";
+import { ITargetTransaction } from "@/interface/target";
 import { PAID_SELLERS_ROUTE } from "@/constants/routes";
 import { useRouter } from "next/navigation";
 
 interface Props {
-  data: IGradeTransaction;
+  data: ITargetTransaction;
   totalPaidSellers?: number;
   allowance: number;
 }
@@ -33,10 +33,10 @@ const StaffTopCards = (props: Props) => {
         }
       />
       <AnalyticsTopCards
-        title="Grade pay"
-        description="Salary pay for meeting your grade point"
+        title="Target pay"
+        description="Salary pay for meeting your target point"
         isClickable
-        number={formatPriceCompact(props?.data?.gradeSalary, true) || "0"}
+        number={formatPriceCompact(props?.data?.targetSalary, true) || "0"}
       />
       <AnalyticsTopCards
         title="Paid sellers"
