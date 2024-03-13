@@ -7,11 +7,11 @@ import { formatPriceCompact } from "@/utils";
 import { ITargetTransaction } from "@/interface/target";
 import { PAID_SELLERS_ROUTE } from "@/constants/routes";
 import { useRouter } from "next/navigation";
+import { PerformanceOverview } from "@/interface/staff";
 
 interface Props {
   data: ITargetTransaction;
-  totalPaidSellers?: number;
-  allowance: number;
+  statsOverview: PerformanceOverview;
 }
 const StaffTopCards = (props: Props) => {
   const { push } = useRouter();
@@ -22,14 +22,19 @@ const StaffTopCards = (props: Props) => {
         title="Commission"
         description="20% of your total sales"
         isClickable
-        number={formatPriceCompact(props?.data?.commission, true) || "0"}
+        number={
+          formatPriceCompact(
+            props?.statsOverview?.commission as number,
+            true,
+          ) || "0"
+        }
       />
       <AnalyticsTopCards
         title="Allowance"
         description="₦5K for every three sales and above"
         isClickable
         number={
-          formatPriceCompact(props?.allowance as number, true || 0) || "0"
+          formatPriceCompact(props?.statsOverview?.allowance, true || 0) || "0"
         }
       />
       <AnalyticsTopCards
@@ -43,7 +48,7 @@ const StaffTopCards = (props: Props) => {
         description="The total numbers of your paid sellers"
         isClickable
         onClick={() => push(PAID_SELLERS_ROUTE)}
-        number={props?.totalPaidSellers?.toLocaleString() || "0"}
+        number={props?.statsOverview?.totalPaidSellers?.toLocaleString() || "0"}
       />
     </AnalyticsTopCardsHOC>
   );

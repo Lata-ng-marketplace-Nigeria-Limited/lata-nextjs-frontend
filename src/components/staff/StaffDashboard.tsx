@@ -10,6 +10,7 @@ import Targets from "@components/staff/Targets";
 import Bonuses from "@components/staff/Bonuses";
 import StaffAnalytics from "./StaffAnalytics";
 import { months } from "@/store/data/analytics";
+import { PerformanceOverview } from "@/interface/staff";
 
 interface Props {
   staffId: string;
@@ -28,8 +29,7 @@ const StaffDashboard = async (props: Props) => {
     <div>
       <StaffTopCards
         data={staffPerf?.data}
-        totalPaidSellers={staffPerf?.statsOverView?.totalPaidSellers}
-        allowance={staffPerf?.statsOverView?.allowance || 0}
+        statsOverview={staffPerf?.statsOverView as PerformanceOverview}
       />
       <div className="mb-8">
         <ProductInsights

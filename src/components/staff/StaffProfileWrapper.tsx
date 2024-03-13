@@ -1,13 +1,13 @@
 import React from "react";
 import UserBanner from "@components/staff/UserBanner";
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
-import {  IGetTargets, getStaffApi } from "@/api/staff";
+import { IGetTargets, getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
 import { staffPerformance } from "@/api/staff";
-import Grades from "@/components/staff/Targets";
 import Bonuses from "@components/staff/Bonuses";
 import StaffTopCards from "./StaffTopCards";
 import Targets from "@/components/staff/Targets";
+import { PerformanceOverview } from "@/interface/staff";
 
 interface Props {
   staffId: string;
@@ -96,7 +96,7 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
         <h2 className="mb-6 font-semibold">Staff KPI</h2>
         <StaffTopCards
           data={staffPerf?.data || JSON.parse("{}")}
-          allowance={staffPerf?.statsOverView?.allowance || 0}
+          statsOverview={staffPerf?.statsOverView as PerformanceOverview}
         />
       </div>
       <div className="gap-3 xms:flex sm:block">
