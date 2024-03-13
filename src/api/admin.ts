@@ -200,5 +200,5 @@ export const adminFetchSellersUnderStaff = async ({
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
 
-  return fetchData(`/admin/${staffId}/sellers`);
+  return fetchData(`/admin/${staffId}/sellers?${params.toString()}`);
 };
