@@ -190,8 +190,15 @@ interface IAdminFetchSellersUnderStaffeApi {
 
 export const adminFetchSellersUnderStaff = async ({
   staffId,
-}: {
+  limit,
+  page,
+}: SearchQuery & {
   staffId: string;
 }): Promise<IAdminFetchSellersUnderStaffeApi> => {
+  const params = new URLSearchParams();
+
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
   return fetchData(`/admin/${staffId}/sellers`);
 };
