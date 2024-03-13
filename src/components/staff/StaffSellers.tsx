@@ -32,7 +32,7 @@ const StaffSellers = (props: Props) => {
       <TableTopArea
         title={(user?.role === "STAFF" ? "My" : props.staff?.name) + " Sellers"}
         buttonText="+ Add Seller"
-        placeholder="Search buyers"
+        placeholder="Search sellers"
         onClick={handleAddSeller}
         setSearch={setSearch}
       />
