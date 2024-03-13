@@ -8,16 +8,22 @@ import React, { Suspense } from "react";
 
 async function Page({
   params: { staffId },
+  searchParams,
 }: {
   params: {
     staffId: string;
+  };
+  searchParams?: {
+    page?: string;
   };
 }) {
   const session = await getServerSession(authConfig);
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }
-  const response = await adminFetchSellersUnderStaff({ staffId });
+  const page = searchParams?.page || "";
+
+  const response = await adminFetchSellersUnderStaff({ staffId, page });
 
   return (
     <div>

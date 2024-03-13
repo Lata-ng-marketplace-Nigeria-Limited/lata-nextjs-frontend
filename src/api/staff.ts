@@ -1,9 +1,9 @@
 "use server";
 
-import { FetchMeta } from "@/interface/general";
+import { FetchMeta, SearchQuery } from "@/interface/general";
 import { User } from "@/interface/user";
 import { fetchData } from "@/api/_helper";
-import {  ITarget, ITargetTransaction } from "@/interface/target";
+import { ITarget, ITargetTransaction } from "@/interface/target";
 import { BonusTransaction, PerformanceOverview } from "@/interface/staff";
 
 interface IGetStaffApi {
@@ -29,10 +29,17 @@ interface IGetSellersUnderStaffeApi {
   success?: boolean;
 }
 
-export const getSellersUnderStaffApi =
-  async (): Promise<IGetSellersUnderStaffeApi> => {
-    return fetchData("/staff/sellers");
-  };
+export const getSellersUnderStaffApi = async ({
+  page,
+  limit,
+}: SearchQuery): Promise<IGetSellersUnderStaffeApi> => {
+  const params = new URLSearchParams();
+
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  return fetchData(`/staff/sellers?${params.toString()}`);
+};
 
 export const bonusApi = async ({ userId }: { userId: string }) => {
   return fetchData(`/bonus/${userId}`);

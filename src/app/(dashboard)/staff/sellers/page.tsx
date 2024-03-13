@@ -7,18 +7,19 @@ import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
 async function Page({
-  params: { staffId },
+  searchParams,
 }: {
-  params: {
-    staffId: string;
+  searchParams?: {
+    page?: string;
   };
 }) {
   const session = await getServerSession(authConfig);
   if (!session || !session.user || session.role !== "STAFF") {
     redirect("/");
   }
+  const page = searchParams?.page || "";
 
-  const response = await getSellersUnderStaffApi();
+  const response = await getSellersUnderStaffApi({ page });
   return (
     <div>
       <Suspense>
