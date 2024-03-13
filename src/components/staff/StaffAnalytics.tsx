@@ -26,13 +26,13 @@ interface Props {
   data: {
     month: string;
     totalSales: number;
-    gradePoint: number;
+    targetPoint: number;
   }[];
 }
 
 const StaffAnalytics = (props: Props) => {
   const { data, options } = staffChartConfig(
-    props.data?.map((item) => item.gradePoint),
+    props.data?.map((item) => item.targetPoint),
     props.data?.map((item) => item.totalSales),
     props.data?.map((item) => item.month?.split(" ")[0]?.slice(0, 3)),
   );

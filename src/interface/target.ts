@@ -1,4 +1,4 @@
-export interface IGrade {
+export interface ITarget {
   id: string;
   level: string;
   amount: number;
@@ -7,13 +7,13 @@ export interface IGrade {
   updatedAt: string;
 }
 
-export interface IGradeTransaction {
+export interface ITargetTransaction {
   id: string;
   staffId: string;
   commission: number;
   amount: number;
-  gradeInformation: string;
-  gradeSalary: number;
+  targetInformation: string;
+  targetSalary: number;
   year: string;
   month: string;
   meta?: string;

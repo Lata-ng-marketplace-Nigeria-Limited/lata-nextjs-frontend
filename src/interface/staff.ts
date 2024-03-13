@@ -19,4 +19,5 @@ export interface PerformanceOverview {
   monthlySales: number;
   totalPaidSellers: number;
   allowance: number;
+  commission?: number
 }

@@ -1,12 +1,13 @@
 import React from "react";
 import UserBanner from "@components/staff/UserBanner";
 import { UserDetail, UserDetailContainer } from "@components/staff/UserDetail";
-import { IGetGrades, getStaffApi } from "@/api/staff";
+import { IGetTargets, getStaffApi } from "@/api/staff";
 import StaffBtnActions from "@components/staff/StaffBtnActions";
 import { staffPerformance } from "@/api/staff";
-import Grades from "@components/staff/Grades";
 import Bonuses from "@components/staff/Bonuses";
 import StaffTopCards from "./StaffTopCards";
+import Targets from "@/components/staff/Targets";
+import { PerformanceOverview } from "@/interface/staff";
 
 interface Props {
   staffId: string;
@@ -14,7 +15,7 @@ interface Props {
 
 const StaffProfileWrapper = async ({ staffId }: Props) => {
   const staffResponse = await getStaffApi({ staffId });
-  const staffPerf: Partial<IGetGrades> = await staffPerformance({ staffId });
+  const staffPerf: Partial<IGetTargets> = await staffPerformance({ staffId });
 
   return (
     <div className="">
@@ -95,15 +96,15 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
         <h2 className="mb-6 font-semibold">Staff KPI</h2>
         <StaffTopCards
           data={staffPerf?.data || JSON.parse("{}")}
-          allowance={staffPerf?.statsOverView?.allowance || 0}
+          statsOverview={staffPerf?.statsOverView as PerformanceOverview}
         />
       </div>
       <div className="gap-3 xms:flex sm:block">
-        <Grades
+        <Targets
           wrapperClass="basis-[50%]"
-          grades={staffPerf?.grades || []}
+          targets={staffPerf?.targets || []}
           sales={staffPerf?.data?.amount || 0}
-          gradePay={JSON.parse(staffPerf?.data?.gradeInformation || "{}")}
+          targetPay={JSON.parse(staffPerf?.data?.targetInformation || "{}")}
         />
         <Bonuses
           wrapperClass="basis-[50%]"
