@@ -84,7 +84,7 @@ const PaidSellers = (props: Props) => {
 
   const sideBtnDisplay = () => {
     const status = params.get("transactionStatus");
-    return (status?.toLowerCase() === "active" ? "on" : status) || "active";
+    return status || "active";
   };
 
   const duration = (seller: ISubscribedUser) => {

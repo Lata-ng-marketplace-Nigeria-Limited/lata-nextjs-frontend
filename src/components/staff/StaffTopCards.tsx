@@ -12,6 +12,7 @@ import { PerformanceOverview } from "@/interface/staff";
 interface Props {
   data: ITargetTransaction;
   statsOverview: PerformanceOverview;
+  staffId: string;
 }
 const StaffTopCards = (props: Props) => {
   const { push } = useRouter();
@@ -47,7 +48,7 @@ const StaffTopCards = (props: Props) => {
         title="Paid sellers"
         description="The total numbers of your paid sellers"
         isClickable
-        onClick={() => push(PAID_SELLERS_ROUTE)}
+        onClick={() => push(`${PAID_SELLERS_ROUTE}/${props.staffId}`)}
         number={props?.statsOverview?.totalPaidSellers?.toLocaleString() || "0"}
       />
     </AnalyticsTopCardsHOC>
