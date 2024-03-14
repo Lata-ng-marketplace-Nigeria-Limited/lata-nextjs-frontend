@@ -104,7 +104,7 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
           statsOverview={staffPerf?.statsOverView as PerformanceOverview}
         />
       </div>
-      <StaffAnalyticsArea staffPerf={staffPerf as IGetTargets} month={"3"} />
+      <StaffAnalyticsArea staffPerf={staffPerf as IGetTargets} month={month} />
 
       <div className="gap-3 xms:flex sm:block">
         <Targets
