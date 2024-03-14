@@ -7,9 +7,13 @@ import React, { Suspense } from "react";
 
 async function Page({
   params: { staffId },
+  searchParams,
 }: {
   params: {
     staffId: string;
+  };
+  searchParams?: {
+    month: string;
   };
 }) {
   const session = await getServerSession(authConfig);
@@ -17,7 +21,7 @@ async function Page({
     redirect("/");
   }
 
-  console.log("staffId from page", staffId);
+  const month = searchParams?.month || "";
 
   return (
     <div>
@@ -26,7 +30,7 @@ async function Page({
       </Suspense>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <StaffProfileWrapper staffId={staffId} />
+        <StaffProfileWrapper staffId={staffId} month={month} />
       </Suspense>
     </div>
   );

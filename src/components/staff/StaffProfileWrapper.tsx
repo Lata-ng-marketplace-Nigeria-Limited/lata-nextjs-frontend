@@ -8,14 +8,19 @@ import Bonuses from "@components/staff/Bonuses";
 import StaffTopCards from "./StaffTopCards";
 import Targets from "@/components/staff/Targets";
 import { PerformanceOverview } from "@/interface/staff";
+import StaffAnalyticsArea from "./StaffAnalyticsArea";
 
 interface Props {
   staffId: string;
+  month: string;
 }
 
-const StaffProfileWrapper = async ({ staffId }: Props) => {
+const StaffProfileWrapper = async ({ staffId, month }: Props) => {
   const staffResponse = await getStaffApi({ staffId });
-  const staffPerf: Partial<IGetTargets> = await staffPerformance({ staffId });
+  const staffPerf: Partial<IGetTargets> = await staffPerformance({
+    staffId,
+    month,
+  });
 
   return (
     <div className="">
@@ -99,6 +104,8 @@ const StaffProfileWrapper = async ({ staffId }: Props) => {
           statsOverview={staffPerf?.statsOverView as PerformanceOverview}
         />
       </div>
+      <StaffAnalyticsArea staffPerf={staffPerf as IGetTargets} month={"3"} />
+
       <div className="gap-3 xms:flex sm:block">
         <Targets
           wrapperClass="basis-[50%]"
