@@ -80,14 +80,19 @@ export const getAllPaidSellersAdminApi = async ({
   page,
   limit,
   transactionStatus,
+  staffId,
 }: SearchQuery & {
   transactionStatus: string;
+  staffId?: string;
 }): Promise<IGetAllPaidSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
   if (transactionStatus) {
     params.append("transactionStatus", transactionStatus);
+  }
+  if (staffId) {
+    params.append("staffId", staffId);
   }
 
   return fetchData(`/admin/paid-sellers?${params.toString()}`);

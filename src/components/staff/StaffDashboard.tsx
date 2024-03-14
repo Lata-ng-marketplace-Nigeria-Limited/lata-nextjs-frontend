@@ -23,6 +23,7 @@ const StaffDashboard = async (props: Props) => {
   return (
     <div>
       <StaffTopCards
+        staffId={props.staffId}
         data={staffPerf?.data}
         statsOverview={staffPerf?.statsOverView as PerformanceOverview}
       />
