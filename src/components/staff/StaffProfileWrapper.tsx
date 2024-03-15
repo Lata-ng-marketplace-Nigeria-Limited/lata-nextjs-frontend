@@ -102,6 +102,7 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
         <StaffTopCards
           data={staffPerf?.data || JSON.parse("{}")}
           statsOverview={staffPerf?.statsOverView as PerformanceOverview}
+          staffId={staffId}
         />
       </div>
       <StaffAnalyticsArea staffPerf={staffPerf as IGetTargets} month={month} />

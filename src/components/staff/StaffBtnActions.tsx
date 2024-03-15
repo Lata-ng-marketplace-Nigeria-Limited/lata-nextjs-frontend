@@ -7,6 +7,7 @@ import BlockUser from "../admin/BlockUser";
 import DeleteUser from "../admin/DeleteUser";
 import { MANAGED_SELLERS_ROUTE, VIEW_STAFF_ROUTE } from "@/constants/routes";
 import { useRouter } from "next/navigation";
+import { useBlockedUser } from "@/store/states/localStore";
 
 interface Props {
   staffId: string;
@@ -17,6 +18,8 @@ const StaffBtnActions = (props: Props) => {
   const [isBlockUser, setIsBlockUser] = React.useState(false);
   const [isDeleteUserModal, setIsDeleteUserModal] = React.useState(false);
   const { push } = useRouter();
+  const { hasBlockedUser } = useBlockedUser();
+
 
   return (
     <React.Fragment>
@@ -29,11 +32,12 @@ const StaffBtnActions = (props: Props) => {
           See Sellers
         </Button>
         <Button
-          format="secondary"
-          className="mb-8 block w-full text-base sl:text-lg"
-        >
-          Block User
-        </Button>
+            format="secondary"
+            className="mb-8 block w-full"
+            onClick={() => setIsBlockUser(!isBlockUser)}
+          >
+            {hasBlockedUser ? "Unblock" : "Block"} User
+          </Button>
         <Button
           format="danger"
           className="mb-8 block w-full text-base sl:text-lg"
