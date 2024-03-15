@@ -282,7 +282,6 @@ export default function ProductCard(props: Props) {
             width={247}
             placeholder={"blur"}
             blurDataURL={IMAGE_BLUR_URL}
-            unoptimized
           />
         )}
 
