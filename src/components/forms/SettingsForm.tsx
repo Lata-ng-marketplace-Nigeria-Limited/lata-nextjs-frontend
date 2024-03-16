@@ -205,7 +205,7 @@ export const SettingsForm = ({ image }: Props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
       <div
-        className={"flex flex-col sm:flex-row justify-between gap-x-6 gap-y-6"}
+        className={"flex flex-col justify-between gap-x-6 gap-y-6 sm:flex-row"}
       >
         <div className={sidesClass}>
           <h3 className={titleClass}>Profile details</h3>
@@ -311,7 +311,7 @@ export const SettingsForm = ({ image }: Props) => {
           />
         </div>
 
-        <div className={"w-full flex-col flex gap-y-6"}>
+        <div className={"flex w-full flex-col gap-y-6"}>
           <div className={sidesClass}>
             <h3 className={titleClass}>Change password</h3>
 
@@ -379,7 +379,7 @@ export const SettingsForm = ({ image }: Props) => {
           <div className={sidesClass}>
             <div>
               <h3 className={titleClass}> Notifications settings</h3>
-              <p className={"text-xs sm:text-sm text-grey8 font-medium"}>
+              <p className={"text-xs font-medium text-grey8 sm:text-sm"}>
                 You will get an email notifications for the options you toggle
                 on
               </p>
@@ -419,7 +419,7 @@ export const SettingsForm = ({ image }: Props) => {
       </div>
 
       <Button
-        className={"block ml-auto mt-[40px]"}
+        className={"ml-auto mt-[40px] block"}
         format={"primary"}
         type={"submit"}
         disabled={loading}
