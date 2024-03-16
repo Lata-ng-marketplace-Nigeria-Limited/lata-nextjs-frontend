@@ -125,8 +125,9 @@ export default function OtpModal(props: OtpModalProps) {
     <div className={cn(`flex max-w-[30rem] flex-col gap-y-6`)}>
       <HeaderText>Enter OTP</HeaderText>
       <p className={"text-sm"}>
-        You are trying to change your phone number. To continue, please enter
-        the OTP sent to this number {props.updatePayload?.phoneNumber}
+        You are trying to change your phone number. To confirm this is your
+        number, please enter the OTP sent to this number{" "}
+        {props.updatePayload?.phoneNumber}
       </p>
 
       <form className={"flex flex-col gap-y-6"} onSubmit={handleSubmit}>
