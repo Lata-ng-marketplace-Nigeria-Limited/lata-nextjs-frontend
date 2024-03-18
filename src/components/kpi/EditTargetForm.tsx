@@ -83,8 +83,6 @@ const EditTargetForm = (props: EditTargetFormProps) => {
 
       const isEmailDoesNotExist = errorObj?.email?.includes("exists");
 
-      console.log("error", errorObj)
-
       if (isEmailDoesNotExist) {
         showToast("This email does not exist", "destructive");
         return;
