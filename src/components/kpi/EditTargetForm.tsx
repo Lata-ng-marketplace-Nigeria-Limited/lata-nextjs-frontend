@@ -81,10 +81,10 @@ const EditTargetForm = (props: EditTargetFormProps) => {
       > = error;
       const errorObj = getFormErrorObject(errorResponse);
 
-      const isEmailDoesNotExist = errorObj?.email?.includes("does not exist");
+      const isEmailDoesNotExist = errorObj?.email?.includes("exists");
 
       if (isEmailDoesNotExist) {
-        showToast(errorObj?.email || "The email does not exist", "destructive");
+        showToast("This email does not exist", "destructive");
         return;
       }
       showToast(error?.data?.message || "Error updating target", "destructive");
