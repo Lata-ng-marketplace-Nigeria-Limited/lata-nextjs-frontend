@@ -5,11 +5,11 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "../ui/use-toast";
-import { updateTarget } from "@/api/target.client";
+import { updateTarget } from "@/api/kpi.client";
 import TextInput from "../input/TextInput";
 import Button from "../atom/Button";
-import { StaffCategoryTypes, TargetLevelTypes } from "./EditTarget";
 import { createTargetSchema } from "./targetSchema";
+import { StaffCategoryTypes, TargetLevelTypes } from "./EditKPI";
 
 interface EditTargetFormProps {
   targetLevel: TargetLevelTypes;
@@ -17,6 +17,10 @@ interface EditTargetFormProps {
   staffCategory: StaffCategoryTypes;
   selectedDate: string;
   selectedMonth: string;
+  setShowFields: React.Dispatch<React.SetStateAction<boolean>>;
+  setStaffCategory: React.Dispatch<
+    React.SetStateAction<StaffCategoryTypes | "">
+  >;
 }
 
 const EditTargetForm = (props: EditTargetFormProps) => {
@@ -101,8 +105,10 @@ const EditTargetForm = (props: EditTargetFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h2 className="mb-1 font-bold">Target {props.targetLevel}</h2>
-      <h3 className="mb-6 font-medium italic text-grey7">{display()}</h3>
+      <h2 className="mb-1 font-medium">Target {props.targetLevel}</h2>
+      <h3 className="mb-6 text-xs font-normal italic text-grey7">
+        {display()}
+      </h3>
       <Controller
         control={control}
         name="amount"
@@ -132,6 +138,16 @@ const EditTargetForm = (props: EditTargetFormProps) => {
         )}
       />
       <div className="flex items-center gap-3">
+        <Button
+          format="secondary"
+          type="button"
+          onClick={() => {
+            props.setStaffCategory("");
+            props.setShowFields(false);
+          }}
+        >
+          Close
+        </Button>
         <Button format="secondary" type="button" onClick={() => reset()}>
           Reset
         </Button>

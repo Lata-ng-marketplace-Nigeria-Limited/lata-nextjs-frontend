@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
 import EditTarget from "@/components/kpi/EditTarget";
+import EditReward from "@/components/kpi/EditReward";
 
 export const metadata: Metadata = {
   title: "Edit KPI",
@@ -20,7 +21,10 @@ export default async function Protected() {
       <Suspense>
         <GetUser />
       </Suspense>
-      <EditTarget />
+      <div className="mb-16">
+        <EditTarget />
+      </div>
+      <EditReward />
     </div>
   );
 }
