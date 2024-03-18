@@ -4,6 +4,7 @@ import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
+import EditTarget from "@/components/kpi/EditTarget";
 
 export const metadata: Metadata = {
   title: "Edit KPI",
@@ -14,13 +15,12 @@ export default async function Protected() {
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }
-
   return (
     <div>
       <Suspense>
         <GetUser />
       </Suspense>
-      <p>Edit KPI</p>
+      <EditTarget />
     </div>
   );
 }
