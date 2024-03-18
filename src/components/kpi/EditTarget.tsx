@@ -40,7 +40,7 @@ const EditTarget = () => {
     <div>
       <h1 className="mb-5">Edit Target</h1>
       <div>
-        <div className="mb-10 grid grid-cols-2 gap-4">
+        <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <SelectInput
             options={[
               { label: "All Staff", value: "all" },
