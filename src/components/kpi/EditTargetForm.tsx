@@ -10,6 +10,8 @@ import TextInput from "../input/TextInput";
 import Button from "../atom/Button";
 import { createTargetSchema } from "./targetSchema";
 import { StaffCategoryTypes, TargetLevelTypes } from "./EditKPI";
+import { ApiErrorResponse } from "@/interface/general";
+import { getFormErrorObject } from "@/utils";
 
 interface EditTargetFormProps {
   targetLevel: TargetLevelTypes;
@@ -25,6 +27,12 @@ interface EditTargetFormProps {
 
 const EditTargetForm = (props: EditTargetFormProps) => {
   const [loading, setLoading] = useState(false);
+  const showToast = (message: string, variant: "destructive" | "success") => {
+    toast({
+      title: message,
+      variant,
+    });
+  };
 
   const {
     control,
@@ -42,10 +50,7 @@ const EditTargetForm = (props: EditTargetFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof createTargetSchema>) => {
     if (!values.amount || !values.salary) {
-      toast({
-        title: "Amount and Salary are required",
-        variant: "destructive",
-      });
+      showToast("Amount and Salary are required", "destructive");
       return;
     }
 
@@ -53,10 +58,7 @@ const EditTargetForm = (props: EditTargetFormProps) => {
       typeof Number(values.amount) !== "number" ||
       typeof Number(values.salary) !== "number"
     ) {
-      toast({
-        title: "Amount and Salary must be numbers",
-        variant: "destructive",
-      });
+      showToast("Amount and Salary must be numbers", "destructive");
       return;
     }
 
@@ -71,17 +73,21 @@ const EditTargetForm = (props: EditTargetFormProps) => {
     try {
       setLoading(true);
       await updateTarget(payload);
-      toast({
-        title: "Target updated successfully",
-        variant: "success",
-      });
+      showToast("Target updated successfully", "success");
       reset();
     } catch (error: any) {
-      toast({
-        title: error?.data?.message || "Error updating target",
-        variant: "destructive",
-      });
-      console.log("errorArray", error?.data);
+      const errorResponse: ApiErrorResponse<
+        z.infer<typeof createTargetSchema>
+      > = error;
+      const errorObj = getFormErrorObject(errorResponse);
+
+      const isEmailDoesNotExist = errorObj?.email?.includes("does not exist");
+
+      if (isEmailDoesNotExist) {
+        showToast(errorObj?.email || "The email does not exist", "destructive");
+        return;
+      }
+      showToast(error?.data?.message || "Error updating target", "destructive");
     } finally {
       setLoading(false);
     }
@@ -117,6 +123,7 @@ const EditTargetForm = (props: EditTargetFormProps) => {
             {...field}
             placeholder="Amount"
             label="Amount"
+            inputClass="!min-h-12"
             value={field.value}
             wrapperClass={"w-full mb-4"}
             errorMessage={errors.amount?.message}
@@ -132,6 +139,7 @@ const EditTargetForm = (props: EditTargetFormProps) => {
             placeholder="Salary"
             label="Salary"
             value={field.value}
+            inputClass="!min-h-12"
             wrapperClass={"w-full mb-4"}
             errorMessage={errors.salary?.message}
           />

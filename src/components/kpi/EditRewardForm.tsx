@@ -12,6 +12,8 @@ import { isNumberSchema } from "@/store/schemas/phoneNumberSchema";
 import { StaffRewardTypes } from "./EditReward";
 import { SelectInput } from "../input/SelectInput";
 import { updateRewardApi } from "@/api/kpi.client";
+import { ApiErrorResponse } from "@/interface/general";
+import { getFormErrorObject } from "@/utils";
 
 interface EditRewardFormProps {
   email: string;
@@ -102,11 +104,31 @@ const EditRewardForm = (props: EditRewardFormProps) => {
       }
       reset();
     } catch (error: any) {
-      toast({
-        title: error?.data?.message || "Error updating target",
-        variant: "destructive",
-      });
-      console.log("errorArray", error?.data);
+      const errorResponse: ApiErrorResponse<z.infer<typeof editRewardSchema>> =
+        error;
+      const errorObj = getFormErrorObject(errorResponse);
+
+      const isEmailDoesNotExist = errorObj?.email?.includes("does not exist");
+
+      if (isEmailDoesNotExist) {
+        showToast(
+          errorObj?.email || "This email does not exist",
+          "destructive",
+        );
+        return;
+      }
+      if (props.query === "bonus" || !props.query) {
+        showToast(
+          error?.data?.message || "Error updating bonus",
+          "destructive",
+        );
+      }
+      if (props.query === "commission") {
+        showToast(
+          error?.data?.message || "Error updating commission",
+          "destructive",
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -155,6 +177,7 @@ const EditRewardForm = (props: EditRewardFormProps) => {
             <TextInput
               {...field}
               placeholder="Amount"
+              inputClass="!min-h-12"
               label="Amount"
               value={field.value}
               wrapperClass={"w-full mb-4"}
