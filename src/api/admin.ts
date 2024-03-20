@@ -2,7 +2,7 @@
 
 import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
-import { IProductStatusCount, Product } from "@/interface/products";
+import { Category, IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
 import { getMonthInGMTPlus1 } from "@/utils";
 import { fetchData } from "./_helper";
@@ -206,4 +206,16 @@ export const adminFetchSellersUnderStaff = async ({
   params.append("limit", String(limit || 10));
 
   return fetchData(`/admin/${staffId}/sellers?${params.toString()}`);
+};
+
+export const fetchCategoriesApi = async ({
+  limit,
+  page,
+}: SearchQuery): Promise<Category[]> => {
+  const params = new URLSearchParams();
+
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  return fetchData(`/categories`);
 };

@@ -59,3 +59,25 @@ export const deleteUserApi = async ({
     throw error.response;
   }
 };
+
+export const createCategoryApi = async (payload: {
+  name: string;
+  status: "ACTIVE" | "INACTIVE";
+  description?: string;
+}) => {
+  try {
+    const response = await $http.post("/categories", payload);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const deleteCategoryApi = async (id: string) => {
+  try {
+    const response = await $http.delete(`/categories/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
