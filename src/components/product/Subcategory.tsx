@@ -30,7 +30,7 @@ const Subcategory = (props: Props) => {
   };
 
   const onSelectSubCategory = (subcategory: SubCategory) => {
-    localStorage.setItem("subcategory", subcategory?.slug || subcategory?.id);
+    localStorage.setItem("subcategory", subcategory?.name);
   };
 
   return (

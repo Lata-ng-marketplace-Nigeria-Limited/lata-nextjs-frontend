@@ -113,7 +113,6 @@ const AddCategory = (props: Props) => {
 
         <Button
           format="primary"
-          // type="submit"
           className={"w-full"}
           disabled={loading}
           onClick={addCategory}

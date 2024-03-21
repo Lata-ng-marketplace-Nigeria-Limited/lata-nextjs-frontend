@@ -9,7 +9,7 @@ import ResizableDialog from "./ResizableDialog";
 import XCancelFillIcon from "../atom/icons/XCancelFill";
 import CustomPopover from "../molecule/CustomPopover";
 import { useRouter } from "next/navigation";
-import { deleteCategoryApi } from "@/api/admin.client";
+import { deleteCategoryApi, deleteSubcategoryApi } from "@/api/admin.client";
 import { showToast } from "@/utils";
 import DeleteModalContent from "./DeleteModalContent";
 import AddSubCategory from "./AddSubCategory";
@@ -49,22 +49,38 @@ const DisplayCategoryTiles = (props: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
+  const [subcategoryId, setSubcategoryId] = useState("");
+  const [selectedCategoryName, setSelectedCategoryName] = useState("");
 
   const deleteCategory = async (id: string) => {
-    console.log("delete category", id);
     if (!id) {
       showToast("Category not found", "destructive");
       return;
     }
     try {
-      const res = await deleteCategoryApi(id);
-      console.log("res", res);
+      await deleteCategoryApi(id);
       setShowDeleteModal(false);
       showToast("Category deleted successfully", "success");
       refresh();
     } catch (error) {
       console.log("error", error);
       showToast("Failed to delete category", "destructive");
+    }
+  };
+
+  const deleteSubcategory = async (id: string) => {
+    if (!id) {
+      showToast("Subcategory not found", "destructive");
+      return;
+    }
+    try {
+      await deleteSubcategoryApi(id);
+      setShowDeleteModal(false);
+      showToast("Subcategory deleted successfully", "success");
+      refresh();
+    } catch (error) {
+      console.log("error", error);
+      showToast("Failed to delete subcategory", "destructive");
     }
   };
 
@@ -88,18 +104,28 @@ const DisplayCategoryTiles = (props: Props) => {
                     className="ml-1 size-[24px] basis-[20%] cursor-pointer xls:ml-2"
                     onClick={() => {
                       setCategoryId(category?.id);
+                      setSelectedCategoryName(category?.name);
                       setShowDeleteModal(true);
                     }}
                   />
                 </div>
                 {category.subcategories?.length > 0 ? (
                   category.subcategories?.map((subcategory, index) => (
-                    <p
+                    <div
                       key={subcategory.id + index}
-                      className="mb-6 border-b border-grey7 pb-3"
+                      className="mb-6 flex items-center justify-between border-b border-grey7 pb-3"
                     >
-                      {subcategory.name}
-                    </p>
+                      <p className="">{subcategory.name}</p>
+                      <p
+                        className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-purp2 p-1"
+                        onClick={() => {
+                          setSubcategoryId(subcategory.id);
+                          setShowDeleteModal(true);
+                        }}
+                      >
+                        ×
+                      </p>
+                    </div>
                   ))
                 ) : (
                   <p className="mb-6">No subcategories found</p>
@@ -131,6 +157,20 @@ const DisplayCategoryTiles = (props: Props) => {
         <DeleteModalContent
           setShowModal={setShowDeleteModal}
           onDelete={() => deleteCategory(categoryId)}
+          type="category"
+          name={selectedCategoryName}
+        />
+      </ResizableDialog>
+
+      <ResizableDialog
+        isShown={showDeleteModal}
+        setIsShown={setShowDeleteModal}
+      >
+        <DeleteModalContent
+          setShowModal={setShowDeleteModal}
+          onDelete={() => deleteSubcategory(subcategoryId)}
+          type="subcategory"
+          name={selectedCategoryName}
         />
       </ResizableDialog>
 

@@ -30,24 +30,23 @@ const AddSubCategory = (props: AddSubCategoryProps) => {
       return;
     }
 
+    const payload: {
+      categoryName: string;
+      categoryId: string;
+      name: string;
+    } = {
+      categoryName: props.category?.name,
+      categoryId: props.category.id,
+      name: subcategoryName,
+    };
+
     try {
       setLoading(true);
-
-      const payload: {
-        categoryName: string;
-        categoryId: string;
-        name: string;
-      } = {
-        categoryName: props.category?.name,
-        categoryId: props.category.id,
-        name: subcategoryName,
-      };
-
       const res = await createSubCategoryApi(payload);
       console.log("res", res);
       showToast("Subcatgeory created successfully", "success");
       props.setShowAddSubCategory(false);
-      refresh;
+      refresh();
     } catch (error) {
       console.log(error);
       showToast("Failed to  Subcatgeory", "destructive");

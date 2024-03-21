@@ -84,6 +84,15 @@ export const deleteCategoryApi = async (id: string) => {
   }
 };
 
+export const deleteSubcategoryApi = async (id: string) => {
+  try {
+    const response = await $http.delete(`/sub-categories/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
 export const createSubCategoryApi = async (payload: {
   categoryName: string;
   categoryId: string;
