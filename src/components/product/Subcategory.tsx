@@ -1,4 +1,4 @@
-import { Category, SubCategoryItems } from "@/interface/products";
+import { Category, SubCategory, SubCategoryItems } from "@/interface/products";
 import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn, safeParseJSON } from "@/utils";
@@ -29,8 +29,8 @@ const Subcategory = (props: Props) => {
     props.onModalClose?.();
   };
 
-  const onSelectSubCategory = (item: SubCategoryItems) => {
-    localStorage.setItem("subcategory", item?.value);
+  const onSelectSubCategory = (subcategory: SubCategory) => {
+    localStorage.setItem("subcategory", subcategory?.slug || subcategory?.id);
   };
 
   return (
@@ -38,30 +38,28 @@ const Subcategory = (props: Props) => {
       className="max-w-max overflow-y-auto rounded-md bg-white shadow-black/15"
       onClick={handleSubcategoryChange}
     >
-      {safeParseJSON(props.category?.subcategories?.[0]?.items).map(
-        (item: SubCategoryItems, index: number) => (
-          <div
-            className={cn(
-              {
-                "border-primary bg-primary hover:!bg-primary":
-                  props.selectedSubcategory === item.label,
-              },
-              "cursor-pointer border-b border-grey2 p-3 hover:bg-purp1",
-            )}
-            key={index}
-            onClick={() => onSelectSubCategory(item)}
+      {props.category?.subcategories?.map((sub) => (
+        <div
+          className={cn(
+            {
+              "border-primary bg-primary hover:!bg-primary":
+                props.selectedSubcategory === sub.name,
+            },
+            "cursor-pointer border-b border-grey2 p-3 hover:bg-purp1",
+          )}
+          key={sub.id}
+          onClick={() => onSelectSubCategory(sub)}
+        >
+          <p
+            className={cn({
+              "text-white hover:text-white":
+                props.selectedSubcategory === sub.name,
+            })}
           >
-            <p
-              className={cn({
-                "text-white hover:text-white":
-                  props.selectedSubcategory === item.label,
-              })}
-            >
-              {item?.label}
-            </p>
-          </div>
-        ),
-      )}
+            {sub?.name}
+          </p>
+        </div>
+      ))}
     </div>
   );
 };

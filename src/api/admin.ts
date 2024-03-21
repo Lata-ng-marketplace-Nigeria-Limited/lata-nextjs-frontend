@@ -219,3 +219,15 @@ export const fetchCategoriesApi = async ({
 
   return fetchData(`/categories`);
 };
+
+export const fetchSubCategoriesApi = async ({
+  limit,
+  page,
+}: SearchQuery): Promise<Category[]> => {
+  const params = new URLSearchParams();
+
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  return fetchData(`/categories`);
+};

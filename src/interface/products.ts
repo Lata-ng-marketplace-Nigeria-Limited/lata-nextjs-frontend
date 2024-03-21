@@ -36,7 +36,7 @@ export interface Product {
   saved?: number;
   phoneClicks?: number;
   planName?: string;
-  discount?: string
+  discount?: string;
   productType: string;
 }
 
@@ -49,8 +49,9 @@ export interface SubCategory {
   id: string;
   categoryId: string;
   categoryName: string;
-  displayName: string;
-  items: string;
+  name: string;
+  slug?: string;
+  meta: string;
 }
 
 export interface Category {
@@ -82,5 +83,5 @@ export interface IProductStatusCount {
   denied: number;
   draft: number;
   other: number;
-  unsubscribed: number
+  unsubscribed: number;
 }

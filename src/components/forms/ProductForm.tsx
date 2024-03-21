@@ -3,7 +3,7 @@ import ImageUploader, {
   SelectedImagePreview,
 } from "@components/input/ImageUploader";
 import { createProductSchema } from "@/store/schemas/createProductSchema";
-import { Product, SubCategoryItems } from "@/interface/products";
+import { Product, SubCategory, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -305,24 +305,22 @@ export default function ProductForm({
     }
   };
 
-  const handleSubcategory = (item: string) => {
+  const handleSubcategory = (categoryId: string) => {
     const subcategoryOptions = categories.find((category) => {
-      return category?.subcategories?.[0]?.categoryId === item;
+      return category?.id === categoryId;
     });
 
     if (!subcategoryOptions) return;
     setHasChosenCategory(true);
 
-    const options = safeParseJSON(
-      subcategoryOptions?.subcategories?.[0]?.items,
+    const subcategoryItems = subcategoryOptions?.subcategories?.map(
+      (sub: SubCategory) => {
+        return {
+          value: sub?.name,
+          label: sub?.name,
+        };
+      },
     );
-
-    const subcategoryItems = options.map((item: SubCategoryItems) => {
-      return {
-        ...item,
-        id: subcategoryOptions?.subcategories?.[0]?.id,
-      };
-    });
 
     setSubCategoriesSelectData(subcategoryItems);
   };

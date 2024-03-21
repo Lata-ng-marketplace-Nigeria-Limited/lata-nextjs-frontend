@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "../ui/use-toast";
 import TextInput from "../input/TextInput";
 import Button from "../atom/Button";
 import { StaffCategoryTypes } from "./EditKPI";
@@ -13,7 +12,7 @@ import { StaffRewardTypes } from "./EditReward";
 import { SelectInput } from "../input/SelectInput";
 import { updateRewardApi } from "@/api/kpi.client";
 import { ApiErrorResponse } from "@/interface/general";
-import { getFormErrorObject } from "@/utils";
+import { getFormErrorObject, showToast } from "@/utils";
 
 interface EditRewardFormProps {
   email: string;
@@ -29,13 +28,6 @@ interface EditRewardFormProps {
 
 const EditRewardForm = (props: EditRewardFormProps) => {
   const [loading, setLoading] = useState(false);
-
-  const showToast = (message: string, variant: "destructive" | "success") => {
-    toast({
-      title: message,
-      variant,
-    });
-  };
 
   const editRewardSchema = z.object({
     bonusAmount: z
