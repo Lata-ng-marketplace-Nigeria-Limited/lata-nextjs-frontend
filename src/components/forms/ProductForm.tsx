@@ -7,12 +7,7 @@ import { Product, SubCategory, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  cn,
-  convertBytesToMB,
-  getFormErrorObject,
-  safeParseJSON,
-} from "@/utils";
+import { cn, convertBytesToMB, getFormErrorObject, showToast } from "@/utils";
 import { useRouter } from "next/navigation";
 import TextInput from "@components/input/TextInput";
 import { SelectInput } from "@components/input/SelectInput";
@@ -243,6 +238,51 @@ export default function ProductForm({
             message: value,
           });
         });
+
+        if (errorObj.name) {
+          showToast(errorObj.name, "destructive");
+          return;
+        }
+
+        if (errorObj.price) {
+          showToast(errorObj.price, "destructive");
+          return;
+        }
+
+        if (errorObj.categoryId) {
+          showToast(errorObj.categoryId, "destructive");
+          return;
+        }
+
+        if (errorObj.subCategoryId) {
+          showToast(errorObj.subCategoryId, "destructive");
+          return;
+        }
+
+        if (errorObj.state) {
+          showToast(errorObj.state, "destructive");
+          return;
+        }
+
+        if (errorObj.city) {
+          showToast(errorObj.city, "destructive");
+          return;
+        }
+
+        if (errorObj.description) {
+          showToast(errorObj.description, "destructive");
+          return;
+        }
+
+        if (errorObj.productType) {
+          showToast(errorObj.productType, "destructive");
+          return;
+        }
+
+        if (errorObj.discount) {
+          showToast(errorObj.discount, "destructive");
+          return;
+        }
         return;
       }
 
@@ -298,7 +338,7 @@ export default function ProductForm({
         }
       }
       toast({
-        title: "Something went wrong",
+        title: typeof error?.message === "string" ? error?.message : "Something went wrong",
         description: "Please try again later",
         variant: "destructive",
       });

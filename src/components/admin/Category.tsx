@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import CategoryIcon from "../atom/icons/Category";
-import { Category } from "@/interface/products";
+import type { Category } from "@/interface/products";
 import Button from "../atom/Button";
 import { renameCategories } from "@/utils/categories";
 import ResizableDialog from "./ResizableDialog";
@@ -89,7 +89,7 @@ const DisplayCategoryTiles = (props: Props) => {
       {props.categories.map((category, index) => (
         <div
           key={category.id}
-          className="flex min-h-[3.4rem] cursor-pointer items-center justify-between gap-[2px] rounded-[0.375rem] bg-purp2 p-2 xls:gap-1 "
+          className="flex min-h-[3.4rem] cursor-pointer items-center justify-between gap-[2px] rounded-[0.375rem] bg-purp2 py-2 px-6 xls:gap-1 "
         >
           <p className="basis-[10%] text-xl">•</p>
           <p className="basis-[60%]">{renameCategories(category)}</p>{" "}
@@ -116,14 +116,15 @@ const DisplayCategoryTiles = (props: Props) => {
                       className="mb-6 flex items-center justify-between border-b border-grey7 pb-3"
                     >
                       <p className="">{subcategory.name}</p>
+
                       <p
-                        className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-purp2 p-1"
+                        className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-purp2 p-2"
                         onClick={() => {
                           setSubcategoryId(subcategory.id);
                           setShowDeleteModal(true);
                         }}
                       >
-                        ×
+                        <span className="text-lg">×</span>
                       </p>
                     </div>
                   ))
@@ -138,7 +139,7 @@ const DisplayCategoryTiles = (props: Props) => {
                   }}
                 >
                   <p className="flex size-8 items-center justify-center rounded-full bg-purp2 p-2">
-                    +
+                    <span className="text-lg font-bold">+</span>
                   </p>
                   <p> Add Subcategory</p>
                 </div>
