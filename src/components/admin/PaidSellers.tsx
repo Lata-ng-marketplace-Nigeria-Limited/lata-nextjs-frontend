@@ -19,13 +19,11 @@ interface Props {
   dueSubscriptionCount: number;
   newSubscriptionCount: number;
   returningSubscribersCount: number;
-  transactionStatus?: string;
   meta: FetchMeta;
 }
 
 const PaidSellers = (props: Props) => {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
   const params = new URLSearchParams(searchParams);
 
