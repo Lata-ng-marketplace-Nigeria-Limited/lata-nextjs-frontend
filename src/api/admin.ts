@@ -45,12 +45,19 @@ export const getAllSellersAdminApi = async ({
   page,
   limit,
   verified,
-}: SearchQuery & { verified: string }): Promise<IGetAllSellersAdminApi> => {
+  query,
+}: SearchQuery & {
+  verified: string;
+  query: string;
+}): Promise<IGetAllSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
   if (verified) {
     params.append("verified", verified);
+  }
+  if (query) {
+    params.append("query", query);
   }
   return fetchData(`/admin/sellers?${params.toString()}`);
 };
@@ -58,10 +65,15 @@ export const getAllSellersAdminApi = async ({
 export const getAllStaffAdminApi = async ({
   page,
   limit,
-}: SearchQuery): Promise<IGetAllSellersAdminApi> => {
+  query,
+}: SearchQuery & { query: string }): Promise<IGetAllSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
+
+  if (query) {
+    params.append("query", query);
+  }
 
   return fetchData(`/admin/staff?${params.toString()}`);
 };
@@ -81,9 +93,11 @@ export const getAllPaidSellersAdminApi = async ({
   limit,
   transactionStatus,
   staffId,
+  query,
 }: SearchQuery & {
   transactionStatus: string;
   staffId?: string;
+  query?: string;
 }): Promise<IGetAllPaidSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
@@ -93,6 +107,10 @@ export const getAllPaidSellersAdminApi = async ({
   }
   if (staffId) {
     params.append("staffId", staffId);
+  }
+
+  if (query) {
+    params.append("query", query);
   }
 
   return fetchData(`/admin/paid-sellers?${params.toString()}`);
@@ -109,12 +127,19 @@ export const getAllBuyersAdminApi = async ({
   page,
   limit,
   verified,
-}: SearchQuery & { verified: string }): Promise<IGetAllBuyersAdminApi> => {
+  query,
+}: SearchQuery & {
+  verified: string;
+  query: string;
+}): Promise<IGetAllBuyersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
   if (verified) {
     params.append("verified", verified);
+  }
+  if (query) {
+    params.append("query", query);
   }
 
   return fetchData(`/admin/buyers?${params.toString()}`);
@@ -128,10 +153,15 @@ interface IGetAllPosts {
 export const getAllPosts = async ({
   page,
   limit,
-}: SearchQuery): Promise<IGetAllPosts> => {
+  query,
+}: SearchQuery & { query: string }): Promise<IGetAllPosts> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
+
+  if (query) {
+    params.append("query", query);
+  }
 
   return fetchData(`/admin/posts?${params.toString()}`);
 };

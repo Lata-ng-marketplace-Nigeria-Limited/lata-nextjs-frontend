@@ -16,6 +16,7 @@ export default async function Protected({
 }: {
   searchParams: {
     page: string;
+    query?: string;
     limit: string;
     verified: string;
   };
@@ -25,10 +26,11 @@ export default async function Protected({
     redirect("/");
   }
 
+  const query = searchParams?.query || "";
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
   const verified = searchParams?.verified || "";
-  const response = await getAllSellersAdminApi({ page, limit, verified });
+  const response = await getAllSellersAdminApi({ page, limit, verified, query });
 
   return (
     <div>
@@ -42,6 +44,7 @@ export default async function Protected({
           countVerifiedSellers={response?.countVerifiedSellers}
           countUnverifiedSellers={response?.countUnVerifiedSellers}
           usersWithNoUploadsCount={response?.usersWithNoUploadsCount}
+          query={query}
         />
       </Suspense>
     </div>

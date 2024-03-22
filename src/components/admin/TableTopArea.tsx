@@ -9,7 +9,6 @@ interface Props {
   buttonText?: string;
   hideButton?: boolean;
   onClick?: () => void;
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TableTopArea = (props: Props) => {
@@ -20,7 +19,6 @@ const TableTopArea = (props: Props) => {
         <SearchInput
           placeholder={props.placeholder}
           wrapperClass="max-w-max"
-          setSearch={props.setSearch}
         />
 
         {props.hideButton ? null : (

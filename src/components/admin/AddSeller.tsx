@@ -19,17 +19,18 @@ import ImageUploader from "../input/ImageUploader";
 import { toast } from "../ui/use-toast";
 import FormTopLabel from "../input/FormTopLabel";
 import { useRouter } from "next/navigation";
+import TableTopArea from "./TableTopArea";
+import ResizableDialog from "./ResizableDialog";
 
-interface Props {
-  setShowAddSellerModal?: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
 const AddSellerForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<FileList>();
   const [imageErrorMessage, setImageErrorMessage] = useState("");
   const [avatar, setAvatar] = useState("");
-  const {refresh} = useRouter()
+  const { refresh } = useRouter();
+  const [showAddSellerModal, setShowAddSellerModal] = useState(false);
 
   const {
     formState: { errors },
@@ -81,8 +82,8 @@ const AddSellerForm = (props: Props) => {
         variant: "success",
         duration: 15000,
       });
-      refresh?.()
-      props.setShowAddSellerModal?.(false);
+      refresh?.();
+      setShowAddSellerModal?.(false);
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<
         z.infer<typeof sellerSignUpSchema>
@@ -110,144 +111,173 @@ const AddSellerForm = (props: Props) => {
     }
   };
 
+  const handleAddSeller = () => {
+    setShowAddSellerModal(!showAddSellerModal);
+  };
+
   return (
-    <form className={"flex flex-col gap-y-6"} onSubmit={handleSubmit(onSubmit)}>
-      <ImageUploader
-        format={"profile"}
-        name={"profile"}
-        file={file}
-        disabled={loading}
-        setValue={setFile}
-        imageUrl={avatar}
-        errorMessage={imageErrorMessage}
-        profileDescription={"Add a profile picture or seller's business logo"}
+    <>
+      <TableTopArea
+        title="All Sellers"
+        buttonText="+ Add Seller"
+        placeholder="Search sellers"
+        onClick={handleAddSeller}
       />
 
-      <Controller
-        render={({ field }) => (
-          <FormTopLabel labelClass="font-semibold text-sm" label={"Fullname"}>
-            <TextInput
-              {...field}
-              placeholder="Enter Fullname"
-              disabled={loading}
-              errorMessage={errors.name?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"name"}
-        control={control}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <FormTopLabel
-            labelClass="font-semibold text-sm"
-            label={"Phone number"}
-          >
-            <TextInput
-              {...field}
-              placeholder={"Enter Phone number"}
-              errorMessage={errors.phoneNumber?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"phoneNumber"}
-        control={control}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <FormTopLabel labelClass="font-semibold text-sm" label={"Email"}>
-            <TextInput
-              {...field}
-              placeholder="Enter email"
-              type="email"
-              disabled={loading}
-              errorMessage={errors.email?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"email"}
-        control={control}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <FormTopLabel
-            labelClass="font-semibold text-sm"
-            label={"Business location"}
-          >
-            <TextInput
-              {...field}
-              placeholder="Enter business location"
-              disabled={loading}
-              errorMessage={errors.address?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"address"}
-        control={control}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <FormTopLabel
-            labelClass="font-semibold text-sm"
-            label={"About business"}
-          >
-            <TextInput
-              {...field}
-              placeholder="About business"
-              disabled={loading}
-              errorMessage={errors.aboutBusiness?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"aboutBusiness"}
-        control={control}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <FormTopLabel labelClass="font-semibold text-sm" label={"Password"}>
-            <TextInput
-              {...field}
-              placeholder="Enter password"
-              type="password"
-              isPassword
-              disabled={loading}
-              name={"field.name"}
-              errorMessage={errors.password?.message}
-            />
-          </FormTopLabel>
-        )}
-        name={"password"}
-        control={control}
-      />
-
-      <div className={cn("flex w-full flex-col items-center gap-y-3")}>
-        <div className={"flex w-full flex-col gap-y-2"}>
-          <Button
-            type={"submit"}
+      <ResizableDialog
+        isShown={showAddSellerModal}
+        setIsShown={setShowAddSellerModal}
+      >
+        <form
+          className={"flex flex-col gap-y-6"}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <ImageUploader
+            format={"profile"}
+            name={"profile"}
+            file={file}
             disabled={loading}
-            format={"primary"}
-            className={"w-full"}
-          >
-            Create account
-          </Button>
-        </div>
-        <div className={"flex w-full flex-col gap-y-2"}>
-          <Button
-            type={"button"}
-            format={"secondary"}
-            className={"w-full"}
-            onClick={() => props.setShowAddSellerModal?.(false)}
-          >
-            Cancel
-          </Button>
-        </div>
-      </div>
-    </form>
+            setValue={setFile}
+            imageUrl={avatar}
+            errorMessage={imageErrorMessage}
+            profileDescription={
+              "Add a profile picture or seller's business logo"
+            }
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormTopLabel
+                labelClass="font-semibold text-sm"
+                label={"Fullname"}
+              >
+                <TextInput
+                  {...field}
+                  placeholder="Enter Fullname"
+                  disabled={loading}
+                  errorMessage={errors.name?.message}
+                />
+              </FormTopLabel>
+            )}
+            name={"name"}
+            control={control}
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormTopLabel
+                labelClass="font-semibold text-sm"
+                label={"Phone number"}
+              >
+                <TextInput
+                  {...field}
+                  placeholder={"Enter Phone number"}
+                  errorMessage={errors.phoneNumber?.message}
+                />
+              </FormTopLabel>
+            )}
+            name={"phoneNumber"}
+            control={control}
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormTopLabel labelClass="font-semibold text-sm" label={"Email"}>
+                <TextInput
+                  {...field}
+                  placeholder="Enter email"
+                  type="email"
+                  disabled={loading}
+                  errorMessage={errors.email?.message}
+                />
+              </FormTopLabel>
+            )}
+            name={"email"}
+            control={control}
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormTopLabel
+                labelClass="font-semibold text-sm"
+                label={"Business location"}
+              >
+                <TextInput
+                  {...field}
+                  placeholder="Enter business location"
+                  disabled={loading}
+                  errorMessage={errors.address?.message}
+                />
+              </FormTopLabel>
+            )}
+            name={"address"}
+            control={control}
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormTopLabel
+                labelClass="font-semibold text-sm"
+                label={"About business"}
+              >
+                <TextInput
+                  {...field}
+                  placeholder="About business"
+                  disabled={loading}
+                  errorMessage={errors.aboutBusiness?.message}
+                />
+              </FormTopLabel>
+            )}
+            name={"aboutBusiness"}
+            control={control}
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormTopLabel
+                labelClass="font-semibold text-sm"
+                label={"Password"}
+              >
+                <TextInput
+                  {...field}
+                  placeholder="Enter password"
+                  type="password"
+                  isPassword
+                  disabled={loading}
+                  name={"field.name"}
+                  errorMessage={errors.password?.message}
+                />
+              </FormTopLabel>
+            )}
+            name={"password"}
+            control={control}
+          />
+
+          <div className={cn("flex w-full flex-col items-center gap-y-3")}>
+            <div className={"flex w-full flex-col gap-y-2"}>
+              <Button
+                type={"submit"}
+                disabled={loading}
+                format={"primary"}
+                className={"w-full"}
+              >
+                Create account
+              </Button>
+            </div>
+            <div className={"flex w-full flex-col gap-y-2"}>
+              <Button
+                type={"button"}
+                format={"secondary"}
+                className={"w-full"}
+                onClick={() => setShowAddSellerModal?.(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </form>
+      </ResizableDialog>
+    </>
   );
 };
 

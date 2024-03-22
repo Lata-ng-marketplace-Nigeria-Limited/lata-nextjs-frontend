@@ -1,8 +1,6 @@
-"use client";
-
 import { FetchMeta } from "@/interface/general";
 import { Product } from "@/interface/products";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
 import { DateTime } from "luxon";
 import TableTopArea from "./TableTopArea";
@@ -18,37 +16,17 @@ interface Props {
   meta: FetchMeta;
 }
 const AllPosts = (props: Props) => {
-  const [search, setSearch] = useState("");
-  const [filteredData, setFilteredData] = useState<Product[]>(props.data);
 
-  useEffect(() => {
-    const filter = props.data.filter(
-      (post) =>
-        // search by name
-        post.user?.name.toLowerCase().includes(search) ||
-        // search by location
-        post.state.toLowerCase().includes(search) ||
-        // search by title
-        post.name.toLowerCase().includes(search) ||
-        // search by reg date
-        DateTime.fromISO(post.createdAt)
-          .toFormat("dd LLL, yyyy")
-          .toLowerCase()
-          .includes(search),
-    );
-    setFilteredData(filter);
-  }, [search, props.data]);
   return (
     <div>
       <TableTopArea
         title="All Posts"
         hideButton
         placeholder="Search posts"
-        setSearch={setSearch}
       />
       <TableWithRowGaps
         isClickable
-        tableData={filteredData.map((post) => {
+        tableData={props.data?.map((post) => {
           return {
             poster: (
               <div className="flex items-center gap-2">
