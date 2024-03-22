@@ -55,7 +55,7 @@ export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
 export const getAllSellerFeedbacks = async (
   type: FeedbackType,
   page: string,
-  viewing: string,
+  tab: string,
 ): Promise<{
   data: IFeedback[];
   meta: FetchMeta;
@@ -64,11 +64,15 @@ export const getAllSellerFeedbacks = async (
   isEmpty?: boolean;
 }> => {
   try {
-    const params = new URLSearchParams({
-      viewing,
-      type,
-      page: String(page) || "1",
-    });
+
+    const params = new URLSearchParams();
+    params.append("page", page);
+    if (tab) {
+      params.append("tab", tab);
+    }
+    if (type) {
+      params.append("type", type);
+    }
 
     const session = await getServerSession(authConfig);
     const res = await fetch(getApiUrl(`/feedbacks?${params.toString()}`), {

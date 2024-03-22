@@ -17,7 +17,6 @@ export default async function Protected({
   searchParams: {
     page: string;
     limit: string;
-    transactionStatus: string;
   };
 }) {
   const session = await getServerSession(authConfig);

@@ -2,14 +2,12 @@ import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import HeaderText from "@atom/HeaderText";
 import { MyShop } from "@components/shop/MyShop";
 import { Suspense } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
 import { findAllMyProductsApi } from "@/api/product";
-import ProductStatusList from "@/components/shop/ProductStatus";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 
 export const metadata: Metadata = {
@@ -21,17 +19,17 @@ export default async function Page({
 }: {
   searchParams?: {
     page?: string;
-    status?: string;
+    tab?: string;
   };
 }) {
   unstable_noStore();
   const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";
-  const status = searchParams?.status || "";
+  const tab = searchParams?.tab || "";
 
   const products = await findAllMyProductsApi({
     page,
-    status,
+    tab,
   });
 
   if (!session || !session.user) {

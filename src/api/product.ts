@@ -117,8 +117,8 @@ export const searchProductsApi = async ({
 export const findAllMyProductsApi = async ({
   page,
   limit,
-  status,
-}: SearchQuery & { status?: string }): Promise<{
+  tab,
+}: SearchQuery & { tab?: string }): Promise<{
   data: Product[];
   meta: FetchMeta;
   message: string;
@@ -130,8 +130,8 @@ export const findAllMyProductsApi = async ({
     const session = await getServerSession(authConfig);
     const params = new URLSearchParams();
 
-    if (status) {
-      params.append("status", status || "");
+    if (tab) {
+      params.append("tab", tab || "");
     }
     params.append("page", String(page || 1));
     params.append("limit", String(limit || 10));

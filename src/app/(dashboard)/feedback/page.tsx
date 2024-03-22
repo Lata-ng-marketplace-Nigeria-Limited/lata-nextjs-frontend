@@ -16,8 +16,8 @@ const Page = async ({
   searchParams,
 }: {
   searchParams?: {
-    query: string;
-    viewing: string;
+    page: string;
+    tab: string;
   };
 }) => {
   const session = await getServerSession(authConfig);
@@ -26,10 +26,10 @@ const Page = async ({
     redirect("/auth/login");
   }
 
-  const query = searchParams?.query || "";
-  const viewing = searchParams?.viewing || "";
+  const page = searchParams?.page || "";
+  const tab = searchParams?.tab || "";
 
-  const feedbacks = await getAllSellerFeedbacks("PRODUCT", query, viewing);
+  const feedbacks = await getAllSellerFeedbacks("PRODUCT", page, tab);
 
   return (
     <>
@@ -40,7 +40,6 @@ const Page = async ({
       <FeedbackHeader
         totalReceived={feedbacks?.totalReceived || 0}
         totalSent={feedbacks?.totalSent || 0}
-        feedbackView={viewing}
       />
 
       <SellerFeedbackList
