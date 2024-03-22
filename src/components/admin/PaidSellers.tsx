@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import BadgeWithCount from "../atom/BadgeWithCount";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FetchMeta } from "@/interface/general";
@@ -27,29 +27,6 @@ const PaidSellers = (props: Props) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const [filteredData, setFilteredData] = useState<ISubscribedUser[]>(
-    props.data,
-  );
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    if (!props.data) return;
-    const filter = props.data.filter(
-      (seller) =>
-        // search by name
-        seller?.name?.toLowerCase().includes(search) ||
-        // search by payment mode
-        seller?.transaction_provider?.toLowerCase().includes(search) ||
-        // search by plan
-        seller?.plan_name?.toLowerCase().includes(search) ||
-        // search by product
-        seller?.subscription_name?.toLowerCase().includes(search) ||
-        // search by amount
-        seller?.transaction_actual_amount?.toString().includes(search),
-    );
-    setFilteredData(filter);
-  }, [search, props.data]);
-
   const params = new URLSearchParams(searchParams);
 
   const handleClick = (
@@ -148,18 +125,14 @@ const PaidSellers = (props: Props) => {
       </div>
       <div className="mb-7 flex items-center justify-between">
         <HeaderText title>{"Paid Sellers"}</HeaderText>
-        <SearchInput
-          placeholder={"Search Sellers"}
-          wrapperClass="max-w-max"
-          setSearch={setSearch}
-        />
+        <SearchInput placeholder={"Search Sellers"} wrapperClass="max-w-max" />
       </div>
 
       <div>
         <TableWithRowGaps
           emptyTableTitle="No Paid seller found"
           emptyTableDescription="All paid sellers will be displayed here"
-          tableData={filteredData?.map((seller) => {
+          tableData={props.data?.map((seller) => {
             return {
               name: (
                 <div

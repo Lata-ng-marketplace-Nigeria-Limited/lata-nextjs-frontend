@@ -65,7 +65,7 @@ const ChangeManager = (props: Props) => {
     <div>
       <h2 className="mb-5 text-lg font-semibold">Choose New Manager</h2>
       <div className="mb-5">
-        <SearchInput setSearch={setSearch} />
+        <SearchInput />
       </div>
       <div className="mb-5">
         {filteredManagers.length > 0 ? (

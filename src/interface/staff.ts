@@ -9,6 +9,17 @@ export interface BonusTransaction {
   updated_at: string;
 }
 
+export interface Reward {
+  id: string;
+  userId: string;
+  bonusAmount: number;
+  commissionPercentage: number;
+  meta?: string;
+  isOutdated?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface PerformanceOverview {
   allTimeTotalSales: number;
   highestSales: number | null;
@@ -20,4 +31,5 @@ export interface PerformanceOverview {
   totalPaidSellers: number;
   allowance: number;
   commission?: number
+  reward: Reward | null;
 }

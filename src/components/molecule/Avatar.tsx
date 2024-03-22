@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { cn, generateColor, makeInitials } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";

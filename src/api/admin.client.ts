@@ -59,3 +59,49 @@ export const deleteUserApi = async ({
     throw error.response;
   }
 };
+
+export const createCategoryApi = async (payload: {
+  name: string;
+  status: "ACTIVE" | "INACTIVE";
+  description?: string;
+  file: File;
+}) => {
+  try {
+    const formData = createFormData(payload);
+    const response = await $http.post("/categories", formData);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const deleteCategoryApi = async (id: string) => {
+  try {
+    const response = await $http.delete(`/categories/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const deleteSubcategoryApi = async (id: string) => {
+  try {
+    const response = await $http.delete(`/sub-categories/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const createSubCategoryApi = async (payload: {
+  categoryName: string;
+  categoryId: string;
+  name: string;
+}) => {
+  try {
+    const response = await $http.post(`/sub-categories`, payload);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};

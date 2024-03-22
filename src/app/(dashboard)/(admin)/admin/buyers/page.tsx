@@ -18,6 +18,7 @@ export default async function Protected({
     page: string;
     limit: string;
     verified: string;
+    query?: string;
   };
 }) {
   const session = await getServerSession(authConfig);
@@ -28,7 +29,8 @@ export default async function Protected({
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
   const verified = searchParams?.verified || "";
-  const response = await getAllBuyersAdminApi({ page, limit, verified });
+  const query = searchParams?.query || "";  
+  const response = await getAllBuyersAdminApi({ page, limit, verified, query });
 
   return (
     <div>

@@ -15,6 +15,7 @@ export default async function Protected({
   searchParams,
 }: {
   searchParams: {
+    query?: string;
     page: string;
     limit: string;
   };
@@ -24,9 +25,10 @@ export default async function Protected({
     redirect("/");
   }
 
+  const query = searchParams?.query || "";
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
-  const response = await getAllPosts({ page, limit });
+  const response = await getAllPosts({ page, limit, query });
 
   return (
     <div>

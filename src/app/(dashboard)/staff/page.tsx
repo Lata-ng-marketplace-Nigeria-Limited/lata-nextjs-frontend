@@ -17,6 +17,7 @@ export default async function Protected({
   searchParams: {
     page: string;
     limit: string;
+    query?: string;
   };
 }) {
   const session = await getServerSession(authConfig);
@@ -26,7 +27,8 @@ export default async function Protected({
 
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
-  const response = await getAllStaffAdminApi({ page, limit });
+  const query = searchParams?.query || "";
+  const response = await getAllStaffAdminApi({ page, limit, query });
 
   return (
     <div>

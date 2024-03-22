@@ -1,16 +1,11 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { User } from "@/interface/user";
 import { FetchMeta } from "@/interface/general";
 import { DateTime } from "luxon";
 import TableWithRowGaps from "@components/table/TableWithRowGaps";
-import TableTopArea from "@components/admin/TableTopArea";
 import AppAvatar from "../molecule/Avatar";
 import Link from "next/link";
 import { DASHBOARD_PROTECTED_SELLER_ROUTE } from "@/constants/routes";
-import { useUser } from "@/hooks/useUser";
-import ResizableDialog from "../admin/ResizableDialog";
 import AddSellerForm from "../admin/AddSeller";
 
 interface Props {
@@ -18,24 +13,11 @@ interface Props {
   staff?: User;
   meta: FetchMeta;
 }
+
 const StaffSellers = (props: Props) => {
-  const [showAddSellerModal, setShowAddSellerModal] = useState(false);
-  const [search, setSearch] = useState("");
-  const { user } = useUser();
-
-  const handleAddSeller = () => {
-    setShowAddSellerModal(!showAddSellerModal);
-  };
-
   return (
     <div>
-      <TableTopArea
-        title={(user?.role === "STAFF" ? "My" : props.staff?.name) + " Sellers"}
-        buttonText="+ Add Seller"
-        placeholder="Search sellers"
-        onClick={handleAddSeller}
-        setSearch={setSearch}
-      />
+      <AddSellerForm />
       <TableWithRowGaps
         isClickable
         tableData={props?.data?.map((seller) => {
@@ -66,12 +48,6 @@ const StaffSellers = (props: Props) => {
         usePaginate
         meta={props.meta}
       />
-      <ResizableDialog
-        isShown={showAddSellerModal}
-        setIsShown={setShowAddSellerModal}
-      >
-        <AddSellerForm setShowAddSellerModal={setShowAddSellerModal} />
-      </ResizableDialog>
     </div>
   );
 };

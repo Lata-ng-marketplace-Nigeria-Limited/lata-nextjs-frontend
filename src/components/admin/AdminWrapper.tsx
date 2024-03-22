@@ -10,7 +10,6 @@ import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
 import { formatNumber } from "@/utils";
 import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
 import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
-// import { bonusApi } from "@/api/staff";
 import ProductInsights from "../analytics/ProductInsights";
 
 interface Props {

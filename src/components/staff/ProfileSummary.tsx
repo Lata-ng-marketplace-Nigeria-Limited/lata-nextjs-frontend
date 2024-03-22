@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import AppAvatar from "../molecule/Avatar";
 import { cn } from "@/utils";

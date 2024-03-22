@@ -15,13 +15,28 @@ interface Props {
   staffId: string;
 }
 const StaffTopCards = (props: Props) => {
+  const reward = () => {
+    let commission;
+    let bonus;
+    if (props?.statsOverview?.reward) {
+      commission = (
+        props.statsOverview.reward?.commissionPercentage * 100
+      ).toFixed(0);
+      bonus = formatPriceCompact(props.statsOverview.reward?.bonusAmount);
+    }
+    return {
+      commission,
+      bonus,
+    };
+  };
+
   const { push } = useRouter();
   return (
     <AnalyticsTopCardsHOC>
       <AnalyticsTopCards
         isTotalViews
         title="Commission"
-        description="20% of your total sales"
+        description={`${reward().commission}% of your total sales`}
         isClickable
         number={
           formatPriceCompact(
@@ -32,7 +47,7 @@ const StaffTopCards = (props: Props) => {
       />
       <AnalyticsTopCards
         title="Allowance"
-        description="₦5K for every three sales and above"
+        description={`${reward().bonus} for every three sales and above`}
         isClickable
         number={
           formatPriceCompact(props?.statsOverview?.allowance, true || 0) || "0"
