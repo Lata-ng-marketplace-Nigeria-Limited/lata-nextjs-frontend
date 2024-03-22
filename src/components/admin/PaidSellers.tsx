@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import BadgeWithCount from "../atom/BadgeWithCount";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FetchMeta } from "@/interface/general";
@@ -19,63 +19,27 @@ interface Props {
   dueSubscriptionCount: number;
   newSubscriptionCount: number;
   returningSubscribersCount: number;
-  transactionStatus?: string;
   meta: FetchMeta;
 }
 
 const PaidSellers = (props: Props) => {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
-  const [filteredData, setFilteredData] = useState<ISubscribedUser[]>(
-    props.data,
-  );
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    if (!props.data) return;
-    const filter = props.data.filter(
-      (seller) =>
-        // search by name
-        seller?.name?.toLowerCase().includes(search) ||
-        // search by payment mode
-        seller?.transaction_provider?.toLowerCase().includes(search) ||
-        // search by plan
-        seller?.plan_name?.toLowerCase().includes(search) ||
-        // search by product
-        seller?.subscription_name?.toLowerCase().includes(search) ||
-        // search by amount
-        seller?.transaction_actual_amount?.toString().includes(search),
-    );
-    setFilteredData(filter);
-  }, [search, props.data]);
-
   const params = new URLSearchParams(searchParams);
-
-  const handleClick = (
-    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "RETURNING",
-  ) => {
-    if (transactionStatus) {
-      params.set("transactionStatus", transactionStatus);
-    } else {
-      params.delete("transactionStatus", transactionStatus);
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-  };
 
   const formatDate = (date: string) => {
     return DateTime.fromISO(date).toFormat("dd LLL, yyyy");
   };
 
   const getBadgeVariant = (): IBadgeVariants => {
-    switch (params.get("transactionStatus")) {
-      case "NEW":
+    switch (params.get("tab")) {
+      case "new":
         return "primary";
-      case "ACTIVE":
+      case "active":
         return "success";
-      case "RETURNING":
+      case "returning":
         return "normal";
-      case "DUE":
+      case "due":
         return "danger";
       default:
         return "success";
@@ -83,7 +47,7 @@ const PaidSellers = (props: Props) => {
   };
 
   const sideBtnDisplay = () => {
-    const status = params.get("transactionStatus");
+    const status = params.get("tab");
     return status || "active";
   };
 
@@ -111,55 +75,48 @@ const PaidSellers = (props: Props) => {
         <div className="flex justify-end gap-4 overflow-x-auto sl:gap-6">
           <BadgeWithCount
             count={props.activeSubscriptionCount}
-            activeVariant={getBadgeVariant()}
+            query="active"
+            isDefaultActive
             className="max-xs:text-[10px]"
             text="active"
             variant="success"
-            onClick={() => handleClick("ACTIVE")}
           />
 
           <BadgeWithCount
             count={props.newSubscriptionCount}
-            activeVariant={getBadgeVariant()}
+            query="new"
             className="max-xs:text-[10px]"
             variant="primary"
             text="new"
-            onClick={() => handleClick("NEW")}
           />
 
           <BadgeWithCount
             count={props.returningSubscribersCount}
-            activeVariant={getBadgeVariant()}
+            query="returning"
             className="max-xs:text-[10px]"
             text="returning"
             variant="normal"
-            onClick={() => handleClick("RETURNING")}
           />
 
           <BadgeWithCount
             count={props.dueSubscriptionCount}
-            activeVariant={getBadgeVariant()}
+            query="due"
             className="max-xs:text-[10px]"
             text="due"
             variant="danger"
-            onClick={() => handleClick("DUE")}
           />
         </div>
       </div>
       <div className="mb-7 flex items-center justify-between">
         <HeaderText title>{"Paid Sellers"}</HeaderText>
-        <SearchInput
-          placeholder={"Search Sellers"}
-          wrapperClass="max-w-max"
-          setSearch={setSearch}
-        />
+        <SearchInput placeholder={"Search Sellers"} wrapperClass="max-w-max" />
       </div>
 
       <div>
         <TableWithRowGaps
           emptyTableTitle="No Paid seller found"
           emptyTableDescription="All paid sellers will be displayed here"
-          tableData={filteredData?.map((seller) => {
+          tableData={props.data?.map((seller) => {
             return {
               name: (
                 <div

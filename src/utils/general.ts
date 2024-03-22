@@ -288,3 +288,13 @@ export function formatPriceCompact(
   }).format(value);
   return formattedPrice;
 }
+
+export const showToast = (
+  message: string,
+  variant: "destructive" | "success",
+) => {
+  toast({
+    title: message,
+    variant,
+  });
+};

@@ -2,7 +2,7 @@
 
 import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
-import { IProductStatusCount, Product } from "@/interface/products";
+import { Category, IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
 import { getMonthInGMTPlus1 } from "@/utils";
 import { fetchData } from "./_helper";
@@ -44,13 +44,20 @@ interface IGetAllSellersAdminApi {
 export const getAllSellersAdminApi = async ({
   page,
   limit,
-  verified,
-}: SearchQuery & { verified: string }): Promise<IGetAllSellersAdminApi> => {
+  tab,
+  query,
+}: SearchQuery & {
+  tab: string;
+  query: string;
+}): Promise<IGetAllSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-  if (verified) {
-    params.append("verified", verified);
+  if (tab) {
+    params.append("tab", tab);
+  }
+  if (query) {
+    params.append("query", query);
   }
   return fetchData(`/admin/sellers?${params.toString()}`);
 };
@@ -58,10 +65,15 @@ export const getAllSellersAdminApi = async ({
 export const getAllStaffAdminApi = async ({
   page,
   limit,
-}: SearchQuery): Promise<IGetAllSellersAdminApi> => {
+  query,
+}: SearchQuery & { query: string }): Promise<IGetAllSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
+
+  if (query) {
+    params.append("query", query);
+  }
 
   return fetchData(`/admin/staff?${params.toString()}`);
 };
@@ -79,20 +91,26 @@ interface IGetAllPaidSellersAdminApi {
 export const getAllPaidSellersAdminApi = async ({
   page,
   limit,
-  transactionStatus,
+  tab,
   staffId,
+  query,
 }: SearchQuery & {
-  transactionStatus: string;
+  tab: string;
   staffId?: string;
+  query?: string;
 }): Promise<IGetAllPaidSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-  if (transactionStatus) {
-    params.append("transactionStatus", transactionStatus);
+  if (tab) {
+    params.append("tab", tab);
   }
   if (staffId) {
     params.append("staffId", staffId);
+  }
+
+  if (query) {
+    params.append("query", query);
   }
 
   return fetchData(`/admin/paid-sellers?${params.toString()}`);
@@ -108,13 +126,20 @@ interface IGetAllBuyersAdminApi {
 export const getAllBuyersAdminApi = async ({
   page,
   limit,
-  verified,
-}: SearchQuery & { verified: string }): Promise<IGetAllBuyersAdminApi> => {
+  tab,
+  query,
+}: SearchQuery & {
+  tab: string;
+  query: string;
+}): Promise<IGetAllBuyersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-  if (verified) {
-    params.append("verified", verified);
+  if (tab) {
+    params.append("tab", tab);
+  }
+  if (query) {
+    params.append("query", query);
   }
 
   return fetchData(`/admin/buyers?${params.toString()}`);
@@ -128,10 +153,15 @@ interface IGetAllPosts {
 export const getAllPosts = async ({
   page,
   limit,
-}: SearchQuery): Promise<IGetAllPosts> => {
+  query,
+}: SearchQuery & { query: string }): Promise<IGetAllPosts> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
+
+  if (query) {
+    params.append("query", query);
+  }
 
   return fetchData(`/admin/posts?${params.toString()}`);
 };
@@ -206,4 +236,28 @@ export const adminFetchSellersUnderStaff = async ({
   params.append("limit", String(limit || 10));
 
   return fetchData(`/admin/${staffId}/sellers?${params.toString()}`);
+};
+
+export const fetchCategoriesApi = async ({
+  limit,
+  page,
+}: SearchQuery): Promise<Category[]> => {
+  const params = new URLSearchParams();
+
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  return fetchData(`/categories`);
+};
+
+export const fetchSubCategoriesApi = async ({
+  limit,
+  page,
+}: SearchQuery): Promise<Category[]> => {
+  const params = new URLSearchParams();
+
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  return fetchData(`/categories`);
 };

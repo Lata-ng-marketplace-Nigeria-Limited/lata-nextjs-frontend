@@ -4,27 +4,38 @@ import React from "react";
 import { InputProps } from "../atom/Input";
 import { cn } from "@/utils";
 import { SearchIcon } from "@components/atom/icons/Search";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
 
 interface Props extends Omit<InputProps, "className"> {
   wrapperClass?: string;
   inputClass?: string;
   placeholder?: string;
   searchIconClass?: string;
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SearchInput = React.forwardRef(
   (
-    {
-      wrapperClass,
-      inputClass,
-      placeholder,
-      searchIconClass,
-      setSearch,
-      ...props
-    }: Props,
+    { wrapperClass, inputClass, placeholder, searchIconClass, ...props }: Props,
     ref,
   ) => {
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
+    const handleSearch = useDebouncedCallback((term: string) => {
+      console.log(`Searching... ${term}`);
+
+      const params = new URLSearchParams(searchParams);
+      if (term) {
+        params.set("query", term);
+        params.set("page", "1");
+      } else {
+        params.delete("query");
+        params.delete("page");
+      }
+      replace(`${pathname}?${params.toString()}`);
+    }, 300);
+
     return (
       <div className={cn(" relative w-full", wrapperClass)}>
         <SearchIcon
@@ -64,7 +75,8 @@ const SearchInput = React.forwardRef(
               `,
             inputClass,
           )}
-          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+          defaultValue={searchParams.get("query")?.toString()}
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
         />
       </div>
     );

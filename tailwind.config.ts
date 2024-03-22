@@ -70,6 +70,9 @@ const config: Config = {
       fontFamily: {
         niramit: ["Niramit", "sans-serif"],
       },
+      gridTemplateColumns: {
+        "auto-fit": "repeat(auto-fit, minmax(12.9375rem, 1fr))",
+      },
     },
     keyframes: {
       shimmer: {
