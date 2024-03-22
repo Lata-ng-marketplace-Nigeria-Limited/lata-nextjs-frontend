@@ -17,7 +17,7 @@ export default async function Protected({
   searchParams: {
     page: string;
     limit: string;
-    transactionStatus: string;
+    tab: string;
     query?: string
   };
 }) {
@@ -32,12 +32,12 @@ export default async function Protected({
 
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
-  const transactionStatus = searchParams?.transactionStatus || "";
+  const tab = searchParams?.tab || "";
   const query = searchParams?.query || "";
   const response = await getAllPaidSellersAdminApi({
     page,
     limit,
-    transactionStatus,
+    tab,
     query
   });
 

@@ -29,30 +29,19 @@ const PaidSellers = (props: Props) => {
   const router = useRouter();
   const params = new URLSearchParams(searchParams);
 
-  const handleClick = (
-    transactionStatus: "NEW" | "ACTIVE" | "DUE" | "RETURNING",
-  ) => {
-    if (transactionStatus) {
-      params.set("transactionStatus", transactionStatus);
-    } else {
-      params.delete("transactionStatus", transactionStatus);
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-  };
-
   const formatDate = (date: string) => {
     return DateTime.fromISO(date).toFormat("dd LLL, yyyy");
   };
 
   const getBadgeVariant = (): IBadgeVariants => {
-    switch (params.get("transactionStatus")) {
-      case "NEW":
+    switch (params.get("tab")) {
+      case "new":
         return "primary";
-      case "ACTIVE":
+      case "active":
         return "success";
-      case "RETURNING":
+      case "returning":
         return "normal";
-      case "DUE":
+      case "due":
         return "danger";
       default:
         return "success";
@@ -60,7 +49,7 @@ const PaidSellers = (props: Props) => {
   };
 
   const sideBtnDisplay = () => {
-    const status = params.get("transactionStatus");
+    const status = params.get("tab");
     return status || "active";
   };
 
@@ -88,38 +77,35 @@ const PaidSellers = (props: Props) => {
         <div className="flex justify-end gap-4 overflow-x-auto sl:gap-6">
           <BadgeWithCount
             count={props.activeSubscriptionCount}
-            activeVariant={getBadgeVariant()}
+            query="active"
+            isDefaultActive
             className="max-xs:text-[10px]"
             text="active"
             variant="success"
-            onClick={() => handleClick("ACTIVE")}
           />
 
           <BadgeWithCount
             count={props.newSubscriptionCount}
-            activeVariant={getBadgeVariant()}
+            query="new"
             className="max-xs:text-[10px]"
             variant="primary"
             text="new"
-            onClick={() => handleClick("NEW")}
           />
 
           <BadgeWithCount
             count={props.returningSubscribersCount}
-            activeVariant={getBadgeVariant()}
+            query="returning"
             className="max-xs:text-[10px]"
             text="returning"
             variant="normal"
-            onClick={() => handleClick("RETURNING")}
           />
 
           <BadgeWithCount
             count={props.dueSubscriptionCount}
-            activeVariant={getBadgeVariant()}
+            query="due"
             className="max-xs:text-[10px]"
             text="due"
             variant="danger"
-            onClick={() => handleClick("DUE")}
           />
         </div>
       </div>

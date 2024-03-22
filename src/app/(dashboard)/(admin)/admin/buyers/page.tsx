@@ -17,7 +17,7 @@ export default async function Protected({
   searchParams: {
     page: string;
     limit: string;
-    verified: string;
+    tab: string;
     query?: string;
   };
 }) {
@@ -28,9 +28,9 @@ export default async function Protected({
 
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
-  const verified = searchParams?.verified || "";
+  const tab = searchParams?.tab || "";
   const query = searchParams?.query || "";  
-  const response = await getAllBuyersAdminApi({ page, limit, verified, query });
+  const response = await getAllBuyersAdminApi({ page, limit, tab, query });
 
   return (
     <div>

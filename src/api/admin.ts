@@ -44,17 +44,17 @@ interface IGetAllSellersAdminApi {
 export const getAllSellersAdminApi = async ({
   page,
   limit,
-  verified,
+  tab,
   query,
 }: SearchQuery & {
-  verified: string;
+  tab: string;
   query: string;
 }): Promise<IGetAllSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-  if (verified) {
-    params.append("verified", verified);
+  if (tab) {
+    params.append("tab", tab);
   }
   if (query) {
     params.append("query", query);
@@ -91,19 +91,19 @@ interface IGetAllPaidSellersAdminApi {
 export const getAllPaidSellersAdminApi = async ({
   page,
   limit,
-  transactionStatus,
+  tab,
   staffId,
   query,
 }: SearchQuery & {
-  transactionStatus: string;
+  tab: string;
   staffId?: string;
   query?: string;
 }): Promise<IGetAllPaidSellersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-  if (transactionStatus) {
-    params.append("transactionStatus", transactionStatus);
+  if (tab) {
+    params.append("tab", tab);
   }
   if (staffId) {
     params.append("staffId", staffId);
@@ -126,17 +126,17 @@ interface IGetAllBuyersAdminApi {
 export const getAllBuyersAdminApi = async ({
   page,
   limit,
-  verified,
+  tab,
   query,
 }: SearchQuery & {
-  verified: string;
+  tab: string;
   query: string;
 }): Promise<IGetAllBuyersAdminApi> => {
   const params = new URLSearchParams();
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
-  if (verified) {
-    params.append("verified", verified);
+  if (tab) {
+    params.append("tab", tab);
   }
   if (query) {
     params.append("query", query);
