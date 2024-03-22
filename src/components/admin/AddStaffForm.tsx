@@ -22,9 +22,7 @@ import { useRouter } from "next/navigation";
 import ResizableDialog from "./ResizableDialog";
 import TableTopArea from "./TableTopArea";
 
-interface Props {
-  setShowAddStaffModal?: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
 const AddStaffForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
@@ -92,7 +90,7 @@ const AddStaffForm = (props: Props) => {
         });
         setLoading(false);
         refresh?.();
-        props.setShowAddStaffModal?.(false);
+        setShowAddStaffModal(false);
       } else {
         setLoading(false);
         toast({
@@ -294,7 +292,7 @@ const AddStaffForm = (props: Props) => {
                       type={"button"}
                       format={"secondary"}
                       className={"w-full"}
-                      onClick={() => props.setShowAddStaffModal?.(false)}
+                      onClick={() => setShowAddStaffModal(false)}
                     >
                       Cancel
                     </Button>
