@@ -5,6 +5,7 @@ import { Category } from "@/interface/products";
 import { Subscription } from "@/interface/payment";
 import { create } from "zustand";
 import { persist, createJSONStorage as createStore } from "zustand/middleware";
+import { State } from "@/interface/location";
 
 export interface ILocalStore {
   user?: User;
@@ -12,12 +13,14 @@ export interface ILocalStore {
   categories?: Category[];
   subscription: Subscription[];
   loading: boolean;
+  location: State[]
   setUser: (user: User) => void;
   updateUser: (user: Partial<User>) => void;
   setChats: (chats: Chat[]) => void;
   setCategories: (categories: Category[]) => void;
   setSubscription: (subscription: Subscription[]) => void;
   setLoading: (loading: boolean) => void;
+  setLocations: (location: State[]) => void;
   clear: () => void;
 }
 
@@ -29,6 +32,14 @@ export const useGeneralStore = create<{
   setHasSetCategories: (val) => set({ hasSetCategories: val }),
 }));
 
+export const useLocationStore = create<{
+  hasSetLocation: boolean;
+  setHasSetLocation: (val: boolean) => void;
+}>((set) => ({
+  hasSetLocation: false,
+  setHasSetLocation: (val) => set({ hasSetLocation: val }),
+}));
+
 export const useLocalStore = create(
   persist<ILocalStore>(
     (set, get) => ({
@@ -37,6 +48,7 @@ export const useLocalStore = create(
       categories: [],
       subscription: [],
       loading: true,
+      location: [],
       setUser: (user: User) => set({ user }),
       updateUser: (user: Partial<User>) =>
         set({ user: { ...get().user, ...(user as any) } }),
@@ -44,6 +56,7 @@ export const useLocalStore = create(
       setCategories: (categories: Category[]) => set({ categories }),
       setSubscription: (subscription: Subscription[]) => set({ subscription }),
       setLoading: (loading: boolean) => set({ loading }),
+      setLocations: (location: State[]) => set({ location }),
       clear: () =>
         set({
           user: undefined,

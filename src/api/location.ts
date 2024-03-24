@@ -1,31 +1,31 @@
-import axios from "axios";
+"use server";
 
-const $location = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_COUNTRIES_API_URL,
-  headers: {
-    "X-CSCAPI-KEY": process.env.NEXT_PUBLIC_COUNTRIES_API_KEY,
-  },
-});
+import { State } from "@/interface/location";
+import { getApiUrl } from "@/utils";
 
-export const getStatesByCountryCode = async (countryCode: string = "NG") => {
+interface IGetStatesApi {
+  data: State[];
+  message?: string;
+  success?: boolean;
+}
+export const getAllStatesApi = async (): Promise<IGetStatesApi> => {
   try {
-    const { data } = await $location.get(`/countries/${countryCode}/states`);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
+    const res = await fetch(getApiUrl("/states"), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-export const getCitiesByStateCodeAndCountryCode = async (
-  stateCode: string,
-  countryCode: string = "NG"
-) => {
-  try {
-    const { data } = await $location.get(
-      `/countries/${countryCode}/states/${stateCode}/cities`
-    );
-    return data;
-  } catch (error) {
-    throw error;
+    if (!res.ok) {
+      return {
+        data: [],
+        message: "Failed to fetch states",
+        success: false,
+      };
+    }
+    return await res.json();
+  } catch (error: any) {
+    throw error.response;
   }
 };

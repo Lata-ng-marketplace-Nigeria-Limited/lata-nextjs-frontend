@@ -4,7 +4,7 @@ import Button from "../atom/Button";
 interface Props {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   onDelete: () => void;
-  type: "category" | "subcategory";
+  type: "category" | "subcategory" | "state" | "city";
   name: string;
 }
 const DeleteModalContent = (props: Props) => {
@@ -12,7 +12,8 @@ const DeleteModalContent = (props: Props) => {
     <div>
       <h3 className="mb-6 font-semibold capitalize">Delete {props.type} </h3>
       <p className="mb-6 font-medium text-grey8">
-        Are you sure you want to delete the <span className="text-primary"> {props.name} </span>
+        Are you sure you want to delete the{" "}
+        <span className="text-primary"> {props.name} </span>
         {props.type}?
       </p>
       <div className="flex justify-end gap-3">

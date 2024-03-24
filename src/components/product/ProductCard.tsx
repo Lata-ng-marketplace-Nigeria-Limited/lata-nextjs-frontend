@@ -16,6 +16,7 @@ import Link from "next/link";
 import { IMAGE_BLUR_URL } from "@/constants/others";
 import { generateSellerAnalyticsApi } from "@/api/view";
 import PercentageOff from "../atom/PercentageOff";
+import { useLocation } from "@/hooks/useLocation";
 
 type Props = {
   imageSrc?: string;
@@ -48,9 +49,10 @@ export default function ProductCard(props: Props) {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState("");
   const [planName, setPlanName] = useState("");
-  const [placeHolderUrl, setPlaceHolderUrl] = useState("");
   const [initialAmount, setInitialAmount] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
+  const { location } = useLocation();
+
 
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
@@ -164,14 +166,17 @@ export default function ProductCard(props: Props) {
   };
 
   const handleLocationDisplay = () => {
-    const stateName =
-      props.state === "Abuja Federal Capital Territory" ? "Abuja" : props.state;
+    const findState = location?.find((loc) => loc.id === props.state);
+    const findCity = findState?.cities?.find((city) => city.id === props.city);
+    const stateName = findState?.name || props.state;
+    const cityName = findCity?.name || props.city;
+
     if (!props?.state && props.createProductPreview) {
       return "Location";
     } else if (!props.city) {
       return stateName;
     } else {
-      return `${props?.city} ${stateName}`;
+      return `${cityName}, ${stateName}`;
     }
   };
 
