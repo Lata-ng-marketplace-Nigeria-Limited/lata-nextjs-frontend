@@ -134,7 +134,8 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
           </UserDetailContainer>
           <SellerActionBtns
             managers={response?.managers || []}
-            seller={response?.data || {}}
+            sellerId={sellerId}
+            sellerName={response?.data?.name || "No name"}
           />
         </div>
       </div>
@@ -155,8 +156,8 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={selectedState( location?.data, product.state)}
-                    city={selectedCity(location?.data, product.state, product.city)}
+                    state={product.state}
+                    city={product.city}
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}
@@ -187,8 +188,8 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={selectedState( location?.data, product.state)}
-                    city={selectedCity(location?.data, product.state, product.city)}
+                    state={product.state}
+                    city={product.city}
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}

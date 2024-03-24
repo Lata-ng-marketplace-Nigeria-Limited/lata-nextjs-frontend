@@ -1,12 +1,15 @@
 import { State } from "@/interface/location";
 
-
 export const selectedState = (location: State[], stateId: string) => {
   return location.find((loc) => loc.id === stateId)?.name || stateId;
 };
 
-export const selectedCity = (location: State[], stateId: string, cityId: string) => {
-  if (!stateId) return cityId;
+export const selectedCity = (
+  location: State[],
+  stateId: string,
+  cityId: string,
+) => {
+  if (!stateId) return;
 
   return (
     location
