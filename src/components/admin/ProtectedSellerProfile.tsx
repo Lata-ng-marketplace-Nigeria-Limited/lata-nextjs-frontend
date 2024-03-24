@@ -7,14 +7,12 @@ import { formatPrice } from "@/utils";
 import FeedbackContent from "@components/feedback/FeedbackContent";
 import { getProtectedSellerApi } from "@/api/admin";
 import SellerActionBtns from "./SellerActionBtns";
-import { selectedCity, selectedState } from "@/utils/location";
 import { getAllStatesApi } from "@/api/location";
 
 interface Props {
   sellerId: string;
 }
 const ProtectedSellerProfile = async ({ sellerId }: Props) => {
-  const location = await getAllStatesApi();
   const response = await getProtectedSellerApi({ sellerId });
 
   const planDuration = () => {
