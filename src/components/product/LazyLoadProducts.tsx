@@ -7,6 +7,8 @@ import ProductGridList from "@atom/ProductGridList";
 import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
+import { useLocation } from "@/hooks/useLocation";
+import { selectedCity, selectedState } from "@/utils/location";
 
 interface Props {
   products: Product[];
@@ -24,7 +26,7 @@ export default function LazyLoadProducts(props: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
   const isVisible = !!entry?.isIntersecting;
-
+  const { location } = useLocation();
 
   useEffect(() => {
     if (!isVisible) return;
@@ -54,8 +56,8 @@ export default function LazyLoadProducts(props: Props) {
             price={formatPrice(product?.price)}
             productName={product?.name}
             description={product?.description}
-            state={product?.state}
-            city={product.city}
+            state={selectedState(location, product?.state)}
+            city={selectedCity(location, product?.state, product.city)}
             imageSrc={product?.files?.[0]?.url}
             product={product}
             trending
@@ -67,7 +69,7 @@ export default function LazyLoadProducts(props: Props) {
       ) : props.hideFallback ? (
         <ProductListSkeleton length={props.skeletonLength || 4} />
       ) : (
-        <div className={"text-grey7 text-xs md:text-sm w-full"}>
+        <div className={"w-full text-xs text-grey7 md:text-sm"}>
           {props?.fallbackText || "No products found"}
         </div>
       )}
@@ -76,11 +78,11 @@ export default function LazyLoadProducts(props: Props) {
         <div
           ref={ref}
           className={cn(`
-          w-full 
-          h-[120%] 
+          absolute 
+          bottom-[0rem] 
+          h-[120%]
+          w-full
           bg-transparent
-          absolute
-          bottom-[0rem]
         `)}
         ></div>
       )}

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Product } from "@/interface/products";
 import { DateTime } from "luxon";
@@ -11,13 +9,17 @@ import {
   DASHBOARD_PROTECTED_SELLER_ROUTE,
 } from "@/constants/routes";
 import AppAvatar from "../molecule/Avatar";
+import { State } from "@/interface/location";
+import { selectedState } from "@/utils/location";
 
 interface Props {
   reposts: Product[];
   meta: FetchMeta;
+  states: State[]
 }
 
 const RecentPosts = (props: Props) => {
+
   return (
     <>
       <TableWithRowGaps
@@ -44,7 +46,7 @@ const RecentPosts = (props: Props) => {
                 </Link>
               </div>
             ),
-            location: <p>{post?.state}</p>,
+            location: <p>{selectedState(props.states, post?.state)}</p>,
             date: DateTime.fromISO(post?.createdAt).toFormat("dd LLL, yyyy"),
             posts: (
               <Link

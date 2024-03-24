@@ -6,6 +6,7 @@ import Subcategory from "@components/product/Subcategory";
 import { cn } from "@/utils";
 import Modal from "../molecule/Modal";
 import type { Category } from "@/interface/products";
+import { renameCategories } from "@/utils/categories";
 
 interface Props {
   data: Category;
@@ -44,7 +45,7 @@ const Category = ({
               "text-sm font-semibold text-grey9",
             )}
           >
-            {data?.name}
+            {renameCategories(data)}
           </p>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { getAllPosts } from "@/api/admin";
+import { getAllStatesApi } from "@/api/location";
 import AllPosts from "@/components/admin/AllPosts";
 import { GetUser } from "@/components/atom/GetUser";
 import { authConfig } from "@authConfig";
@@ -29,6 +30,7 @@ export default async function Protected({
   const page = searchParams?.page || "";
   const limit = searchParams?.limit || "";
   const response = await getAllPosts({ page, limit, query });
+  const location = await getAllStatesApi();
 
   return (
     <div>
@@ -36,7 +38,11 @@ export default async function Protected({
         <GetUser />
       </Suspense>
       <Suspense fallback={<p>Loading...</p>}>
-        <AllPosts data={response.data} meta={response.meta} />
+        <AllPosts
+          data={response.data}
+          meta={response.meta}
+          states={location?.data}
+        />
       </Suspense>
     </div>
   );
