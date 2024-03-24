@@ -11,6 +11,7 @@ import { formatNumber } from "@/utils";
 import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
 import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
 import ProductInsights from "../analytics/ProductInsights";
+import { getAllStatesApi } from "@/api/location";
 
 interface Props {
   username: string;
@@ -19,6 +20,8 @@ interface Props {
 export default async function AdminDashboardWrapper(props: Props) {
   const response = await getAdminAnalyticsApi(props.month);
   const chartsData = await getAnalyticsClicksAndViews();
+  const states = await getAllStatesApi();
+
 
   return (
     <div>
@@ -77,6 +80,7 @@ export default async function AdminDashboardWrapper(props: Props) {
         <RecentPosts
           reposts={response?.recentPosts?.data}
           meta={response.recentPosts?.meta}
+          states={states?.data}
         />
       </div>
     </div>
