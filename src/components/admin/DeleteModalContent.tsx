@@ -23,7 +23,13 @@ const DeleteModalContent = (props: Props) => {
         >
           Cancel
         </Button>
-        <Button format="danger" onClick={props.onDelete}>
+        <Button
+          format="danger"
+          onClick={() => {
+            props.onDelete();
+            props.setShowModal(false);
+          }}
+        >
           Delete
         </Button>
       </div>

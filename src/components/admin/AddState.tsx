@@ -37,7 +37,15 @@ const AddState = (props: Props) => {
     } catch (error) {
       const errorResponse = error;
       const errorObj = getFormErrorObject(errorResponse as any);
-      showToast(errorObj?.stateName || "Failed to create state", "destructive");
+      const errorArray = (error as any)?.data?.errorData?.messages?.errors;
+
+      if (errorArray && errorArray?.length > 0) {
+        errorArray?.forEach((err: Record<string, any>) => {
+          showToast(err.message, "destructive");
+        });
+      } else {
+        showToast(errorObj?.name || "Failed to create state", "destructive");
+      }
     } finally {
       setLoading(false);
     }
