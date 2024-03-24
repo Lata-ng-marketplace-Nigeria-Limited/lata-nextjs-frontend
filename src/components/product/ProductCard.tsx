@@ -53,7 +53,6 @@ export default function ProductCard(props: Props) {
   const [discountedAmount, setDiscountedAmount] = useState(0);
   const { location } = useLocation();
 
-
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
   const isVisible = !!entry?.isIntersecting;
@@ -165,11 +164,20 @@ export default function ProductCard(props: Props) {
     }
   };
 
-  const handleLocationDisplay = () => {
+  const state = () => {
     const findState = location?.find((loc) => loc.id === props.state);
-    const findCity = findState?.cities?.find((city) => city.id === props.city);
-    const stateName = findState?.name || props.state;
-    const cityName = findCity?.name || props.city;
+    return findState;
+  };
+
+  const city = () => {
+    if (!state()) return;
+    const findCity = state()?.cities?.find((city) => city.id === props.city);
+    return findCity;
+  };
+
+  const handleLocationDisplay = () => {
+    const stateName = state()?.name || props.state;
+    const cityName = city()?.name || props.city;
 
     if (!props?.state && props.createProductPreview) {
       return "Location";

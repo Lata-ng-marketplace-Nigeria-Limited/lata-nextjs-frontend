@@ -14,14 +14,15 @@ interface Props {
 }
 
 export const SellerProfile = ({ seller, productId }: Props) => {
+
   return (
     <>
       <div
         className={
-          "flex gap-x-6 gap-y-6 justify-between flex-col  sm:flex-col sl:flex-row "
+          "flex flex-col justify-between gap-x-6 gap-y-6  sm:flex-col sl:flex-row "
         }
       >
-        <div className={"max-w-[] tablet:min-w-[330px] w-full"}>
+        <div className={"w-full max-w-[] tablet:min-w-[330px]"}>
           <SellerContact
             productName={seller?.name}
             sellerInfo={seller}
@@ -32,14 +33,14 @@ export const SellerProfile = ({ seller, productId }: Props) => {
 
         <div
           className={cn(`
-              w-full 
-              sl:max-w-[472px] 
               flex 
-              flex-col
-              sm:flex-row
-              sl:flex-col
-              gap-y-6
+              w-full 
+              flex-col 
               gap-x-3
+              gap-y-6
+              sm:flex-row
+              sl:max-w-[472px]
+              sl:flex-col
             `)}
         >
           <AboutSeller sellerInfo={seller} />
@@ -50,7 +51,7 @@ export const SellerProfile = ({ seller, productId }: Props) => {
       <div className={"mt-6 sl:mt-8"}>
         <h2
           className={
-            "text-xs sm:text-base font-semibold sm:font-medium text-grey9 "
+            "text-xs font-semibold text-grey9 sm:text-base sm:font-medium "
           }
         >
           Seller’s products
@@ -77,7 +78,7 @@ export const SellerProfile = ({ seller, productId }: Props) => {
               ))}
             </>
           ) : (
-            <div className={"text-grey7 text-xs md:text-sm"}>
+            <div className={"text-xs text-grey7 md:text-sm"}>
               Seller has no products yet
             </div>
           )}

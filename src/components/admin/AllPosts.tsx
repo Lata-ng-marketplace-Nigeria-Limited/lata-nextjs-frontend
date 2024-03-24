@@ -7,23 +7,21 @@ import TableTopArea from "./TableTopArea";
 import Link from "next/link";
 import {
   DASHBOARD_PRODUCT_ROUTE,
-  DASHBOARD_SELLER_PROFILE_ROUTE,
+  DASHBOARD_PROTECTED_SELLER_ROUTE,
 } from "@/constants/routes";
 import AppAvatar from "../molecule/Avatar";
+import { State } from "@/interface/location";
+import { selectedState } from "@/utils/location";
 
 interface Props {
   data: Product[];
   meta: FetchMeta;
+  states: State[];
 }
 const AllPosts = (props: Props) => {
-
   return (
     <div>
-      <TableTopArea
-        title="All Posts"
-        hideButton
-        placeholder="Search posts"
-      />
+      <TableTopArea title="All Posts" hideButton placeholder="Search posts" />
       <TableWithRowGaps
         isClickable
         tableData={props.data?.map((post) => {
@@ -37,14 +35,14 @@ const AllPosts = (props: Props) => {
                   initialsClass="font-normal text-xs sm:text-xs"
                 />
                 <Link
-                  href={DASHBOARD_SELLER_PROFILE_ROUTE + "/" + post.user?.id}
+                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + post.user?.id}
                   className="font-semibold hover:text-primary"
                 >
                   {post?.user?.name}
                 </Link>
               </div>
             ),
-            location: <p>{post?.state}</p>,
+            location: <p>{selectedState(props.states, post?.state)}</p>,
             date: DateTime.fromISO(post?.createdAt).toFormat("dd LLL, yyyy"),
             posts: (
               <Link

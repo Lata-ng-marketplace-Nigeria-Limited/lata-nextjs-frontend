@@ -7,6 +7,7 @@ import { formatPrice } from "@/utils";
 import FeedbackContent from "@components/feedback/FeedbackContent";
 import { getProtectedSellerApi } from "@/api/admin";
 import SellerActionBtns from "./SellerActionBtns";
+import { getAllStatesApi } from "@/api/location";
 
 interface Props {
   sellerId: string;
@@ -30,7 +31,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
 
   return (
     <div className="">
-      <div className="sm:flex sm:justify-between gap-4 max-w-full">
+      <div className="max-w-full gap-4 sm:flex sm:justify-between">
         <div className="sm:basis-[60%]">
           <UserBanner
             name={response?.data?.name || "No name"}
