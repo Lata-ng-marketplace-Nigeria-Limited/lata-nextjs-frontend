@@ -7,11 +7,14 @@ import { formatPrice } from "@/utils";
 import FeedbackContent from "@components/feedback/FeedbackContent";
 import { getProtectedSellerApi } from "@/api/admin";
 import SellerActionBtns from "./SellerActionBtns";
+import { selectedCity, selectedState } from "@/utils/location";
+import { getAllStatesApi } from "@/api/location";
 
 interface Props {
   sellerId: string;
 }
 const ProtectedSellerProfile = async ({ sellerId }: Props) => {
+  const location = await getAllStatesApi();
   const response = await getProtectedSellerApi({ sellerId });
 
   const planDuration = () => {
@@ -30,7 +33,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
 
   return (
     <div className="">
-      <div className="sm:flex sm:justify-between gap-4 max-w-full">
+      <div className="max-w-full gap-4 sm:flex sm:justify-between">
         <div className="sm:basis-[60%]">
           <UserBanner
             name={response?.data?.name || "No name"}
@@ -131,8 +134,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
           </UserDetailContainer>
           <SellerActionBtns
             managers={response?.managers || []}
-            sellerId={sellerId}
-            sellerName={response?.data?.name || "No name"}
+            seller={response?.data || {}}
           />
         </div>
       </div>
@@ -153,8 +155,8 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={product.state}
-                    city={product.city}
+                    state={selectedState( location?.data, product.state)}
+                    city={selectedCity(location?.data, product.state, product.city)}
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}
@@ -185,8 +187,8 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={product.state}
-                    city={product.city}
+                    state={selectedState( location?.data, product.state)}
+                    city={selectedCity(location?.data, product.state, product.city)}
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}

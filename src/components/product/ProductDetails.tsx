@@ -7,6 +7,7 @@ import Hr from "@atom/Hr";
 import { useDiscount } from "@/hooks/useDiscount";
 import PercentageOff from "../atom/PercentageOff";
 import { useLocation } from "@/hooks/useLocation";
+import { selectedState } from "@/utils/location";
 
 interface Props {
   product: Product;
@@ -21,14 +22,6 @@ export default function ProductDetails(props: Props) {
   };
 
   const { initialAmount, discountedAmount } = useDiscount(priceDetails);
-
-  const getSelectedState = () => {
-    if (!location) {
-      return;
-    }
-    const getState = location.find((loc) => loc.id === props.product?.state);
-    return getState?.name || props.product?.state;
-  };
 
   return (
     <div
@@ -78,7 +71,7 @@ export default function ProductDetails(props: Props) {
           <p className={"flex shrink-0 items-center gap-x-[0.125rem]"}>
             <MapPinIcon className={cn(`h-4 w-4 `)} pathClass={"stroke-grey5"} />
             <span className={cn(`text-sm text-grey5`)}>
-              {getSelectedState()}
+              {selectedState(location, props.product?.state)}
             </span>
           </p>
         </div>

@@ -21,6 +21,8 @@ import { cn, formatPrice } from "@/utils";
 import ProductCard from "@components/product/ProductCard";
 import FeedbacksForProduct from "../feedback/FeedbacksForProduct";
 import { useRouter } from "next/navigation";
+import { useLocation } from "@/hooks/useLocation";
+import { selectedCity, selectedState } from "@/utils/location";
 
 interface Props {
   product: Product | undefined;
@@ -34,6 +36,7 @@ export default function ViewNotOwnProduct(props: Props) {
   const [modalButtonLoading, setModalButtonLoading] = useState(false);
   const { toast } = useToast();
   const { replace, refresh } = useRouter();
+  const { location } = useLocation();
 
   const handleSendToReview = async () => {
     if (!props.product?.id) return;
@@ -257,8 +260,8 @@ export default function ViewNotOwnProduct(props: Props) {
                 price={formatPrice(products.price)}
                 productName={products.name}
                 description={products.description}
-                state={products.state}
-                city={products.city}
+                state={selectedState(location, products.state)}
+                city={selectedCity(location, products.state, products.city)}
                 imageSrc={products.files?.[0]?.url}
                 product={products}
                 createProductPreview={false}
