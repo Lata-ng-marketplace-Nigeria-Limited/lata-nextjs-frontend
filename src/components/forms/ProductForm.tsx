@@ -27,8 +27,8 @@ import {
 import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
-import { nigerianStatesAndCities } from "@/store/data/location";
 import { useUser } from "@/hooks/useUser";
+import { useLocation } from "@/hooks/useLocation";
 
 interface Props {
   product?: Product;
@@ -83,7 +83,10 @@ export default function ProductForm({
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
+  const { location, statesSelectData } = useLocation();
   const [hasSelectedState, setHasSelectedState] = useState(false);
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const { user } = useUser();
 
   useEffect(() => {
@@ -129,8 +132,8 @@ export default function ProductForm({
       categoryId: watch("categoryId"),
       subCategoryId: watch("subCategoryId"),
       description: watch("description"),
-      state: watch("state"),
-      city: watch("city"),
+      state: state,
+      city: city,
       discount: watch("discount") || "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,8 +151,10 @@ export default function ProductForm({
     watch("description"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("state"),
+    state,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("city"),
+    city,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     watch("discount"),
   ]);
@@ -338,7 +343,10 @@ export default function ProductForm({
         }
       }
       toast({
-        title: typeof error?.message === "string" ? error?.message : "Something went wrong",
+        title:
+          typeof error?.message === "string"
+            ? error?.message
+            : "Something went wrong",
         description: "Please try again later",
         variant: "destructive",
       });
@@ -366,8 +374,8 @@ export default function ProductForm({
   };
 
   const handleCities = (selectedState: string) => {
-    const getSelectedState = nigerianStatesAndCities.find(
-      (state) => state.value === selectedState,
+    const getSelectedState = location.find(
+      (state) => state.id === selectedState,
     );
 
     if (!getSelectedState) return;
@@ -375,10 +383,24 @@ export default function ProductForm({
 
     const citiesInState = getSelectedState?.cities?.map((city) => ({
       label: city.name,
-      value: city.name,
+      value: city.id,
     }));
 
     setCities(citiesInState);
+  };
+
+  const onSelectCity = (selectedCity: string) => {
+    const findCity = cities.find((city) => city.value === selectedCity);
+
+    if (!findCity) return;
+    setCity(findCity?.label);
+  };
+
+  const onSelectState = (selectedState: string) => {
+    const findState = location.find((loc) => loc.id === selectedState);
+
+    if (!findState) return;
+    setState(findState?.name);
   };
 
   const flexInputs = cn(
@@ -544,7 +566,7 @@ export default function ProductForm({
               <SelectInput
                 inputProps={{ ...field }}
                 placeholder={"Select state"}
-                options={nigerianStatesAndCities.map((state) => ({
+                options={statesSelectData.map((state) => ({
                   label: state.label,
                   value: state.value,
                 }))}
@@ -554,6 +576,7 @@ export default function ProductForm({
                 value={field.value || ""}
                 onValueChange={(value) => {
                   field.onChange(value);
+                  onSelectState(value);
                   handleCities(value);
                 }}
                 emptyMessage={"No States"}
@@ -577,6 +600,7 @@ export default function ProductForm({
               value={field.value || ""}
               onValueChange={(value) => {
                 field.onChange(value);
+                onSelectCity(value);
               }}
               emptyMessage={"No Cities"}
               errorMessage={errors.city?.message}

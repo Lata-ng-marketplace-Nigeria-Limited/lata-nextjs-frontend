@@ -4,6 +4,8 @@ import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
+import Location from "@/components/admin/Location";
+import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
   title: "Edit Location",
@@ -15,12 +17,16 @@ export default async function Protected() {
     redirect("/");
   }
 
+  const response = await getAllStatesApi();
+
   return (
     <div>
       <Suspense>
         <GetUser />
       </Suspense>
-      <p>Edit Location</p>
+      <Suspense fallback={<p>Loading...</p>}>
+        <Location states={response.data} />
+      </Suspense>
     </div>
   );
 }

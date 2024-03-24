@@ -38,12 +38,6 @@ const AddCategory = (props: Props) => {
       setErrorMsg("Category name is required");
       return;
     }
-    if (!/^[a-zA-Z\s]*$/.test(categoryName)) {
-      setErrorMsg(
-        "Category name should be a string, without special characters",
-      );
-      return;
-    }
     if (imageErrorMessage) {
       showToast(imageErrorMessage, "destructive");
       return;
