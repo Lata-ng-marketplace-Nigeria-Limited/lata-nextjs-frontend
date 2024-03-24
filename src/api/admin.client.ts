@@ -105,3 +105,49 @@ export const createSubCategoryApi = async (payload: {
     throw error.response;
   }
 };
+
+export const createStateApi = async (payload: {
+  name: string;
+  countryName: string;
+  isActive: boolean;
+}) => {
+  try {
+    const response = await $http.post(`/states`, payload);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+interface CreateCityInput {
+  name: string;
+  stateId: string;
+  isActive: boolean;
+}
+
+export const createCityApi = async (payload: CreateCityInput) => {
+  try {
+    const response = await $http.post(`/cities`, payload);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const deleteStateApi = async (id: string) => {
+  try {
+    const response = await $http.delete(`/states/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const deleteCityApi = async (id: string) => {
+  try {
+    const response = await $http.delete(`/cities/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};

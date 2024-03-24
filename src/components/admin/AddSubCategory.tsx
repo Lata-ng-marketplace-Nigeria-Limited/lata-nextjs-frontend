@@ -23,12 +23,6 @@ const AddSubCategory = (props: AddSubCategoryProps) => {
       setErrorMsg("Subcategory name is required");
       return;
     }
-    if (!/^[a-zA-Z\s]*$/.test(subcategoryName)) {
-      setErrorMsg(
-        "Subcatgeory name should be a string, without special characters",
-      );
-      return;
-    }
 
     const payload: {
       categoryName: string;
@@ -42,13 +36,11 @@ const AddSubCategory = (props: AddSubCategoryProps) => {
 
     try {
       setLoading(true);
-      const res = await createSubCategoryApi(payload);
-      console.log("res", res);
+      await createSubCategoryApi(payload);
       showToast("Subcatgeory created successfully", "success");
       props.setShowAddSubCategory(false);
       refresh();
     } catch (error) {
-      console.log(error);
       showToast("Failed to  Subcatgeory", "destructive");
     } finally {
       setLoading(false);
@@ -57,7 +49,7 @@ const AddSubCategory = (props: AddSubCategoryProps) => {
   return (
     <div className="">
       <h1 className="mb-6 font-semibold">Add Subcatgeory</h1>
-      <form onSubmit={addSubCategory}>
+      <form>
         <FormTopLabel
           label="Subcatgeory name"
           wrapperClass="mb-8"
@@ -72,9 +64,9 @@ const AddSubCategory = (props: AddSubCategoryProps) => {
 
         <Button
           format="primary"
-          type="submit"
           className={"w-full"}
           disabled={loading}
+          onClick={addSubCategory}
         >
           Create Subcatgeory
         </Button>
