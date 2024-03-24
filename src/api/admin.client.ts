@@ -121,7 +121,6 @@ export const createStateApi = async (payload: {
 
 interface CreateCityInput {
   name: string;
-  stateName: string;
   stateId: string;
   isActive: boolean;
 }

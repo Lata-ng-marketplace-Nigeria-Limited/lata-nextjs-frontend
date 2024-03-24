@@ -27,7 +27,6 @@ const AddCity = (props: Props) => {
 
     const payload = {
       name: cityName,
-      stateName: props.state?.name,
       stateId: props.state?.id,
       isActive: true,
     };
