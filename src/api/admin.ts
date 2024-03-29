@@ -6,7 +6,7 @@ import { Category, IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
 import { getMonthInGMTPlus1 } from "@/utils";
 import { fetchData } from "./_helper";
-import {  BlockedUserDetails } from "@/interface/blockedAccounts";
+import { BlockedUserDetails } from "@/interface/blockedAccounts";
 
 export interface IAdminAnalytics {
   success: boolean;
@@ -266,6 +266,8 @@ export const fetchSubCategoriesApi = async ({
 interface IFetchAllBlockedAccountsApi {
   data: BlockedUserDetails[];
   meta: FetchMeta;
+  numOfUnappealed: number;
+  numOfAppealed: number;
 }
 
 export const fetchAllBlockedAccountsApi = async ({
@@ -282,5 +284,5 @@ export const fetchAllBlockedAccountsApi = async ({
     params.append("tab", tab);
   }
 
-  return fetchData(`/blocked-accounts`);
+  return fetchData(`/blocked-accounts?${params.toString()}`);
 };

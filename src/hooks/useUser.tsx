@@ -91,10 +91,13 @@ export const useUser = () => {
       try {
         const authCallback = await authCallbackApi(publicToken);
 
+
         if (!authCallback) {
           return {
             error: true,
-            message: "Something went wrong",
+            message: isBlockedUser
+              ? "Unauthorized access"
+              : "Something went wrong",
           };
         }
 
@@ -163,5 +166,6 @@ export const useUser = () => {
     loginUser,
     activePlan,
     isSocketConnected,
+    isBlockedUser,
   };
 };

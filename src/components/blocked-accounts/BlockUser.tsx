@@ -1,10 +1,8 @@
 import React from "react";
-import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import Button from "../atom/Button";
 import { blockUserApi } from "@/api/admin.client";
 import { useBlockedUser } from "@/store/states/localStore";
-import { useUser } from "@/hooks/useUser";
 import { showToast } from "@/utils";
 import { IGetProtectedSellerApi } from "@/api/admin";
 
@@ -16,7 +14,6 @@ interface Props {
 const BlockUser = (props: Props) => {
   const { refresh } = useRouter();
   const { hasBlockedUser, unblockUser, setBlockUser } = useBlockedUser();
-  const { updateUser } = useUser();
 
   const onBlockUser = async () => {
     try {

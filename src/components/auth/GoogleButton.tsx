@@ -23,7 +23,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 export default function GoogleButton(props: Props) {
   const [loading, setLoading] = useState(false);
   const { selectedRole, setSelectedRole } = useFastLocalStore();
-  const { loginUser } = useUser();
+  const { loginUser, isBlockedUser } = useUser();
   const { setRegistrationForm, shouldCompleteForm } =
     useRegistrationFormStore();
   const nav = useRouter();
@@ -35,7 +35,7 @@ export default function GoogleButton(props: Props) {
 
   const handleError = useCallback(() => {
     toast({
-      title: "Something went wrong!",
+      title: isBlockedUser ? "Unauthorized access" : "Something went wrong!",
       variant: "destructive",
     });
     setLoading(false);
@@ -91,6 +91,7 @@ export default function GoogleButton(props: Props) {
           setSelectedRole(undefined);
           const { error } = await loginUser(data.publicToken);
           if (error) {
+            if (isBlockedUser) return;
             handleError();
             return;
           }
@@ -135,20 +136,20 @@ export default function GoogleButton(props: Props) {
       format={"secondary"}
       className={cn(
         `
-        rounded-md
-        text-grey6
         flex
         items-center
         justify-center
         gap-x-2.5
-        py-2.5 
+        rounded-md
         border-grey5
+        py-2.5 
+        font-normal
  
-        sm:border-primary
+        text-grey6
         hover:bg-transparent
         active:bg-transparent
         
-        font-normal
+        sm:border-primary
         sm:font-semibold
         `,
         props.className,

@@ -3,7 +3,7 @@
 import React from "react";
 import Button from "@components/atom/Button";
 import ResizableDialog from "../admin/ResizableDialog";
-import BlockUser from "../admin/BlockUser";
+import BlockUser from "../blocked-accounts/BlockUser";
 import DeleteUser from "../admin/DeleteUser";
 import { MANAGED_SELLERS_ROUTE, VIEW_STAFF_ROUTE } from "@/constants/routes";
 import { useRouter } from "next/navigation";

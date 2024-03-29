@@ -17,9 +17,11 @@ const BlockedAccountHome = (props: Props) => {
   const { push } = useRouter();
   return (
     <div className="mt-12 xs:flex xs:flex-row-reverse xs:items-center xs:justify-center xs:gap-10">
-      <PadlockIcon className="mb-8" />
+      <div className="flex justify-center xs:block">
+        <PadlockIcon className="mb-8" />
+      </div>
       <div>
-        <div className="mb-6 ">
+        <div className="mb-6 text-center xs:text-left">
           <h1 className="mb-3 text-xl font-semibold xs:text-2xl">
             Your account has been blocked!
           </h1>
@@ -28,10 +30,10 @@ const BlockedAccountHome = (props: Props) => {
           </p>
         </div>
 
-        <div className="xs:flex xs:gap-6">
+        <div className="flex justify-center flex-wrap gap-4 xs:justify-start xs:gap-6">
           <Button
             format="primary"
-            className="mb-6 xs:mb-0"
+            className="mb- xs:mb-0"
             onClick={() =>
               push(
                 `${BLOCKED_ACCOUNTS_ROUTE}/${props.userId}/${UPLOAD_ID_ROUTE}`,

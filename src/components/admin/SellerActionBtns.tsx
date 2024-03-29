@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { User } from "@/interface/user";
 import ResizableDialog from "./ResizableDialog";
-import BlockUser from "./BlockUser";
+import BlockUser from "../blocked-accounts/BlockUser";
 import DeleteUser from "./DeleteUser";
 import { useBlockedUser } from "@/store/states/localStore";
 import { useUser } from "@/hooks/useUser";

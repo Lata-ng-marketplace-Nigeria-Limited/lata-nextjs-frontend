@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
 import { fetchAllBlockedAccountsApi } from "@/api/admin";
-import BlockedAccountsDisplay from "@/components/admin/BlockedAccountsDisplay";
+import BlockedAccountsDisplay from "@/components/blocked-accounts/BlockedAccountsDisplay";
 
 export const metadata: Metadata = {
   title: "Blocked Accounts",
@@ -38,10 +38,15 @@ export default async function Protected({
       <Suspense>
         <GetUser />
       </Suspense>
-      <BlockedAccountsDisplay
-        meta={response?.meta}
-        blockedAccounts={response?.data}
-      />
+      <Suspense fallback={<p>Loading...</p>}>
+        <BlockedAccountsDisplay
+          meta={response?.meta}
+          blockedAccounts={response?.data}
+          numOfAppealed={response?.numOfAppealed}
+          numOfUnappealed={response?.numOfUnappealed}
+          query={queries?.tab || "unappealed"}
+        />
+      </Suspense>
     </div>
   );
 }

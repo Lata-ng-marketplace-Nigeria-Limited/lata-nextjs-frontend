@@ -25,11 +25,12 @@ export interface BlockedAccount {
 }
 
 export interface BlockedUserDetails {
-  id: number;
+  id: string;
   email: string;
   name: string;
   avatar: string;
   managerName: string;
+  file_type?: FileType;
   address: string;
   managerEmail: string;
   createdAt: string;
