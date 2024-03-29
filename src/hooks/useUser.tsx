@@ -9,6 +9,7 @@ import { SessionData } from "@/interface/next-auth";
 import { useUserStore } from "@/store/states/userState";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
+import { BLOCKED_ACCOUNTS_ROUTE } from "@/constants/routes";
 
 export const useUser = () => {
   const { user, updateUser, clear, setUser } = useLocalStore();
@@ -16,12 +17,12 @@ export const useUser = () => {
   const { data, status, update } = useSession();
   const isSocketConnected = useUserStore((state) => state.isSocketConnected);
   const { replace, push } = useRouter();
+  const [isBlockedUser, setIsBlockedUser] = useState(false);
 
   useEffect(() => {
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
-
 
     if (
       (user && new Date() > new Date(user?.expires_at)) ||
@@ -114,6 +115,7 @@ export const useUser = () => {
         }
 
         if (authCallback.isBlocked) {
+          setIsBlockedUser(true);
           toast({
             title: "Account Locked",
             description:
@@ -121,7 +123,7 @@ export const useUser = () => {
             variant: "destructive",
           });
           await new Promise((resolve) => setTimeout(resolve, 2000));
-          push("/blocked");
+          push(`${BLOCKED_ACCOUNTS_ROUTE}/${authCallback?.id}`);
           return {
             error: true,
             message: "Account Blocked",
@@ -142,6 +144,7 @@ export const useUser = () => {
           message: "Success",
         };
       } catch (error) {
+        console.log(error);
         return {
           error: true,
           message: "Something went wrong",

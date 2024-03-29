@@ -4,57 +4,55 @@ import { useRouter } from "next/navigation";
 import Button from "../atom/Button";
 import { blockUserApi } from "@/api/admin.client";
 import { useBlockedUser } from "@/store/states/localStore";
+import { useUser } from "@/hooks/useUser";
+import { showToast } from "@/utils";
+import { IGetProtectedSellerApi } from "@/api/admin";
 
 interface Props {
-  userId: string;
-  name: string;
   setIsBlockUser: React.Dispatch<React.SetStateAction<boolean>>;
+  user: IGetProtectedSellerApi["data"];
 }
 
 const BlockUser = (props: Props) => {
   const { refresh } = useRouter();
   const { hasBlockedUser, unblockUser, setBlockUser } = useBlockedUser();
-
-  const toaster = (response: { message: string; success: boolean }) => {
-    if (response.success) {
-      toast({
-        title: response.message,
-        variant: "success",
-      });
-      props.setIsBlockUser(false);
-      refresh();
-    } else {
-      toast({
-        title: response.message || "Something went wrong",
-        variant: "destructive",
-      });
-    }
-  };
+  const { updateUser } = useUser();
 
   const onBlockUser = async () => {
     try {
       const blockUserPayload = {
-        userId: props.userId,
+        userId: props.user?.id,
         block: true,
+        managerId: props.user?.managerId,
       };
       const response = await blockUserApi(blockUserPayload);
+      console.log("response", response);
+      props.setIsBlockUser(false);
+      refresh();
       setBlockUser();
-      toaster(response);
+      showToast(response?.message, "success");
     } catch (error) {
       console.log(error);
+      showToast("Something went wrong", "destructive");
     }
   };
 
   const onUnblockUser = async () => {
     try {
       const unBlockUserPayload = {
-        userId: props.userId,
+        userId: props.user?.id,
         block: false,
+        managerId: props.user?.managerId,
       };
       const response = await blockUserApi(unBlockUserPayload);
       unblockUser();
-      toaster(response);
-    } catch (error) {}
+      showToast(response?.message, "success");
+      props.setIsBlockUser(false);
+      refresh();
+    } catch (error) {
+      console.log(error);
+      showToast("Something went wrong", "destructive");
+    }
   };
 
   const handleBlockUser = () => {
@@ -70,7 +68,7 @@ const BlockUser = (props: Props) => {
       <h2 className="mb-2 text-lg font-semibold">
         {hasBlockedUser ? "Unblock" : "Block"}{" "}
         <span className="text-lg font-semibold text-primary">
-          {props.name || "User"}
+          {props.user?.name || "User"}
         </span>
       </h2>
       <p className="mb-4">

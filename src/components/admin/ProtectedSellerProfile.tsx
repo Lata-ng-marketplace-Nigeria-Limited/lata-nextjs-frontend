@@ -132,8 +132,7 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
           </UserDetailContainer>
           <SellerActionBtns
             managers={response?.managers || []}
-            sellerId={sellerId}
-            sellerName={response?.data?.name || "No name"}
+            seller={response?.data}
           />
         </div>
       </div>

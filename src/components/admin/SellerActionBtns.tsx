@@ -14,11 +14,11 @@ import BlockUser from "./BlockUser";
 import DeleteUser from "./DeleteUser";
 import { useBlockedUser } from "@/store/states/localStore";
 import { useUser } from "@/hooks/useUser";
+import { IGetProtectedSellerApi } from "@/api/admin";
 
 interface Props {
   managers: User[];
-  sellerId: string;
-  sellerName: string;
+  seller: IGetProtectedSellerApi["data"];
 }
 
 const SellerActionBtns = (props: Props) => {
@@ -51,7 +51,7 @@ const SellerActionBtns = (props: Props) => {
             format="secondary"
             className="mb-8 block w-full"
             onClick={() =>
-              push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.sellerId}`)
+              push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.seller?.id}`)
             }
           >
             Upload Product
@@ -76,7 +76,7 @@ const SellerActionBtns = (props: Props) => {
           format="secondary"
           className="mb-8 block w-full"
           onClick={() =>
-            push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.sellerId}`)
+            push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.seller?.id}`)
           }
         >
           Upload Product
@@ -86,8 +86,7 @@ const SellerActionBtns = (props: Props) => {
       <ResizableDialog isShown={isBlockUser} setIsShown={setIsBlockUser}>
         <BlockUser
           setIsBlockUser={setIsBlockUser}
-          userId={props.sellerId}
-          name={props.sellerName}
+          user={props?.seller}
         />
       </ResizableDialog>
 
@@ -97,14 +96,14 @@ const SellerActionBtns = (props: Props) => {
       >
         <DeleteUser
           setIsDeleteUser={setIsDeleteUserModal}
-          userId={props.sellerId}
-          name={props.sellerName}
+          userId={props.seller?.id}
+          name={props.seller?.name}
         />
       </ResizableDialog>
 
       <ResizableDialog isShown={openModal} setIsShown={setOpenModal}>
         <ChangeManager
-          sellerId={props.sellerId}
+          sellerId={props.seller?.id}
           managers={props.managers}
           setOpenModal={setOpenModal}
         />
