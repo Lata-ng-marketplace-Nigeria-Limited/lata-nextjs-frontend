@@ -8,9 +8,11 @@ import { cn, getFormErrorObject, showToast } from "@/utils";
 import { IMakeAppealApiInput, makeAppealApi } from "@/api/blocked-user.client";
 import { toast } from "../ui/use-toast";
 import Button from "../atom/Button";
+import { AppealStatus } from "@/interface/blockedAccounts";
 
 interface Props {
   userId: string;
+  appealStatus: AppealStatus | null;
 }
 
 const UploadID = (props: Props) => {
@@ -96,20 +98,27 @@ const UploadID = (props: Props) => {
             placeholder="Select ID type"
             value={idType}
             setValue={setIdType}
+            disabled={props.appealStatus === "PENDING"}
             errorMessage={idTypeErrorMessage}
           />
         </FormTopLabel>
         <div
           className={cn("mb-6 rounded-[0.625rem] border border-grey2 p-6 pb-4")}
         >
-          <ImageUploader
-            file={file as FileList}
-            imageUrl={imageUrl}
-            setValue={setFile}
-            format="blocked-account"
-            profileDescription="Upload ID"
-            uploadImgClass="!bg-red-800"
-          />
+          {props.appealStatus === "PENDING" ? (
+            <div className="text-center text-lg font-semibold">
+              You have already uploaded your ID. Your request is being reviewed
+            </div>
+          ) : (
+            <ImageUploader
+              file={file as FileList}
+              imageUrl={imageUrl}
+              setValue={setFile}
+              format="blocked-account"
+              profileDescription="Upload ID"
+              uploadImgClass="!bg-red-800"
+            />
+          )}
         </div>
         <div className="flex justify-end">
           <Button

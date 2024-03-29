@@ -1,7 +1,7 @@
 import { User } from "./user";
 
 type BlockedAccountStatus = "BLOCKED" | "UNBLOCKED" | "OTHER";
-type AppealStatus = "APPROVED" | "REJECTED" | "PENDING";
+export type AppealStatus = "APPROVED" | "REJECTED" | "PENDING";
 type FileType =
   | "NIN"
   | "DRIVERS_LICENSE"
@@ -34,3 +34,4 @@ export interface BlockedUserDetails {
   managerEmail: string;
   createdAt: string;
 }
+
