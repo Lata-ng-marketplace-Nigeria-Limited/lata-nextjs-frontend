@@ -6,10 +6,16 @@ export const metadata: Metadata = {
   title: "Upload ID",
 };
 
-const Page = () => {
+const Page = ({
+  params: { userId },
+}: {
+  params: {
+    userId: string;
+  };
+}) => {
   return (
     <main>
-      <UploadID />
+      <UploadID userId={userId} />
     </main>
   );
 };

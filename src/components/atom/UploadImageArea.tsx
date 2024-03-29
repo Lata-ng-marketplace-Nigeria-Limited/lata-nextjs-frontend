@@ -12,21 +12,23 @@ export default function UploadImageArea(props: Props) {
       {...props}
       className={cn(
         `
-        w-[70px] 
-        h-[70px] 
-        sm:w-[100px] 
-        sm:h-[100px] 
-        bg-purp3 
         flex 
-        justify-center 
+        h-[70px] 
+        w-[70px] 
+        shrink-0 
+        cursor-pointer 
         items-center 
-        cursor-pointer
-        shrink-0
+        justify-center 
+        sm:h-[100px]
+        sm:w-[100px]
       `,
         {
           "rounded-full ": props.format === "profile",
-          "rounded-[7px] h-[61px] sm:w-[130px] sm:h-[120px]":
+          "h-[61px] rounded-[7px] sm:h-[120px] sm:w-[130px]":
             props.format === "product",
+          "bg-purp3": props.format !== "blocked-account",
+          "z-10 h-full w-full sm:h-full sm:w-full":
+            props.format === "blocked-account",
         },
         props.className,
       )}

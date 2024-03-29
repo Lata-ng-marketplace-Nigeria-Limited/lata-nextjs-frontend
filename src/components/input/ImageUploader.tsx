@@ -9,6 +9,7 @@ import UploadImageArea from "@atom/UploadImageArea";
 import UploadImg from "@atom/UploadImg";
 import { UploadImageIcon } from "@atom/icons/UploadImage";
 import Small from "@atom/Small";
+import Button from "../atom/Button";
 
 export interface SelectedImagePreview {
   image: ImagePreview;
@@ -75,7 +76,7 @@ export default function ImageUploader({
   const [hasSetDefaultImage, setHasSetDefaultImage] = useState(false);
 
   useEffect(() => {
-    console.log("imageUrl", imageUrl);
+    // console.log("imageUrl", imageUrl);
     if (hasSetDefaultImage) return;
     if (imageUrl) {
       const fileList = [
@@ -129,9 +130,10 @@ export default function ImageUploader({
     const input = event.target as HTMLInputElement;
     const files = input.files;
 
-    if (files && format === "profile") {
+    if (files && (format === "profile" || format === "blocked-account")) {
       const file = files[0];
-      if (isFileSizeGreaterThan(file, 5)) {
+      const maxFileSize = format === "profile" ? 5 : 10;
+      if (isFileSizeGreaterThan(file, maxFileSize)) {
         setErrorMsg("Image size cannot be greater than 5mb");
       }
       const url = URL.createObjectURL(file);
@@ -175,7 +177,7 @@ export default function ImageUploader({
     <div className={wrapperClass}>
       {format === "product" ? (
         <AuthParagraph
-          className={cn(`text-grey7 mb-3 sm:text-md`, topDescriptionClass)}
+          className={cn(`sm:text-md mb-3 text-grey7`, topDescriptionClass)}
         >
           {productTopDescription}
         </AuthParagraph>
@@ -192,7 +194,7 @@ export default function ImageUploader({
           sm:items-start
           `,
           {
-            "sm:flex-row gap-x-[7px] sm:gap-x-4 flex-wrap":
+            "flex-wrap gap-x-[7px] sm:flex-row sm:gap-x-4":
               format === "product",
           },
         )}
@@ -214,6 +216,30 @@ export default function ImageUploader({
                 <UploadImageIcon />
               )}
             </>
+          ) : null}
+
+          {format === "blocked-account" ? (
+            selectedPhoto ? (
+              <div>
+                <UploadImg
+                  preview={selectedPhoto[0]}
+                  format={format}
+                  className={cn(uploadImgClass, "mb-3")}
+                />
+
+                <div>
+                  <p className="text-center font-semibold text-primary ">
+                    Choose another file
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex h-[9rem] w-[10rem] xs:h-[14.6875rem] xs:w-[15.185rem] items-center">
+                <p className="m-auto text-center font-semibold text-primary">
+                  Click here to upload an image of your valid ID
+                </p>
+              </div>
+            )
           ) : null}
 
           {format === "product" ? <UploadImageIcon /> : null}
@@ -273,10 +299,10 @@ export default function ImageUploader({
 
       <div
         className={cn(`
+          mt-3
           flex
           flex-col
           gap-y-1.5
-          mt-3
         `)}
       >
         {format === "product" ? (
@@ -286,8 +312,8 @@ export default function ImageUploader({
                 key={i}
                 className={cn(
                   `
-                  text-grey6
                   text-[11px]
+                  text-grey6
                   sm:text-xs
                 `,
                   bottomDescriptionClass,
@@ -300,7 +326,7 @@ export default function ImageUploader({
         ) : null}
 
         <Small
-          className={cn(`text-danger text-[11px] sm:text-xs `, errorClass)}
+          className={cn(`text-[11px] text-danger sm:text-xs `, errorClass)}
         >
           {errorMessage || errorMsg}
         </Small>
