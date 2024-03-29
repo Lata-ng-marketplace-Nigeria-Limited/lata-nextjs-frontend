@@ -95,6 +95,7 @@ export default function NotificationCard(props: Props) {
             alt={props.notification?.data?.title || "Notification"}
             width={50}
             height={50}
+            unoptimized
           />
         </div>
       ) : null}
