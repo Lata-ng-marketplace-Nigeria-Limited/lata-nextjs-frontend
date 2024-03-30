@@ -100,3 +100,21 @@ export const useFastLocalStore = create(
   ),
 );
 
+interface IIsUserBlocked {
+  userIsBlocked: "true" | "false";
+  setUserIsBlocked: (userIsBlocked: "true" | "false") => void;
+}
+
+export const useIsUserBlocked = create(
+  persist<IIsUserBlocked>(
+    (set) => ({
+      userIsBlocked: "false",
+      setUserIsBlocked: (userIsBlocked: "true" | "false") =>
+        set({ userIsBlocked }),
+    }),
+    {
+      name: "lata.ng-blocked-users",
+      storage: createStore(() => localStorage),
+    },
+  ),
+);

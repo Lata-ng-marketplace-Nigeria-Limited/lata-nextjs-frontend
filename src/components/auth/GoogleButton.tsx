@@ -10,7 +10,7 @@ import {
   useGoogleLogin,
   useGoogleOneTapLogin,
 } from "@react-oauth/google";
-import { useFastLocalStore } from "@/store/states/localStore";
+import { useFastLocalStore, useIsUserBlocked } from "@/store/states/localStore";
 import { AuthorizeResponse } from "@/interface/user";
 import { useUser } from "@hooks/useUser";
 import { useRegistrationFormStore } from "@/store/states/userState";
@@ -23,9 +23,11 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 export default function GoogleButton(props: Props) {
   const [loading, setLoading] = useState(false);
   const { selectedRole, setSelectedRole } = useFastLocalStore();
-  const { loginUser, isBlockedUser } = useUser();
+  const { loginUser } = useUser();
   const { setRegistrationForm, shouldCompleteForm } =
     useRegistrationFormStore();
+  const { userIsBlocked } = useIsUserBlocked();
+
   const nav = useRouter();
   const { toast } = useToast();
   const pathname = usePathname();
@@ -35,7 +37,7 @@ export default function GoogleButton(props: Props) {
 
   const handleError = useCallback(() => {
     toast({
-      title: isBlockedUser ? "Unauthorized access" : "Something went wrong!",
+      title: "Something went wrong!",
       variant: "destructive",
     });
     setLoading(false);
@@ -91,12 +93,13 @@ export default function GoogleButton(props: Props) {
           setSelectedRole(undefined);
           const { error } = await loginUser(data.publicToken);
           if (error) {
-            if (isBlockedUser) return;
+            if (userIsBlocked === "true") return;
             handleError();
             return;
           }
         }
       } catch (error) {
+        if (userIsBlocked === "true") return;
         handleError();
       }
     },

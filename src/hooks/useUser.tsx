@@ -1,4 +1,4 @@
-import { useLocalStore } from "@/store/states/localStore";
+import { useIsUserBlocked, useLocalStore } from "@/store/states/localStore";
 import { signIn, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { getUserFromAuthCallback, logoutUser, setCookies } from "@/utils";
@@ -17,7 +17,7 @@ export const useUser = () => {
   const { data, status, update } = useSession();
   const isSocketConnected = useUserStore((state) => state.isSocketConnected);
   const { replace, push } = useRouter();
-  const [isBlockedUser, setIsBlockedUser] = useState(false);
+  const { setUserIsBlocked } = useIsUserBlocked();
 
   useEffect(() => {
     if (!user) return;
@@ -97,9 +97,7 @@ export const useUser = () => {
         if (!authCallback) {
           return {
             error: true,
-            message: isBlockedUser
-              ? "Unauthorized access"
-              : "Something went wrong",
+            message: "Something went wrong",
           };
         }
 
@@ -120,15 +118,20 @@ export const useUser = () => {
         }
 
         if (authCallback.isBlocked) {
-          setIsBlockedUser(true);
+          setUserIsBlocked(authCallback.isBlocked ? "true" : "false");
           toast({
             title: "Account Locked",
             description:
-              "You have been temporarily locked. Please fill out the form on the redirected page to unlock your account.",
+              authCallback?.role === "STAFF"
+                ? "Your account has been temporarily blocked. Please contact support for more information."
+                : "You have been temporarily blocked. Please fill out the form on the redirected page to unlock your account.",
             variant: "destructive",
           });
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          push(`${BLOCKED_ACCOUNTS_ROUTE}/${authCallback?.id}`);
+          if (authCallback?.role !== "STAFF") {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            push(`${BLOCKED_ACCOUNTS_ROUTE}/${authCallback?.id}`);
+          }
+
           return {
             error: true,
             message: "Account Blocked",
@@ -168,6 +171,5 @@ export const useUser = () => {
     loginUser,
     activePlan,
     isSocketConnected,
-    isBlockedUser,
   };
 };
