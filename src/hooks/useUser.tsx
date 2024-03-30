@@ -20,13 +20,16 @@ export const useUser = () => {
   const [isBlockedUser, setIsBlockedUser] = useState(false);
 
   useEffect(() => {
+    if (!user) return;
+
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
 
     if (
-      (user && new Date() > new Date(user?.expires_at)) ||
-      (user && !user?.expires_at)
+      new Date() > new Date(user?.expires_at) ||
+      user?.isBlocked ||
+      !user?.expires_at
     ) {
       logoutUser(clear, true);
     }
@@ -90,7 +93,6 @@ export const useUser = () => {
     async (publicToken: string, isUpgrading?: boolean) => {
       try {
         const authCallback = await authCallbackApi(publicToken);
-
 
         if (!authCallback) {
           return {

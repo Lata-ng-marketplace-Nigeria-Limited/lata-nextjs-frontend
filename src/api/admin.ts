@@ -177,7 +177,6 @@ export interface IGetProtectedSellerApi {
     managerName: string;
   };
   feedbacks?: IFeedback[];
-  managers?: User[];
 }
 export const getProtectedSellerApi = async ({
   sellerId,
@@ -214,6 +213,22 @@ export const findAllSellerProductsApi = async ({
   params.append("limit", String(limit || 10));
 
   return fetchData(`/admin/seller-shop/${sellerId}?${params.toString()}`);
+};
+
+interface IFetchAllMangersApi {
+  data: User[];
+  message?: string;
+  success?: boolean;
+}
+export const fetchAllMangersApi = async (
+  query: string,
+): Promise<IFetchAllMangersApi> => {
+  const params = new URLSearchParams();
+  if (query) {
+    params.append("query", query || "");
+  }
+
+  return fetchData(`/admin/managers?${params.toString()}`);
 };
 
 interface IAdminFetchSellersUnderStaffeApi {

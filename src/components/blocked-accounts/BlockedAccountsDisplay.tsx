@@ -44,13 +44,10 @@ const BlockedAccountsDisplay = async (props: Props) => {
       </div>
 
       {props.query === "appealed" ? (
-        <div className="grid grid-cols-auto-fit gap-6">
+        <div className="grid grid-cols-auto-fit gap-2 sm:gap-6">
           {props?.blockedAccounts?.map((account) => (
             <AppealedAccounts
-              imageSrc={account?.avatar}
-              idType={account?.file_type as AppealStatus}
-              userId={account?.id}
-              name={account?.name}
+              userDetail={account}
               key={account?.id + "appeal"}
             />
           ))}

@@ -29,10 +29,15 @@ export interface BlockedUserDetails {
   email: string;
   name: string;
   avatar: string;
-  managerName: string;
-  file_type?: FileType;
+  file: string;
   address: string;
+  isBlocked: boolean;
+
+  file_type?: FileType;
+  user_id: string;
+
+  managerName: string;
   managerEmail: string;
+  managerId: string;
   createdAt: string;
 }
-

@@ -2,19 +2,16 @@
 
 import React from "react";
 import ChangeManager from "./ChangeManager";
-import Button from "../atom/Button";
 import {
   ADMIN_UPLOAD_PRODUCT_ROUTE,
   ADMIN_VERIFY_TRANSFERS_ROUTE,
 } from "@/constants/routes";
-import { useRouter } from "next/navigation";
 import { User } from "@/interface/user";
-import ResizableDialog from "./ResizableDialog";
-import BlockUser from "../blocked-accounts/BlockUser";
+import BlockOrUnblockAccount from "../blocked-accounts/BlockOrUnblockAccount";
 import DeleteUser from "./DeleteUser";
-import { useBlockedUser } from "@/store/states/localStore";
 import { useUser } from "@/hooks/useUser";
 import { IGetProtectedSellerApi } from "@/api/admin";
+import NavigateButton from "../atom/NavigateButton";
 
 interface Props {
   managers: User[];
@@ -22,92 +19,48 @@ interface Props {
 }
 
 const SellerActionBtns = (props: Props) => {
-  const { push } = useRouter();
-  const [openModal, setOpenModal] = React.useState(false);
-  const [isBlockUser, setIsBlockUser] = React.useState(false);
-  const [isDeleteUserModal, setIsDeleteUserModal] = React.useState(false);
-  const { hasBlockedUser } = useBlockedUser();
   const { user } = useUser();
 
   return (
     <div className="mb-6 rounded-xl border border-grey2 p-6">
       {user?.role === "ADMIN" ? (
         <>
-          <Button
-            format="primary"
+          <ChangeManager
+            sellerId={props.seller?.id}
+            managers={props.managers}
+          />
+          <NavigateButton
+            buttonFormat="secondary"
             className="mb-8 block w-full"
-            onClick={() => setOpenModal(!openModal)}
-          >
-            Change Manager
-          </Button>
-          <Button
-            format="secondary"
-            className="mb-8 block w-full"
-            onClick={() => push(ADMIN_VERIFY_TRANSFERS_ROUTE)}
+            route={ADMIN_VERIFY_TRANSFERS_ROUTE}
           >
             Activate Subscription
-          </Button>
-          <Button
-            format="secondary"
+          </NavigateButton>
+
+          <NavigateButton
+            buttonFormat="secondary"
             className="mb-8 block w-full"
-            onClick={() =>
-              push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.seller?.id}`)
-            }
+            route={`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.seller?.id}`}
           >
             Upload Product
-          </Button>
-          <Button
-            format="secondary"
-            className="mb-8 block w-full"
-            onClick={() => setIsBlockUser(!isBlockUser)}
-          >
-            {hasBlockedUser ? "Unblock" : "Block"} User
-          </Button>
-          <Button
-            format="danger"
-            className="mb-8 block w-full"
-            onClick={() => setIsDeleteUserModal(true)}
-          >
-            Delete Seller
-          </Button>
+          </NavigateButton>
+          <BlockOrUnblockAccount
+            userId={props.seller?.id}
+            name={props.seller?.name}
+            managerId={props.seller?.managerId}
+            isBlocked={props.seller?.isBlocked as boolean}
+          />
+          <DeleteUser userId={props.seller?.id} name={props.seller?.name} />
         </>
       ) : (
-        <Button
-          format="secondary"
+        <NavigateButton
+          buttonFormat="secondary"
           className="mb-8 block w-full"
-          onClick={() =>
-            push(`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.seller?.id}`)
-          }
+          route={`${ADMIN_UPLOAD_PRODUCT_ROUTE}/${props?.seller?.id}`}
         >
           Upload Product
-        </Button>
+        </NavigateButton>
       )}
-
-      <ResizableDialog isShown={isBlockUser} setIsShown={setIsBlockUser}>
-        <BlockUser
-          setIsBlockUser={setIsBlockUser}
-          user={props?.seller}
-        />
-      </ResizableDialog>
-
-      <ResizableDialog
-        isShown={isDeleteUserModal}
-        setIsShown={setIsDeleteUserModal}
-      >
-        <DeleteUser
-          setIsDeleteUser={setIsDeleteUserModal}
-          userId={props.seller?.id}
-          name={props.seller?.name}
-        />
-      </ResizableDialog>
-
-      <ResizableDialog isShown={openModal} setIsShown={setOpenModal}>
-        <ChangeManager
-          sellerId={props.seller?.id}
-          managers={props.managers}
-          setOpenModal={setOpenModal}
-        />
-      </ResizableDialog>
     </div>
   );
 };
