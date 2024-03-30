@@ -6,6 +6,7 @@ import { Category, IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
 import { getMonthInGMTPlus1 } from "@/utils";
 import { fetchData } from "./_helper";
+import { BlockedUserDetails } from "@/interface/blockedAccounts";
 
 export interface IAdminAnalytics {
   success: boolean;
@@ -166,7 +167,7 @@ export const getAllPosts = async ({
   return fetchData(`/admin/posts?${params.toString()}`);
 };
 
-interface IGetProtectedSellerApi {
+export interface IGetProtectedSellerApi {
   data: User & {
     approvedPosts: number;
     cancelledPosts: number;
@@ -176,7 +177,6 @@ interface IGetProtectedSellerApi {
     managerName: string;
   };
   feedbacks?: IFeedback[];
-  managers?: User[];
 }
 export const getProtectedSellerApi = async ({
   sellerId,
@@ -213,6 +213,22 @@ export const findAllSellerProductsApi = async ({
   params.append("limit", String(limit || 10));
 
   return fetchData(`/admin/seller-shop/${sellerId}?${params.toString()}`);
+};
+
+interface IFetchAllMangersApi {
+  data: User[];
+  message?: string;
+  success?: boolean;
+}
+export const fetchAllMangersApi = async (
+  query: string,
+): Promise<IFetchAllMangersApi> => {
+  const params = new URLSearchParams();
+  if (query) {
+    params.append("query", query || "");
+  }
+
+  return fetchData(`/admin/managers?${params.toString()}`);
 };
 
 interface IAdminFetchSellersUnderStaffeApi {
@@ -260,4 +276,28 @@ export const fetchSubCategoriesApi = async ({
   params.append("limit", String(limit || 10));
 
   return fetchData(`/categories`);
+};
+
+interface IFetchAllBlockedAccountsApi {
+  data: BlockedUserDetails[];
+  meta: FetchMeta;
+  numOfUnappealed: number;
+  numOfAppealed: number;
+}
+
+export const fetchAllBlockedAccountsApi = async ({
+  limit,
+  page,
+  tab,
+}: SearchQuery & { tab: string }): Promise<IFetchAllBlockedAccountsApi> => {
+  const params = new URLSearchParams();
+
+  params.append("page", String(page || 1));
+  params.append("limit", String(limit || 10));
+
+  if (tab) {
+    params.append("tab", tab);
+  }
+
+  return fetchData(`/blocked-accounts?${params.toString()}`);
 };

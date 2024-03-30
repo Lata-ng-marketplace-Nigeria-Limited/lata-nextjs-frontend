@@ -10,15 +10,16 @@ import { cn } from "@/utils";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { changeManagerApi } from "@/api/admin.client";
+import ResizableDialog from "./ResizableDialog";
 
 interface Props {
   sellerId: string;
   managers: User[];
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ChangeManager = (props: Props) => {
   const [search, setSearch] = React.useState("");
+  const [openModal, setOpenModal] = React.useState(false);
   const [filteredManagers, setFilteredManagers] = React.useState<User[]>(
     props.managers,
   );
@@ -48,7 +49,7 @@ const ChangeManager = (props: Props) => {
           variant: "destructive",
         });
       }
-      props.setOpenModal(false);
+      setOpenModal(false);
     } catch (error) {
       console.log(error);
     }
@@ -63,49 +64,59 @@ const ChangeManager = (props: Props) => {
 
   return (
     <div>
-      <h2 className="mb-5 text-lg font-semibold">Choose New Manager</h2>
-      <div className="mb-5">
-        <SearchInput />
-      </div>
-      <div className="mb-5">
-        {filteredManagers.length > 0 ? (
-          filteredManagers.map((manager) => (
-            <div
-              key={manager?.id}
-              onClick={() => setSelectedManager(manager)}
-              className={cn(
-                "mb-4 flex cursor-pointer items-center gap-3 rounded-md hover:bg-purp1",
-                {
-                  "bg-primary text-white hover:bg-primary hover:text-white":
-                    selectedManager?.name === manager?.name,
-                },
-              )}
-            >
-              {manager.avatar ? (
-                <Image src={manager.avatar} alt={"image of" + manager.name} />
-              ) : (
-                <AppAvatar name={manager.name} type="user" />
-              )}
-              <p>{manager.name}</p>
-            </div>
-          ))
-        ) : (
-          <p>No managers found</p>
-        )}
+      <Button
+        format="primary"
+        className="mb-8 block w-full"
+        onClick={() => setOpenModal(!openModal)}
+      >
+        Change Manager
+      </Button>
 
-        <div className="flex items-center justify-end gap-5">
-          <Button format="secondary" onClick={() => props.setOpenModal(false)}>
-            Cancel
-          </Button>
-          <Button
-            format="primary"
-            onClick={onChangeManager}
-            disabled={!selectedManager}
-          >
-            Change
-          </Button>
+      <ResizableDialog isShown={openModal} setIsShown={setOpenModal}>
+        <h2 className="mb-5 text-lg font-semibold">Choose New Manager</h2>
+        <div className="mb-5">
+          <SearchInput />
         </div>
-      </div>
+        <div className="mb-5">
+          {filteredManagers.length > 0 ? (
+            filteredManagers.map((manager) => (
+              <div
+                key={manager?.id}
+                onClick={() => setSelectedManager(manager)}
+                className={cn(
+                  "mb-4 flex cursor-pointer items-center gap-3 rounded-md hover:bg-purp1",
+                  {
+                    "bg-primary text-white hover:bg-primary hover:text-white":
+                      selectedManager?.name === manager?.name,
+                  },
+                )}
+              >
+                {manager.avatar ? (
+                  <Image src={manager.avatar} alt={"image of" + manager.name} />
+                ) : (
+                  <AppAvatar name={manager.name} type="user" />
+                )}
+                <p>{manager.name}</p>
+              </div>
+            ))
+          ) : (
+            <p>No managers found</p>
+          )}
+
+          <div className="flex items-center justify-end gap-5">
+            <Button format="secondary" onClick={() => setOpenModal(false)}>
+              Cancel
+            </Button>
+            <Button
+              format="primary"
+              onClick={onChangeManager}
+              disabled={!selectedManager}
+            >
+              Change
+            </Button>
+          </div>
+        </div>
+      </ResizableDialog>
     </div>
   );
 };

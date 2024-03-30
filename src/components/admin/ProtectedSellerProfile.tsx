@@ -5,14 +5,15 @@ import ProductGridList from "@components/atom/ProductGridList";
 import ProductCard from "../product/ProductCard";
 import { formatPrice } from "@/utils";
 import FeedbackContent from "@components/feedback/FeedbackContent";
-import { getProtectedSellerApi } from "@/api/admin";
+import { fetchAllMangersApi, getProtectedSellerApi } from "@/api/admin";
 import SellerActionBtns from "./SellerActionBtns";
-import { getAllStatesApi } from "@/api/location";
 
 interface Props {
   sellerId: string;
+  query: string;
 }
-const ProtectedSellerProfile = async ({ sellerId }: Props) => {
+const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
+  const managers = await fetchAllMangersApi(query);
   const response = await getProtectedSellerApi({ sellerId });
 
   const planDuration = () => {
@@ -131,9 +132,8 @@ const ProtectedSellerProfile = async ({ sellerId }: Props) => {
             />
           </UserDetailContainer>
           <SellerActionBtns
-            managers={response?.managers || []}
-            sellerId={sellerId}
-            sellerName={response?.data?.name || "No name"}
+            managers={managers?.data || []}
+            seller={response?.data}
           />
         </div>
       </div>

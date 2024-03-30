@@ -10,7 +10,7 @@ import {
   useGoogleLogin,
   useGoogleOneTapLogin,
 } from "@react-oauth/google";
-import { useFastLocalStore } from "@/store/states/localStore";
+import { useFastLocalStore, useIsUserBlocked } from "@/store/states/localStore";
 import { AuthorizeResponse } from "@/interface/user";
 import { useUser } from "@hooks/useUser";
 import { useRegistrationFormStore } from "@/store/states/userState";
@@ -26,6 +26,8 @@ export default function GoogleButton(props: Props) {
   const { loginUser } = useUser();
   const { setRegistrationForm, shouldCompleteForm } =
     useRegistrationFormStore();
+  const { userIsBlocked } = useIsUserBlocked();
+
   const nav = useRouter();
   const { toast } = useToast();
   const pathname = usePathname();
@@ -91,11 +93,13 @@ export default function GoogleButton(props: Props) {
           setSelectedRole(undefined);
           const { error } = await loginUser(data.publicToken);
           if (error) {
+            if (userIsBlocked === "true") return;
             handleError();
             return;
           }
         }
       } catch (error) {
+        if (userIsBlocked === "true") return;
         handleError();
       }
     },
@@ -135,20 +139,20 @@ export default function GoogleButton(props: Props) {
       format={"secondary"}
       className={cn(
         `
-        rounded-md
-        text-grey6
         flex
         items-center
         justify-center
         gap-x-2.5
-        py-2.5 
+        rounded-md
         border-grey5
+        py-2.5 
+        font-normal
  
-        sm:border-primary
+        text-grey6
         hover:bg-transparent
         active:bg-transparent
         
-        font-normal
+        sm:border-primary
         sm:font-semibold
         `,
         props.className,

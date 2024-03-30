@@ -51,3 +51,6 @@ export const ADMIN_UPLOAD_PRODUCT_ROUTE = "/admin/create-product";
 export const ADMIN_SUBSCRIPTIONS_ROUTE = "/admin/subscriptions";
 export const VIEW_SELLERS_ROUTE = "/sellers";
 export const MANAGED_SELLERS_ROUTE = "/managed-sellers";
+export const BLOCKED_ACCOUNTS_ROUTE = "/blocked-accounts";
+export const CONTACT_SUPPORT_ROUTE = "/contact-support";
+export const UPLOAD_ID_ROUTE = "/upload-id";
