@@ -40,7 +40,7 @@ export const blockUserApi = async (payload: {
   block: boolean;
 }): Promise<{ success: boolean; message: string }> => {
   try {
-    const response = await $http.post("/block", payload);
+    const response = await $http.post("/blocked-accounts", payload);
     return response.data;
   } catch (error: any) {
     throw error.response;

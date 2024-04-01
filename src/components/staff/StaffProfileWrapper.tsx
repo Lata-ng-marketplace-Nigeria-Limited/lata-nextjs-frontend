@@ -91,10 +91,7 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
               description={staffResponse?.data?.bankAccount?.accountName || ""}
             />
           </UserDetailContainer>
-          <StaffBtnActions
-            staffId={staffId}
-            staffName={staffResponse?.data?.name}
-          />
+          <StaffBtnActions staff={staffResponse?.data} />
         </div>
       </div>
       <div>

@@ -13,7 +13,7 @@ export interface ILocalStore {
   categories?: Category[];
   subscription: Subscription[];
   loading: boolean;
-  location: State[]
+  location: State[];
   setUser: (user: User) => void;
   updateUser: (user: Partial<User>) => void;
   setChats: (chats: Chat[]) => void;
@@ -100,21 +100,20 @@ export const useFastLocalStore = create(
   ),
 );
 
-interface IBlockedUser {
-  hasBlockedUser: boolean;
-  setBlockUser: () => void;
-  unblockUser: () => void;
+interface IIsUserBlocked {
+  userIsBlocked: "true" | "false";
+  setUserIsBlocked: (userIsBlocked: "true" | "false") => void;
 }
 
-export const useBlockedUser = create(
-  persist<IBlockedUser>(
+export const useIsUserBlocked = create(
+  persist<IIsUserBlocked>(
     (set) => ({
-      hasBlockedUser: false,
-      setBlockUser: () => set({ hasBlockedUser: true }),
-      unblockUser: () => set({ hasBlockedUser: false }),
+      userIsBlocked: "false",
+      setUserIsBlocked: (userIsBlocked: "true" | "false") =>
+        set({ userIsBlocked }),
     }),
     {
-      name: "lata.ng-blocked-user",
+      name: "lata.ng-blocked-users",
       storage: createStore(() => localStorage),
     },
   ),
