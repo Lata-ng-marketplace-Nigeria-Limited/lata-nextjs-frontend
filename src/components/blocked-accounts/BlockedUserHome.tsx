@@ -1,20 +1,17 @@
-"use client";
-
 import React from "react";
 import PadlockIcon from "../atom/icons/Padlock";
-import Button from "../atom/Button";
-import { useRouter } from "next/navigation";
 import {
   BLOCKED_ACCOUNTS_ROUTE,
   CONTACT_SUPPORT_ROUTE,
   UPLOAD_ID_ROUTE,
 } from "@/constants/routes";
+import NavigateButton from "../atom/NavigateButton";
 
 interface Props {
   userId: string;
 }
+
 const BlockedAccountHome = (props: Props) => {
-  const { push } = useRouter();
   return (
     <div className="mt-12 xs:flex xs:flex-row-reverse xs:items-center xs:justify-center xs:gap-10">
       <div className="flex justify-center xs:block">
@@ -30,28 +27,21 @@ const BlockedAccountHome = (props: Props) => {
           </p>
         </div>
 
-        <div className="flex justify-center flex-wrap gap-4 xs:justify-start xs:gap-6">
-          <Button
-            format="primary"
+        <div className="flex flex-wrap justify-center gap-4 xs:justify-start xs:gap-6">
+          <NavigateButton
             className="mb- xs:mb-0"
-            onClick={() =>
-              push(
-                `${BLOCKED_ACCOUNTS_ROUTE}/${props.userId}/${UPLOAD_ID_ROUTE}`,
-              )
-            }
+            buttonFormat="primary"
+            route={`${BLOCKED_ACCOUNTS_ROUTE}/${props.userId}/${UPLOAD_ID_ROUTE}`}
           >
             Upload ID
-          </Button>
-          <Button
-            format="secondary"
-            onClick={() =>
-              push(
-                `${BLOCKED_ACCOUNTS_ROUTE}/${props.userId}/${CONTACT_SUPPORT_ROUTE}`,
-              )
-            }
+          </NavigateButton>
+
+          <NavigateButton
+            buttonFormat="secondary"
+            route={`${BLOCKED_ACCOUNTS_ROUTE}/${props.userId}/${CONTACT_SUPPORT_ROUTE}`}
           >
             Contact Support
-          </Button>
+          </NavigateButton>
         </div>
       </div>
     </div>

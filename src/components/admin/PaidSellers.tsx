@@ -20,7 +20,6 @@ interface Props {
   newSubscriptionCount: number;
   returningSubscribersCount: number;
   meta: FetchMeta;
-  role: UserRole;
 }
 
 const formatDate = (date: string) => {
