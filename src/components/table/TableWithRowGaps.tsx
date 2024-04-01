@@ -22,6 +22,7 @@ interface Props extends PaginateProps {
   onRowClick?: (row: any) => void;
   emptyTableTitle?: string;
   emptyTableDescription?: string;
+  hideHeaders?: boolean;
 }
 
 const TableWithRowGaps = (props: Props) => {
@@ -64,18 +65,20 @@ const TableWithRowGaps = (props: Props) => {
     <>
       {props.tableData && props.tableData.length > 0 ? (
         <Table className="border-collapse text-grey10">
-          <TableHeader>
-            <TableRow>
-              {keys?.map((key, index) => (
-                <TableHead
-                  key={"TableHead" + index}
-                  className="font-semibold capitalize"
-                >
-                  {key}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
+          {!props.hideHeaders && (
+            <TableHeader>
+              <TableRow>
+                {keys?.map((key, index) => (
+                  <TableHead
+                    key={"TableHead" + index}
+                    className="font-semibold capitalize"
+                  >
+                    {key}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+          )}
 
           <TableBody className="">
             {props.tableData?.map((row, mainIndex) => (

@@ -2,10 +2,10 @@
 
 import React from "react";
 import BadgeWithCount from "../atom/BadgeWithCount";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FetchMeta } from "@/interface/general";
 import TableWithRowGaps from "../table/TableWithRowGaps";
-import { ISubscribedUser } from "@/interface/user";
+import { ISubscribedUser, UserRole } from "@/interface/user";
 import { DateTime } from "luxon";
 import { formatPrice } from "@/utils";
 import Badge, { IBadgeVariants } from "@components/atom/Badge";
@@ -20,16 +20,34 @@ interface Props {
   newSubscriptionCount: number;
   returningSubscribersCount: number;
   meta: FetchMeta;
+  role: UserRole;
 }
+
+const formatDate = (date: string) => {
+  return DateTime.fromISO(date).toFormat("dd LLL, yyyy");
+};
+
+const duration = (seller: ISubscribedUser) => {
+  if (seller?.subscription_paid_at && seller?.subscription_expiry_date) {
+    return (
+      <p>
+        {formatDate(seller?.subscription_paid_at)} -{" "}
+        {formatDate(seller?.subscription_expiry_date)}
+      </p>
+    );
+  } else if (
+    !seller?.subscription_paid_at &&
+    seller?.subscription_expiry_date
+  ) {
+    return <p>{formatDate(seller?.subscription_expiry_date)}</p>;
+  } else {
+    return "Due";
+  }
+};
 
 const PaidSellers = (props: Props) => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const params = new URLSearchParams(searchParams);
-
-  const formatDate = (date: string) => {
-    return DateTime.fromISO(date).toFormat("dd LLL, yyyy");
-  };
 
   const getBadgeVariant = (): IBadgeVariants => {
     switch (params.get("tab")) {
@@ -49,24 +67,6 @@ const PaidSellers = (props: Props) => {
   const sideBtnDisplay = () => {
     const status = params.get("tab");
     return status || "active";
-  };
-
-  const duration = (seller: ISubscribedUser) => {
-    if (seller?.subscription_paid_at && seller?.subscription_expiry_date) {
-      return (
-        <p>
-          {formatDate(seller?.subscription_paid_at)} -{" "}
-          {formatDate(seller?.subscription_expiry_date)}
-        </p>
-      );
-    } else if (
-      !seller?.subscription_paid_at &&
-      seller?.subscription_expiry_date
-    ) {
-      return <p>{formatDate(seller?.subscription_expiry_date)}</p>;
-    } else {
-      return "Due";
-    }
   };
 
   return (
@@ -112,47 +112,113 @@ const PaidSellers = (props: Props) => {
         <SearchInput placeholder={"Search Sellers"} wrapperClass="max-w-max" />
       </div>
 
-      <div>
-        <TableWithRowGaps
-          emptyTableTitle="No Paid seller found"
-          emptyTableDescription="All paid sellers will be displayed here"
-          tableData={props.data?.map((seller) => {
-            return {
-              name: (
-                <div
-                  className="flex cursor-pointer items-center gap-2"
-                  onClick={() =>
-                    router.push(
-                      DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id,
-                    )
-                  }
-                >
-                  <Badge variant={getBadgeVariant()} text={sideBtnDisplay()} />
-                  <p className="capitalize">{seller?.name}</p>
-                </div>
-              ),
-              "payment mode": (
-                <p className="capitalize">{seller?.transaction_provider}</p>
-              ),
-              plan:
-                seller?.plan_name || seller?.plan_duration ? (
-                  <p className="capitalize">
-                    {seller?.plan_name}-{seller?.plan_duration}
-                    {seller?.plan_duration > 1 ? "months" : "month"}
-                  </p>
-                ) : (
-                  "-"
-                ),
-              product: seller?.subscription_name || "-",
-              duration: duration(seller),
-              amount: <p>{formatPrice(seller?.transaction_actual_amount)}</p>,
-            };
-          })}
-          usePaginate
+      <div className="hidden xs:block">
+        <PaidSellersBiggerScreenTable
+          activeVariant={getBadgeVariant()}
+          badgeText={sideBtnDisplay()}
+          data={props.data}
+          meta={props.meta}
+        />
+      </div>
+
+      <div className="xs:hidden">
+        <PaidSellersSmallerScreenTable
+          activeVariant={getBadgeVariant()}
+          badgeText={sideBtnDisplay()}
+          data={props.data}
           meta={props.meta}
         />
       </div>
     </div>
+  );
+};
+
+interface ChildProps extends Pick<Props, "data" | "meta"> {
+  badgeText: string;
+  activeVariant: IBadgeVariants;
+}
+
+const PaidSellersBiggerScreenTable = (props: ChildProps) => {
+  const router = useRouter();
+
+  return (
+    <TableWithRowGaps
+      emptyTableTitle="No Paid seller found"
+      emptyTableDescription="All paid sellers will be displayed here"
+      tableData={props.data?.map((seller) => {
+        return {
+          name: (
+            <div
+              className="flex cursor-pointer items-center gap-2"
+              onClick={() =>
+                router.push(DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id)
+              }
+            >
+              <Badge variant={props.activeVariant} text={props.badgeText} />
+              <p className="capitalize">{seller?.name}</p>
+            </div>
+          ),
+          "payment mode": (
+            <p className="capitalize">{seller?.transaction_provider}</p>
+          ),
+          plan:
+            seller?.plan_name || seller?.plan_duration ? (
+              <p className="capitalize">
+                {seller?.plan_name}-{seller?.plan_duration}
+                {seller?.plan_duration > 1 ? "months" : "month"}
+              </p>
+            ) : (
+              "-"
+            ),
+          product: seller?.subscription_name || "-",
+          duration: duration(seller),
+          amount: <p>{formatPrice(seller?.transaction_actual_amount)}</p>,
+        };
+      })}
+      usePaginate
+      meta={props.meta}
+    />
+  );
+};
+
+const PaidSellersSmallerScreenTable = (props: ChildProps) => {
+  return (
+    <TableWithRowGaps
+      emptyTableTitle="No Paid seller found"
+      emptyTableDescription="All paid sellers will be displayed here"
+      hideHeaders
+      tableData={props.data?.map((seller) => {
+        return {
+          left: (
+            <div>
+              <div className="justify- mb-3 flex gap-2">
+                <Badge
+                  variant={props.activeVariant}
+                  text={props.badgeText}
+                  className="max-h-fit"
+                />
+                <p className="text-sm font-semibold">{seller?.name}</p>
+              </div>
+              <p className="text-xs">{duration(seller)}</p>
+            </div>
+          ),
+          right: (
+            <div>
+              <p className="mb-3 font-semibold text-primary">
+                {seller?.plan_name}-{seller?.plan_duration}
+                {seller?.plan_duration > 1 ? "months" : "month"}
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-xs">{seller?.transaction_provider}</p>
+                <p>{formatPrice(seller?.transaction_actual_amount)}</p>
+              </div>
+            </div>
+          ),
+        };
+      })}
+      usePaginate
+      meta={props.meta}
+    />
   );
 };
 

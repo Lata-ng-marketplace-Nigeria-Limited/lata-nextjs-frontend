@@ -16,6 +16,7 @@ interface Props {
   countUnverifiedSellers?: number;
   usersWithNoUploadsCount?: number;
 }
+
 const AllSellers = (props: Props) => {
   return (
     <div>
@@ -47,12 +48,62 @@ const AllSellers = (props: Props) => {
       </div>
       <AddSellerForm />
 
-      <TableWithRowGaps
-        isClickable
-        tableData={props.data?.map((seller) => {
-          return {
-            name: (
-              <div className="flex items-center gap-2">
+      <div className="max-xs:hidden">
+        <BiggerScreenTable data={props.data} meta={props.meta} />
+      </div>
+
+      <div className="xs:hidden">
+        <SmallerScreenTable data={props.data} meta={props.meta} />
+      </div>
+    </div>
+  );
+};
+
+const BiggerScreenTable = (props: Props) => {
+  return (
+    <TableWithRowGaps
+      isClickable
+      tableData={props?.data?.map((seller) => {
+        return {
+          name: (
+            <div className="flex items-center gap-2">
+              <AppAvatar
+                name={seller?.name}
+                src={seller?.avatar}
+                className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                initialsClass="font-normal text-xs sm:text-xs"
+              />
+              <Link
+                href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
+                className="hover:text-primary"
+              >
+                {seller?.name}
+              </Link>
+            </div>
+          ),
+          location: seller?.address,
+          "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
+            "dd LLL, yyyy",
+          ),
+          manager: seller?.managerName || "N/A",
+        };
+      })}
+      usePaginate
+      meta={props.meta}
+    />
+  );
+};
+
+const SmallerScreenTable = (props: Props) => {
+  return (
+    <TableWithRowGaps
+      isClickable
+      hideHeaders
+      tableData={props?.data?.map((seller) => {
+        return {
+          left: (
+            <div>
+              <div className="mb-2 flex items-center gap-2">
                 <AppAvatar
                   name={seller?.name}
                   src={seller?.avatar}
@@ -61,23 +112,29 @@ const AllSellers = (props: Props) => {
                 />
                 <Link
                   href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
-                  className="hover:text-primary"
+                  className="text-sm font-semibold hover:text-primary"
                 >
                   {seller?.name}
                 </Link>
               </div>
-            ),
-            location: seller?.address,
-            "reg Date": DateTime.fromISO(seller?.createdAt).toFormat(
-              "dd LLL, yyyy",
-            ),
-            manager: seller?.managerName || "-",
-          };
-        })}
-        usePaginate
-        meta={props.meta}
-      />
-    </div>
+              <p>{seller?.address}</p>
+            </div>
+          ),
+          right: (
+            <div>
+              <p className="mb-3 text-sm font-semibold">
+                {seller?.managerName || "N/A"}
+              </p>
+              <p className="text-xs">
+                {DateTime.fromISO(seller?.createdAt).toFormat("dd LLL, yyyy")}
+              </p>
+            </div>
+          ),
+        };
+      })}
+      usePaginate
+      meta={props.meta}
+    />
   );
 };
 

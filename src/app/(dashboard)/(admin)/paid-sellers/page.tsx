@@ -54,6 +54,7 @@ export default async function Protected({
           newSubscriptionCount={response?.newSubscriptionCount}
           returningSubscribersCount={response?.returningSubscribersCount}
           meta={response?.meta}
+          role={session?.role}
         />
       </Suspense>
     </div>
