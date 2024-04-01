@@ -1,6 +1,5 @@
 import React from "react";
-import AnalyticsSideCard from "@components/analytics/AnalyticsSideCard";
-import { getAnalyticsClicksAndViews, getSellerAnalyticsApi } from "@/api/view";
+import { getAnalyticsClicksAndViews } from "@/api/view";
 import AnalyticsChart from "@components/analytics/AnalyticsChart";
 import AnalyticsSideCardsWrapper from "@components/analytics/AnalyticsSideCardsWrapper";
 import AnalyticsChartAreaHOC from "./AnalyticsChartAreaHOC";

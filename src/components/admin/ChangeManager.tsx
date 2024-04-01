@@ -18,11 +18,7 @@ interface Props {
 }
 
 const ChangeManager = (props: Props) => {
-  const [search, setSearch] = React.useState("");
   const [openModal, setOpenModal] = React.useState(false);
-  const [filteredManagers, setFilteredManagers] = React.useState<User[]>(
-    props.managers,
-  );
   const [selectedManager, setSelectedManager] = React.useState<User | null>(
     null,
   );
@@ -55,13 +51,6 @@ const ChangeManager = (props: Props) => {
     }
   };
 
-  React.useEffect(() => {
-    const filter = props.managers.filter((manager) =>
-      manager.name.toLowerCase().includes(search.toLowerCase()),
-    );
-    setFilteredManagers(filter);
-  }, [search, props.managers]);
-
   return (
     <div>
       <Button
@@ -78,8 +67,8 @@ const ChangeManager = (props: Props) => {
           <SearchInput />
         </div>
         <div className="mb-5">
-          {filteredManagers.length > 0 ? (
-            filteredManagers.map((manager) => (
+          {props.managers?.length > 0 ? (
+            props.managers?.map((manager) => (
               <div
                 key={manager?.id}
                 onClick={() => setSelectedManager(manager)}
