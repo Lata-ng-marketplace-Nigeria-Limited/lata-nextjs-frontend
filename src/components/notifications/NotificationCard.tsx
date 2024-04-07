@@ -6,7 +6,7 @@ import { cn, getTimeFromNow } from "@/utils";
 import Image from "next/image";
 import { DateTime } from "luxon";
 import Modal from "@molecule/Modal";
-import SendSellerMessage from "@components/input/SendSellerMessage";
+import SendSellerMessage from "@/components/input/SendMessage";
 
 interface Props {
   notification: Notification;
@@ -147,7 +147,7 @@ export default function NotificationCard(props: Props) {
 
             <SendSellerMessage
               productId={props.notification?.data?.productId}
-              buyerId={props.notification?.data?.userId}
+              senderId={props.notification?.data?.userId}
               hideCancel
             />
           </div>

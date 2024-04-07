@@ -6,25 +6,34 @@ import AppAvatar from "../molecule/Avatar";
 import { useRouter } from "next/navigation";
 import { VIEW_SELLERS_ROUTE } from "@/constants/routes";
 import { User } from "@/interface/user";
+import SendMessage from "../input/SendMessage";
 
 interface Props {
   name: string;
   imgSrc: string | undefined;
   btnText: string;
   role: User["role"];
-  userId?: string;
+  userId: string;
   onBtnClick?: () => void;
 }
 const UserBanner = (props: Props) => {
   const { push } = useRouter();
+  const [isMessage, setIsMessage] = React.useState(false);
 
   const handleBtnClick = () => {
     if (props.role === "SELLER") {
       push(`${VIEW_SELLERS_ROUTE}/${props.userId}/shop`);
+      return;
     }
 
-    if (props.onBtnClick) {
-      props.onBtnClick();
+    if (
+      props.role === "STAFF" &&
+      props.btnText.toLowerCase().includes("message")
+    ) {
+      setIsMessage(true);
+      return;
+    } else {
+      props.onBtnClick?.();
     }
   };
 
@@ -34,14 +43,14 @@ const UserBanner = (props: Props) => {
       <div className="gap-2 px-3 sm:flex sm:gap-5">
         <div className="flex gap-x-4">
           <div className="max-h-[9.6rem] max-w-[9.6rem] -translate-y-4 rounded-full border-4 border-white p-2">
-          <AppAvatar
-            name={props.name}
-            src={props.imgSrc || undefined}
-            className="!h-[6.25rem] !w-[6.25rem] sl:!h-[7.7rem] sl:!w-[7.7rem]"
-            initialsClass="!text-[1.5rem] font-bold"
-          />
+            <AppAvatar
+              name={props.name}
+              src={props.imgSrc || undefined}
+              className="!h-[6.25rem] !w-[6.25rem] sl:!h-[7.7rem] sl:!w-[7.7rem]"
+              initialsClass="!text-[1.5rem] font-bold"
+            />
           </div>
-          <h2 className="mb-3 text-xl font-medium text-grey10 sm:hidden pt-6">
+          <h2 className="mb-3 pt-6 text-xl font-medium text-grey10 sm:hidden">
             {props.name}
           </h2>
         </div>
@@ -50,9 +59,17 @@ const UserBanner = (props: Props) => {
           <h2 className="mb-3 text-xl font-medium text-grey10 max-sl:text-3xl max-sm:hidden">
             {props.name}
           </h2>
-          <Button format="primary" onClick={handleBtnClick} className="w-full">
-            {props.btnText}
-          </Button>
+          {isMessage ? (
+            <SendMessage isNotProductMessage receiverId={props.userId} />
+          ) : (
+            <Button
+              format="primary"
+              onClick={handleBtnClick}
+              className="w-full"
+            >
+              {props.btnText}
+            </Button>
+          )}
         </div>
       </div>
     </div>

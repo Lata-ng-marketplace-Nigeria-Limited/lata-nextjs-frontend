@@ -8,7 +8,7 @@ import { useUser } from "@hooks/useUser";
 import { createChatApi } from "@/api/chat";
 import { useToast } from "@components/ui/use-toast";
 import { ApiErrorResponse } from "@/interface/general";
-import { cn, getFormErrorObject } from "@/utils";
+import { cn, getFormErrorObject, showToast } from "@/utils";
 import TextAreaInput from "@components/input/TextAreaInput";
 import Button from "@atom/Button";
 import { generateSellerAnalyticsApi } from "@/api/view";
@@ -17,12 +17,14 @@ interface Props {
   setTypeMessage?: React.Dispatch<SetStateAction<boolean>>;
   sellerInfo?: User | null;
   productId?: string;
+  senderId?: string;
   setMessageSent?: React.Dispatch<SetStateAction<boolean>>;
-  buyerId?: string;
   hideCancel?: boolean;
   productOwnerId?: string;
+  isNotProductMessage?: boolean;
+  receiverId?: string;
 }
-export default function SendSellerMessage(props: Props) {
+export default function SendMessage(props: Props) {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -31,7 +33,7 @@ export default function SendSellerMessage(props: Props) {
       await generateSellerAnalyticsApi(
         "MESSAGE",
         props.productId || "",
-        props.productOwnerId || ""
+        props.productOwnerId || "",
       );
     } catch (error) {
       console.log(error);
@@ -41,6 +43,7 @@ export default function SendSellerMessage(props: Props) {
   const {
     handleSubmit,
     setError,
+    resetField,
     reset,
     clearErrors,
     control,
@@ -81,29 +84,38 @@ export default function SendSellerMessage(props: Props) {
   }, [clearErrors, user, isSocketConnected, setError]);
 
   const onSubmit = async (values: z.infer<typeof sendSellerMessageSchema>) => {
-    if (!props.productId) {
+    if (!props.isNotProductMessage && !props.productId) {
       setError("message", {
         message: "Refresh the page and try again",
       });
       return;
     }
 
-    setLoading(true);
+    const messageFromProductPagePayload = {
+      productId: props.productId,
+      message: values.message,
+      senderId: props.senderId || user?.id,
+    };
+
+    const messageFromUserProfilePayload = {
+      message: values.message,
+      receiverId: props.receiverId,
+      senderId: props.senderId || user?.id,
+    };
+
     try {
-      await handleCountMessageClick();
-      await createChatApi({
-        productId: props.productId,
-        message: values.message,
-        buyerId: props.buyerId,
-      });
-      toast({
-        title: "Success",
-        description: "Your message has been sent successfully",
-        variant: "success",
-      });
+      setLoading(true);
+      if (!props.isNotProductMessage) {
+        await handleCountMessageClick();
+        await createChatApi(messageFromProductPagePayload);
+      } else {
+        await createChatApi(messageFromUserProfilePayload);
+      }
+      showToast("Your message has been sent successfully", "success");
+      resetField("message");
       props.setMessageSent?.(true);
-      reset();
     } catch (error: any) {
+      console.log("error Message 119", error?.data?.message);
       const errorResponse: ApiErrorResponse<
         z.infer<typeof sendSellerMessageSchema>
       > = error;
@@ -127,6 +139,14 @@ export default function SendSellerMessage(props: Props) {
         }
         return;
       } else {
+        if (error && error?.data && error?.data?.message) {
+          toast({
+            title: "Error",
+            description: error?.data?.message,
+            variant: "destructive",
+          });
+          return;
+        }
         toast({
           title: "Error",
           description: "Something went wrong. Please try again later",
@@ -163,7 +183,7 @@ export default function SendSellerMessage(props: Props) {
         control={control}
       />
 
-      <div className={"flex justify-end mt-6 gap-x-3.5 mb-2"}>
+      <div className={"mb-2 mt-6 flex justify-end gap-x-3.5"}>
         {!props.hideCancel ? (
           <Button type={"button"} format={"tertiary"} onClick={handleCancel}>
             Cancel
