@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/utils";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface Props {
@@ -6,7 +9,7 @@ interface Props {
   number: number | string;
   title: string;
   description: string;
-  onClick?: () => void;
+  route?: string;
   isClickable?: boolean;
 }
 const AnalyticsTopCards = ({
@@ -14,9 +17,11 @@ const AnalyticsTopCards = ({
   number,
   title,
   description,
-  onClick,
+  route,
   isClickable,
 }: Props) => {
+  const { push } = useRouter();
+
   return (
     <div
       className={cn(
@@ -26,7 +31,10 @@ const AnalyticsTopCards = ({
         },
         "rounded-lg border border-solid border-grey2 px-6 pb-7 pt-[1.81rem] shadow-black/10",
       )}
-      onClick={onClick}
+      onClick={() => {
+        if (!route) return;
+        push(route as string);
+      }}
     >
       <p
         className={cn(

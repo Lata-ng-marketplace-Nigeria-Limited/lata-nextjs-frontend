@@ -49,16 +49,16 @@ export default function MessagesListArea(props: Props) {
     <div
       className={cn(
         `
+        flex 
         w-full 
         shrink-0 
+        flex-col 
+        gap-y-6 
+        sm:flex 
         sm:max-w-[250px] 
         tablet:max-w-[250px] 
         lg:max-w-[340px] 
-        xl:max-w-[390px] 
-        flex 
-        sm:flex 
-        flex-col 
-        gap-y-6   
+        xl:max-w-[390px]   
      `,
         {
           hidden: !!props.activeChat,
@@ -68,18 +68,18 @@ export default function MessagesListArea(props: Props) {
       <div
         className={cn(`
         flex
+        w-full
+        rounded-[5px]
+        bg-primary
         px-2.5
         py-2
         sm:px-4
         sm:py-3.5
-        bg-primary
-        rounded-[5px]
-        w-full
         
         
       `)}
       >
-        <h2 className={"text-sm sm:text-base text-white font-semibold"}>
+        <h2 className={"text-sm font-semibold text-white sm:text-base"}>
           My messages
         </h2>
       </div>

@@ -13,7 +13,7 @@ export const MessagesArea = () => {
 
   return (
     <EmptyMessages hasChat={!!chats.length}>
-      <div className={"flex gap-x-2 lg:gap-x-6 h-full w-full"}>
+      <div className={"flex h-full w-full gap-x-2 lg:gap-x-6"}>
         <MessagesListArea
           activeChat={activeChat}
           setActiveChat={setActiveChat}

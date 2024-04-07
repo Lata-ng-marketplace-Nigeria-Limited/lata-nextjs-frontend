@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Protected({
-    params: { staffId },
+  params: { staffId },
   searchParams,
 }: {
   searchParams: {
@@ -22,7 +22,7 @@ export default async function Protected({
   };
   params: {
     staffId: string;
-  }
+  };
 }) {
   const session = await getServerSession(authConfig);
   if (

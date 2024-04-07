@@ -342,14 +342,20 @@ export default function ProductForm({
           }
         }
       }
-      toast({
-        title:
-          typeof error?.message === "string"
-            ? error?.message
-            : "Something went wrong",
-        description: "Please try again later",
-        variant: "destructive",
-      });
+      if (
+        error &&
+        error?.data &&
+        error?.data?.message &&
+        typeof error?.data?.message === "string"
+      ) {
+        showToast(error?.data?.message, "destructive");
+      } else {
+        toast({
+          title: "Something went wrong",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      }
     }
   };
 

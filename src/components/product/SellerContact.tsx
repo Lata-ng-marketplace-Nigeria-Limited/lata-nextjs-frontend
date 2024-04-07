@@ -7,7 +7,7 @@ import { useToast } from "@components/ui/use-toast";
 import MobileBorderArea from "@atom/MobileBorderArea";
 import AppAvatar from "@molecule/Avatar";
 import Button from "@atom/Button";
-import SendSellerMessage from "@components/input/SendSellerMessage";
+import SendMessage from "@/components/input/SendMessage";
 import { generateSellerAnalyticsApi } from "@/api/view";
 
 interface Props {
@@ -151,7 +151,7 @@ export default function SellerContact(props: Props) {
             Send message to seller
           </Button>
         ) : (
-          <SendSellerMessage
+          <SendMessage
             sellerInfo={props.sellerInfo}
             setTypeMessage={setTypeMessage}
             productId={props.productId}
