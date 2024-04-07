@@ -102,33 +102,34 @@ const SmallerScreenTable = (props: Props) => {
       tableData={props?.data?.map((seller) => {
         return {
           left: (
-            <div>
-              <div className="mb-2 flex items-center gap-2">
-                <AppAvatar
-                  name={seller?.name}
-                  src={seller?.avatar}
-                  className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
-                  initialsClass="font-normal text-xs sm:text-xs"
-                />
-                <Link
-                  href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
-                  className="text-sm font-semibold hover:text-primary"
-                >
-                  {seller?.name}
-                </Link>
+            <>
+              <div className="flex justify-between gap-6">
+                <div className="mb-2 flex basis-[50%] items-center gap-2">
+                  <AppAvatar
+                    name={seller?.name}
+                    src={seller?.avatar}
+                    className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
+                    initialsClass="font-normal text-xs sm:text-xs"
+                  />
+                  <Link
+                    href={DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id}
+                    className="text-sm font-semibold hover:text-primary"
+                  >
+                    {seller?.name}
+                  </Link>
+                </div>
+                <p className="mb-3 text-sm font-semibold">
+                  {seller?.managerName || "N/A"}
+                </p>
               </div>
-              <p>{seller?.address}</p>
-            </div>
-          ),
-          right: (
-            <div>
-              <p className="mb-3 text-sm font-semibold">
-                {seller?.managerName || "N/A"}
-              </p>
-              <p className="text-xs">
-                {DateTime.fromISO(seller?.createdAt).toFormat("dd LLL, yyyy")}
-              </p>
-            </div>
+              <div className="flex basis-[50%] justify-between gap-6">
+                <p>{seller?.address}</p>
+
+                <p className=" text-xs">
+                  {DateTime.fromISO(seller?.createdAt).toFormat("dd LLL, yyyy")}
+                </p>
+              </div>
+            </>
           ),
         };
       })}

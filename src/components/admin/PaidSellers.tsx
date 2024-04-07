@@ -189,29 +189,32 @@ const PaidSellersSmallerScreenTable = (props: ChildProps) => {
       tableData={props.data?.map((seller) => {
         return {
           left: (
-            <div>
-              <div className="justify- mb-3 flex gap-2">
-                <Badge
-                  variant={props.activeVariant}
-                  text={props.badgeText}
-                  className="max-h-fit"
-                />
-                <p className="text-sm font-semibold">{seller?.name}</p>
+            <>
+              <div className="flex justify-between gap-6">
+                <div className="justify- mb-3 flex basis-[50%] gap-2 ">
+                  <Badge
+                    variant={props.activeVariant}
+                    text={props.badgeText}
+                    className="max-h-fit"
+                  />
+                  <p className="text-sm font-semibold">{seller?.name}</p>
+                </div>
+                <p className="mb-3 text-left font-semibold  text-primary">
+                  {seller?.plan_name}-{seller?.plan_duration}
+                  {seller?.plan_duration > 1 ? "months" : "month"}
+                </p>
               </div>
-              <p className="text-xs">{duration(seller)}</p>
-            </div>
-          ),
-          right: (
-            <div>
-              <p className="mb-3 font-semibold text-primary">
-                {seller?.plan_name}-{seller?.plan_duration}
-                {seller?.plan_duration > 1 ? "months" : "month"}
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-xs">{seller?.transaction_provider}</p>
-                <p>{formatPrice(seller?.transaction_actual_amount)}</p>
+
+              <div className="flex justify-between gap-6">
+                <div className="flex basis-[50%] flex-wrap items-center gap-2 ">
+                  <p className="text-left text-xs">
+                    {seller?.transaction_provider}
+                  </p>
+                  <p>{formatPrice(seller?.transaction_actual_amount)}</p>
+                </div>
+                <p className="text-left  text-xs">{duration(seller)}</p>
               </div>
-            </div>
+            </>
           ),
         };
       })}

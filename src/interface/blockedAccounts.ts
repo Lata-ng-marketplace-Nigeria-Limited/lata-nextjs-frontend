@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User, UserRole } from "./user";
 
 type BlockedAccountStatus = "BLOCKED" | "UNBLOCKED" | "OTHER";
 export type AppealStatus = "APPROVED" | "REJECTED" | "PENDING";
@@ -35,6 +35,7 @@ export interface BlockedUserDetails {
 
   file_type?: FileType;
   user_id: string;
+  role: UserRole;
 
   managerName: string;
   managerEmail: string;
