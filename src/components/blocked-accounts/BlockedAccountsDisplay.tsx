@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import TableWithRowGaps from "../table/TableWithRowGaps";
 import { AppealStatus, BlockedUserDetails } from "@/interface/blockedAccounts";
@@ -33,7 +35,7 @@ const BlockedAccountsDisplay = async (props: Props) => {
 
     if (user?.role === "SELLER") {
       push(`${DASHBOARD_PROTECTED_SELLER_ROUTE}/${user?.id}`);
-      return
+      return;
     }
   };
 
@@ -76,17 +78,17 @@ const BlockedAccountsDisplay = async (props: Props) => {
           tableData={props.blockedAccounts?.map((blockedAccount) => {
             return {
               poster: (
-                <div className="flex items-center gap-2">
+                <div
+                  className="flex cursor-pointer items-center gap-2"
+                  onClick={() => handleGoToProfile(blockedAccount)}
+                >
                   <AppAvatar
                     name={blockedAccount?.name}
                     src={blockedAccount?.avatar}
                     className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
                     initialsClass="font-normal text-xs sm:text-xs"
                   />
-                  <p
-                    className="font-semibold hover:text-primary"
-                    onClick={() => handleGoToProfile(blockedAccount)}
-                  >
+                  <p className="font-semibold hover:text-primary">
                     {blockedAccount?.name}
                   </p>
                 </div>
