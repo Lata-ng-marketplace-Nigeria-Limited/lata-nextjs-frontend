@@ -8,6 +8,11 @@ import BadgeWithCount from "../atom/BadgeWithCount";
 import HeaderText from "../atom/HeaderText";
 import SearchInput from "../admin/SearchInput";
 import AppealedAccounts from "./AppealedAccounts";
+import { useRouter } from "next/navigation";
+import {
+  DASHBOARD_PROTECTED_SELLER_ROUTE,
+  VIEW_STAFF_ROUTE,
+} from "@/constants/routes";
 
 interface Props {
   blockedAccounts: BlockedUserDetails[];
@@ -18,6 +23,20 @@ interface Props {
 }
 
 const BlockedAccountsDisplay = async (props: Props) => {
+  const { push } = useRouter();
+
+  const handleGoToProfile = (user: BlockedUserDetails) => {
+    if (user?.role === "STAFF") {
+      push(`${VIEW_STAFF_ROUTE}/${user?.id}`);
+      return;
+    }
+
+    if (user?.role === "SELLER") {
+      push(`${DASHBOARD_PROTECTED_SELLER_ROUTE}/${user?.id}`);
+      return
+    }
+  };
+
   return (
     <div>
       <div className="mb-7 flex justify-end gap-4 sl:gap-6">
@@ -64,7 +83,10 @@ const BlockedAccountsDisplay = async (props: Props) => {
                     className="h-[30px] w-[30px] sm:h-[30px] sm:w-[30px]"
                     initialsClass="font-normal text-xs sm:text-xs"
                   />
-                  <p className="font-semibold hover:text-primary">
+                  <p
+                    className="font-semibold hover:text-primary"
+                    onClick={() => handleGoToProfile(blockedAccount)}
+                  >
                     {blockedAccount?.name}
                   </p>
                 </div>
