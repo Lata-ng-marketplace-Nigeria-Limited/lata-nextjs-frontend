@@ -9,7 +9,7 @@ import Button from "@atom/Button";
 export const SalesAgreement = () => {
   const handleDownload = () => {
     const fileUrl =
-      "https://res.cloudinary.com/dg9by7oca/raw/upload/v1691337695/SALES_AGREEMENT_Request_form_yb1lvu.docx";
+      "https://res.cloudinary.com/dg9by7oca/image/upload/v1712012185/Lata.ng_Sales_Agreement.pdf";
     const fileName = "SALES_AGREEMENT_Request_form.docx";
 
     const link = document.createElement("a");

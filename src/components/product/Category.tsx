@@ -28,10 +28,6 @@ const Category = ({
     return true;
   };
 
-  useEffect(() => {
-    console.log("category", data);
-  }, []);
-
   return (
     <div className="cursor-pointer">
       <div onClick={() => setShowInnerModal(!showInnerModal)}>

@@ -1,10 +1,7 @@
-"use client";
-
 import React from "react";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import { IAdminAnalytics } from "@/api/admin";
 import AnalyticsTopCardsHOC from "../analytics/AnalyticsTopCardsHOC";
-import { useRouter } from "next/navigation";
 import {
   ADMIN_ALL_POSTS,
   VIEW_SELLERS_ROUTE,
@@ -17,7 +14,6 @@ interface Props {
 }
 
 const AdminAnalyticsWrapper = (props: Props) => {
-  const router = useRouter();
   const formatNumber = (number: number | undefined | null) => {
     if (!number || typeof number !== "number") return 0;
     return number.toLocaleString();
@@ -40,20 +36,20 @@ const AdminAnalyticsWrapper = (props: Props) => {
         title="All sellers"
         description="The total number of registered sellers"
         isClickable
-        onClick={() => router?.push(VIEW_SELLERS_ROUTE)}
+        route={VIEW_SELLERS_ROUTE}
         number={totalSellersCount}
       />
       <AnalyticsTopCards
         title="Staff accounts"
         number={totalStaff}
         isClickable
-        onClick={() => router?.push(VIEW_STAFF_ROUTE)}
+        route={VIEW_STAFF_ROUTE}
         description="The total number of registered staff"
       />
       <AnalyticsTopCards
         title="Paid Sellers"
         number={paidSellersCount}
-        onClick={() => router?.push(PAID_SELLERS_ROUTE)}
+        route={PAID_SELLERS_ROUTE}
         isClickable
         description="The total number of paid subscribers"
       />
@@ -61,7 +57,7 @@ const AdminAnalyticsWrapper = (props: Props) => {
         title="All Posts"
         number={totalPostsCount}
         isClickable
-        onClick={() => router?.push(ADMIN_ALL_POSTS)}
+        route={ADMIN_ALL_POSTS}
         description="The total number of approved posts"
       />
     </AnalyticsTopCardsHOC>

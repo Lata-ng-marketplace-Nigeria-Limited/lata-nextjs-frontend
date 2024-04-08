@@ -31,6 +31,7 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
             btnText="Send Message"
             name={staffResponse?.data?.name}
             role={staffResponse?.data?.role}
+            userId={staffId}
           />
 
           <UserDetailContainer heading="About">
@@ -91,10 +92,7 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
               description={staffResponse?.data?.bankAccount?.accountName || ""}
             />
           </UserDetailContainer>
-          <StaffBtnActions
-            staffId={staffId}
-            staffName={staffResponse?.data?.name}
-          />
+          <StaffBtnActions staff={staffResponse?.data} />
         </div>
       </div>
       <div>

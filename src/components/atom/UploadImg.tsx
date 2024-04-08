@@ -116,40 +116,40 @@ export default function UploadImg({
 
   return (
     <div
-      className={cn("relative group  ", {
+      className={cn("group relative  ", {
         "opacity-20": isDeleted,
-        "w-full h-full": format === "profile",
+        "h-full w-full": format === "profile",
       })}
     >
       <div
         className={cn(
           `
             absolute
-            top-0
             left-0
-            w-full
-            h-full
-            py-[5px]
-            px-[4px]
+            top-0
             hidden
+            h-full
+            w-full
+            items-start
+            justify-end
             
             
+            px-[4px]
+            py-[5px]
+            before:absolute
+            
+            
+            before:left-0
+            before:top-0
+            
+            before:h-full
+            before:w-full
+            before:rounded-[7px]
+            before:bg-black
+            before:opacity-40
             before:transition-opacity
             before:duration-300
             before:ease-in
-            
-            
-            justify-end
-            items-start
-            
-            before:bg-black
-            before:opacity-40
-            before:absolute
-            before:top-0
-            before:left-0
-            before:w-full
-            before:h-full
-            before:rounded-[7px]
             
         `,
           {
@@ -177,37 +177,50 @@ export default function UploadImg({
         // width={format === "profile" ? 0 : isSm ? 130 : 70}
         // height={format === "profile" ? 0 : isSm ? 120 : 61}
         style={{
-          width: format === "profile" ? "100%" : isSm ? 130 : 70,
-          height: format === "profile" ? "100%" : isSm ? 120 : 61,
+          width:
+            format === "profile"
+              ? "100%"
+              : format === "blocked-account"
+                ? "16.25rem"
+                : isSm
+                  ? 130
+                  : 70,
+          height:
+            format === "profile"
+              ? "100%"
+              : format === "blocked-account"
+                ? "11.3125rem"
+                : isSm
+                  ? 120
+                  : 61,
         }}
         aria-label={"You are trying to upload this file named: " + preview.name}
         className={cn(
           `
-        w-full 
         h-full 
+        w-full 
         
-        rounded-full
+        ${format === "blocked-account" ? "rounded-none" : "rounded-full"}
         cursor-pointer
         
        `,
           {
             [`
-            max-w-[70px] 
             max-h-[61px] 
-            sm:max-w-[130px] 
+            max-w-[70px] 
+            rounded-[7px] 
             sm:max-h-[120px]
-            rounded-[7px]
+            sm:max-w-[130px]
           `]: format === "product",
-
             [`
             object-cover
           `]: format === "profile",
             [`
-            outline
-            outline-primary
-            outline-[3px]
-            border-white
             border-[1px]
+            border-white
+            outline
+            outline-[3px]
+            outline-primary
           `]: selected?.image?.url === preview.url,
           },
           props.className,

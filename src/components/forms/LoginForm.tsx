@@ -11,8 +11,6 @@ import { loginApi, resendOtpApi } from "@/api/auth";
 import { useFastLocalStore } from "@/store/states/localStore";
 import { useUser } from "@/hooks/useUser";
 import ResendEmail from "@molecule/ResendEmail";
-import { useRouter } from "next/navigation";
-import { toast } from "../ui/use-toast";
 
 export const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,7 +22,6 @@ export const LoginForm = () => {
   const [resendError, setResendError] = useState("");
   const { loginUser } = useUser();
   const { setSelectedRole } = useFastLocalStore();
-  const { push } = useRouter();
 
   useEffect(() => {
     setSelectedRole(undefined);
@@ -44,18 +41,6 @@ export const LoginForm = () => {
       if (loginRes.error) {
         setErrorMessage(loginRes.error.errorInfo);
         setLoading(false);
-        return;
-      }
-
-      if (loginRes.isBlocked) {
-        toast({
-          title: "Account Locked",
-          description:
-            "You have been temporarily locked. Please fill out the form on the redirected page to unlock your account.",
-          variant: "destructive",
-        });
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        push("/blocked");
         return;
       }
 
