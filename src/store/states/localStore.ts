@@ -118,3 +118,31 @@ export const useIsUserBlocked = create(
     },
   ),
 );
+
+interface IRoleSwitchState {
+  isSwitchingRole: "true" | "false";
+  sessionUser: User | null; // Represents the user whose session is being used
+  searchQuery: string; // Captures the userId and role of the user being switched to
+  setIsSwitchingRole: (isSwitchingRole: "true" | "false") => void;
+  setSessionUser: (sessionUser: User | null) => void;
+  setSearchQuery: (searchQuery: string) => void;
+}
+
+export const useRoleSwitchStore = create(
+  persist<IRoleSwitchState>(
+    (set) => ({
+      isSwitchingRole: "false",
+      sessionUser: null,
+      searchQuery: "",
+      setIsSwitchingRole: (isSwitchingRole: "true" | "false") =>
+        set({ isSwitchingRole }),
+      setSessionUser: (sessionUser: User | null) =>
+        set({ sessionUser }),
+      setSearchQuery: (searchQuery: string) => set({ searchQuery }),
+    }),
+    {
+      name: "app.role-switch-state",
+      storage: createStore(() => localStorage),
+    },
+  ),
+);

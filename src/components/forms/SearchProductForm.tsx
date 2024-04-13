@@ -64,7 +64,7 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
 
   return (
     <div className={"w-full"}>
-      <form className={" flex items-center gap-x-2 w-fit"} onSubmit={onSubmit}>
+      <form className={" flex w-fit items-center gap-x-2"} onSubmit={onSubmit}>
         <ComboBox
           options={recentSearches || []}
           value={query}
@@ -82,7 +82,7 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
         />
 
         <SelectInput
-          iconBefore={<MapPinIcon className="w-[12px] h-[12px]" />}
+          iconBefore={<MapPinIcon className="h-[12px] w-[12px]" />}
           value={location}
           options={[{ value: "any", label: "Any" }, ...nigerianStates]}
           contentWidth={"115px"}

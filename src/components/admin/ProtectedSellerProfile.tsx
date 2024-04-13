@@ -39,7 +39,8 @@ const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
             role={response?.data?.role || ""}
             imgSrc={response?.data?.avatar}
             userId={response?.data?.id}
-            btnText="See shop"
+            user={response?.data}
+            // btnText="See shop"
           />
 
           <UserDetailContainer heading="About">

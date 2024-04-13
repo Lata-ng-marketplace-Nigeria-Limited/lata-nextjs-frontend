@@ -3,22 +3,45 @@
 import React from "react";
 import Button from "../atom/Button";
 import AppAvatar from "../molecule/Avatar";
-import { useRouter } from "next/navigation";
-import { VIEW_SELLERS_ROUTE } from "@/constants/routes";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { LANDING_ROUTE, VIEW_SELLERS_ROUTE } from "@/constants/routes";
 import { User } from "@/interface/user";
 import SendMessage from "../input/SendMessage";
+import { useRoleSwitchStore } from "@/store/states/localStore";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   name: string;
   imgSrc: string | undefined;
-  btnText: string;
+  btnText?: string;
   role: User["role"];
   userId: string;
+  user: User;
   onBtnClick?: () => void;
 }
 const UserBanner = (props: Props) => {
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
   const [isMessage, setIsMessage] = React.useState(false);
+  const { user } = useUser();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { setIsSwitchingRole, setSessionUser, setSearchQuery } =
+    useRoleSwitchStore();
+
+  const handleSwitchRole = () => {
+    if (user?.role !== "ADMIN") return;
+
+    const params = new URLSearchParams(searchParams);
+
+    params.set("session", props.role.toLowerCase());
+    params.set("uid", props.userId);
+    setIsSwitchingRole("true");
+    setSessionUser(props.user);
+    setSearchQuery(params.toString());
+
+    replace(`${pathname}?${params.toString()}`);
+    push(`${LANDING_ROUTE}?${params.toString()}`);
+  };
 
   const handleBtnClick = () => {
     if (props.role === "SELLER") {
@@ -28,7 +51,7 @@ const UserBanner = (props: Props) => {
 
     if (
       props.role === "STAFF" &&
-      props.btnText.toLowerCase().includes("message")
+      props.btnText?.toLowerCase().includes("message")
     ) {
       setIsMessage(true);
       return;
@@ -55,21 +78,30 @@ const UserBanner = (props: Props) => {
           </h2>
         </div>
 
-        <div className="">
+        <div className=" w-full">
           <h2 className="mb-3 text-xl font-medium text-grey10 max-sl:text-3xl max-sm:hidden">
             {props.name}
           </h2>
-          {isMessage ? (
-            <SendMessage isNotProductMessage receiverId={props.userId} />
-          ) : (
+          <div className="flex items-center gap-4 max-sm:flex-wrap">
+            {isMessage ? (
+              <SendMessage isNotProductMessage receiverId={props.userId} />
+            ) : (
+              <Button
+                format="primary"
+                onClick={handleBtnClick}
+                className="w-full sm:max-w-max"
+              >
+                {props.btnText || "Send Message"}
+              </Button>
+            )}
             <Button
-              format="primary"
-              onClick={handleBtnClick}
-              className="w-full"
+              format="secondary"
+              className="w-full sm:max-w-max"
+              onClick={handleSwitchRole}
             >
-              {props.btnText}
+              Go to profile
             </Button>
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -345,7 +345,7 @@ export default function ProductCard(props: Props) {
               : props?.productName}
           </p>
           <p
-            className={cn("max-w-[24ch] text-[10px] text-grey6  sm:text-xs", {
+            className={cn("max-w-[24ch] text-[10px] text-grey6 break-words sm:text-xs", {
               "max-w-full": props.createProductPreview,
             })}
           >

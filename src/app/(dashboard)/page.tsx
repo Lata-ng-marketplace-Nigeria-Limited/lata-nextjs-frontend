@@ -35,16 +35,19 @@ export default async function Home({
     subcategory?: string;
     page?: string;
     month?: string;
+    session?: string;
+    uid?: string;
   };
 }) {
   const session = await getServerSession(authConfig);
   const query = searchParams?.category || "";
   const subcategory = searchParams?.subcategory || "";
   const selectedMonth = searchParams?.month || "";
+  const isAdminInuserSession = searchParams?.session && searchParams?.uid;
 
   return (
     <main className="">
-      {session?.role === "ADMIN" ? (
+      {session?.role === "ADMIN" && !isAdminInuserSession ? (
         <Suspense fallback={<p>Loading...</p>}>
           <AdminDashboardWrapper
             username={session?.user?.name || "Admin"}

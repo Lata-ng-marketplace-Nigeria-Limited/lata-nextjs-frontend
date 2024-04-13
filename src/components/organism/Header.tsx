@@ -15,10 +15,12 @@ import { useToast } from "@components/ui/use-toast";
 import { ToastAction } from "@components/ui/toast";
 import { useCallback, useEffect, useState } from "react";
 import { useRegistrationFormStore } from "@/store/states/userState";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getRecentSearchesApi } from "@/api/product";
 import { UserRole } from "@/interface/user";
 import ProfileSummary from "../staff/ProfileSummary";
+import Alert from "../atom/Alert";
+import { useRoleSwitchStore } from "@/store/states/localStore";
 
 interface Props {
   noSideMenu?: boolean;
@@ -29,7 +31,12 @@ const Header = ({ noSideMenu, role }: Props) => {
   const { user } = useUser();
   const { toast } = useToast();
   const { setRegistrationForm } = useRegistrationFormStore();
-  const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { setIsSwitchingRole, setSessionUser } = useRoleSwitchStore();
+
+  const { push, replace } = useRouter();
+  const params = new URLSearchParams(searchParams);
 
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
@@ -52,58 +59,72 @@ const Header = ({ noSideMenu, role }: Props) => {
     push("/auth" + SELLER_SIGN_UP_ROUTE + "?isUpgradingToSeller=true");
   }, [push, setRegistrationForm, user]);
 
-  return (
-    <header className="shadow-header sticky top-0 z-30 flex h-[50px] items-center justify-between gap-x-1 bg-white px-1  xs:px-2.5 sm:px-4 md:h-[60px] md:px-6">
-      <div
-        className={
-          "flex w-full items-center justify-between gap-x-[6px] xls:gap-x-[20px] xs:gap-x-[50px] md:gap-x-[100px] lg:gap-x-[190px]"
-        }
-      >
-        <div className={"flex items-center"}>
-          {!noSideMenu ? <HeaderHamburgerButton /> : null}
+  const onLeaveSession = () => {
+    if (params.get("session")) {
+      params.delete("session");
+    }
+    if (params.get("uid")) {
+      params.delete("uid");
+    }
+    setIsSwitchingRole("false");
+    setSessionUser(null);
 
-          <Link href={"/"}>
-            <LataLogo
-              className={
-                "sm:-[46px] h-[9px] w-[33px] cursor-pointer sm:h-[13px] tablet:h-[20px] tablet:w-[60px]"
-              }
-            />
-          </Link>
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+  return (
+    <header className="shadow-header sticky top-0 z-30  h-[50px]  bg-white px-1  xs:px-2.5 sm:px-4 md:h-[60px] md:px-6">
+      <div className="flex items-center justify-between gap-x-1">
+        <div
+          className={
+            "flex w-full items-center justify-between gap-x-[6px] xls:gap-x-[20px] xs:gap-x-[50px] md:gap-x-[100px] lg:gap-x-[190px]"
+          }
+        >
+          <div className={"flex items-center"}>
+            {!noSideMenu ? <HeaderHamburgerButton /> : null}
+
+            <Link href={"/"}>
+              <LataLogo
+                className={
+                  "sm:-[46px] h-[9px] w-[33px] cursor-pointer sm:h-[13px] tablet:h-[20px] tablet:w-[60px]"
+                }
+              />
+            </Link>
+          </div>
+
+          <SearchProductForm recentSearches={recentSearches} />
         </div>
 
-        <SearchProductForm recentSearches={recentSearches} />
-      </div>
+        {role === "ADMIN" ? null : role === "STAFF" ? (
+          <ProfileSummary
+            name={user?.name as string}
+            imgSrc={user?.avatar as string}
+          />
+        ) : (
+          <Button
+            type={"submit"}
+            as={"link"}
+            href={DASHBOARD_PRODUCT_CREATE_ROUTE}
+            format={"primary"}
+            onClick={(e) => {
+              if (role === "BUYER") {
+                e.preventDefault();
 
-      {role === "ADMIN" ? null : role === "STAFF" ? (
-        <ProfileSummary
-          name={user?.name as string}
-          imgSrc={user?.avatar as string}
-        />
-      ) : (
-        <Button
-          type={"submit"}
-          as={"link"}
-          href={DASHBOARD_PRODUCT_CREATE_ROUTE}
-          format={"primary"}
-          onClick={(e) => {
-            if (role === "BUYER") {
-              e.preventDefault();
-
-              toast({
-                title: "Only sellers can sell products",
-                variant: "info",
-                action: (
-                  <ToastAction
-                    altText={"Switch to seller account"}
-                    onClick={handleSwitchToSeller}
-                  >
-                    Become a seller
-                  </ToastAction>
-                ),
-              });
-            }
-          }}
-          className={cn(`
+                toast({
+                  title: "Only sellers can sell products",
+                  variant: "info",
+                  action: (
+                    <ToastAction
+                      altText={"Switch to seller account"}
+                      onClick={handleSwitchToSeller}
+                    >
+                      Become a seller
+                    </ToastAction>
+                  ),
+                });
+              }
+            }}
+            className={cn(`
           px-[8px]
           py-[4px]
           
@@ -114,9 +135,22 @@ const Header = ({ noSideMenu, role }: Props) => {
           tablet:px-6
           tablet:py-3     
         `)}
-        >
-          SELL
-        </Button>
+          >
+            SELL
+          </Button>
+        )}
+      </div>
+      {params.get("session") && params.get("uid") && (
+        <div className="flex justify-center">
+          <Alert type="info" className="w-full">
+            <div className="flex flex-wrap items-center justify-between gap-4 text-white">
+              <p className={""}>You are currently in user's session</p>
+              <Button format="primary" onClick={onLeaveSession}>
+                Leave
+              </Button>
+            </div>
+          </Alert>
+        </div>
       )}
     </header>
   );
