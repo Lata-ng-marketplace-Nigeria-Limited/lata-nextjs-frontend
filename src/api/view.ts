@@ -65,7 +65,7 @@ export const getSellerAnalyticsApi = async ({
 };
 
 export const getAnalyticsClicksAndViews = async (
-  queries: SwitchedRoleQueries,
+  queries?: SwitchedRoleQueries,
 ): Promise<MonthlyAnalyticsResponse> => {
   const params = appendQueryParams(queries || {});
 

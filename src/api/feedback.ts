@@ -5,34 +5,49 @@ import {
   ICustomerFeedback,
   IFeedback,
 } from "@/interface/feedback";
-import { FetchMeta } from "@/interface/general";
+import { FetchMeta, SearchQuery } from "@/interface/general";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import { $http } from "@/service/axios";
-import { getApiUrl } from "@/utils";
+import { appendQueryParams, getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
 import { revalidateTag } from "next/cache";
 
 interface MessageLataApiInput {
   message: string;
+  queries: SwitchedRoleQueries;
 }
 
-export const messageLataApi = async (
-  payload: MessageLataApiInput,
-): Promise<{
+export const messageLataApi = async ({
+  message,
+  queries,
+}: MessageLataApiInput): Promise<{
   message: string;
 }> => {
+  const params = appendQueryParams(queries || {});
+  const payload = {
+    message,
+  };
   try {
-    const response = await $http.post("/feedbacks/message-lata", payload);
+    const response = await $http.post(
+      `/feedbacks/message-lata?${params}`,
+      payload,
+    );
     return response.data;
   } catch (error: any) {
     throw error.response || error;
   }
 };
 
-export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
+export const saveCustomerFeedback = async (
+  payload: ICustomerFeedback,
+  queries: SwitchedRoleQueries,
+) => {
+  const params = appendQueryParams(queries || {});
+
   try {
     const session = await getServerSession(authConfig);
-    const res = await fetch(getApiUrl("/feedbacks"), {
+    const res = await fetch(getApiUrl(`/feedbacks?${params}`), {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
@@ -62,7 +77,7 @@ export interface IFeedbackQuery {
 }
 
 export const getAllSellerFeedbacks = async (
-  query: IFeedbackQuery,
+  queries: IFeedbackQuery,
 ): Promise<{
   data: IFeedback[];
   meta: FetchMeta;
@@ -70,29 +85,11 @@ export const getAllSellerFeedbacks = async (
   totalSent?: number;
   isEmpty?: boolean;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
-    const params = new URLSearchParams();
-    params.append("page", query?.page);
-    if (query?.tab) {
-      params.append("tab", query?.tab);
-    }
-    if (query?.type) {
-      params.append("type", query?.type);
-    }
-
-    if (query?.uid) {
-      params.append("uid", query?.uid);
-    }
-    if (query?.sessionSwitch) {
-      params.append("sessionSwitch", query?.sessionSwitch);
-    }
-
-    if (query?.role) {
-      params.append("role", query?.role);
-    }
-
     const session = await getServerSession(authConfig);
-    const res = await fetch(getApiUrl(`/feedbacks?${params.toString()}`), {
+    const res = await fetch(getApiUrl(`/feedbacks?${params}`), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
@@ -113,22 +110,22 @@ export interface IGetProductFeedback {
   isEmpty?: boolean;
 }
 
+interface IGetProductFeedbackQueries extends SwitchedRoleQueries, SearchQuery {}
+
 export const getProductFeedback = async (
   productId: string,
-  page?: string,
+  queries: IGetProductFeedbackQueries,
 ): Promise<{
   data: IFeedback[];
   meta: FetchMeta;
   isEmpty?: boolean;
 }> => {
-  try {
-    const params = new URLSearchParams({
-      page: String(page) || "1",
-    });
+  const params = appendQueryParams(queries || {});
 
+  try {
     const session = await getServerSession(authConfig);
     const res = await fetch(
-      getApiUrl(`/feedbacks/product/${productId}?${params.toString()}`),
+      getApiUrl(`/feedbacks/product/${productId}?${params}`),
       {
         headers: {
           Authorization: `Bearer ${session?.token}`,
