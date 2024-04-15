@@ -170,7 +170,8 @@ const Header = ({ noSideMenu, role }: Props) => {
           <Alert type="info" className="w-full">
             <div className="flex flex-wrap items-center justify-between gap-4 text-white">
               <p className={""}>
-                You are currently in {sessionUser?.name || "another user"}'s
+                You are currently in {sessionUser?.name || "another user"}
+                {"'s"}
                 session
               </p>
               <Button format="primary" onClick={onLeaveSession}>
