@@ -83,10 +83,9 @@ const Header = ({ noSideMenu, role }: Props) => {
     if (params.get("uid")) {
       params.delete("uid");
     }
-    setIsSwitchingRole("false");
+    setIsSwitchingRole("");
     setSessionUser(null);
 
-    replace(`${pathname}?${params.toString()}`);
     push(previousUrl || LANDING_ROUTE);
   };
 

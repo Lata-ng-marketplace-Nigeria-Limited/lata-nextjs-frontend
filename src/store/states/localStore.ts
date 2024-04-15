@@ -120,11 +120,11 @@ export const useIsUserBlocked = create(
 );
 
 interface IRoleSwitchState {
-  isSwitchingRole: "true" | "false";
+  isSwitchingRole: "true" | "";
   sessionUser: User | null; // Represents the user whose session is being used
   searchQuery: string; // Captures the userId and role of the user being switched to
   previousUrl: string;
-  setIsSwitchingRole: (isSwitchingRole: "true" | "false") => void;
+  setIsSwitchingRole: (isSwitchingRole: "true" | "") => void;
   setSessionUser: (sessionUser: User | null) => void;
   setSearchQuery: (searchQuery: string) => void;
   setPreviousUrl: (previousUrl: string) => void;
@@ -133,11 +133,11 @@ interface IRoleSwitchState {
 export const useRoleSwitchStore = create(
   persist<IRoleSwitchState>(
     (set) => ({
-      isSwitchingRole: "false",
+      isSwitchingRole: "",
       sessionUser: null,
       searchQuery: "",
       previousUrl: "",
-      setIsSwitchingRole: (isSwitchingRole: "true" | "false") =>
+      setIsSwitchingRole: (isSwitchingRole: "true" | "") =>
         set({ isSwitchingRole }),
       setSessionUser: (sessionUser: User | null) =>
         set({ sessionUser }),
