@@ -52,10 +52,17 @@ export const saveCustomerFeedback = async (payload: ICustomerFeedback) => {
   }
 };
 
+export interface IFeedbackQuery {
+  tab: string;
+  type: FeedbackType;
+  page: string;
+  uid: string;
+  sessionSwitch: string;
+  role: string;
+}
+
 export const getAllSellerFeedbacks = async (
-  type: FeedbackType,
-  page: string,
-  tab: string,
+  query: IFeedbackQuery,
 ): Promise<{
   data: IFeedback[];
   meta: FetchMeta;
@@ -64,14 +71,24 @@ export const getAllSellerFeedbacks = async (
   isEmpty?: boolean;
 }> => {
   try {
-
     const params = new URLSearchParams();
-    params.append("page", page);
-    if (tab) {
-      params.append("tab", tab);
+    params.append("page", query?.page);
+    if (query?.tab) {
+      params.append("tab", query?.tab);
     }
-    if (type) {
-      params.append("type", type);
+    if (query?.type) {
+      params.append("type", query?.type);
+    }
+
+    if (query?.uid) {
+      params.append("uid", query?.uid);
+    }
+    if (query?.sessionSwitch) {
+      params.append("sessionSwitch", query?.sessionSwitch);
+    }
+
+    if (query?.role) {
+      params.append("role", query?.role);
     }
 
     const session = await getServerSession(authConfig);

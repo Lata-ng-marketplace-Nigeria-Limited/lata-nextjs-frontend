@@ -6,7 +6,7 @@ import { clickOutside, cn } from "@/utils";
 import { useSideMenuStore } from "@/store/states/sideMenuState";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { UserRole } from "@/interface/user";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useRoleSwitchStore } from "@/store/states/localStore";
 
 interface SideMenuProps {
@@ -18,11 +18,9 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
   const { isOpen, setIsOpen } = useSideMenuStore();
   const ref = useRef<HTMLElement>(null);
 
-  const pathname = usePathname();
   const [adminIsInUserMode, setAdminIsInUserMode] = useState(false);
 
   const searchParams = useSearchParams();
-  const router = useRouter();
   const params = new URLSearchParams(searchParams);
 
   const { isSwitchingRole, searchQuery } = useRoleSwitchStore();
@@ -37,7 +35,7 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
   useLayoutEffect(() => {
     if (role !== "ADMIN") return;
 
-    const session = params.get("session");
+    const session = params.get("sessionSwitched");
     const userId = params.get("uid");
 
     if (session && userId) {
@@ -45,7 +43,7 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
     } else {
       setAdminIsInUserMode(false);
     }
-  }, [params.get("session"), params.get("uid")]);
+  }, [params]);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -102,7 +100,7 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
               return;
             if (item.isAdmin && (role !== "ADMIN" || adminIsInUserMode)) return;
             if (item.isAuth && !isLoggedIn) return;
-            if (item.isStaff && role !== "STAFF" && !adminIsInUserMode) return;
+            if (item.isStaff && role !== "STAFF" && adminIsInUserMode) return;
             if (item.hideFromAdmin && role === "ADMIN" && !adminIsInUserMode)
               return;
             if (item.hideFromStaff && role === "STAFF" && !adminIsInUserMode)

@@ -5,6 +5,7 @@ import { LataLogo } from "@/components/atom/icons/Lata";
 import { cn } from "@/utils";
 import {
   DASHBOARD_PRODUCT_CREATE_ROUTE,
+  LANDING_ROUTE,
   SELLER_SIGN_UP_ROUTE,
 } from "@/constants/routes";
 import Link from "next/link";
@@ -21,6 +22,8 @@ import { UserRole } from "@/interface/user";
 import ProfileSummary from "../staff/ProfileSummary";
 import Alert from "../atom/Alert";
 import { useRoleSwitchStore } from "@/store/states/localStore";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   noSideMenu?: boolean;
@@ -33,16 +36,25 @@ const Header = ({ noSideMenu, role }: Props) => {
   const { setRegistrationForm } = useRegistrationFormStore();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { setIsSwitchingRole, setSessionUser } = useRoleSwitchStore();
+  const {
+    setIsSwitchingRole,
+    isSwitchingRole,
+    setSessionUser,
+    sessionUser,
+    previousUrl,
+    searchQuery,
+  } = useRoleSwitchStore();
 
   const { push, replace } = useRouter();
   const params = new URLSearchParams(searchParams);
+
+  const queries = useGetSwitchedRolesQueries();
 
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
-      const data = await getRecentSearchesApi();
+      const data = await getRecentSearchesApi(queries);
       setRecentSearches(data);
     })();
   }, []);
@@ -60,8 +72,13 @@ const Header = ({ noSideMenu, role }: Props) => {
   }, [push, setRegistrationForm, user]);
 
   const onLeaveSession = () => {
-    if (params.get("session")) {
-      params.delete("session");
+    if (params.get("role")) {
+      params.delete("role");
+    }
+    if (
+      params.get("sessionSwitched") as SwitchedRoleQueries["sessionSwitched"]
+    ) {
+      params.delete("sessionSwitched");
     }
     if (params.get("uid")) {
       params.delete("uid");
@@ -70,6 +87,14 @@ const Header = ({ noSideMenu, role }: Props) => {
     setSessionUser(null);
 
     replace(`${pathname}?${params.toString()}`);
+    push(previousUrl || LANDING_ROUTE);
+  };
+
+  const handleSearchSwitchUrl = (url: string) => {
+    if (isSwitchingRole) {
+      return `${url}?${searchQuery}`;
+    }
+    return url;
   };
 
   return (
@@ -95,7 +120,7 @@ const Header = ({ noSideMenu, role }: Props) => {
           <SearchProductForm recentSearches={recentSearches} />
         </div>
 
-        {role === "ADMIN" ? null : role === "STAFF" ? (
+        {role === "ADMIN" && !isSwitchingRole ? null : role === "STAFF" ? (
           <ProfileSummary
             name={user?.name as string}
             imgSrc={user?.avatar as string}
@@ -104,7 +129,7 @@ const Header = ({ noSideMenu, role }: Props) => {
           <Button
             type={"submit"}
             as={"link"}
-            href={DASHBOARD_PRODUCT_CREATE_ROUTE}
+            href={handleSearchSwitchUrl(DASHBOARD_PRODUCT_CREATE_ROUTE)}
             format={"primary"}
             onClick={(e) => {
               if (role === "BUYER") {
@@ -140,11 +165,14 @@ const Header = ({ noSideMenu, role }: Props) => {
           </Button>
         )}
       </div>
-      {params.get("session") && params.get("uid") && (
+      {params.get("sessionSwitched") && params.get("uid") && (
         <div className="flex justify-center">
           <Alert type="info" className="w-full">
             <div className="flex flex-wrap items-center justify-between gap-4 text-white">
-              <p className={""}>You are currently in user's session</p>
+              <p className={""}>
+                You are currently in {sessionUser?.name || "another user"}'s
+                session
+              </p>
               <Button format="primary" onClick={onLeaveSession}>
                 Leave
               </Button>

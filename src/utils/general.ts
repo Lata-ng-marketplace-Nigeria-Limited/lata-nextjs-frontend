@@ -298,3 +298,12 @@ export const showToast = (
     variant,
   });
 };
+
+export const appendQueryParams = (queries: Record<string, any>) => {
+  const params = new URLSearchParams();
+
+  for (const key in queries) {
+    params.append(key, queries[key]);
+  }
+  return params.toString();
+};

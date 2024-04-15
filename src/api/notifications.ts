@@ -1,7 +1,7 @@
 "use server";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { Notification } from "@/interface/Notification";
-import { getApiUrl } from "@/utils";
+import { appendQueryParams, getApiUrl } from "@/utils";
 import { User } from "@/interface/user";
 import { $http } from "@/service/axios";
 import { getServerSession } from "next-auth";
@@ -11,25 +11,27 @@ import {
   revalidateTag,
   unstable_noStore as noStore,
 } from "next/cache";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
-export const findAllNotificationsApi = async ({
-  page,
-  limit,
-}: SearchQuery): Promise<{
+export interface IFindAllNotificationsApiQueries
+  extends SwitchedRoleQueries,
+    SearchQuery {}
+export const findAllNotificationsApi = async (
+  queries: IFindAllNotificationsApiQueries,
+): Promise<{
   meta: FetchMeta;
   data: Notification[];
   userData: User;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     noStore();
     const session = await getServerSession(authConfig);
-    const response = await fetch(
-      getApiUrl(`/notifications?page=${page}&limit=${limit})`),
-      {
-        headers: { Authorization: "Bearer " + session?.token },
-        cache: "no-cache",
-      },
-    );
+    const response = await fetch(getApiUrl(`/notifications?${params})`), {
+      headers: { Authorization: "Bearer " + session?.token },
+      cache: "no-cache",
+    });
     if (!response.ok) {
       throw JSON.stringify(await response.json());
     }
@@ -41,11 +43,13 @@ export const findAllNotificationsApi = async ({
 
 export const readNotificationApi = async (
   id: string,
+  queries?: SwitchedRoleQueries,
 ): Promise<{
   message: string;
 }> => {
+  const params = appendQueryParams(queries || {});
   try {
-    const response = await $http.put("/notifications/read/" + id);
+    const response = await $http.put(`/notifications/read?${params}` + id);
     revalidatePath("/notifications");
     revalidateTag("user_tag");
     return response.data;
@@ -54,11 +58,12 @@ export const readNotificationApi = async (
   }
 };
 
-export const readAllNotificationApi = async (): Promise<{
+export const readAllNotificationApi = async (queries?: SwitchedRoleQueries,): Promise<{
   message: string;
 }> => {
+  const params = appendQueryParams(queries || {});
   try {
-    const response = await $http.put("/notifications/read-all");
+    const response = await $http.put(`/notifications/read-all?${params}`);
     revalidatePath("/notifications");
     revalidateTag("user_tag");
     return response.data;

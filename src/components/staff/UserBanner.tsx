@@ -25,7 +25,7 @@ const UserBanner = (props: Props) => {
   const { user } = useUser();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { setIsSwitchingRole, setSessionUser, setSearchQuery } =
+  const { setIsSwitchingRole, setSessionUser, setSearchQuery, setPreviousUrl } =
     useRoleSwitchStore();
 
   const handleSwitchRole = () => {
@@ -33,31 +33,34 @@ const UserBanner = (props: Props) => {
 
     const params = new URLSearchParams(searchParams);
 
-    params.set("session", props.role.toLowerCase());
+    params.set("sessionSwitched", "true");
+    params.set("role", props.role.toLowerCase());
     params.set("uid", props.userId);
     setIsSwitchingRole("true");
     setSessionUser(props.user);
     setSearchQuery(params.toString());
+    setPreviousUrl(pathname);
 
     replace(`${pathname}?${params.toString()}`);
     push(`${LANDING_ROUTE}?${params.toString()}`);
   };
 
   const handleBtnClick = () => {
-    if (props.role === "SELLER") {
-      push(`${VIEW_SELLERS_ROUTE}/${props.userId}/shop`);
-      return;
-    }
+    // if (props.role === "SELLER") {
+    //   push(`${VIEW_SELLERS_ROUTE}/${props.userId}/shop`);
+    //   return;
+    // }
+    setIsMessage(true);
 
-    if (
-      props.role === "STAFF" &&
-      props.btnText?.toLowerCase().includes("message")
-    ) {
-      setIsMessage(true);
-      return;
-    } else {
-      props.onBtnClick?.();
-    }
+    // if (
+    //   props.role === "STAFF" &&
+    //   props.btnText?.toLowerCase().includes("message")
+    // ) {
+    //   setIsMessage(true);
+    //   return;
+    // } else {
+    //   props.onBtnClick?.();
+    // }
   };
 
   return (

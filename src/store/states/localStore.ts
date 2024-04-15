@@ -123,9 +123,11 @@ interface IRoleSwitchState {
   isSwitchingRole: "true" | "false";
   sessionUser: User | null; // Represents the user whose session is being used
   searchQuery: string; // Captures the userId and role of the user being switched to
+  previousUrl: string;
   setIsSwitchingRole: (isSwitchingRole: "true" | "false") => void;
   setSessionUser: (sessionUser: User | null) => void;
   setSearchQuery: (searchQuery: string) => void;
+  setPreviousUrl: (previousUrl: string) => void;
 }
 
 export const useRoleSwitchStore = create(
@@ -134,11 +136,13 @@ export const useRoleSwitchStore = create(
       isSwitchingRole: "false",
       sessionUser: null,
       searchQuery: "",
+      previousUrl: "",
       setIsSwitchingRole: (isSwitchingRole: "true" | "false") =>
         set({ isSwitchingRole }),
       setSessionUser: (sessionUser: User | null) =>
         set({ sessionUser }),
       setSearchQuery: (searchQuery: string) => set({ searchQuery }),
+      setPreviousUrl: (previousUrl: string) => set({ previousUrl }),
     }),
     {
       name: "app.role-switch-state",

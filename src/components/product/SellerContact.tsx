@@ -9,6 +9,7 @@ import AppAvatar from "@molecule/Avatar";
 import Button from "@atom/Button";
 import SendMessage from "@/components/input/SendMessage";
 import { generateSellerAnalyticsApi } from "@/api/view";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   type: "compact" | "expanded";
@@ -23,6 +24,8 @@ export default function SellerContact(props: Props) {
   const [messageSent, setMessageSent] = useState(false);
   const { push: nav } = useRouter();
   const { toast } = useToast();
+
+  const switchedRolesQueries = useGetSwitchedRolesQueries();
 
   const handleSendMessage = () => {
     setTypeMessage(true);
@@ -52,7 +55,8 @@ export default function SellerContact(props: Props) {
       await generateSellerAnalyticsApi(
         "MESSAGE",
         props.productId || "",
-        props.productOwnerId || ""
+        props.productOwnerId || "",
+        switchedRolesQueries
       );
       window.open(
         `https://wa.me/${formatNo}?text=${window.location.origin}/product/${props.productId}%0A%0A%0AHi, I'm interested in this product on Lata.ng!`,
@@ -62,7 +66,8 @@ export default function SellerContact(props: Props) {
       await generateSellerAnalyticsApi(
         "PHONE",
         props.productId || "",
-        props.productOwnerId || ""
+        props.productOwnerId || "",
+        switchedRolesQueries
       );
       makePhoneCall(formatNo);
     }
