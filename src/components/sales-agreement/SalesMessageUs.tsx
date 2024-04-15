@@ -8,16 +8,20 @@ import { useToast } from "@components/ui/use-toast";
 import { useState } from "react";
 import TextAreaInput from "@components/input/TextAreaInput";
 import { messageLataApi } from "@/api/feedback";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 export const SalesMessageUs = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  const queries = useGetSwitchedRolesQueries();
   const handleSend = async () => {
     setLoading(true);
     try {
       await messageLataApi({
         message: message,
+        queries,
       });
       toast({
         variant: "success",
@@ -38,7 +42,7 @@ export const SalesMessageUs = () => {
   return (
     <MobileBorderArea
       showBorderInDesktop
-      className={cn(`px-6 sm:px-[60px] py-6 w-full h-max`)}
+      className={cn(`h-max w-full px-6 py-6 sm:px-[60px]`)}
       removePadding
     >
       <HeaderText>Message LATA.ng</HeaderText>
@@ -62,7 +66,7 @@ export const SalesMessageUs = () => {
       <Button
         disabled={!message || loading}
         format={"primary"}
-        className={"block ml-auto mt-[40px]"}
+        className={"ml-auto mt-[40px] block"}
         onClick={handleSend}
       >
         Send message

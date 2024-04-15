@@ -15,7 +15,7 @@ import { revalidateTag } from "next/cache";
 
 interface MessageLataApiInput {
   message: string;
-  queries: SwitchedRoleQueries;
+  queries?: SwitchedRoleQueries;
 }
 
 export const messageLataApi = async ({
