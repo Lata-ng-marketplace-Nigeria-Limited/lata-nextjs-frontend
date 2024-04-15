@@ -33,7 +33,7 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
   };
 
   useLayoutEffect(() => {
-    if (role !== "ADMIN") return;
+    if (!(role === "ADMIN" || role === "STAFF")) return;
 
     const session = params.get("sessionSwitched");
     const userId = params.get("uid");
