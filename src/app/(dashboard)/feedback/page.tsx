@@ -1,4 +1,4 @@
-import { getAllSellerFeedbacks } from "@/api/feedback";
+import { IFeedbackQuery, getAllSellerFeedbacks } from "@/api/feedback";
 import { GetUser } from "@/components/atom/GetUser";
 import FeedbackHeader from "@/components/feedback/FeedbackHeader";
 import SellerFeedbackList from "@/components/feedback/SellerFeedbackList";
@@ -12,24 +12,25 @@ export const metadata: Metadata = {
   title: "Feedback",
 };
 
-const Page = async ({
-  searchParams,
-}: {
-  searchParams?: {
-    page: string;
-    tab: string;
-  };
-}) => {
+interface ISearchParams extends IFeedbackQuery {}
+
+const Page = async ({ searchParams }: { searchParams?: ISearchParams }) => {
   const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {
     redirect("/auth/login");
   }
 
-  const page = searchParams?.page || "";
-  const tab = searchParams?.tab || "";
+  const queries: ISearchParams = {
+    page: searchParams?.page || "",
+    tab: searchParams?.tab || "received",
+    uid: searchParams?.uid || "",
+    sessionSwitch: searchParams?.sessionSwitch || "",
+    role: searchParams?.role || "",
+    type: "PRODUCT",
+  };
 
-  const feedbacks = await getAllSellerFeedbacks("PRODUCT", page, tab);
+  const feedbacks = await getAllSellerFeedbacks(queries);
 
   return (
     <>

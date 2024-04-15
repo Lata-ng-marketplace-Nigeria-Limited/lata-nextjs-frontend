@@ -19,6 +19,7 @@ import { saveCustomerFeedback } from "@/api/feedback";
 import { ICustomerFeedback } from "@/interface/feedback";
 import { toast } from "../ui/use-toast";
 import { useUser } from "@/hooks/useUser";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   openFeedbackModal: boolean;
@@ -30,6 +31,8 @@ const FeedbackModal = (props: Props) => {
   const [loading, setLoading] = React.useState(false);
   const [productRating, setProductRating] = React.useState<3 | 2 | 1 | 0>(0);
   const { user } = useUser();
+
+  const queries = useGetSwitchedRolesQueries()
 
   const createFeedbackSchema = z.object({
     description: z
@@ -68,7 +71,7 @@ const FeedbackModal = (props: Props) => {
         sender: user?.name,
       };
 
-      const res = await saveCustomerFeedback(payload);
+      const res = await saveCustomerFeedback(payload, queries);
 
       if (res.success) {
         toast({

@@ -12,6 +12,7 @@ import { cn, getFormErrorObject, showToast } from "@/utils";
 import TextAreaInput from "@components/input/TextAreaInput";
 import Button from "@atom/Button";
 import { generateSellerAnalyticsApi } from "@/api/view";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   setTypeMessage?: React.Dispatch<SetStateAction<boolean>>;
@@ -28,12 +29,15 @@ export default function SendMessage(props: Props) {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const queries = useGetSwitchedRolesQueries();
+
   const handleCountMessageClick = async () => {
     try {
       await generateSellerAnalyticsApi(
         "MESSAGE",
         props.productId || "",
         props.productOwnerId || "",
+        queries,
       );
     } catch (error) {
       console.log(error);

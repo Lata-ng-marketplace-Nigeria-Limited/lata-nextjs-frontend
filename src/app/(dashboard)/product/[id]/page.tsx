@@ -6,6 +6,7 @@ import { ViewProductSkeleton } from "@components/skeleton/ViewProductSkeleton";
 import { Suspense } from "react";
 import { ViewProduct } from "@components/product/ViewProduct";
 import { unstable_noStore } from "next/cache";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 type Props = {
   params: { id: string };
@@ -37,14 +38,23 @@ export async function generateMetadata(
   };
 }
 
+interface ISearchParms extends SwitchedRoleQueries {}
+
 export default async function Page({
   params: { id },
+  searchParams,
 }: {
   params: {
     id: string;
   };
+  searchParams?: ISearchParms;
 }) {
   unstable_noStore();
+  const queries: ISearchParms = {
+    role: searchParams?.role || "",
+    sessionSwitched: searchParams?.sessionSwitched || "",
+    uid: searchParams?.uid || "",
+  };
   return (
     <div>
       <Suspense>
@@ -52,7 +62,7 @@ export default async function Page({
       </Suspense>
 
       <Suspense key={id} fallback={<ViewProductSkeleton />}>
-        <ViewProduct id={id} />
+        <ViewProduct id={id} queries={queries}/>
       </Suspense>
     </div>
   );

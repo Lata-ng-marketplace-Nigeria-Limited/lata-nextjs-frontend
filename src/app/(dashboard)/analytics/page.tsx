@@ -10,19 +10,17 @@ import ProductInsights from "@/components/analytics/ProductInsights";
 import AnalyticsTopCardSkeleton from "@/components/skeleton/AnalyticsTopCardSkeleton";
 import AnalyticsChartAreaSkeleton from "@/components/skeleton/AnalyticsChartAreaSkeleton";
 import ProductInsightsLoadingSkeleton from "@/components/skeleton/AnaltyicsProductInsightsSkeleton";
-
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export const metadata: Metadata = {
   title: "Analytics",
 };
 
-const page = async ({
-  searchParams,
-}: {
-  searchParams?: {
-    month?: string;
-  };
-}) => {
+interface ISearchParams extends SwitchedRoleQueries {
+  month?: string;
+}
+
+const page = async ({ searchParams }: { searchParams?: ISearchParams }) => {
   function getMonthInGMTPlus1() {
     const date = new Date();
     const utcMonth = date.getUTCMonth(); // Get current UTC month
@@ -34,7 +32,14 @@ const page = async ({
   }
 
   const session = await getServerSession(authConfig);
-  const query = searchParams?.month || getMonthInGMTPlus1().toString();
+
+  const month = searchParams?.month || getMonthInGMTPlus1().toString();
+
+  const queries: SwitchedRoleQueries = {
+    role: searchParams?.role || "",
+    sessionSwitched: searchParams?.sessionSwitched || "",
+    uid: searchParams?.uid || "",
+  };
 
   return (
     <div>
@@ -42,15 +47,15 @@ const page = async ({
       <HeaderSubText>Hi {session?.user?.name}, Welcome back!</HeaderSubText>
 
       <Suspense fallback={<AnalyticsTopCardSkeleton />}>
-        <AnalyticsCardsWrapper />
+        <AnalyticsCardsWrapper queries={queries} />
       </Suspense>
 
       <Suspense fallback={<ProductInsightsLoadingSkeleton />}>
-        <ProductInsights selectedMonth={query} />
+        <ProductInsights selectedMonth={month} />
       </Suspense>
 
-      <Suspense key={query} fallback={<AnalyticsChartAreaSkeleton />}>
-        <AnalyticsChartArea selectedMonth={query} />
+      <Suspense key={month} fallback={<AnalyticsChartAreaSkeleton />}>
+        <AnalyticsChartArea selectedMonth={month} queries={queries} />
       </Suspense>
     </div>
   );

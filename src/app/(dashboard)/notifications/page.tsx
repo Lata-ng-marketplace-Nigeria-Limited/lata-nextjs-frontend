@@ -6,17 +6,19 @@ import { Suspense } from "react";
 import { NotificationWrapper } from "@components/notifications/NotificationWrapper";
 import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
+import { SearchQuery } from "@/interface/general";
 
 export const metadata: Metadata = {
   title: "Notifications",
 };
 
+interface ISearchParams extends SwitchedRoleQueries, SearchQuery {}
+
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
-    page?: string;
-  };
+  searchParams?: ISearchParams;
 }) {
   unstable_noStore();
   const session = await getServerSession(authConfig);
@@ -24,6 +26,12 @@ export default async function Page({
   if (!session || !session.user) {
     redirect("/auth/login");
   }
+  const queries: ISearchParams = {
+    role: searchParams?.role || "",
+    sessionSwitched: searchParams?.sessionSwitched || "",
+    uid: searchParams?.uid || "",
+    page: searchParams?.page || "1",
+  };
 
   return (
     <div>
@@ -31,7 +39,7 @@ export default async function Page({
         <GetUser />
       </Suspense>
       <Suspense key={page} fallback={<p>Loading..</p>}>
-        <NotificationWrapper page={page} />
+        <NotificationWrapper queries={queries} />
       </Suspense>
     </div>
   );

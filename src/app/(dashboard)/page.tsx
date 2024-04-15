@@ -9,6 +9,7 @@ import AdminDashboardWrapper from "@/components/admin/AdminWrapper";
 import StaffDashboard from "@/components/staff/StaffDashboard";
 import HeaderText from "@/components/atom/HeaderText";
 import HeaderSubText from "@/components/atom/HeaderSubText";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export const metadata = {
   title: "Buy, sell, or rent products or search for your dream job on Lata.ng",
@@ -27,24 +28,28 @@ export const metadata = {
   },
 };
 
+interface ISearchParams extends SwitchedRoleQueries {
+  category?: string;
+  subcategory?: string;
+  page?: string;
+  month?: string;
+}
+
 export default async function Home({
   searchParams,
 }: {
-  searchParams?: {
-    category?: string;
-    subcategory?: string;
-    page?: string;
-    month?: string;
-  };
+  searchParams?: ISearchParams;
 }) {
   const session = await getServerSession(authConfig);
   const query = searchParams?.category || "";
   const subcategory = searchParams?.subcategory || "";
   const selectedMonth = searchParams?.month || "";
+  const isAdminInuserSession =
+    searchParams?.sessionSwitched && searchParams?.uid;
 
   return (
     <main className="">
-      {session?.role === "ADMIN" ? (
+      {session?.role === "ADMIN" && !isAdminInuserSession ? (
         <Suspense fallback={<p>Loading...</p>}>
           <AdminDashboardWrapper
             username={session?.user?.name || "Admin"}

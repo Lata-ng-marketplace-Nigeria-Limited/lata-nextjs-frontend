@@ -21,6 +21,7 @@ import { cn, formatPrice } from "@/utils";
 import ProductCard from "@components/product/ProductCard";
 import FeedbacksForProduct from "../feedback/FeedbacksForProduct";
 import { useRouter } from "next/navigation";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   product: Product | undefined;
@@ -34,6 +35,8 @@ export default function ViewNotOwnProduct(props: Props) {
   const [modalButtonLoading, setModalButtonLoading] = useState(false);
   const { toast } = useToast();
   const { replace, refresh } = useRouter();
+  const queries = useGetSwitchedRolesQueries();
+
 
   const handleSendToReview = async () => {
     if (!props.product?.id) return;
@@ -81,7 +84,7 @@ export default function ViewNotOwnProduct(props: Props) {
       onConfirm: async () => {
         setModalButtonLoading(true);
         try {
-          await deleteAProductApi(product.id);
+          await deleteAProductApi(product.id, queries);
           toast({
             title: "Product Deleted",
             description: "Product has been deleted",

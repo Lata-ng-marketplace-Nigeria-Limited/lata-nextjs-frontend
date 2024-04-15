@@ -5,8 +5,14 @@ import { redirect } from "next/navigation";
 import { findAProductApi } from "@/api/product";
 import { Suspense } from "react";
 import { CreateOrEditProduct } from "@components/product/CreateOrEditProduct";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
-export default async function EditProduct({ id }: { id: string }) {
-  const data = await findAProductApi(id);
+interface Props {
+  id: string;
+  queries: SwitchedRoleQueries;
+}
+
+export default async function EditProduct({ id, queries }: Props) {
+  const data = await findAProductApi(id, queries);
   return <CreateOrEditProduct data={data} />;
 }

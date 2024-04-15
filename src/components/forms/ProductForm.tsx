@@ -29,6 +29,8 @@ import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
 import { useUser } from "@/hooks/useUser";
 import { useLocation } from "@/hooks/useLocation";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import { useRoleSwitchStore } from "@/store/states/localStore";
 
 interface Props {
   product?: Product;
@@ -88,6 +90,17 @@ export default function ProductForm({
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const { user } = useUser();
+
+  const queries = useGetSwitchedRolesQueries();
+
+  const { isSwitchingRole, sessionUser, searchQuery } = useRoleSwitchStore();
+
+  const handleSearchSwitchUrl = (url: string) => {
+    if (isSwitchingRole) {
+      return `${url}?${searchQuery}`;
+    }
+    return url;
+  };
 
   useEffect(() => {
     if (!product) {
@@ -176,12 +189,18 @@ export default function ProductForm({
     if (imageHasError) return;
     setLoading(true);
 
+    const isAdminOrStaff = user?.role === "ADMIN" || user?.role === "STAFF";
+
     const payload: CreateProductApiInput = {
       ...values,
       files: files!,
       price: Number(values.price),
       userId:
-        user?.role === "ADMIN" || user?.role === "STAFF" ? sellerId : user?.id,
+        isAdminOrStaff && !isSwitchingRole
+          ? sellerId
+          : isAdminOrStaff && isSwitchingRole
+            ? sessionUser?.id
+            : user?.id,
       discount: Number(values.discount || 0),
       selectedImage: selectedPhotos?.fileName,
       selectedCategory: categories.find(
@@ -210,9 +229,9 @@ export default function ProductForm({
     try {
       let productData = product;
       if (product) {
-        await updateAProductApi(product.id, payload);
+        await updateAProductApi(product.id, payload, queries);
       } else {
-        const res = await createAProductApi(payload);
+        const res = await createAProductApi(payload, queries);
         productData = res.product;
 
         if (res.msg) {
@@ -225,7 +244,7 @@ export default function ProductForm({
         }
       }
       setTimeout(() => {
-        nav(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id);
+        nav(handleSearchSwitchUrl(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id));
       }, 800);
     } catch (error: any) {
       setLoading(false);

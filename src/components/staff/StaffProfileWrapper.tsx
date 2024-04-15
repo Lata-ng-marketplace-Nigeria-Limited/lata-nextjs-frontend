@@ -32,6 +32,7 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
             name={staffResponse?.data?.name}
             role={staffResponse?.data?.role}
             userId={staffId}
+            user={staffResponse?.data}
           />
 
           <UserDetailContainer heading="About">

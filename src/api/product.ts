@@ -1,6 +1,11 @@
 "use server";
-import { FindAProductData, IProductStatusCount, Product, SavedProduct } from "@/interface/products";
-import { createFormData, getApiUrl } from "@/utils";
+import {
+  FindAProductData,
+  IProductStatusCount,
+  Product,
+  SavedProduct,
+} from "@/interface/products";
+import { appendQueryParams, createFormData, getApiUrl } from "@/utils";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
@@ -8,6 +13,7 @@ import { revalidatePath, revalidateTag, unstable_noStore } from "next/cache";
 import { $http, $httpFile } from "@/service/axios";
 import { User } from "@/interface/user";
 import { ADMIN_REVIEW_PRODUCTS_ROUTE } from "@/constants/routes";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export const getDashboardProductsApi = async (
   query?: string,
@@ -49,15 +55,21 @@ export const getDashboardProductsApi = async (
 
 export const findAProductApi = async (
   productId: string,
+  queries?: SwitchedRoleQueries,
 ): Promise<FindAProductData | null> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
-    const res = await fetch(getApiUrl(`/products/${productId}`), {
-      headers: {
-        Authorization: "Bearer " + session?.token,
+    const res = await fetch(
+      getApiUrl(`/products/${productId}?${params.toString()}`),
+      {
+        headers: {
+          Authorization: "Bearer " + session?.token,
+        },
       },
-    });
+    );
     if (!res.ok) {
       return null;
     }
@@ -113,12 +125,15 @@ export const searchProductsApi = async ({
   }
 };
 
+interface IFindAllMyProductsApiQueries extends SwitchedRoleQueries {
+  page?: number | string;
+  limit?: number | string;
+  tab?: string;
+}
 
-export const findAllMyProductsApi = async ({
-  page,
-  limit,
-  tab,
-}: SearchQuery & { tab?: string }): Promise<{
+export const findAllMyProductsApi = async (
+  queries?: IFindAllMyProductsApiQueries,
+): Promise<{
   data: Product[];
   meta: FetchMeta;
   message: string;
@@ -128,13 +143,9 @@ export const findAllMyProductsApi = async ({
   try {
     unstable_noStore();
     const session = await getServerSession(authConfig);
-    const params = new URLSearchParams();
+    const params = appendQueryParams(queries || {});
 
-    if (tab) {
-      params.append("tab", tab || "");
-    }
-    params.append("page", String(page || 1));
-    params.append("limit", String(limit || 10));
+    console.log("params", params);
 
     const res = await fetch(getApiUrl(`/products/my?${params.toString()}`), {
       headers: {
@@ -153,21 +164,22 @@ export const findAllMyProductsApi = async ({
   }
 };
 
-export const findMySavedProductsApi = async ({
-  page,
-  limit,
-}: SearchQuery): Promise<{
+interface IFindMySavedProductsApi extends SwitchedRoleQueries {
+  page?: number | string;
+  limit?: number | string;
+}
+
+export const findMySavedProductsApi = async (
+  queries: IFindMySavedProductsApi,
+): Promise<{
   meta: FetchMeta;
   data: SavedProduct[];
   message: string;
   isEmpty: boolean;
 }> => {
-  try {
-    const params = new URLSearchParams({
-      page: String(page) || "1",
-      limit: String(limit) || "10",
-    });
+  const params = appendQueryParams(queries || {});
 
+  try {
     const session = await getServerSession(authConfig);
     const res = await fetch(getApiUrl(`/products/saved?${params.toString()}`), {
       headers: {
@@ -186,9 +198,14 @@ export const findMySavedProductsApi = async ({
   }
 };
 
-export const deleteAProductApi = async (id: string) => {
+export const deleteAProductApi = async (
+  id: string,
+  queries?: SwitchedRoleQueries,
+) => {
+  const params = appendQueryParams(queries || {});
+
   try {
-    const res = await $http.delete(`products/${id}`);
+    const res = await $http.delete(`products/${id}?${params}`);
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -230,9 +247,12 @@ interface CreateProductApiOutput {
 
 export const createAProductApi = async (
   payload: FormData,
+  queries?: SwitchedRoleQueries,
 ): Promise<CreateProductApiOutput> => {
+  const params = appendQueryParams(queries || {});
+
   try {
-    const res = await $httpFile.post(`products`, payload);
+    const res = await $httpFile.post(`products?${params}`, payload);
     return res.data;
   } catch (error: any) {
     console.log(error?.response?.data?.error);
@@ -243,13 +263,16 @@ export const createAProductApi = async (
 export const updateAProductApi = async (
   id: string,
   payload: Partial<CreateProductApiInput>,
+  queries?: SwitchedRoleQueries,
 ): Promise<{
   message: string;
   product: Product;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.put(`products/${id}`, formData);
+    const res = await $httpFile.put(`products/${id}?${params}`, formData);
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -258,12 +281,15 @@ export const updateAProductApi = async (
 
 export const saveAProductApi = async (
   productId: string,
+  queries?: SwitchedRoleQueries,
 ): Promise<{
   message: string;
   userData: User;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
-    const res = await $http.get(`products/save/${productId}`);
+    const res = await $http.get(`products/save/${productId}?${params}`);
     revalidatePath("/saved");
     revalidateTag("user_tag");
     return res.data;
@@ -274,12 +300,16 @@ export const saveAProductApi = async (
 
 export const unSaveAProductApi = async (
   productId: string,
+  queries?: SwitchedRoleQueries,
+
 ): Promise<{
   message: string;
   userData: User;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
-    const res = await $http.get(`products/un-save/${productId}`);
+    const res = await $http.get(`products/un-save/${productId}?${params}`);
     revalidatePath("/saved");
     revalidateTag("user_tag");
     return res.data;
@@ -288,10 +318,12 @@ export const unSaveAProductApi = async (
   }
 };
 
-export const getRecentSearchesApi = async (): Promise<Array<string>> => {
+export const getRecentSearchesApi = async (queries?: SwitchedRoleQueries,): Promise<Array<string>> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     const session = await getServerSession(authConfig);
-    const res = await fetch(getApiUrl(`products/searches`), {
+    const res = await fetch(getApiUrl(`products/searches?${params}`), {
       headers: {
         Authorization: "Bearer " + session?.token,
       },
@@ -320,10 +352,13 @@ export interface GetNewProductsApiInput extends SearchQuery {
 
 export const getNewProductsApi = async (
   payload: GetNewProductsApiInput,
+  // queries?: SwitchedRoleQueries,
 ): Promise<{
   data: Product[];
   meta: FetchMeta;
 }> => {
+  // const params = appendQueryParams(queries || {});
+
   try {
     const query = new URLSearchParams(payload as any).toString();
     const res = await $http.get(`products/new-products?${query}`);

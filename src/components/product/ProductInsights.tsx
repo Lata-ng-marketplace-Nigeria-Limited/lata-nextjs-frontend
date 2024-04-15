@@ -2,7 +2,7 @@
 import { Product } from "@/interface/products";
 import { useUser } from "@hooks/useUser";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@components/ui/use-toast";
 import {
   DASHBOARD_MY_SHOP_ROUTE,
@@ -20,6 +20,7 @@ import { EyeIcon } from "@atom/icons/Eye";
 import { SavedIcon } from "@atom/icons/Saved";
 import { ProfileIcon } from "@atom/icons/Profile";
 import { CallIcon } from "../atom/icons/Call";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   product?: Product;
@@ -31,11 +32,13 @@ export default function ProductInsights(props: Props) {
   const { push: nav } = useRouter();
   const { toast } = useToast();
 
+  const queries = useGetSwitchedRolesQueries();
+
   const handleDelete = async () => {
     if (!props.product?.id) return;
     setLoading(true);
     try {
-      await deleteAProductApi(props.product?.id || "");
+      await deleteAProductApi(props.product?.id || "", queries);
       toast({
         title: "Product deleted successfully",
         variant: "success",
