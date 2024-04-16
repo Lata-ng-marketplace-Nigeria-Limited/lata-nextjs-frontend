@@ -49,14 +49,14 @@ export default async function Home({
 
   return (
     <main className="">
-      {session?.role === "ADMIN" && !isAdminInuserSession ? (
+      {(session?.role === "ADMIN" && !isAdminInuserSession) ? (
         <Suspense fallback={<p>Loading...</p>}>
           <AdminDashboardWrapper
             username={session?.user?.name || "Admin"}
             month={selectedMonth}
           />
         </Suspense>
-      ) : session?.role === "STAFF" && !isAdminInuserSession ? (
+      ) : (session?.role === "STAFF" && !isAdminInuserSession) ? (
         <Suspense fallback={<p>Loading...</p>}>
           <HeaderText title>Staff Dashboard</HeaderText>
           <HeaderSubText>Hi {session?.user?.name}, Welcome back!</HeaderSubText>
