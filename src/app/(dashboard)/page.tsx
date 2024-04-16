@@ -56,7 +56,7 @@ export default async function Home({
             month={selectedMonth}
           />
         </Suspense>
-      ) : session?.role === "STAFF" && !isAdminInuserSession ? (
+      ) : session?.role === "STAFF" ? (
         <Suspense fallback={<p>Loading...</p>}>
           <HeaderText title>Staff Dashboard</HeaderText>
           <HeaderSubText>Hi {session?.user?.name}, Welcome back!</HeaderSubText>
