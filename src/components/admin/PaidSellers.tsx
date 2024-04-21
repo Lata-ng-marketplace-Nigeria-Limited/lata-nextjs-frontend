@@ -221,7 +221,7 @@ const PaidSellersSmallerScreenTable = (props: ChildProps) => {
                   </p>
                   <p>{formatPrice(seller?.transaction_actual_amount)}</p>
                 </div>
-                <p className="text-left  text-xs">{duration(seller)}</p>
+                <div className="text-left  text-xs">{duration(seller)}</div>
               </div>
             </>
           ),
