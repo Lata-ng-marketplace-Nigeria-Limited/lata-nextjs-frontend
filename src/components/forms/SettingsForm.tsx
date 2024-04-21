@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@hooks/useUser";
-import { UserRole } from "@/interface/user";
+import { User, UserRole } from "@/interface/user";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { settingsSchema } from "@/store/schemas/settingsSchema";
@@ -31,6 +31,8 @@ import {
   updateUserProfileApi,
   UpdateUserProfileInput,
 } from "@/api/auth.client";
+import { useRoleSwitchStore } from "@/store/states/localStore";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   image?: string;
@@ -45,6 +47,7 @@ export const SettingsForm = ({ image }: Props) => {
   const [hasUpdatedPhone, setHasUpdatedPhone] = useState(false);
   const [updatePayload, setUpdatePayload] = useState<UpdateUserProfileInput>();
   const [role, setRole] = useState<UserRole>("BUYER");
+  const [userDataInfo, setUserDataInfo] = useState<User | null>(null);
   const [notificationSettings, setNotificationSettings] = useState({
     feature: false,
     subscription: false,
@@ -68,13 +71,21 @@ export const SettingsForm = ({ image }: Props) => {
   });
   const { user, updateUser } = useUser();
   const { toast } = useToast();
+  const { sessionSwitched } = useGetSwitchedRolesQueries();
+  const { sessionUser } = useRoleSwitchStore();
 
   useEffect(() => {
     if (!user?.email) return;
     if (hasMounted) return;
+    if (sessionSwitched && sessionUser) {
+      setUserDataInfo(sessionUser);
+    } else {
+      setUserDataInfo(user);
+    }
+    console.log("sessionuser 85", sessionUser?.settings);
     setHasMounted(true);
     setLoading(false);
-  }, [hasMounted, user?.email]);
+  }, [user?.email]);
 
   useEffect(() => {
     // updates the form values AFTER profile update from server
@@ -82,13 +93,13 @@ export const SettingsForm = ({ image }: Props) => {
     if (!hasMounted) return;
     if (loading) return;
 
-    setAvatar(user?.avatar || "");
-    setValue("name", user?.name || "");
-    setValue("email", user?.email || "");
-    setValue("phoneNumber", user?.phoneNumber || "");
-    setValue("address", user?.address || "");
-    setValue("aboutBusiness", user?.aboutBusiness || "");
-    setRole(user?.role || "BUYER");
+    setAvatar(userDataInfo?.avatar || "");
+    setValue("name", userDataInfo?.name || "");
+    setValue("email", userDataInfo?.email || "");
+    setValue("phoneNumber", userDataInfo?.phoneNumber || "");
+    setValue("address", userDataInfo?.address || "");
+    setValue("aboutBusiness", userDataInfo?.aboutBusiness || "");
+    setRole(userDataInfo?.role || "BUYER");
 
     const notifSettings = user?.settings.find(
       (set) => set.columnName === "USER_NOTIFICATION_SETTING",
@@ -102,7 +113,7 @@ export const SettingsForm = ({ image }: Props) => {
     }
 
     setHasUpdatedFormAfterProfileUpdate(true);
-  }, [user, hasMounted, loading, hasUpdatedFormAfterProfileUpdate, setValue]);
+  }, [user, hasMounted, loading, hasUpdatedFormAfterProfileUpdate]);
 
   const onSubmit = async (values: z.infer<typeof settingsSchema>) => {
     if (role === "SELLER") {
@@ -131,31 +142,42 @@ export const SettingsForm = ({ image }: Props) => {
 
     if (imageHasError) return;
 
-    const payload: UpdateUserProfileInput = {
-      ...values,
-      ...(file?.[0] ? { file: file?.[0] } : {}),
-      ...notificationSettings,
-    };
+    let payload: UpdateUserProfileInput;
 
-    if (
-      values.phoneNumber &&
-      values.phoneNumber !== user?.phoneNumber &&
-      !hasUpdatedPhone
-    ) {
-      const phoneNumberSetting = user?.settings.find((set) => {
-        return set.columnName === USER_VERIFIED_PHONE;
-      });
+    if (sessionSwitched) {
+      payload = {
+        ...values,
+        ...(file?.[0] ? { file: file?.[0] } : {}),
+      };
+    } else {
+      payload = {
+        ...values,
+        ...(file?.[0] ? { file: file?.[0] } : {}),
+        ...notificationSettings,
+      };
+    }
 
+    if(!sessionSwitched){
       if (
-        !phoneNumberSetting ||
-        (phoneNumberSetting &&
-          phoneNumberSetting?.columnValue?.phoneNumber !==
-            formatNigerianPhoneNumber(values.phoneNumber)) ||
-        (phoneNumberSetting && !phoneNumberSetting?.columnValue?.verified)
+        values.phoneNumber &&
+        values.phoneNumber !== user?.phoneNumber &&
+        !hasUpdatedPhone
       ) {
-        setUpdatePayload(payload);
-        setShowModal(true);
-        return;
+        const phoneNumberSetting = user?.settings.find((set) => {
+          return set.columnName === USER_VERIFIED_PHONE;
+        });
+  
+        if (
+          !phoneNumberSetting ||
+          (phoneNumberSetting &&
+            phoneNumberSetting?.columnValue?.phoneNumber !==
+              formatNigerianPhoneNumber(values.phoneNumber)) ||
+          (phoneNumberSetting && !phoneNumberSetting?.columnValue?.verified)
+        ) {
+          setUpdatePayload(payload);
+          setShowModal(true);
+          return;
+        }
       }
     }
 

@@ -1,6 +1,7 @@
-import { createFormData } from "@/utils";
+import { appendQueryParams, createFormData } from "@/utils";
 import { $http } from "@/service/axios";
 import { User } from "@/interface/user";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 interface BuyerRegisterApiInput {
   role: "BUYER";
@@ -85,13 +86,16 @@ export interface UpdateUserProfileInput {
 
 export const updateUserProfileApi = async (
   payload: UpdateUserProfileInput,
+  queries?: SwitchedRoleQueries,
 ): Promise<{
   message: string;
   userData: User;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     const formData = createFormData(payload);
-    const { data } = await $http.put("users", formData);
+    const { data } = await $http.put(`users?${params}`, formData);
     return data;
   } catch (error: any) {
     throw error.response || error;

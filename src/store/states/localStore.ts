@@ -13,14 +13,14 @@ export interface ILocalStore {
   categories?: Category[];
   subscription: Subscription[];
   loading: boolean;
-  location: State[];
+  nigerianStates: State[];
   setUser: (user: User) => void;
   updateUser: (user: Partial<User>) => void;
   setChats: (chats: Chat[]) => void;
   setCategories: (categories: Category[]) => void;
   setSubscription: (subscription: Subscription[]) => void;
   setLoading: (loading: boolean) => void;
-  setLocations: (location: State[]) => void;
+  setNigerianStates: (nigerianStates: State[]) => void;
   clear: () => void;
 }
 
@@ -32,14 +32,6 @@ export const useGeneralStore = create<{
   setHasSetCategories: (val) => set({ hasSetCategories: val }),
 }));
 
-export const useLocationStore = create<{
-  hasSetLocation: boolean;
-  setHasSetLocation: (val: boolean) => void;
-}>((set) => ({
-  hasSetLocation: false,
-  setHasSetLocation: (val) => set({ hasSetLocation: val }),
-}));
-
 export const useLocalStore = create(
   persist<ILocalStore>(
     (set, get) => ({
@@ -48,7 +40,7 @@ export const useLocalStore = create(
       categories: [],
       subscription: [],
       loading: true,
-      location: [],
+      nigerianStates: [],
       setUser: (user: User) => set({ user }),
       updateUser: (user: Partial<User>) =>
         set({ user: { ...get().user, ...(user as any) } }),
@@ -56,7 +48,7 @@ export const useLocalStore = create(
       setCategories: (categories: Category[]) => set({ categories }),
       setSubscription: (subscription: Subscription[]) => set({ subscription }),
       setLoading: (loading: boolean) => set({ loading }),
-      setLocations: (location: State[]) => set({ location }),
+      setNigerianStates: (nigerianStates: State[]) => set({ nigerianStates }),
       clear: () =>
         set({
           user: undefined,
