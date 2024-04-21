@@ -29,7 +29,7 @@ const UserBanner = (props: Props) => {
     useRoleSwitchStore();
 
   const handleSwitchRole = () => {
-    if (user?.role !== "ADMIN") return;
+    if (user?.role !== "ADMIN" && user?.role !== "STAFF") return;
 
     const params = new URLSearchParams(searchParams);
 
