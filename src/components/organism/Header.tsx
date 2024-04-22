@@ -2,7 +2,7 @@
 
 import Button from "@/components/atom/Button";
 import { LataLogo } from "@/components/atom/icons/Lata";
-import { cn } from "@/utils";
+import { cn, handleSearchSwitchUrl } from "@/utils";
 import {
   DASHBOARD_PRODUCT_CREATE_ROUTE,
   LANDING_ROUTE,
@@ -89,12 +89,6 @@ const Header = ({ noSideMenu, role }: Props) => {
     push(previousUrl || LANDING_ROUTE);
   };
 
-  const handleSearchSwitchUrl = (url: string) => {
-    if (isSwitchingRole) {
-      return `${url}?${searchQuery}`;
-    }
-    return url;
-  };
 
   return (
     <header className="shadow-header sticky top-0 z-30  h-[50px]  bg-white px-1  xs:px-2.5 sm:px-4 md:h-[60px] md:px-6">
@@ -128,7 +122,11 @@ const Header = ({ noSideMenu, role }: Props) => {
           <Button
             type={"submit"}
             as={"link"}
-            href={handleSearchSwitchUrl(DASHBOARD_PRODUCT_CREATE_ROUTE)}
+            href={handleSearchSwitchUrl(
+              DASHBOARD_PRODUCT_CREATE_ROUTE,
+              isSwitchingRole,
+              searchQuery,
+            )}
             format={"primary"}
             onClick={(e) => {
               if (role === "BUYER") {

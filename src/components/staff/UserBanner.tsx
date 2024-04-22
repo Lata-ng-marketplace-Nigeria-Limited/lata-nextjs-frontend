@@ -29,7 +29,7 @@ const UserBanner = (props: Props) => {
     useRoleSwitchStore();
 
   const handleSwitchRole = () => {
-    if (!(user?.role === "ADMIN" && user?.role === "STAFF") ) return;
+    if (!(user?.role === "ADMIN" || user?.role === "STAFF") ) return;
 
     const params = new URLSearchParams(searchParams);
 
@@ -46,21 +46,7 @@ const UserBanner = (props: Props) => {
   };
 
   const handleBtnClick = () => {
-    // if (props.role === "SELLER") {
-    //   push(`${VIEW_SELLERS_ROUTE}/${props.userId}/shop`);
-    //   return;
-    // }
     setIsMessage(true);
-
-    // if (
-    //   props.role === "STAFF" &&
-    //   props.btnText?.toLowerCase().includes("message")
-    // ) {
-    //   setIsMessage(true);
-    //   return;
-    // } else {
-    //   props.onBtnClick?.();
-    // }
   };
 
   return (

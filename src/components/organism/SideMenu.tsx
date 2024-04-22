@@ -2,7 +2,7 @@
 
 import NavLink from "@/components/molecule/NavLink";
 import { sideMenu } from "@/store/data/sideMenu";
-import { clickOutside, cn } from "@/utils";
+import { clickOutside, cn, handleSearchSwitchUrl } from "@/utils";
 import { useSideMenuStore } from "@/store/states/sideMenuState";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { UserRole } from "@/interface/user";
@@ -24,13 +24,6 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
   const params = new URLSearchParams(searchParams);
 
   const { isSwitchingRole, searchQuery } = useRoleSwitchStore();
-
-  const handleSearchSwitchUrl = (url: string) => {
-    if (isSwitchingRole) {
-      return `${url}?${searchQuery}`;
-    }
-    return url;
-  };
 
   useLayoutEffect(() => {
     if (!(role === "ADMIN" || role === "STAFF")) return;
@@ -109,7 +102,7 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
             return (
               <NavLink
                 key={i}
-                href={handleSearchSwitchUrl(item.href)}
+                href={handleSearchSwitchUrl(item.href, isSwitchingRole, searchQuery)}
                 icon={item.icon}
                 fill={item.fill}
               >

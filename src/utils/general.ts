@@ -307,3 +307,14 @@ export const appendQueryParams = (queries: Record<string, any>) => {
   }
   return params.toString();
 };
+
+export const handleSearchSwitchUrl = (
+  url: string,
+  isSwitchingRole: string,
+  searchQuery: string,
+) => {
+  if (isSwitchingRole) {
+    return `${url}?${searchQuery}`;
+  }
+  return url;
+};

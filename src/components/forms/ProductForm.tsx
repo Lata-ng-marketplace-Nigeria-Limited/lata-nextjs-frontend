@@ -7,7 +7,7 @@ import { Product, SubCategory, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn, convertBytesToMB, getFormErrorObject, showToast } from "@/utils";
+import { cn, convertBytesToMB, getFormErrorObject, handleSearchSwitchUrl, showToast } from "@/utils";
 import { useRouter } from "next/navigation";
 import TextInput from "@components/input/TextInput";
 import { SelectInput } from "@components/input/SelectInput";
@@ -28,7 +28,7 @@ import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
 import { useUser } from "@/hooks/useUser";
-import { useLocation } from "@/hooks/useLocation";
+import { useNigerianStates } from "@/hooks/useNigerianStates";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 import { useRoleSwitchStore } from "@/store/states/localStore";
 
@@ -85,7 +85,7 @@ export default function ProductForm({
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
-  const { location, statesSelectData } = useLocation();
+  const { nigerianStates, statesSelectData } = useNigerianStates();
   const [hasSelectedState, setHasSelectedState] = useState(false);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -94,13 +94,6 @@ export default function ProductForm({
   const queries = useGetSwitchedRolesQueries();
 
   const { isSwitchingRole, sessionUser, searchQuery } = useRoleSwitchStore();
-
-  const handleSearchSwitchUrl = (url: string) => {
-    if (isSwitchingRole) {
-      return `${url}?${searchQuery}`;
-    }
-    return url;
-  };
 
   useEffect(() => {
     if (!product) {
@@ -244,7 +237,7 @@ export default function ProductForm({
         }
       }
       setTimeout(() => {
-        nav(handleSearchSwitchUrl(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id));
+        nav(handleSearchSwitchUrl(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id, isSwitchingRole, searchQuery));
       }, 800);
     } catch (error: any) {
       setLoading(false);
@@ -399,7 +392,7 @@ export default function ProductForm({
   };
 
   const handleCities = (selectedState: string) => {
-    const getSelectedState = location.find(
+    const getSelectedState = nigerianStates.find(
       (state) => state.id === selectedState,
     );
 
@@ -422,7 +415,7 @@ export default function ProductForm({
   };
 
   const onSelectState = (selectedState: string) => {
-    const findState = location.find((loc) => loc.id === selectedState);
+    const findState = nigerianStates.find((state) => state.id === selectedState);
 
     if (!findState) return;
     setState(findState?.name);

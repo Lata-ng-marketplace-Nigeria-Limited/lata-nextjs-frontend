@@ -8,9 +8,10 @@ import {
 import { User } from "@/interface/user";
 import { $http } from "@/service/axios";
 import { FetchMeta } from "@/interface/general";
-import { getApiUrl } from "@/utils";
+import { appendQueryParams, getApiUrl } from "@/utils";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export interface GetSubscriptionPaymentCredentialsInput {
   planId: string;
@@ -39,14 +40,18 @@ export interface PaymentCredentials {
 
 export const getSubscriptionPaymentCredentialsApi = async (
   payload?: GetSubscriptionPaymentCredentialsInput,
+  queries?: SwitchedRoleQueries,
+
 ): Promise<{
   credentials: PaymentCredentials;
   userData?: User;
 }> => {
   if (!payload) throw new Error("Payload is required");
+  const params = appendQueryParams(queries || {});
+
   try {
     const session = await getServerSession(authConfig);
-    const res = await fetch(getApiUrl("/payments/subscribe"), {
+    const res = await fetch(getApiUrl(`/payments/subscribe?${params}`), {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
@@ -82,15 +87,19 @@ export const getWalletPaymentCredentialsApi = async (payload: {
 
 export const verifyPaymentApi = async (
   reference: string,
+  queries?: SwitchedRoleQueries,
+
 ): Promise<{
   message: string;
   transaction: Transaction;
   userData: User;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     const session = await getServerSession(authConfig);
     const res = await $http.post(
-      `/transactions`,
+      `/transactions?${params}`,
       { reference },
       {
         headers: {

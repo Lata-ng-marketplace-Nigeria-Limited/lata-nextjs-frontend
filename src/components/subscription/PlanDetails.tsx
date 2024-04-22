@@ -10,6 +10,9 @@ import { CheckCircleIcon } from "@atom/icons/CheckCircle";
 import { PlanFeature } from "@components/subscription/PlanFeature";
 import { DiscountButton } from "@molecule/DiscountButton";
 import PaymentOption from "@organism/PaymentOption";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import { User } from "@/interface/user";
+import { useRoleSwitchStore } from "@/store/states/localStore";
 
 interface Props {
   months: number[];
@@ -35,6 +38,16 @@ export const PlanDetails = ({
   const [plan, setPlan] = useState<Plan>();
   const [disableClick, setDisableClick] = useState(false);
   const { user } = useUser();
+  const [userData, setUserData] = useState<User | null>(null);
+  const { sessionSwitched } = useGetSwitchedRolesQueries();
+  const { sessionUser } = useRoleSwitchStore();
+
+  useEffect(() => {
+    if (!sessionSwitched) {
+      setUserData(user as User);
+    }
+    setUserData(sessionUser as User);
+  }, [showModal]);
 
   useEffect(() => {
     const feat = selectedPlans?.[0]?.features || [];
@@ -55,8 +68,8 @@ export const PlanDetails = ({
     setPrice(priceAmt || 0);
     setDiscount(discountAmt || 0);
 
-    if (user?.subscriptionStatus === "ACTIVE") {
-      if (user?.planId === selectedPlan?.id) {
+    if (userData?.subscriptionStatus === "ACTIVE") {
+      if (userData?.planId === selectedPlan?.id) {
         setText("Active");
         setDiscount(0);
         setDisableClick(true);
@@ -65,52 +78,52 @@ export const PlanDetails = ({
 
     if (planName === "Free") {
       setDisableClick(true);
-      if (user?.subscriptionStatus !== "ACTIVE") {
+      if (userData?.subscriptionStatus !== "ACTIVE") {
         setText("Active");
       } else {
         setText(`Inactive`);
       }
     }
-  }, [selectedPlans, selectedMonth, planName, user]);
+  }, [selectedPlans, selectedMonth, planName, userData]);
 
   return (
     <MobileBorderArea
       className={cn(`
         max-w-[375px]
-        py-6
         px-4
+        py-6
         sm:px-6
-        tablet:py-6
         tablet:px-8
+        tablet:py-6
     `)}
       removePadding
       showBorderInDesktop
     >
       {months.length ? (
-        <div className={"flex gap-x-1 sm:gap-x-2 mb-6"}>
+        <div className={"mb-6 flex gap-x-1 sm:gap-x-2"}>
           {months.map((month, i) => (
             <Button
               format={"secondary"}
               key={i}
               className={cn(
                 `
-                  w-full 
-                  p-0 
-                  sm:p-0 
-                  py-1 
-                  px-1
-                  xxs:px-1.5
-                  sm:px-2 
                   w-fit 
-                  border-[#AE8CD0]
-                  rounded-[4px]
+                  w-full 
+                  rounded-[4px] 
+                  border-[#AE8CD0] 
+                  p-0
+                  px-1
+                  py-1 
+                  text-[10px] 
                   font-normal
-                  text-[10px]
-                  sm:text-[12px]
                   text-grey9
+                  xxs:px-1.5
+                  sm:p-0
+                  sm:px-2
+                  sm:text-[12px]
                 `,
                 {
-                  "bg-[#D6C3E9] border-[#D6C3E9] hover:bg-[#D6C3E9]":
+                  "border-[#D6C3E9] bg-[#D6C3E9] hover:bg-[#D6C3E9]":
                     selectedMonth === month,
                 },
               )}
