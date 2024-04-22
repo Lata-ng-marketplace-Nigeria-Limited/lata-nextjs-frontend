@@ -26,7 +26,7 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
   const { isSwitchingRole, searchQuery } = useRoleSwitchStore();
 
   useLayoutEffect(() => {
-    if (role !== "ADMIN" && role !== "STAFF") return;
+    if (!(role === "ADMIN" || role === "STAFF")) return;
 
     const session = params.get("sessionSwitched");
     const userId = params.get("uid");
