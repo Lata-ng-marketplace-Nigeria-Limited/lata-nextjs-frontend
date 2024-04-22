@@ -22,6 +22,8 @@ import ProductCard from "@components/product/ProductCard";
 import FeedbacksForProduct from "../feedback/FeedbacksForProduct";
 import { useRouter } from "next/navigation";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import { useNigerianStates } from "@/hooks/useNigerianStates";
+import { selectedCity, selectedState } from "@/utils/location";
 
 interface Props {
   product: Product | undefined;
@@ -36,6 +38,8 @@ export default function ViewNotOwnProduct(props: Props) {
   const { toast } = useToast();
   const { replace, refresh } = useRouter();
   const queries = useGetSwitchedRolesQueries();
+  const { nigerianStates } = useNigerianStates();
+
 
 
   const handleSendToReview = async () => {
@@ -260,8 +264,8 @@ export default function ViewNotOwnProduct(props: Props) {
                 price={formatPrice(products.price)}
                 productName={products.name}
                 description={products.description}
-                state={products?.state}
-                city={products?.city}
+                state={selectedState(nigerianStates, products?.state)}
+                city={selectedCity(nigerianStates, products?.state, products?.city) || products?.city}
                 imageSrc={products.files?.[0]?.url}
                 product={products}
                 createProductPreview={false}

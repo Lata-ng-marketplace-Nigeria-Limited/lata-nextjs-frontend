@@ -7,6 +7,8 @@ import SafetyTips from "@components/product/SafetyTips";
 import ProductGridList from "@atom/ProductGridList";
 import ProductCard from "@components/product/ProductCard";
 import AboutSeller from "@components/seller-profile/AboutSeller";
+import { useNigerianStates } from "@/hooks/useNigerianStates";
+import { selectedCity, selectedState } from "@/utils/location";
 
 interface Props {
   seller: User;
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export const SellerProfile = ({ seller, productId }: Props) => {
+  const { nigerianStates } = useNigerianStates();
 
   return (
     <>
@@ -68,8 +71,8 @@ export const SellerProfile = ({ seller, productId }: Props) => {
                   price={formatPrice(product.price)}
                   productName={product.name}
                   description={product.description}
-                  state={product.state}
-                  city={product.city}
+                  state={selectedState(nigerianStates, product.state) || product?.state}
+                  city={selectedCity(nigerianStates, product.state, product.city) || product?.city}
                   imageSrc={product.files?.[0]?.url}
                   product={product}
                   createProductPreview={false}

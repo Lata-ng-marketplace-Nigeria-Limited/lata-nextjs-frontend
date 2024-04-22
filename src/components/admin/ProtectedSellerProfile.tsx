@@ -7,6 +7,8 @@ import { formatPrice } from "@/utils";
 import FeedbackContent from "@components/feedback/FeedbackContent";
 import { fetchAllMangersApi, getProtectedSellerApi } from "@/api/admin";
 import SellerActionBtns from "./SellerActionBtns";
+import { getAllStatesApi } from "@/api/location";
+import { selectedCity, selectedState } from "@/utils/location";
 
 interface Props {
   sellerId: string;
@@ -15,6 +17,7 @@ interface Props {
 const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
   const managers = await fetchAllMangersApi(query);
   const response = await getProtectedSellerApi({ sellerId });
+  const statesData = await getAllStatesApi();
 
   const planDuration = () => {
     const duration = Number(response?.data?.plan?.duration);
@@ -154,8 +157,14 @@ const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={product.state}
-                    city={product.city}
+                    state={selectedState(statesData?.data, product.state)}
+                    city={
+                      selectedCity(
+                        statesData?.data,
+                        product.state,
+                        product.city,
+                      ) || product.city
+                    }
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}
@@ -186,8 +195,14 @@ const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={product.state}
-                    city={product.city}
+                    state={selectedState(statesData?.data, product.state)}
+                    city={
+                      selectedCity(
+                        statesData?.data,
+                        product.state,
+                        product.city,
+                      ) || product.city
+                    }
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}
