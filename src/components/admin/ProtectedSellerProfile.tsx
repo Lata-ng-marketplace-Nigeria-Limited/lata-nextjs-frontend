@@ -157,7 +157,7 @@ const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={selectedState(statesData?.data, product.state)}
+                    state={selectedState(statesData?.data, product.state) || product?.state}
                     city={
                       selectedCity(
                         statesData?.data,
@@ -195,7 +195,7 @@ const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={selectedState(statesData?.data, product.state)}
+                    state={selectedState(statesData?.data, product.state) || product?.state}
                     city={
                       selectedCity(
                         statesData?.data,
