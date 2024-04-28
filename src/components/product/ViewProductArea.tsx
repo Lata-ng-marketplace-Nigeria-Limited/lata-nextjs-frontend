@@ -5,11 +5,13 @@ import { useUser } from "@hooks/useUser";
 import { ViewProductSkeleton } from "@components/skeleton/ViewProductSkeleton";
 import ViewOwnProduct from "@components/product/ViewOwnProduct";
 import ViewNotOwnProduct from "@components/product/ViewNotOwnProduct";
+import { State } from "@/interface/location";
 
 interface Props {
   data: FindAProductData | null;
+  statesInNigeria: State[];
 }
-export const ViewProductArea = ({ data }: Props) => {
+export const ViewProductArea = ({ data, statesInNigeria }: Props) => {
   const { updateUser } = useUser();
   const [product, setProduct] = useState<Product>();
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
@@ -50,6 +52,7 @@ export const ViewProductArea = ({ data }: Props) => {
             <ViewNotOwnProduct
               product={product}
               similarProducts={similarProducts}
+              statesInNigeria={statesInNigeria}
             />
           )}
         </>

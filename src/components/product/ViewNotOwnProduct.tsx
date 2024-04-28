@@ -22,12 +22,13 @@ import ProductCard from "@components/product/ProductCard";
 import FeedbacksForProduct from "../feedback/FeedbacksForProduct";
 import { useRouter } from "next/navigation";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
-import { useNigerianStates } from "@/hooks/useNigerianStates";
+import { State } from "@/interface/location";
 import { selectedCity, selectedState } from "@/utils/location";
 
 interface Props {
   product: Product | undefined;
   similarProducts: Product[];
+  statesInNigeria: State[]
 }
 
 export default function ViewNotOwnProduct(props: Props) {
@@ -36,9 +37,8 @@ export default function ViewNotOwnProduct(props: Props) {
   const [modalProps, setModalProps] = useState<PromptProps>({});
   const [modalButtonLoading, setModalButtonLoading] = useState(false);
   const { toast } = useToast();
-  const { replace, refresh } = useRouter();
+  const { refresh } = useRouter();
   const queries = useGetSwitchedRolesQueries();
-  const { nigerianStates } = useNigerianStates();
 
 
 
@@ -181,7 +181,7 @@ export default function ViewNotOwnProduct(props: Props) {
   return (
     <>
       <ViewProductContainer>
-        <ProductDetails product={props.product!} />
+        <ProductDetails product={props.product!} statesInNigeria={props.statesInNigeria}/>
 
         <ProductAsideArea>
           <SellerContact
@@ -264,8 +264,8 @@ export default function ViewNotOwnProduct(props: Props) {
                 price={formatPrice(products.price)}
                 productName={products.name}
                 description={products.description}
-                state={selectedState(nigerianStates, products?.state)}
-                city={selectedCity(nigerianStates, products?.state, products?.city) || products?.city}
+                state={selectedState(props.statesInNigeria, products?.state) || products?.state}
+                city={selectedCity(props.statesInNigeria, products?.state, products?.city) || products?.city}
                 imageSrc={products.files?.[0]?.url}
                 product={products}
                 createProductPreview={false}

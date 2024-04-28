@@ -6,15 +6,15 @@ import { MapPinIcon } from "@atom/icons/MapPin";
 import Hr from "@atom/Hr";
 import { useDiscount } from "@/hooks/useDiscount";
 import PercentageOff from "../atom/PercentageOff";
-import { useNigerianStates } from "@/hooks/useNigerianStates";
 import { selectedState } from "@/utils/location";
+import { State } from "@/interface/location";
 
 interface Props {
   product: Product;
+  statesInNigeria: State[]
 }
 
 export default function ProductDetails(props: Props) {
-  const { nigerianStates } = useNigerianStates();
 
   const priceDetails = {
     amount: props.product?.price,
@@ -71,7 +71,7 @@ export default function ProductDetails(props: Props) {
           <p className={"flex shrink-0 items-center gap-x-[0.125rem]"}>
             <MapPinIcon className={cn(`h-4 w-4 `)} pathClass={"stroke-grey5"} />
             <span className={cn(`text-sm text-grey5`)}>
-              {selectedState(nigerianStates, props.product?.state)}
+              {selectedState(props.statesInNigeria, props.product?.state)}
             </span>
           </p>
         </div>

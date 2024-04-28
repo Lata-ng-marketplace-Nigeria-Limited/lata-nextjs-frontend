@@ -20,16 +20,16 @@ export const useUser = () => {
   const { setUserIsBlocked } = useIsUserBlocked();
 
   useEffect(() => {
-    if (!user) return;
 
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
 
     if (
-      new Date() > new Date(user?.expires_at) ||
-      user?.isBlocked ||
-      !user?.expires_at
+      user &&
+      (new Date() > new Date(user?.expires_at) ||
+        user?.isBlocked ||
+        !user?.expires_at)
     ) {
       logoutUser(clear, true);
     }
