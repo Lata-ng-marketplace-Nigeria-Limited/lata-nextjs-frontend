@@ -13,6 +13,7 @@ import {
   cn,
   createPaystackConfig,
   formatPrice,
+  handleSearchSwitchUrl,
   openPaystackModal,
 } from "@/utils";
 import { Toggle } from "@molecule/Toggle";
@@ -20,6 +21,9 @@ import { NumberTextInput } from "@components/input/NumberTextInput";
 import Button from "@atom/Button";
 import PayWithTransfer from "@organism/PayWithTransfer";
 import { TRANSACTION_ROUTE } from "@/constants/routes";
+import { User } from "@/interface/user";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import { useRoleSwitchStore } from "@/store/states/localStore";
 
 interface Props {
   setShowModal?: React.Dispatch<SetStateAction<boolean>>;
@@ -40,11 +44,22 @@ export default function PaymentOption({
   const [useWallet, setUseWallet] = useState(false);
   const [amount, setAmount] = useState("");
   const [amountErrorMsg, setAmountErrorMsg] = useState("");
+  const [userDataInfo, setUserDataInfo] = useState<User | null>(null);
   const { push: nav } = useRouter();
   const { toast } = useToast();
   const { user, updateUser } = useUser();
+  const { sessionSwitched, uid, role } = useGetSwitchedRolesQueries();
+  const { sessionUser, searchQuery, isSwitchingRole } = useRoleSwitchStore();
+
+  const queries = { uid, sessionSwitched, role };
 
   useEffect(() => {
+    if (sessionSwitched) {
+      setUserDataInfo(sessionUser);
+    } else {
+      setUserDataInfo(user as User);
+    }
+
     if (transfer) {
       setPreventOverlayClose(true);
     } else {
@@ -55,7 +70,13 @@ export default function PaymentOption({
   const handlePaymentSuccess = useCallback(
     (transaction: Transaction) => {
       setShowModal?.(false);
-      nav(TRANSACTION_ROUTE + "/" + transaction.id);
+      nav(
+        handleSearchSwitchUrl(
+          TRANSACTION_ROUTE + "/" + transaction.id,
+          isSwitchingRole,
+          searchQuery,
+        ),
+      );
       toast({
         variant: "success",
         title: "Payment Successful! You are now on " + plan?.name,
@@ -77,6 +98,7 @@ export default function PaymentOption({
       try {
         const { transaction, userData } = await verifyPaymentApi(
           response.reference!,
+          queries,
         );
         await updateUser(userData);
         handlePaymentSuccess(transaction);
@@ -120,7 +142,7 @@ export default function PaymentOption({
         type: isTransfer ? "transfer" : "paystack",
         planId: plan.id,
         useWallet,
-      });
+      }, queries);
       setLoading(false);
       setPaymentResponse(credentials);
 
@@ -218,12 +240,12 @@ export default function PaymentOption({
         >
           <h2
             className={cn(`
-              text-grey10
-              font-medium
-              text-sm
-              sm:text-base
               mb-6
               text-center
+              text-sm
+              font-medium
+              text-grey10
+              sm:text-base
             `)}
           >
             {isWalletCredit
@@ -242,11 +264,11 @@ export default function PaymentOption({
               />
             </div>
           ) : (
-            <div className={"flex flex-col gap-y-2 mb-4"}>
+            <div className={"mb-4 flex flex-col gap-y-2"}>
               <p className={"text-sm"}>
                 Account balance:{" "}
                 <span className={cn(`font-medium`)}>
-                  {formatPrice(user?.wallet?.balance || 0)}
+                  {formatPrice(userDataInfo?.wallet?.balance || 0)}
                 </span>
               </p>
 
@@ -254,7 +276,9 @@ export default function PaymentOption({
                 label={"Pay with balance"}
                 labelClass={"text-grey7"}
                 disabled={
-                  user?.wallet?.balance ? user?.wallet?.balance <= 0 : true
+                  userDataInfo?.wallet?.balance
+                    ? userDataInfo?.wallet?.balance <= 0
+                    : true
                 }
                 checked={useWallet}
                 setChecked={setUseWallet}

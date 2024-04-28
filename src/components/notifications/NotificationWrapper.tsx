@@ -1,17 +1,18 @@
-import { findAllNotificationsApi } from "@/api/notifications";
+import {
+  IFindAllNotificationsApiQueries,
+  findAllNotificationsApi,
+} from "@/api/notifications";
 import { NotificationArea } from "@components/notifications/NotificationArea";
 
 interface Props {
-  page?: string;
+  queries: IFindAllNotificationsApiQueries;
 }
 
-export const NotificationWrapper = async ({ page }: Props) => {
-  const data = await findAllNotificationsApi({
-    page,
-  });
+export const NotificationWrapper = async ({ queries }: Props) => {
+  const data = await findAllNotificationsApi(queries);
 
   return (
-    <div className={"h-full relative"}>
+    <div className={"relative h-full"}>
       <NotificationArea notifications={data.data} meta={data.meta} />
     </div>
   );

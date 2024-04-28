@@ -1,12 +1,14 @@
 import { searchProductsApi } from "@/api/product";
 import LazyLoadProducts from "@components/product/LazyLoadProducts";
 import Paginate from "@components/input/Paginate";
+import { State } from "@/interface/location";
 
 interface Props {
   search: string;
   location?: string;
   page: string;
   token?: string;
+  statesInNigeria: State[]
 }
 
 export const SearchProducts = async ({
@@ -14,6 +16,7 @@ export const SearchProducts = async ({
   page,
   location,
   token,
+  statesInNigeria
 }: Props) => {
   const res = await searchProductsApi({
     search,
@@ -32,6 +35,7 @@ export const SearchProducts = async ({
       ) : (
         <div>
           <LazyLoadProducts
+          statesInNigeria={statesInNigeria}
             products={res.data || []}
             offset={4}
             showLimit={4}

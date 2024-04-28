@@ -5,6 +5,7 @@ import { SearchProducts } from "@components/product/SearchProducts";
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
+import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
   title: "Search Products",
@@ -25,6 +26,8 @@ export default async function Page({
   const location = searchParams?.loc || "";
   const page = searchParams?.page || "";
 
+  const statesInNigeriaData = await getAllStatesApi();
+
   return (
     <div className={"flex flex-col gap-y-2"}>
       <HeaderText title>Products</HeaderText>
@@ -35,6 +38,7 @@ export default async function Page({
           location={location}
           page={page}
           token={session?.token}
+          statesInNigeria={statesInNigeriaData?.data || []}
         />
       </Suspense>
     </div>

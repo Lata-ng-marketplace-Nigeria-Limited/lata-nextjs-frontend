@@ -8,17 +8,23 @@ import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { SavedProducts } from "@components/saved/SavedProducts";
 import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
+import { findMySavedProductsApi } from "@/api/product";
+import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
   title: "Saved Products",
 };
 
+interface ISearchParams extends SwitchedRoleQueries {
+  page?: string;
+  limit?: string;
+}
+
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
-    page?: string;
-  };
+  searchParams?: ISearchParams;
 }) {
   unstable_noStore();
   const session = await getServerSession(authConfig);
@@ -26,6 +32,17 @@ export default async function Page({
   if (!session || !session.user) {
     redirect("/auth/login");
   }
+  const queries: ISearchParams = {
+    page: searchParams?.page || "",
+    role: searchParams?.role || "",
+    sessionSwitched: searchParams?.sessionSwitched || "",
+    uid: searchParams?.uid || "",
+    limit: searchParams?.limit || "",
+  };
+
+  const res = await findMySavedProductsApi(queries);
+  const statesInNigeriaData = await getAllStatesApi();
+
   return (
     <div>
       <Suspense>
@@ -33,7 +50,11 @@ export default async function Page({
       </Suspense>
       <HeaderText title>Saved Products</HeaderText>
       <Suspense key={page} fallback={<ProductListSkeleton />}>
-        <SavedProducts page={page} />
+        <SavedProducts
+          data={res.data}
+          meta={res.meta}
+          statesInNigeria={statesInNigeriaData?.data || []}
+        />
       </Suspense>
     </div>
   );

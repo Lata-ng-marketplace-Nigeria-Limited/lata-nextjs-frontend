@@ -1,8 +1,7 @@
 import { $httpFile } from "@/service/axios";
 import { Product } from "@/interface/products";
-import { createFormData } from "@/utils";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { DASHBOARD_PRODUCT_ROUTE } from "@/constants/routes";
+import { appendQueryParams, createFormData } from "@/utils";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export interface CreateProductApiInput {
   name: string;
@@ -31,10 +30,13 @@ interface CreateProductApiOutput {
 }
 export const createAProductApi = async (
   payload: CreateProductApiInput,
+  queries?: SwitchedRoleQueries,
 ): Promise<CreateProductApiOutput> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.post(`products`, formData);
+    const res = await $httpFile.post(`products?${params}`, formData);
     return res.data;
   } catch (error: any) {
     console.log(error?.response?.data?.error);
@@ -45,13 +47,16 @@ export const createAProductApi = async (
 export const updateAProductApi = async (
   id: string,
   payload: Partial<CreateProductApiInput>,
+  queries?: SwitchedRoleQueries,
 ): Promise<{
   message: string;
   product: Product;
 }> => {
+  const params = appendQueryParams(queries || {});
+
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.put(`products/${id}`, formData);
+    const res = await $httpFile.put(`products/${id}?${params}`, formData);
     return res.data;
   } catch (error: any) {
     throw error.response || error;

@@ -9,6 +9,7 @@ import { cn } from "@/utils";
 import EmptyFeedback from "./EmptyFeedback";
 import { useUser } from "@/hooks/useUser";
 import FeedbackContentSkeleton from "../skeleton/FeedbackContentSkeleton";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 
 interface Props {
   page?: string;
@@ -21,9 +22,11 @@ const FeedbacksForProduct = (props: Props) => {
   const [productFeedback, setProductFeedback] =
     React.useState<IGetProductFeedback | null>(null);
 
+    const queries = useGetSwitchedRolesQueries()
+
   React.useEffect(() => {
     const fetchFeedback = async () => {
-      const feedback = await getProductFeedback(props.product?.id);
+      const feedback = await getProductFeedback(props.product?.id, queries);
       setProductFeedback(feedback);
     };
 

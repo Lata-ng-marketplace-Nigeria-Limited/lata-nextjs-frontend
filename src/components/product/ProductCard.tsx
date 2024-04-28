@@ -1,5 +1,11 @@
 "use client";
-import { cn, formatPrice, safeParseJSON, truncateText } from "@/utils";
+import {
+  cn,
+  formatPrice,
+  handleSearchSwitchUrl,
+  safeParseJSON,
+  truncateText,
+} from "@/utils";
 import { MapPinIcon } from "@atom/icons/MapPin";
 import { SavedIcon } from "@atom/icons/Saved";
 import Button from "@atom/Button";
@@ -16,14 +22,15 @@ import Link from "next/link";
 import { IMAGE_BLUR_URL } from "@/constants/others";
 import { generateSellerAnalyticsApi } from "@/api/view";
 import PercentageOff from "../atom/PercentageOff";
-import { useLocation } from "@/hooks/useLocation";
+import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import { useRoleSwitchStore } from "@/store/states/localStore";
 
 type Props = {
   imageSrc?: string;
   price?: string | number;
   productName?: string;
   description?: string;
-  state?: string;
+  state: string;
   city: string;
   discount?: string | number;
   onUnSave?: (productId: string) => void;
@@ -51,12 +58,14 @@ export default function ProductCard(props: Props) {
   const [planName, setPlanName] = useState("");
   const [initialAmount, setInitialAmount] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
-  const { location } = useLocation();
 
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
   const isVisible = !!entry?.isIntersecting;
   const { toast } = useToast();
+
+  const queries = useGetSwitchedRolesQueries();
+  const { isSwitchingRole, searchQuery } = useRoleSwitchStore();
 
   const handleImage = useCallback(
     (returnImage?: boolean) => {
@@ -76,6 +85,7 @@ export default function ProductCard(props: Props) {
         "VIEW",
         props.product?.id || "",
         props.product?.userId || "",
+        queries,
       );
     } catch (error) {
       console.log("Error registering view", error);
@@ -145,11 +155,13 @@ export default function ProductCard(props: Props) {
       if (isSaved) {
         const { userData: userInfo } = await saveAProductApi(
           props.product?.id || "",
+          queries,
         );
         await updateUser(userInfo);
       } else {
         const { userData: userInfo } = await unSaveAProductApi(
           props.product?.id || "",
+          queries,
         );
         props.onUnSave?.(props.product?.id || "");
         await updateUser(userInfo);
@@ -164,27 +176,13 @@ export default function ProductCard(props: Props) {
     }
   };
 
-  const state = () => {
-    const findState = location?.find((loc) => loc.id === props.state);
-    return findState;
-  };
-
-  const city = () => {
-    if (!state()) return;
-    const findCity = state()?.cities?.find((city) => city.id === props.city);
-    return findCity;
-  };
-
   const handleLocationDisplay = () => {
-    const stateName = state()?.name || props.state;
-    const cityName = city()?.name || props.city;
-
     if (!props?.state && props.createProductPreview) {
       return "Location";
     } else if (!props.city) {
-      return stateName;
+      return props.state;
     } else {
-      return `${cityName}, ${stateName}`;
+      return `${props.city}, ${props.state}`;
     }
   };
 
@@ -316,7 +314,11 @@ export default function ProductCard(props: Props) {
             "mb-4 gap-y-4": props.createProductPreview,
             "cursor-pointer": !props.createProductPreview,
           })}
-          href={`${DASHBOARD_PRODUCT_ROUTE}/${props.product?.id}`}
+          href={handleSearchSwitchUrl(
+            `${DASHBOARD_PRODUCT_ROUTE}/${props.product?.id}`,
+            isSwitchingRole,
+            searchQuery,
+          )}
           onClick={(e) => {
             if (!props.createProductPreview) return;
             e.preventDefault();
@@ -345,9 +347,12 @@ export default function ProductCard(props: Props) {
               : props?.productName}
           </p>
           <p
-            className={cn("max-w-[24ch] text-[10px] text-grey6  sm:text-xs", {
-              "max-w-full": props.createProductPreview,
-            })}
+            className={cn(
+              "max-w-[24ch] break-words text-[10px] text-grey6 sm:text-xs",
+              {
+                "max-w-full": props.createProductPreview,
+              },
+            )}
           >
             {!props?.description && props.createProductPreview
               ? "Product description"

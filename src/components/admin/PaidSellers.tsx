@@ -181,6 +181,8 @@ const PaidSellersBiggerScreenTable = (props: ChildProps) => {
 };
 
 const PaidSellersSmallerScreenTable = (props: ChildProps) => {
+  const router = useRouter();
+
   return (
     <TableWithRowGaps
       emptyTableTitle="No Paid seller found"
@@ -190,7 +192,14 @@ const PaidSellersSmallerScreenTable = (props: ChildProps) => {
         return {
           left: (
             <>
-              <div className="flex justify-between gap-6">
+              <div
+                className="flex justify-between gap-6"
+                onClick={() =>
+                  router.push(
+                    DASHBOARD_PROTECTED_SELLER_ROUTE + "/" + seller?.id,
+                  )
+                }
+              >
                 <div className="justify- mb-3 flex basis-[50%] gap-2 ">
                   <Badge
                     variant={props.activeVariant}
@@ -212,7 +221,7 @@ const PaidSellersSmallerScreenTable = (props: ChildProps) => {
                   </p>
                   <p>{formatPrice(seller?.transaction_actual_amount)}</p>
                 </div>
-                <p className="text-left  text-xs">{duration(seller)}</p>
+                <div className="text-left  text-xs">{duration(seller)}</div>
               </div>
             </>
           ),

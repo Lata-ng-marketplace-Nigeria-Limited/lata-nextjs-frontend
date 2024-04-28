@@ -1,20 +1,21 @@
-import { findMySavedProductsApi } from "@/api/product";
+import { FetchMeta } from "@/interface/general";
+import { State } from "@/interface/location";
+import { SavedProduct } from "@/interface/products";
 import { SavedProductList } from "@components/saved/SavedProductList";
 
 interface Props {
-  page: string;
+  data: SavedProduct[];
+  meta: FetchMeta;
+  statesInNigeria: State[];
 }
-export const SavedProducts = async ({ page }: Props) => {
-  const res = await findMySavedProductsApi({
-    page,
-  });
-
+export const SavedProducts = async ({ data, meta, statesInNigeria }: Props) => {
   return (
     <SavedProductList
-      key={res?.data?.length}
-      savedProducts={res.data}
-      meta={res.meta}
-      hideIsEmpty={(res.data.length || 0) > 0}
+      statesInNigeria={statesInNigeria}
+      key={data?.length}
+      savedProducts={data}
+      meta={meta}
+      hideIsEmpty={(data.length || 0) > 0}
     />
   );
 };

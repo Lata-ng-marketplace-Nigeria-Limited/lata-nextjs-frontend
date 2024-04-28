@@ -7,6 +7,8 @@ import ProductGridList from "@atom/ProductGridList";
 import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
+import { selectedCity, selectedState } from "@/utils/location";
+import { State } from "@/interface/location";
 
 interface Props {
   products: Product[];
@@ -16,6 +18,7 @@ interface Props {
   onUnSave?: (productId: string) => void;
   hideFallback?: boolean;
   skeletonLength?: number;
+  statesInNigeria: State[];
 }
 
 export default function LazyLoadProducts(props: Props) {
@@ -53,8 +56,12 @@ export default function LazyLoadProducts(props: Props) {
             price={formatPrice(product?.price)}
             productName={product?.name}
             description={product?.description}
-            state={product?.state}
-            city={product?.city}
+            state={selectedState(props.statesInNigeria, product?.state)}
+            city={selectedCity(
+              props.statesInNigeria,
+              product?.state,
+              product?.city,
+            )}
             imageSrc={product?.files?.[0]?.url}
             product={product}
             trending

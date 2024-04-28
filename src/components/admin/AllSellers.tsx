@@ -118,7 +118,7 @@ const SmallerScreenTable = (props: Props) => {
                     {seller?.name}
                   </Link>
                 </div>
-                <p className="mb-3 text-sm font-semibold">
+                <p className="mb-3 text-sm font-semibold text-right">
                   {seller?.managerName || "N/A"}
                 </p>
               </div>

@@ -5,7 +5,6 @@ import { Category } from "@/interface/products";
 import { Subscription } from "@/interface/payment";
 import { create } from "zustand";
 import { persist, createJSONStorage as createStore } from "zustand/middleware";
-import { State } from "@/interface/location";
 
 export interface ILocalStore {
   user?: User;
@@ -13,14 +12,12 @@ export interface ILocalStore {
   categories?: Category[];
   subscription: Subscription[];
   loading: boolean;
-  location: State[];
   setUser: (user: User) => void;
   updateUser: (user: Partial<User>) => void;
   setChats: (chats: Chat[]) => void;
   setCategories: (categories: Category[]) => void;
   setSubscription: (subscription: Subscription[]) => void;
   setLoading: (loading: boolean) => void;
-  setLocations: (location: State[]) => void;
   clear: () => void;
 }
 
@@ -32,14 +29,6 @@ export const useGeneralStore = create<{
   setHasSetCategories: (val) => set({ hasSetCategories: val }),
 }));
 
-export const useLocationStore = create<{
-  hasSetLocation: boolean;
-  setHasSetLocation: (val: boolean) => void;
-}>((set) => ({
-  hasSetLocation: false,
-  setHasSetLocation: (val) => set({ hasSetLocation: val }),
-}));
-
 export const useLocalStore = create(
   persist<ILocalStore>(
     (set, get) => ({
@@ -48,7 +37,6 @@ export const useLocalStore = create(
       categories: [],
       subscription: [],
       loading: true,
-      location: [],
       setUser: (user: User) => set({ user }),
       updateUser: (user: Partial<User>) =>
         set({ user: { ...get().user, ...(user as any) } }),
@@ -56,7 +44,6 @@ export const useLocalStore = create(
       setCategories: (categories: Category[]) => set({ categories }),
       setSubscription: (subscription: Subscription[]) => set({ subscription }),
       setLoading: (loading: boolean) => set({ loading }),
-      setLocations: (location: State[]) => set({ location }),
       clear: () =>
         set({
           user: undefined,
@@ -114,6 +101,38 @@ export const useIsUserBlocked = create(
     }),
     {
       name: "lata.ng-blocked-users",
+      storage: createStore(() => localStorage),
+    },
+  ),
+);
+
+interface IRoleSwitchState {
+  isSwitchingRole: "true" | "";
+  sessionUser: User | null; // Represents the user whose session is being used
+  searchQuery: string; // Captures the userId and role of the user being switched to
+  previousUrl: string;
+  setIsSwitchingRole: (isSwitchingRole: "true" | "") => void;
+  setSessionUser: (sessionUser: User | null) => void;
+  setSearchQuery: (searchQuery: string) => void;
+  setPreviousUrl: (previousUrl: string) => void;
+}
+
+export const useRoleSwitchStore = create(
+  persist<IRoleSwitchState>(
+    (set) => ({
+      isSwitchingRole: "",
+      sessionUser: null,
+      searchQuery: "",
+      previousUrl: "",
+      setIsSwitchingRole: (isSwitchingRole: "true" | "") =>
+        set({ isSwitchingRole }),
+      setSessionUser: (sessionUser: User | null) =>
+        set({ sessionUser }),
+      setSearchQuery: (searchQuery: string) => set({ searchQuery }),
+      setPreviousUrl: (previousUrl: string) => set({ previousUrl }),
+    }),
+    {
+      name: "app.role-switch-state",
       storage: createStore(() => localStorage),
     },
   ),

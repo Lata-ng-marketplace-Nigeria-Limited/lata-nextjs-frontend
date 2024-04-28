@@ -66,13 +66,12 @@ export default async function RootLayout({
       <GoogleAnalytics
         GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS as IEnv}
       />
-      <head key="google-adsense-script">
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
-          crossOrigin="anonymous"
-        />
-      </head>
+      <Script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
 
       <Script
         type="application/ld+json"

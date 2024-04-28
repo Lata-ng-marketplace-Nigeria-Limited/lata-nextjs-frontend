@@ -3,13 +3,15 @@ import AnalyticsSideCard from "@components/analytics/AnalyticsSideCard";
 import { getSellerAnalyticsApi } from "@/api/view";
 import { months } from "@/store/data/analytics";
 import AnalyticsSideCardsHOC from "./AnalyticsSideCardsHOC";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 interface Props {
   selectedMonth: string;
+  queries: SwitchedRoleQueries
 }
 
-const AnalyticsSideCardsWrapper = async ({ selectedMonth }: Props) => {
-  const response = await getSellerAnalyticsApi(selectedMonth);
+const AnalyticsSideCardsWrapper = async ({ selectedMonth, queries }: Props) => {
+  const response = await getSellerAnalyticsApi({month: selectedMonth, queries});
 
   const monthInFull = months[Number(response?.month) - 1]?.extra ?? "";
 

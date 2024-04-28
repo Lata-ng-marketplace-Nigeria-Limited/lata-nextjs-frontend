@@ -9,28 +9,36 @@ import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
 import { findAllMyProductsApi } from "@/api/product";
 import ShopTopArea from "@/components/shop/ShopTopArea";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
+import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
   title: "My Shop",
 };
 
+interface ISearchParams extends SwitchedRoleQueries {
+  page?: string;
+  tab?: string;
+}
+
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
-    page?: string;
-    tab?: string;
-  };
+  searchParams?: ISearchParams;
 }) {
   unstable_noStore();
   const session = await getServerSession(authConfig);
-  const page = searchParams?.page || "";
-  const tab = searchParams?.tab || "";
 
-  const products = await findAllMyProductsApi({
-    page,
-    tab,
-  });
+  const queries: ISearchParams = {
+    page: searchParams?.page || "",
+    tab: searchParams?.tab || "",
+    role: searchParams?.role || "",
+    sessionSwitched: searchParams?.sessionSwitched || "",
+    uid: searchParams?.uid || "",
+  };
+
+  const products = await findAllMyProductsApi(queries);
+  const statesInNigeriaData = await getAllStatesApi();
 
   if (!session || !session.user) {
     redirect("/auth/login");
@@ -42,8 +50,9 @@ export default async function Page({
         <GetUser />
       </Suspense>
       <ShopTopArea statusCounts={products?.statusCounts || 0} />
-      <Suspense key={page} fallback={<ProductListSkeleton />}>
+      <Suspense key={queries.page} fallback={<ProductListSkeleton />}>
         <MyShop
+          statesInNigeria={statesInNigeriaData?.data || []}
           products={products.data}
           meta={products?.meta}
           isEmpty={products?.isEmpty}

@@ -298,3 +298,29 @@ export const showToast = (
     variant,
   });
 };
+
+export const appendQueryParams = (queries: Record<string, any>) => {
+  const params = new URLSearchParams();
+
+  for (const key in queries) {
+    params.append(key, queries[key]);
+  }
+  return params.toString();
+};
+
+export const handleSearchSwitchUrl = (
+  url: string,
+  isSwitchingRole: string,
+  searchQuery: string,
+) => {
+  if (isSwitchingRole) {
+    return `${url}?${searchQuery}`;
+  }
+  return url;
+};
+
+export const isUUID = (str: string) => {
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(str);
+};

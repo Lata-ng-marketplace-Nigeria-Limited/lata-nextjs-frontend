@@ -3,16 +3,18 @@ import ViewProductContainer from "@atom/ViewProductContainer";
 import ProductDetails from "@components/product/ProductDetails";
 import ProductInsights from "@components/product/ProductInsights";
 import FeedbacksForProduct from "../feedback/FeedbacksForProduct";
+import { State } from "@/interface/location";
 
 interface Props {
   product: Product;
+  statesInNigeria: State[];
 }
 
 export default function ViewOwnProduct(props: Props) {
   return (
     <div>
       <ViewProductContainer>
-        <ProductDetails product={props.product} />
+        <ProductDetails product={props.product} statesInNigeria={props.statesInNigeria}/>
         <div>
           <ProductInsights product={props.product} />
           {props.product && props.product?.status === "ACTIVE" ? (

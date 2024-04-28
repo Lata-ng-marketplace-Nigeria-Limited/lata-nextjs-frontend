@@ -3,9 +3,15 @@ import React from "react";
 import AnalyticsTopCards from "@components/analytics/AnalyticsTopCards";
 import { GetSellerAnalyticsResponse } from "@/interface/views";
 import AnalyticsTopCardsHOC from "./AnalyticsTopCardsHOC";
+import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
-const AnalyticsCardsWrapper = async () => {
-  const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi();
+interface Props {
+  queries: SwitchedRoleQueries;
+}
+const AnalyticsCardsWrapper = async (props: Props) => {
+  const response: GetSellerAnalyticsResponse = await getSellerAnalyticsApi({
+    queries: props.queries,
+  });
 
   const formatNumber = (number: number | undefined | null) => {
     if (!number || typeof number !== "number") return 0;
