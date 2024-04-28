@@ -10,6 +10,7 @@ import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import { findMySavedProductsApi } from "@/api/product";
+import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
   title: "Saved Products",
@@ -40,6 +41,7 @@ export default async function Page({
   };
 
   const res = await findMySavedProductsApi(queries);
+  const statesInNigeriaData = await getAllStatesApi();
 
   return (
     <div>
@@ -48,7 +50,11 @@ export default async function Page({
       </Suspense>
       <HeaderText title>Saved Products</HeaderText>
       <Suspense key={page} fallback={<ProductListSkeleton />}>
-        <SavedProducts data={res.data} meta={res.meta} />
+        <SavedProducts
+          data={res.data}
+          meta={res.meta}
+          statesInNigeria={statesInNigeriaData?.data || []}
+        />
       </Suspense>
     </div>
   );

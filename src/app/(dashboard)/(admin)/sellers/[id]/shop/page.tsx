@@ -9,6 +9,7 @@ import { unstable_noStore } from "next/cache";
 import { authConfig } from "@authConfig";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 import { findAllSellerProductsApi } from "@/api/admin";
+import { getAllStatesApi } from "@/api/location";
 
 interface IPageProps {
   searchParams?: {
@@ -34,6 +35,7 @@ export async function generateMetadata({
   };
 
   const products = await findAllSellerProductsApi(info);
+  const statesInNigeriaData = await getAllStatesApi();
 
   return {
     title: products?.seller?.name + " Shop",
@@ -56,6 +58,7 @@ export default async function Page({
   };
 
   const products = await findAllSellerProductsApi(info);
+  const statesInNigeriaData = await getAllStatesApi();
 
   if (!session || !session.user) {
     redirect("/auth/login");
@@ -72,6 +75,7 @@ export default async function Page({
       />
       <Suspense key={page} fallback={<ProductListSkeleton />}>
         <MyShop
+          statesInNigeria={statesInNigeriaData?.data || []}
           products={products.data}
           meta={products?.meta}
           isEmpty={products?.isEmpty}

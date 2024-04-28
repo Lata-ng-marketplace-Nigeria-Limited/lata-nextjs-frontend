@@ -46,7 +46,10 @@ export const ViewProductArea = ({ data, statesInNigeria }: Props) => {
         <>
           {isOwner ? (
             product ? (
-              <ViewOwnProduct product={product} />
+              <ViewOwnProduct
+                product={product}
+                statesInNigeria={statesInNigeria}
+              />
             ) : null
           ) : (
             <ViewNotOwnProduct
