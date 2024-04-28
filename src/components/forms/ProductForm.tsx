@@ -37,6 +37,7 @@ import { useUser } from "@/hooks/useUser";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 import { useRoleSwitchStore } from "@/store/states/localStore";
 import { State } from "@/interface/location";
+import { selectedCity, selectedState } from "@/utils/location";
 
 interface Props {
   product?: Product;
@@ -122,8 +123,11 @@ export default function ProductForm({
     setValue("price", product.price.toString());
     setValue("categoryId", product.categoryId);
     setValue("subCategoryId", product.subCategoryId);
-    setValue("state", product.state);
-    setValue("city", product.city);
+    setValue("state", selectedState(statesInNigeria, product.state));
+    setValue(
+      "city",
+      selectedCity(statesInNigeria, product.state, product.city),
+    );
     setValue("description", product.description);
     setValue("discount", product.discount?.toString());
     setValue("productType", product.productType);
