@@ -18,7 +18,7 @@ interface Props {
   onUnSave?: (productId: string) => void;
   hideFallback?: boolean;
   skeletonLength?: number;
-  statesInNigeria: State[]
+  statesInNigeria: State[];
 }
 
 export default function LazyLoadProducts(props: Props) {
@@ -27,7 +27,6 @@ export default function LazyLoadProducts(props: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
   const isVisible = !!entry?.isIntersecting;
-
 
   useEffect(() => {
     if (!isVisible) return;
@@ -57,8 +56,12 @@ export default function LazyLoadProducts(props: Props) {
             price={formatPrice(product?.price)}
             productName={product?.name}
             description={product?.description}
-            state={selectedState(props.statesInNigeria, product?.state) || product?.state}
-            city={selectedCity(props.statesInNigeria, product?.state, product?.city) || product?.city}
+            state={selectedState(props.statesInNigeria, product?.state)}
+            city={selectedCity(
+              props.statesInNigeria,
+              product?.state,
+              product?.city,
+            )}
             imageSrc={product?.files?.[0]?.url}
             product={product}
             trending

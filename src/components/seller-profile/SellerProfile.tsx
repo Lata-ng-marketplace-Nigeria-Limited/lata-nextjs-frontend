@@ -13,11 +13,14 @@ import { State } from "@/interface/location";
 interface Props {
   seller: User;
   productId?: string;
-  statesInNigeria: State[]
+  statesInNigeria: State[];
 }
 
-export const SellerProfile = ({ seller, productId, statesInNigeria }: Props) => {
-
+export const SellerProfile = ({
+  seller,
+  productId,
+  statesInNigeria,
+}: Props) => {
   return (
     <>
       <div
@@ -71,8 +74,16 @@ export const SellerProfile = ({ seller, productId, statesInNigeria }: Props) => 
                   price={formatPrice(product.price)}
                   productName={product.name}
                   description={product.description}
-                  state={selectedState(statesInNigeria, product.state) || product?.state}
-                  city={selectedCity(statesInNigeria, product.state, product.city) || product?.city}
+                  state={
+                    selectedState(statesInNigeria, product.state) 
+                  }
+                  city={
+                    selectedCity(
+                      statesInNigeria,
+                      product.state,
+                      product.city,
+                    ) 
+                  }
                   imageSrc={product.files?.[0]?.url}
                   product={product}
                   createProductPreview={false}

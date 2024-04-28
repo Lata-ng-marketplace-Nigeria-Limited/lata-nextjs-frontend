@@ -28,7 +28,7 @@ import { selectedCity, selectedState } from "@/utils/location";
 interface Props {
   product: Product | undefined;
   similarProducts: Product[];
-  statesInNigeria: State[]
+  statesInNigeria: State[];
 }
 
 export default function ViewNotOwnProduct(props: Props) {
@@ -39,8 +39,6 @@ export default function ViewNotOwnProduct(props: Props) {
   const { toast } = useToast();
   const { refresh } = useRouter();
   const queries = useGetSwitchedRolesQueries();
-
-
 
   const handleSendToReview = async () => {
     if (!props.product?.id) return;
@@ -181,7 +179,10 @@ export default function ViewNotOwnProduct(props: Props) {
   return (
     <>
       <ViewProductContainer>
-        <ProductDetails product={props.product!} statesInNigeria={props.statesInNigeria}/>
+        <ProductDetails
+          product={props.product!}
+          statesInNigeria={props.statesInNigeria}
+        />
 
         <ProductAsideArea>
           <SellerContact
@@ -264,8 +265,12 @@ export default function ViewNotOwnProduct(props: Props) {
                 price={formatPrice(products.price)}
                 productName={products.name}
                 description={products.description}
-                state={selectedState(props.statesInNigeria, products?.state) || products?.state}
-                city={selectedCity(props.statesInNigeria, products?.state, products?.city) || products?.city}
+                state={selectedState(props.statesInNigeria, products?.state)}
+                city={selectedCity(
+                  props.statesInNigeria,
+                  products?.state,
+                  products?.city,
+                )}
                 imageSrc={products.files?.[0]?.url}
                 product={products}
                 createProductPreview={false}

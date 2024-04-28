@@ -157,14 +157,12 @@ const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={selectedState(statesData?.data, product.state) || product?.state}
-                    city={
-                      selectedCity(
-                        statesData?.data,
-                        product.state,
-                        product.city,
-                      ) || product.city
-                    }
+                    state={selectedState(statesData?.data, product.state)}
+                    city={selectedCity(
+                      statesData?.data,
+                      product.state,
+                      product.city,
+                    )}
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}
@@ -195,14 +193,12 @@ const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
                     price={formatPrice(product.price)}
                     productName={product.name}
                     description={product.description}
-                    state={selectedState(statesData?.data, product.state) || product?.state}
-                    city={
-                      selectedCity(
-                        statesData?.data,
-                        product.state,
-                        product.city,
-                      ) || product.city
-                    }
+                    state={selectedState(statesData?.data, product.state)}
+                    city={selectedCity(
+                      statesData?.data,
+                      product.state,
+                      product.city,
+                    )}
                     imageSrc={product.files?.[0]?.url}
                     product={product}
                     createProductPreview={false}
