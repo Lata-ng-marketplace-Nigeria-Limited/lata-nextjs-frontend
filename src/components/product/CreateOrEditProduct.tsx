@@ -8,13 +8,19 @@ import NewProductPreview, {
 } from "@components/product/NewProductPreview";
 import ProductForm from "@components/forms/ProductForm";
 import { FindAProductData } from "@/interface/products";
+import { State } from "@/interface/location";
 
 interface Props {
   data?: FindAProductData | null;
   sellerId?: string;
+  statesInNigeria: State[];
 }
 
-export const CreateOrEditProduct = ({ data, sellerId }: Props) => {
+export const CreateOrEditProduct = ({
+  data,
+  sellerId,
+  statesInNigeria,
+}: Props) => {
   const [productInfo, setProductInfo] = useState<ProductFormProductInfo>({
     name: "",
     description: "",
@@ -51,6 +57,7 @@ export const CreateOrEditProduct = ({ data, sellerId }: Props) => {
         setProductInfo={setProductInfo}
         product={data?.product}
         sellerId={sellerId}
+        statesInNigeria={statesInNigeria}
       />
     </div>
   );

@@ -10,6 +10,7 @@ import { authConfig } from "@authConfig";
 import { findAllMyProductsApi } from "@/api/product";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
+import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
   title: "My Shop",
@@ -37,6 +38,7 @@ export default async function Page({
   };
 
   const products = await findAllMyProductsApi(queries);
+  const statesInNigeriaData = await getAllStatesApi();
 
   if (!session || !session.user) {
     redirect("/auth/login");
@@ -50,6 +52,7 @@ export default async function Page({
       <ShopTopArea statusCounts={products?.statusCounts || 0} />
       <Suspense key={queries.page} fallback={<ProductListSkeleton />}>
         <MyShop
+          statesInNigeria={statesInNigeriaData?.data || []}
           products={products.data}
           meta={products?.meta}
           isEmpty={products?.isEmpty}

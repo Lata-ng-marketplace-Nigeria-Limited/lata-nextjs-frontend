@@ -20,7 +20,7 @@ interface Props {
   onBtnClick?: () => void;
 }
 const UserBanner = (props: Props) => {
-  const { push, replace } = useRouter();
+  const { push } = useRouter();
   const [isMessage, setIsMessage] = React.useState(false);
   const { user } = useUser();
   const searchParams = useSearchParams();
@@ -41,7 +41,6 @@ const UserBanner = (props: Props) => {
     setSearchQuery(params.toString());
     setPreviousUrl(pathname);
 
-    replace(`${pathname}?${params.toString()}`);
     push(`${LANDING_ROUTE}?${params.toString()}`);
   };
 

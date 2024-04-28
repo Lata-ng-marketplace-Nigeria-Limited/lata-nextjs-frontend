@@ -7,7 +7,13 @@ import { Product, SubCategory, SubCategoryItems } from "@/interface/products";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn, convertBytesToMB, getFormErrorObject, handleSearchSwitchUrl, showToast } from "@/utils";
+import {
+  cn,
+  convertBytesToMB,
+  getFormErrorObject,
+  handleSearchSwitchUrl,
+  showToast,
+} from "@/utils";
 import { useRouter } from "next/navigation";
 import TextInput from "@components/input/TextInput";
 import { SelectInput } from "@components/input/SelectInput";
@@ -28,9 +34,9 @@ import { ApiErrorResponse } from "@/interface/general";
 import { ToastAction } from "@components/ui/toast";
 import { useCategory } from "@hooks/useCategory";
 import { useUser } from "@/hooks/useUser";
-import { useNigerianStates } from "@/hooks/useNigerianStates";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 import { useRoleSwitchStore } from "@/store/states/localStore";
+import { State } from "@/interface/location";
 
 interface Props {
   product?: Product;
@@ -40,6 +46,7 @@ interface Props {
   selectedPhotos?: SelectedImagePreview;
   setProductInfo: React.Dispatch<SetStateAction<ProductFormProductInfo>>;
   sellerId?: string;
+  statesInNigeria: State[];
 }
 
 export default function ProductForm({
@@ -48,6 +55,7 @@ export default function ProductForm({
   setSelectedPhotos,
   selectedPhotos,
   sellerId,
+  statesInNigeria,
 }: Props) {
   const [files, setFiles] = useState<FileList>();
   const [loading, setLoading] = useState(true);
@@ -85,7 +93,6 @@ export default function ProductForm({
   const { push: nav, back } = useRouter();
   const { toast } = useToast();
   const { categoriesSelectData, categories } = useCategory();
-  const { nigerianStates, statesSelectData } = useNigerianStates();
   const [hasSelectedState, setHasSelectedState] = useState(false);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -237,7 +244,13 @@ export default function ProductForm({
         }
       }
       setTimeout(() => {
-        nav(handleSearchSwitchUrl(DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id, isSwitchingRole, searchQuery));
+        nav(
+          handleSearchSwitchUrl(
+            DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id,
+            isSwitchingRole,
+            searchQuery,
+          ),
+        );
       }, 800);
     } catch (error: any) {
       setLoading(false);
@@ -392,7 +405,7 @@ export default function ProductForm({
   };
 
   const handleCities = (selectedState: string) => {
-    const getSelectedState = nigerianStates.find(
+    const getSelectedState = statesInNigeria.find(
       (state) => state.id === selectedState,
     );
 
@@ -415,7 +428,9 @@ export default function ProductForm({
   };
 
   const onSelectState = (selectedState: string) => {
-    const findState = nigerianStates.find((state) => state.id === selectedState);
+    const findState = statesInNigeria.find(
+      (state) => state.id === selectedState,
+    );
 
     if (!findState) return;
     setState(findState?.name);
@@ -584,9 +599,9 @@ export default function ProductForm({
               <SelectInput
                 inputProps={{ ...field }}
                 placeholder={"Select state"}
-                options={statesSelectData.map((state) => ({
-                  label: state.label,
-                  value: state.value,
+                options={statesInNigeria.map((state) => ({
+                  label: state?.name,
+                  value: state?.id,
                 }))}
                 inputClass="!min-h-12"
                 name={field.name}

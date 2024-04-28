@@ -1,6 +1,7 @@
 import { cn } from "@/utils";
 import { getDashboardProductsApi } from "@/api/product";
 import LazyLoadProducts from "@components/product/LazyLoadProducts";
+import { getAllStatesApi } from "@/api/location";
 
 interface Props {
   query: string;
@@ -8,8 +9,9 @@ interface Props {
 }
 export default async function HomeProducts({ query, subcategory }: Props) {
   const products = await getDashboardProductsApi(query, subcategory);
+  const statesInNigeriaData = await getAllStatesApi();
   const headerClass = cn(
-    `text-sm xs:text-base tablet:text-[20px] text-grey9 font-medium`
+    `text-sm xs:text-base tablet:text-[20px] text-grey9 font-medium`,
   );
   return (
     <div
@@ -22,13 +24,14 @@ export default async function HomeProducts({ query, subcategory }: Props) {
           `,
         {
           "flex-col-reverse": !!query,
-        }
+        },
       )}
     >
       {products?.trendingProducts?.length ? (
         <div>
           <h2 className={headerClass}>Trending Products</h2>
           <LazyLoadProducts
+            statesInNigeria={statesInNigeriaData?.data || []}
             products={products.trendingProducts}
             offset={4}
             showLimit={4}
@@ -42,6 +45,7 @@ export default async function HomeProducts({ query, subcategory }: Props) {
       <div>
         <h2 className={headerClass}>Other Products</h2>
         <LazyLoadProducts
+          statesInNigeria={statesInNigeriaData?.data || []}
           products={products?.otherProducts || []}
           offset={4}
           showLimit={4}

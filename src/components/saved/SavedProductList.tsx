@@ -7,16 +7,19 @@ import { useEffect, useState } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import Paginate from "@components/input/Paginate";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { State } from "@/interface/location";
 
 interface Props {
   savedProducts: SavedProduct[];
   meta: FetchMeta;
   hideIsEmpty: boolean;
+  statesInNigeria: State[];
 }
 export const SavedProductList = ({
   savedProducts,
   meta,
   hideIsEmpty,
+  statesInNigeria
 }: Props) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [hasLoadedProducts, setHasLoadedProducts] = useState(false);
@@ -44,6 +47,7 @@ export const SavedProductList = ({
       {hasLoadedProducts ? (
         <div>
           <LazyLoadProducts
+            statesInNigeria={statesInNigeria}
             products={products}
             showLimit={4}
             offset={4}

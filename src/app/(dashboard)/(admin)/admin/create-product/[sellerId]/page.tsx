@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { CreateOrEditProduct } from "@components/product/CreateOrEditProduct";
 import { Suspense } from "react";
 import { authConfig } from "@authConfig";
+import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
   title: "Create Product",
@@ -26,12 +27,17 @@ export default async function Page({
     redirect("/");
   }
 
+  const statesInNigeria = await getAllStatesApi();
+
   return (
     <div className={"w-full"}>
       <Suspense>
         <GetUser />
       </Suspense>
-      <CreateOrEditProduct sellerId={sellerId} />
+      <CreateOrEditProduct
+        sellerId={sellerId}
+        statesInNigeria={statesInNigeria?.data || []}
+      />
     </div>
   );
 }
