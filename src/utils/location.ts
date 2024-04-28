@@ -9,11 +9,10 @@ export const locationIdAsName = (locationId: string) => {
 export const selectedState = (location: State[], stateId: string): string => {
   if (!location || !stateId) return "";
 
-  let stateName: string = "";
-
-  const findState = location.find((loc) => loc.id === stateId);
-
-  return (stateName = findState?.name || locationIdAsName(stateId));
+  return (
+    location.find((loc) => loc.id === stateId)?.name ||
+    locationIdAsName(stateId)
+  );
 };
 
 export const selectedCity = (
@@ -21,11 +20,13 @@ export const selectedCity = (
   stateId: string,
   cityId: string,
 ): string => {
-  if (!location || !stateId || cityId) return "";
+  if (!location || !stateId || !cityId) return "";
 
-  let cityName: string;
+  const findState = location.find((loc) => loc.id === stateId);
+  if (!findState) return "";
 
-  const findCity = location.find((loc) => loc.id === stateId);
-
-  return (cityName = findCity?.name || locationIdAsName(cityId));
+  return (
+    findState?.cities.find((city) => city.id === cityId)?.name ||
+    locationIdAsName(cityId)
+  );
 };
