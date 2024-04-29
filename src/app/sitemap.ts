@@ -19,12 +19,20 @@ type Sitemap = SitemapItem[];
 export default async function sitemap(): Promise<Sitemap> {
   const response = await getDashboardProductsApi();
 
-  const products: Sitemap =
+  const trendingProducts: Sitemap =
     response?.trendingProducts?.map((product) => ({
       url: `https://lata.ng/product/${product?.id}`,
       lastModified: new Date(product?.updatedAt),
       changeFrequency: "daily",
-      priority: 0.8,
+      priority: 1,
+    })) || [];
+
+  const otherProducts: Sitemap =
+    response?.otherProducts?.map((product) => ({
+      url: `https://lata.ng/product/${product?.id}`,
+      lastModified: new Date(product?.updatedAt),
+      changeFrequency: "daily",
+      priority: 0.9,
     })) || [];
 
   return [
@@ -38,8 +46,9 @@ export default async function sitemap(): Promise<Sitemap> {
       url: `https://lata.ng/about-us`,
       lastModified: new Date().toISOString(),
       changeFrequency: "daily",
-      priority: 0.6,
+      priority: 0.9,
     },
-    ...products,
+    ...trendingProducts,
+    ...otherProducts,
   ];
 }

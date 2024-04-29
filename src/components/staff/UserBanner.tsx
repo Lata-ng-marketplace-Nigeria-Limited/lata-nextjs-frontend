@@ -29,7 +29,7 @@ const UserBanner = (props: Props) => {
     useRoleSwitchStore();
 
   const handleSwitchRole = () => {
-    if (!(user?.role === "ADMIN" || user?.role === "STAFF") ) return;
+    if (!(user?.role === "ADMIN" || user?.role === "STAFF")) return;
 
     const params = new URLSearchParams(searchParams);
 
@@ -82,13 +82,15 @@ const UserBanner = (props: Props) => {
                 {props.btnText || "Send Message"}
               </Button>
             )}
-            <Button
-              format="secondary"
-              className="w-full sm:max-w-max"
-              onClick={handleSwitchRole}
-            >
-              Go to profile
-            </Button>
+            {props.role === "SELLER" ? (
+              <Button
+                format="secondary"
+                className="w-full sm:max-w-max"
+                onClick={handleSwitchRole}
+              >
+                Go to profile
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>

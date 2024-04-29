@@ -98,11 +98,17 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
               return;
             if (item.hideFromStaff && role === "STAFF" && !adminIsInUserMode)
               return;
+            if (item.hideFromSeller && role === "SELLER") return;
+            if (item.hideFromBuyer && role === "BUYER") return;
 
             return (
               <NavLink
                 key={i}
-                href={handleSearchSwitchUrl(item.href, isSwitchingRole, searchQuery)}
+                href={handleSearchSwitchUrl(
+                  item.href,
+                  isSwitchingRole,
+                  searchQuery,
+                )}
                 icon={item.icon}
                 fill={item.fill}
               >

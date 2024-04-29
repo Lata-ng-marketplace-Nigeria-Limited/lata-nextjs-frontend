@@ -40,13 +40,18 @@ export const SellerSignUpForm = () => {
   const [isPlaying, setPlaying] = useState<boolean>(false);
   const [hasSetValue, setHasSetValue] = useState(false);
   const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
 
   const { loginUser, clear } = useUser();
   const { toast } = useToast();
   const nav = useRouter();
   const { setSelectedRole } = useFastLocalStore();
-  const { isUpgradingToSeller, shouldCompleteForm, ...registerData } =
-    useRegistrationFormStore();
+  const {
+    isUpgradingToSeller,
+    setRegistrationForm,
+    shouldCompleteForm,
+    ...registerData
+  } = useRegistrationFormStore();
 
   const {
     formState: { errors },
@@ -63,8 +68,19 @@ export const SellerSignUpForm = () => {
       email: "",
       address: "",
       aboutBusiness: "",
+      referrerCode: "",
     },
   });
+
+  useEffect(() => {
+    if (params.get("ref")) {
+      setValue("referrerCode", params.get("ref") as string);
+      setRegistrationForm({
+        ...registerData,
+        referrerCode: params.get("ref") as string,
+      });
+    }
+  }, [params.get("ref")]);
 
   useEffect(() => {
     setSelectedRole("SELLER");
@@ -80,6 +96,7 @@ export const SellerSignUpForm = () => {
       setValue("password", "CompleteUserRegistration123$");
       setValue("aboutBusiness", registerData.aboutBusiness);
       setValue("address", registerData.address);
+      setValue("referrerCode", registerData.referrerCode);
       setHasSetValue(true);
     }
   }, [registerData, setValue, hasSetValue, shouldCompleteForm]);
@@ -289,8 +306,25 @@ export const SellerSignUpForm = () => {
         control={control}
       />
 
-      <div className={cn("flex flex-col gap-y-3 items-center w-full")}>
-        <div className={"w-full flex flex-col gap-y-2"}>
+      <Controller
+        render={({ field }) => (
+          <TextInput
+            {...field}
+            placeholder="Referrer ID (Optional)"
+            type="text"
+            label={"Referrer ID (Optional)"}
+            disabled={shouldCompleteForm || loading || !!params.get("ref")}
+            name={field.name}
+            value={field.value || ""}
+            errorMessage={errors.referrerCode?.message}
+          />
+        )}
+        name={"referrerCode"}
+        control={control}
+      />
+
+      <div className={cn("flex w-full flex-col items-center gap-y-3")}>
+        <div className={"flex w-full flex-col gap-y-2"}>
           <Button
             type={"submit"}
             disabled={loading}
