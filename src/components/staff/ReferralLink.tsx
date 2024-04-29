@@ -17,20 +17,39 @@ const ReferralLink = (props: Props) => {
   const refferalUrl: string = `${origin}/auth${SELLER_SIGN_UP_ROUTE}?ref=${props.referralCode}`;
   return (
     <>
-      <div
-        className="flex max-w-max cursor-pointer gap-4 rounded-lg bg-primary px-6 py-2"
-        onClick={() => {
-          copyTextToClipboard({
-            text: refferalUrl,
-            inputId: "copy-staff-referral-code",
-            toastMessage: "Referral link copied!",
-          });
-        }}
-      >
-        <p className="text-white">Copy link</p>
-        <Copy className="text-white" />
+      <div className="mb-6">
+        <div
+          className="flex max-w-max cursor-pointer gap-4 rounded-lg bg-primary px-6 py-2"
+          onClick={() => {
+            copyTextToClipboard({
+              text: refferalUrl,
+              inputId: "copy-staff-referral-link",
+              toastMessage: "Referral link copied!",
+            });
+          }}
+        >
+          <p className="text-white">Copy link</p>
+          <Copy className="text-white" />
+        </div>
+        <input type="text" className="hidden" id="copy-staff-referral-link" />
       </div>
-      <input type="text" className="hidden" id="copy-staff-referral-code" />
+
+      <div>
+        <div
+          className="flex max-w-max cursor-pointer gap-4 rounded-lg bg-primary px-6 py-2"
+          onClick={() => {
+            copyTextToClipboard({
+              text: props.referralCode,
+              inputId: "copy-staff-referral-code",
+              toastMessage: "Referral code copied!",
+            });
+          }}
+        >
+          <p className="text-white">Copy code</p>
+          <Copy className="text-white" />
+        </div>
+        <input type="text" className="hidden" id="copy-staff-referral-code" />
+      </div>
     </>
   );
 };

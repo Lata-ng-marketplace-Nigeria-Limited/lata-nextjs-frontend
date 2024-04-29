@@ -71,7 +71,7 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
             </p>
           </UserDetailContainer>
 
-          <UserDetailContainer heading="Referral Url">
+          <UserDetailContainer heading="Referral">
             <ReferralLink
               referralCode={staffResponse?.data?.referral?.referralCode || ""}
             />
