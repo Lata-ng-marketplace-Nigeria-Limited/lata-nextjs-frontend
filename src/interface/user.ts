@@ -3,6 +3,7 @@ import { FileData } from "./file";
 import { Plan, Transaction, Wallet } from "./payment";
 import { Product, SavedProduct } from "./products";
 import { Chat } from "./chat";
+import { IReferral } from "./referral";
 
 export interface User {
   id: string;
@@ -42,6 +43,8 @@ export interface User {
   bankAccount?: BankAccount;
   isBlocked?: boolean;
   managerName?: string;
+  referrerCode?: string;
+  referral?: IReferral;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";
@@ -80,6 +83,7 @@ export interface AuthorizeResponse {
   avatar?: string;
   token?: string;
   shouldCompleteProfile?: boolean;
+  referrerCode?: string
 }
 
 export interface ISubscribedUser {

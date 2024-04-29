@@ -42,6 +42,7 @@ export const registrationFormDataDefaultState = {
   avatar: "",
   shouldCompleteForm: false,
   isUpgradingToSeller: false,
+  referrerCode: "",
 };
 
 interface RegistrationFormState extends z.infer<typeof sellerSignUpSchema> {
