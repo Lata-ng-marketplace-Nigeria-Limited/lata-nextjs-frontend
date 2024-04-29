@@ -11,6 +11,8 @@ export const sellerSignUpSchema = loginSchema.and(
         .min(3, "Please enter a minimum of 3 characters."),
       address: z.string().nonempty("Please enter business location"),
       aboutBusiness: z.string().nonempty("Please enter about business"),
+      referrerCode: z.string().optional()
     })
     .and(phoneNumberSchema())
 );
+

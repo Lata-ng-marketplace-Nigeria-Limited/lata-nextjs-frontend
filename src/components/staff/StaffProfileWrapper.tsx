@@ -9,6 +9,7 @@ import StaffTopCards from "./StaffTopCards";
 import Targets from "@/components/staff/Targets";
 import { PerformanceOverview } from "@/interface/staff";
 import StaffAnalyticsArea from "./StaffAnalyticsArea";
+import ReferralLink from "./ReferralLink";
 
 interface Props {
   staffId: string;
@@ -65,9 +66,15 @@ const StaffProfileWrapper = async ({ staffId, month }: Props) => {
           </UserDetailContainer>
 
           <UserDetailContainer heading="Address">
-            <p className="font-normal text-grey6">
+            <p className="mb-6 font-normal text-grey6">
               {staffResponse?.data?.address || "No address"}
             </p>
+          </UserDetailContainer>
+
+          <UserDetailContainer heading="Referral Url">
+            <ReferralLink
+              referralCode={staffResponse?.data?.referral?.referralCode || ""}
+            />
           </UserDetailContainer>
         </div>
         <div className="col-span-1 mb-10 text-xl ">
