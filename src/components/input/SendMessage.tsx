@@ -47,11 +47,10 @@ export default function SendMessage(props: Props) {
   const {
     handleSubmit,
     setError,
-    resetField,
     reset,
     clearErrors,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm<z.infer<typeof sendSellerMessageSchema>>({
     resolver: zodResolver(sendSellerMessageSchema),
     defaultValues: {
@@ -60,6 +59,14 @@ export default function SendMessage(props: Props) {
   });
   const { user, isSocketConnected } = useUser();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (isSubmitted) {
+      reset({
+        message: "",
+      });
+    }
+  }, [isSubmitted, reset]);
 
   useEffect(() => {
     let message =
@@ -87,7 +94,10 @@ export default function SendMessage(props: Props) {
     setErrorMsg(message);
   }, [clearErrors, user, isSocketConnected, setError]);
 
-  const onSubmit = async (values: z.infer<typeof sendSellerMessageSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof sendSellerMessageSchema>,
+    e: any,
+  ) => {
     if (!props.isNotProductMessage && !props.productId) {
       setError("message", {
         message: "Refresh the page and try again",
@@ -115,8 +125,8 @@ export default function SendMessage(props: Props) {
       } else {
         await createChatApi(messageFromUserProfilePayload);
       }
+      e.target.reset();
       showToast("Your message has been sent successfully", "success");
-      resetField("message");
       props.setMessageSent?.(true);
     } catch (error: any) {
       console.log("error Message 119", error?.data?.message);
