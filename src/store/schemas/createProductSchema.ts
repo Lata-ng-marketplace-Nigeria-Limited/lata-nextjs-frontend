@@ -1,12 +1,20 @@
 import { z } from "zod";
-import { isNumberSchema } from "./phoneNumberSchema";
+import { checkIfInputNumber } from "@/utils";
+
+export const isPriceSchema = (error: string) =>
+  z.custom((value) => {
+    if (!value) return true;
+    const price = String(value).replace(/[^0-9]/g, "");
+
+    return checkIfInputNumber(price);
+  }, error);
 
 export const createProductSchema = z.object({
   name: z.string().min(1, "Please enter a product name."),
   price: z
     .string()
     .min(1, "Please enter a price")
-    .and(isNumberSchema("Please enter a valid price")),
+    .and(isPriceSchema("Please enter a valid price")),
   state: z.string().min(1, "Please select your state."),
   city: z.string().min(1, "Please select your city."),
   description: z

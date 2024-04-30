@@ -38,6 +38,7 @@ import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 import { useRoleSwitchStore } from "@/store/states/localStore";
 import { State } from "@/interface/location";
 import { selectedCity, selectedState } from "@/utils/location";
+import { NumericFormat } from "react-number-format";
 
 interface Props {
   product?: Product;
@@ -144,7 +145,7 @@ export default function ProductForm({
     }
 
     setProductInfo({
-      price: watch("price"),
+      price: watch("price")?.replaceAll(/[^0-9]/g, ""),
       name: watch("name"),
       categoryId: watch("categoryId"),
       subCategoryId: watch("subCategoryId"),
@@ -198,7 +199,7 @@ export default function ProductForm({
     const payload: CreateProductApiInput = {
       ...values,
       files: files!,
-      price: Number(values.price),
+      price: Number(values.price?.replaceAll(/[^0-9]/g, "")),
       userId:
         isAdminOrStaff && !isSwitchingRole
           ? sellerId
@@ -506,8 +507,10 @@ export default function ProductForm({
             control={control}
             name="price"
             render={({ field }) => (
-              <TextInput
+              <NumericFormat
                 {...field}
+                thousandSeparator={true}
+                prefix="₦"
                 wrapperClass={"w-full"}
                 placeholder={"Price"}
                 label={"Price"}
@@ -516,6 +519,7 @@ export default function ProductForm({
                 disabled={loading}
                 value={field.value || ""}
                 errorMessage={errors.price?.message}
+                customInput={TextInput}
               />
             )}
           />
