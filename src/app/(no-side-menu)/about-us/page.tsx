@@ -1,7 +1,6 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import HeroImage from "@molecule/HeroImage";
-import GoogleAdSense from "@/app/external-services/GoogleAdSense";
+import GoogleAdsUnit from "@/app/external-services/GoogleAdsUnit";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -26,7 +25,7 @@ export default async function Page() {
         }
         alt={`Hero`}
       /> */}
-      <GoogleAdSense />
+      <GoogleAdsUnit />
 
       <article className={"mt-[60px] flex flex-col gap-y-6"}>
         <h2

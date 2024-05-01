@@ -1,13 +1,15 @@
 "use client";
 
 import HeroImage from "@/components/molecule/HeroImage";
-import { cn } from "@/utils";
+import { usePathname, useSearchParams } from "next/navigation";
 import React from "react";
 
 interface Props extends React.InsHTMLAttributes<HTMLElement> {}
 
-const GoogleAdSense = ({ ...props }: Props) => {
+const GoogleAdsUnit = ({ ...props }: Props) => {
   const [loaded, setLoaded] = React.useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   React.useEffect(() => {
     setLoaded(false);
@@ -23,7 +25,7 @@ const GoogleAdSense = ({ ...props }: Props) => {
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [pathname, searchParams]);
 
   return (
     <>
@@ -51,4 +53,4 @@ const GoogleAdSense = ({ ...props }: Props) => {
   );
 };
 
-export default GoogleAdSense;
+export default GoogleAdsUnit;
