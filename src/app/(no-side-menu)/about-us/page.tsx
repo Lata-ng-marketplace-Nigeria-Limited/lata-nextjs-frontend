@@ -1,6 +1,7 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
 import GoogleAdsUnit from "@/app/external-services/GoogleAdsUnit";
+import HeroImage from "@/components/molecule/HeroImage";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -13,30 +14,33 @@ export default async function Page() {
 
       <h1
         className={
-          " text-base tablet:text-[40px] lg:text-[50px] font-semibold mb-7"
+          " mb-7 text-base font-semibold tablet:text-[40px] lg:text-[50px]"
         }
       >
         Welcome to Lata
       </h1>
 
-      {/* <HeroImage
+      <div className="mx-auto mb-10 w-full text-center">
+        <GoogleAdsUnit />
+      </div>
+
+      <HeroImage
         src={
           "https://res.cloudinary.com/dg9by7oca/image/upload/v1691381515/About_latae_458_qqdcht.webp"
         }
         alt={`Hero`}
-      /> */}
-      <GoogleAdsUnit />
+      />
 
       <article className={"mt-[60px] flex flex-col gap-y-6"}>
         <h2
-          className={"text-sm tablet:text-[22px] lg:text-[32px] font-semibold"}
+          className={"text-sm font-semibold tablet:text-[22px] lg:text-[32px]"}
         >
           About Lata
         </h2>
 
         <p
           className={
-            " text-xs tablet:text-[16px] leading-6 lg:text-[20px] font-medium"
+            " text-xs font-medium leading-6 tablet:text-[16px] lg:text-[20px]"
           }
         >
           LATA.ng is Nigeria classified marketplace where buyers and sellers
