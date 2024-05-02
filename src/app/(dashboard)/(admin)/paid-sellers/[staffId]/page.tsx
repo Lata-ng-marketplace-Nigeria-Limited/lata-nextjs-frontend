@@ -1,6 +1,7 @@
 import { getAllPaidSellersAdminApi } from "@/api/admin";
 import PaidSellers from "@/components/admin/PaidSellers";
 import { GetUser } from "@/components/atom/GetUser";
+import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
 import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -48,7 +49,7 @@ export default async function Protected({
       <Suspense>
         <GetUser />
       </Suspense>
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<CentralizedRollerSpinner />}>
         <PaidSellers
           data={response?.data}
           activeSubscriptionCount={response?.activeSubscriptionCount}

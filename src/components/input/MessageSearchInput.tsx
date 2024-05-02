@@ -22,9 +22,9 @@ export default function MessageSearchInput(props: Props) {
       return;
     }
     const filteredChats = props.chats.filter((chat) => {
-      const { seller, buyer, product } = chat;
+      const { receiver, sender, product } = chat;
       const isOwner = chat.product?.userId === user?.id;
-      const name = isOwner ? buyer?.name : seller?.name;
+      const name = isOwner ? sender?.name : receiver?.name;
       const isNameMatch = searchString(search, name);
       const isProductMatch = searchString(search, product?.name);
       return isNameMatch || isProductMatch;

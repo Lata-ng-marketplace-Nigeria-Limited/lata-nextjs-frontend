@@ -4,6 +4,7 @@ import { useUser } from "@hooks/useUser";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { cn } from "@/utils";
 import MessagePreview from "@components/message/MessagePreview";
+import { UserRole } from "@/interface/user";
 
 interface Props {
   setActiveChat: React.Dispatch<SetStateAction<Chat | undefined>>;
@@ -77,10 +78,13 @@ export default function MessageListVirtualizer(props: Props) {
               isOwnProduct={
                 user?.id === props.chatList?.[virtualRow.index]?.product?.userId
               }
-              seller={props.chatList?.[virtualRow.index]?.seller}
-              buyer={props.chatList?.[virtualRow.index]?.buyer}
+              seller={props.chatList?.[virtualRow.index]?.receiver}
+              buyer={props.chatList?.[virtualRow.index]?.sender}
               lastMessage={props.chatList?.[virtualRow.index]?.lastMessage}
               productName={props.chatList?.[virtualRow.index]?.product?.name}
+              productId={props.chatList?.[virtualRow.index]?.product?.id}
+              senderRole={props.chatList?.[virtualRow.index]?.sender?.role as UserRole}
+              receiverRole={props.chatList?.[virtualRow.index]?.receiver?.role  as UserRole}
               lastMessageTime={
                 props.chatList?.[virtualRow.index]?.lastMessageAt
               }
