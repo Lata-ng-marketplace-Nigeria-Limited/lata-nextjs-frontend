@@ -1,10 +1,11 @@
 import { Product } from "./products";
+import { UserRole } from "./user";
 
 export interface Chat {
   id: string;
   productId: string;
-  sellerId: string;
-  buyerId: string;
+  receiverId: string;
+  senderId: string;
   lastMessage?: string | null;
   isArchived: boolean;
   lastMessageAt?: string | null;
@@ -12,8 +13,8 @@ export interface Chat {
   updatedAt: string;
   lastMessageId?: string | null;
   lastMessageSenderId?: string | null;
-  seller?: ChatUser;
-  buyer?: ChatUser;
+  receiver?: ChatUser;
+  sender?: ChatUser;
   product?: Omit<Product, "user" | "category" | "files">;
   messages?: ChatMessage[];
   lastMessageData?: ChatMessage;
@@ -25,6 +26,7 @@ export interface ChatUser {
   avatar?: string | null;
   email: string;
   phoneNumber?: string | null;
+  role?: UserRole
 }
 
 export interface ChatMessage {
