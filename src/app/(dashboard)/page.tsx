@@ -10,6 +10,7 @@ import StaffDashboard from "@/components/staff/StaffDashboard";
 import HeaderText from "@/components/atom/HeaderText";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
+import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
 
 export const metadata = {
   title: "Buy, sell, or rent products or search for your dream job on Lata.ng",
@@ -50,7 +51,7 @@ export default async function Home({
   if (session?.role === "ADMIN" && !isViewingAsAnotherUser) {
     return (
       <main className="">
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<CentralizedRollerSpinner />}>
           <AdminDashboardWrapper
             username={session?.user?.name || "Admin"}
             month={selectedMonth}
@@ -61,7 +62,7 @@ export default async function Home({
   } else if (session?.role === "STAFF" && !isViewingAsAnotherUser) {
     return (
       <main className="">
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<CentralizedRollerSpinner />}>
           <HeaderText title>Staff Dashboard</HeaderText>
           <HeaderSubText>Hi {session?.user?.name}, Welcome back!</HeaderSubText>
           <StaffDashboard staffId={session?.user?.id} month={selectedMonth} />

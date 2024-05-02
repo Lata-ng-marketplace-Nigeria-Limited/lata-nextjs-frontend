@@ -38,6 +38,8 @@ export const getSellersUnderStaffApi = async ({
   params.append("page", String(page || 1));
   params.append("limit", String(limit || 10));
 
+  new Promise((resolve) =>  setTimeout(resolve, 20000))
+
   return fetchData(`/staff/sellers?${params.toString()}`);
 };
 

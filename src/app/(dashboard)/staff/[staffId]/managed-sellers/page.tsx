@@ -1,5 +1,6 @@
 import { adminFetchSellersUnderStaff } from "@/api/admin";
 import { GetUser } from "@/components/atom/GetUser";
+import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
 import StaffSellers from "@/components/staff/StaffSellers";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
@@ -31,7 +32,7 @@ async function Page({
         <GetUser />
       </Suspense>
 
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<CentralizedRollerSpinner />}>
         <StaffSellers
           data={response?.data}
           meta={response?.meta}
