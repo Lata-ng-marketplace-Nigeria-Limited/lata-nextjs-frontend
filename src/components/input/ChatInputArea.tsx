@@ -34,8 +34,8 @@ export default function ChatInputArea(props: Props) {
     e.preventDefault();
     if (!message) return;
     const otherUserId = props.isOwner
-      ? props.activeChat?.buyer?.id
-      : props.activeChat?.seller?.id;
+      ? props.activeChat?.sender?.id
+      : props.activeChat?.receiver?.id;
     setLoading(true);
     SocketService.socket?.emit(`send:message` + user?.id, {
       chatId: props.activeChat?.id,

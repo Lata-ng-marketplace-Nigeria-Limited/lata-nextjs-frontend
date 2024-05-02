@@ -1,9 +1,9 @@
 import { ChatMessage, ChatUser } from "@/interface/chat";
 import { useEffect, useState } from "react";
-import { useUser } from "@hooks/useUser";
 import { DateTime } from "luxon";
 import { cn } from "@/utils";
 import AppAvatar from "@molecule/Avatar";
+import { UserRole } from "@/interface/user";
 
 interface Props {
   lastMessage?: string | null;
@@ -18,6 +18,9 @@ interface Props {
   onClick?: () => void;
   isActive?: boolean;
   lastMessageData?: ChatMessage;
+  senderRole?: UserRole;
+  receiverRole?: UserRole;
+  productId?: string;
   ref: any;
 }
 
@@ -26,7 +29,6 @@ export default function MessagePreview(props: Props) {
   const [lastMessageTime, setLastMessageTime] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [isLastMessageRead, setIsLastMessageRead] = useState(true);
-  const { user } = useUser();
 
   useEffect(() => {
     if (props.isOwnProduct) {
@@ -55,17 +57,33 @@ export default function MessagePreview(props: Props) {
     setIsLastMessageRead(props.lastMessageData.isRead);
   }, [props.lastMessageData]);
 
+  const lastMessageSender = () => {
+    if (props.lastMessageSender === "me") {
+      if (!props.productId) {
+        return "You";
+      } else {
+        return props.isOwnProduct ? "Buyer" : "Seller";
+      }
+    } else {
+      if (!props.productId) {
+        return props.receiverRole?.toLowerCase() || "User";
+      } else {
+        return props.isOwnProduct ? "Seller" : "Buyer";
+      }
+    }
+  };
+
   return (
     <div
       className={cn(
         `
-          flex px-[11px] 
-          sm:px-4 
-          pt-1 
+          flex cursor-pointer 
           gap-x-[5px] 
+          rounded-[10px] 
+          px-[11px] 
+          pt-1 
           sm:gap-x-[10px] 
-          cursor-pointer 
-          rounded-[10px]
+          sm:px-4
           
         `,
         {
@@ -82,29 +100,29 @@ export default function MessagePreview(props: Props) {
       <div
         className={cn(`
         flex 
-        flex-col 
         w-full 
+        flex-col 
         gap-y-1.5 
-        sm:gap-x-2
-        pb-3
         border-b
         border-grey1
+        pb-3
+        sm:gap-x-2
         
       `)}
       >
         <div
-          className={cn("flex justify-between w-full gap-x-2", {
+          className={cn("flex w-full justify-between gap-x-2", {
             "font-extrabold":
               props.lastMessageSender === "other" && !isLastMessageRead,
           })}
         >
-          <p className={cn("text-[10px] sm:text-[12px]  text-grey8")}>{name}</p>
-          <p className={"text-grey6 text-[6px] sm:text-[8px]"}>
+          <p className={cn("text-[10px] text-grey8  sm:text-[12px]")}>{name}</p>
+          <p className={"text-[6px] text-grey6 sm:text-[8px]"}>
             {lastMessageTime}
           </p>
         </div>
         <p
-          className={cn("text-sm sm:text-sm xl:text-base text-grey11", {
+          className={cn("text-sm text-grey11 sm:text-sm xl:text-base", {
             "font-extrabold":
               props.lastMessageSender === "other" && !isLastMessageRead,
           })}
@@ -113,21 +131,15 @@ export default function MessagePreview(props: Props) {
         </p>
         <p
           className={cn(
-            "text-xs xl:text-sm text-grey8 leading-tight tracking-tight",
+            "text-xs leading-tight tracking-tight text-grey8 xl:text-sm",
             {
               "font-extrabold":
                 props.lastMessageSender === "other" && !isLastMessageRead,
             },
           )}
         >
-          <span className={"capitalize"}>
-            {props.lastMessageSender === "me"
-              ? "You"
-              : props.isOwnProduct
-              ? "Buyer"
-              : "Seller"}
-          </span>
-          : {props.lastMessage}
+          <span className={"capitalize"}>{lastMessageSender()}</span>:{" "}
+          {props.lastMessage}
         </p>
       </div>
     </div>

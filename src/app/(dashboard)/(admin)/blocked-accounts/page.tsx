@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
 import { fetchAllBlockedAccountsApi } from "@/api/admin";
 import BlockedAccountsDisplay from "@/components/blocked-accounts/BlockedAccountsDisplay";
+import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
 
 export const metadata: Metadata = {
   title: "Blocked Accounts",
@@ -38,7 +39,7 @@ export default async function Protected({
       <Suspense>
         <GetUser />
       </Suspense>
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<CentralizedRollerSpinner />}>
         <BlockedAccountsDisplay
           meta={response?.meta}
           blockedAccounts={response?.data}

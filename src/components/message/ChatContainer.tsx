@@ -27,12 +27,12 @@ export default function ChatContainer(props: Props) {
     const isOwner = props.activeChat?.product?.userId === user?.id;
     setIsOwner(isOwner);
     const name = isOwner
-      ? props.activeChat?.buyer?.name
-      : props.activeChat?.seller?.name;
+      ? props.activeChat?.sender?.name
+      : props.activeChat?.receiver?.name;
     setName(name!);
     const picture = isOwner
-      ? props.activeChat?.buyer?.avatar
-      : props.activeChat?.seller?.avatar;
+      ? props.activeChat?.sender?.avatar
+      : props.activeChat?.receiver?.avatar;
     setPicture(picture!);
     setMessages(props.activeChat?.messages || []);
   }, [props.activeChat, user?.id]);

@@ -1,6 +1,7 @@
 import { getAllBuyersAdminApi } from "@/api/admin";
 import AllBuyers from "@/components/admin/AllBuyers";
 import { GetUser } from "@/components/atom/GetUser";
+import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
 import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -37,7 +38,7 @@ export default async function Protected({
       <Suspense>
         <GetUser />
       </Suspense>
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<CentralizedRollerSpinner />}>
         <AllBuyers
           data={response.data}
           meta={response.meta}
