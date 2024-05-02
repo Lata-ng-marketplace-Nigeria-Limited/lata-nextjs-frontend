@@ -13,24 +13,26 @@ const GoogleAdsUnit = ({ ...props }: Props) => {
 
   React.useEffect(() => {
     setLoaded(false);
-    try {
-      if ((window as any).adsbygoogle) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-          {}
-        );
-        setLoaded(true);
-      }else{
-        setLoaded(false);
+    const loadAds = () => {
+      try {
+        if ((window as any).adsbygoogle) {
+          ((window as any).adsbygoogle =
+            (window as any).adsbygoogle || []).push({});
+          setLoaded(true);
+        } else {
+          setLoaded(false);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
+    };
+    loadAds();
   }, [pathname, searchParams]);
 
   return (
     <>
       {loaded ? (
-        <div className="w-full mx-auto text-center">
+        <div className="mx-auto w-full text-center">
           <ins
             className="adsbygoogle adbanner-customize"
             style={{ display: "block", width: "100%" }}
