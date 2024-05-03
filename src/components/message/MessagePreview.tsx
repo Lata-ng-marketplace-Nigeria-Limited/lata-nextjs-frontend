@@ -60,7 +60,7 @@ export default function MessagePreview(props: Props) {
   const lastMessageSender = () => {
     return props.lastMessageSender === "me"
       ? "You"
-      : props.receiverRole?.toLowerCase();
+      : props.senderRole?.toLowerCase();
   };
 
   return (
