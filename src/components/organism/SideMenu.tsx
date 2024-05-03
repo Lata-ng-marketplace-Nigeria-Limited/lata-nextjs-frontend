@@ -100,6 +100,11 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
               return;
             if (item.hideFromSeller && role === "SELLER") return;
             if (item.hideFromBuyer && role === "BUYER") return;
+            if (
+              adminIsInUserMode &&
+              item.href.toLowerCase()?.includes("messages")
+            )
+              return;
 
             return (
               <NavLink
