@@ -58,19 +58,9 @@ export default function MessagePreview(props: Props) {
   }, [props.lastMessageData]);
 
   const lastMessageSender = () => {
-    if (props.lastMessageSender === "me") {
-      if (!props.productId) {
-        return "You";
-      } else {
-        return props.isOwnProduct ? "Buyer" : "Seller";
-      }
-    } else {
-      if (!props.productId) {
-        return props.receiverRole?.toLowerCase() || "User";
-      } else {
-        return props.isOwnProduct ? "Seller" : "Buyer";
-      }
-    }
+    return props.lastMessageSender === "me"
+      ? "You"
+      : props.receiverRole?.toLowerCase();
   };
 
   return (
