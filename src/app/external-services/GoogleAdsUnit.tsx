@@ -9,35 +9,6 @@ const GoogleAdsUnit = ({ ...props }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // React.useEffect(() => {
-  //   const loadAds = () => {
-  //     let adsbygoogle = (window as any).adsbygoogle;
-  //     try {
-  //       if (adsbygoogle && !adsbygoogle?.loaded) return;
-      
-  //       const adsElements = document.getElementsByClassName("adsbygoogle");
-  //       console.log("adsElements", adsElements);
-  //       if (adsbygoogle) {
-  //         (adsbygoogle = adsbygoogle || []).push({});
-
-  //         console.log("ads length", adsbygoogle?.length);
-
-  //         // window.addEventListener("load", function () {
-  //         //   ((window as any).adsbygoogle =
-  //         //     (window as any).adsbygoogle || []).push({});
-  //         // });
-
-  //         console.log("Ads with content", (window as any).adsbygoogle);
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   // console.log("Ads", Array.isArray((window as any).adsbygoogle) );
-  //   // console.log("Ads", (window as any).adsbygoogle) ;
-  //   loadAds();
-  // }, [pathname, searchParams]);
-
   React.useEffect(() => {
     const loadAds = () => {
       try {
@@ -58,7 +29,6 @@ const GoogleAdsUnit = ({ ...props }: Props) => {
     };
     loadAds();
   }, [pathname, searchParams]);
-  
 
   return (
     <ins
