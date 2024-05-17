@@ -220,21 +220,13 @@ export default function ImageUploader({
 
           {format === "blocked-account" ? (
             selectedPhoto ? (
-              <div>
-                <UploadImg
-                  preview={selectedPhoto[0]}
-                  format={format}
-                  className={cn(uploadImgClass, "mb-3")}
-                />
-
-                <div>
-                  <p className="text-center font-semibold text-primary ">
-                    Choose another file
-                  </p>
-                </div>
-              </div>
+              <UploadImg
+                preview={selectedPhoto[0]}
+                format={format}
+                className={cn(uploadImgClass, "mb-3")}
+              />
             ) : (
-              <div className="flex h-[9rem] w-[10rem] xs:h-[14.6875rem] xs:w-[15.185rem] items-center">
+              <div className="flex h-[9rem] w-[10rem] items-center xs:h-[14.6875rem] xs:w-[15.185rem]">
                 <p className="m-auto text-center font-semibold text-primary">
                   Click here to upload an image of your valid ID
                 </p>
