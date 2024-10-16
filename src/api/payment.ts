@@ -19,6 +19,7 @@ export interface GetSubscriptionPaymentCredentialsInput {
   type: "transfer" | "paystack";
 }
 
+
 export interface PaymentCredentials {
   isPaid: false;
   amountToPay: number;
