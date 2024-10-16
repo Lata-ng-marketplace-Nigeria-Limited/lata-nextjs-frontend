@@ -18,10 +18,11 @@ interface Props {
   month: string;
 }
 export default async function AdminDashboardWrapper(props: Props) {
-  const response = await getAdminAnalyticsApi(props.month);
-  const chartsData = await getAnalyticsClicksAndViews();
-  const states = await getAllStatesApi();
-
+  const [response, chartsData, states] = await Promise.all([
+    getAdminAnalyticsApi(props.month),
+    getAnalyticsClicksAndViews(),
+    getAllStatesApi(),
+  ]);
 
   return (
     <div>
