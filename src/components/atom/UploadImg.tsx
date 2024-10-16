@@ -150,7 +150,6 @@ export default function UploadImg({
             before:transition-opacity
             before:duration-300
             before:ease-in
-            
         `,
           {
             "group-hover:flex": (isSaved && !isDeleted) || isUploaded,
