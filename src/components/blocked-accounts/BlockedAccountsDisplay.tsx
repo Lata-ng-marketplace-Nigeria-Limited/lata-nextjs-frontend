@@ -24,7 +24,7 @@ interface Props {
   query: string;
 }
 
-const BlockedAccountsDisplay = async (props: Props) => {
+const BlockedAccountsDisplay = (props: Props) => {
   const { push } = useRouter();
 
   const handleGoToProfile = (user: BlockedUserDetails) => {

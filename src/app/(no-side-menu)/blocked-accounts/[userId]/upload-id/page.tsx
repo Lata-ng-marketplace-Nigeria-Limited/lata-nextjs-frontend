@@ -21,6 +21,8 @@ const Page = async ({
     redirect("/");
   }
 
+  console.log("response", response);
+
   return (
     <main>
       <UploadID
