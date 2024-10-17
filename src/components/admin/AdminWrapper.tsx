@@ -1,28 +1,28 @@
-import { getAdminAnalyticsApi } from "@/api/admin";
-import AdminAnalyticsWrapper from "@/components/admin/AdminAnalytics";
+// import { getAdminAnalyticsApi } from "@/api/admin";
+// import AdminAnalyticsWrapper from "@/components/admin/AdminAnalytics";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";
 import Button from "@/components/atom/Button";
-import RecentPosts from "@/components/admin/RecentPosts";
-import { getAnalyticsClicksAndViews } from "@/api/view";
-import AnalyticsChart from "@/components/analytics/AnalyticsChart";
-import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
-import { formatNumber } from "@/utils";
-import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
-import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
+// import RecentPosts from "@/components/admin/RecentPosts";
+// import { getAnalyticsClicksAndViews } from "@/api/view";
+// import AnalyticsChart from "@/components/analytics/AnalyticsChart";
+// import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
+// import { formatNumber } from "@/utils";
+// import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
+// import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
 import ProductInsights from "../analytics/ProductInsights";
-import { getAllStatesApi } from "@/api/location";
+// import { getAllStatesApi } from "@/api/location";
 
 interface Props {
   username: string;
   month: string;
 }
 export default async function AdminDashboardWrapper(props: Props) {
-  const [ chartsData, states] = await Promise.all([
-    // getAdminAnalyticsApi(props.month),
-    getAnalyticsClicksAndViews(),
-    getAllStatesApi(),
-  ]);
+  // const [ chartsData, states] = await Promise.all([
+  //   getAdminAnalyticsApi(props.month),
+  //   getAnalyticsClicksAndViews(),
+  //   getAllStatesApi(),
+  // ]);
 
   return (
     <div>
@@ -47,8 +47,8 @@ export default async function AdminDashboardWrapper(props: Props) {
           titleClass="!text-sm md:!text-[1.1rem] text-grey10 font-semibold md:font-medium"
         />
 
-        <AnalyticsChartAreaHOC>
-          <AnalyticsChart chartsData={chartsData} />
+        {/* <AnalyticsChartAreaHOC> */}
+          {/* <AnalyticsChart chartsData={chartsData} /> */}
 
           {/* <AnalyticsSideCardsHOC>
             <AnalyticsSideCard
@@ -70,7 +70,7 @@ export default async function AdminDashboardWrapper(props: Props) {
               description="All time sales"
             />
           </AnalyticsSideCardsHOC> */}
-        </AnalyticsChartAreaHOC>
+        {/* </AnalyticsChartAreaHOC> */}
       </div>
 
       <div>
