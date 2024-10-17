@@ -49,7 +49,7 @@ export default async function AdminDashboardWrapper(props: Props) {
         />
 
         <AnalyticsChartAreaHOC>
-          <AnalyticsChart chartsData={chartsData} />
+          {/* <AnalyticsChart chartsData={chartsData} /> */}
 
           <AnalyticsSideCardsHOC>
             <AnalyticsSideCard
