@@ -19,11 +19,11 @@ interface Props {
 }
 // chartsData, states
 export default async function AdminDashboardWrapper(props: Props) {
-  const [response, ] = await Promise.all([
-    getAdminAnalyticsApi(props.month),
-    // getAnalyticsClicksAndViews(),
-    // getAllStatesApi(),
-  ]);
+  // const [response] = await Promise.all([
+  //   getAdminAnalyticsApi(props.month),
+  //   getAnalyticsClicksAndViews(),
+  //   getAllStatesApi(),
+  // ]);
 
   return (
     <div>
@@ -39,7 +39,8 @@ export default async function AdminDashboardWrapper(props: Props) {
         <Button format="primary">Account Email</Button>
       </div>
 
-      <AdminAnalyticsWrapper analyticsCount={response?.counts} />
+      {/* <AdminAnalyticsWrapper analyticsCount={response?.counts} /> */}
+      {/* <AdminAnalyticsWrapper analyticsCount={} /> */}
 
       <div className="mb-8">
         <ProductInsights
@@ -56,18 +57,21 @@ export default async function AdminDashboardWrapper(props: Props) {
               title="Monthly Sales"
               titleClassName="text-success"
               isMoney
-              clicksCount={
-                formatNumber(Number(response?.sales?.monthlySales)) || 0
-              }
-              description={response?.sales?.month}
+              // clicksCount={
+              //   formatNumber(Number(response?.sales?.monthlySales)) || 0
+              // }
+              clicksCount={0}
+              // description={response?.sales?.month}
+              description={"March"}
             />
 
             <AnalyticsSideCard
               title="Total Sales"
               titleClassName="text-grey10"
-              clicksCount={
-                "₦" + formatNumber(Number(response?.sales?.totalSales)) || 0
-              }
+              // clicksCount={
+              //   "₦" + formatNumber(Number(response?.sales?.totalSales)) || 0
+              // }
+              clicksCount={"₦" + formatNumber(Number(0))}
               description="All time sales"
             />
           </AnalyticsSideCardsHOC>
@@ -79,11 +83,14 @@ export default async function AdminDashboardWrapper(props: Props) {
           Recent Posts
         </HeaderText>
 
-        {/* <RecentPosts
-          reposts={response?.recentPosts?.data}
-          meta={response.recentPosts?.meta}
-          states={states?.data}
-        /> */}
+        <RecentPosts
+          // reposts={response?.recentPosts?.data}
+          reposts={[]}
+          // meta={response.recentPosts?.meta}
+          // meta={{ total: 0, per_page: 0, last_page: 0 }}
+          // states={states?.data}
+          states={[]}
+        />
       </div>
     </div>
   );
