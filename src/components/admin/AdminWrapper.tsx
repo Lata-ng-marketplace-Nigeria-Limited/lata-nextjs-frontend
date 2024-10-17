@@ -18,8 +18,8 @@ interface Props {
   month: string;
 }
 export default async function AdminDashboardWrapper(props: Props) {
-  const [response, chartsData, states] = await Promise.all([
-    getAdminAnalyticsApi(props.month),
+  const [ chartsData, states] = await Promise.all([
+    // getAdminAnalyticsApi(props.month),
     getAnalyticsClicksAndViews(),
     getAllStatesApi(),
   ]);
@@ -38,7 +38,7 @@ export default async function AdminDashboardWrapper(props: Props) {
         <Button format="primary">Account Email</Button>
       </div>
 
-      <AdminAnalyticsWrapper analyticsCount={response?.counts} />
+      {/* <AdminAnalyticsWrapper analyticsCount={response?.counts} /> */}
 
       <div className="mb-8">
         <ProductInsights
@@ -50,7 +50,7 @@ export default async function AdminDashboardWrapper(props: Props) {
         <AnalyticsChartAreaHOC>
           <AnalyticsChart chartsData={chartsData} />
 
-          <AnalyticsSideCardsHOC>
+          {/* <AnalyticsSideCardsHOC>
             <AnalyticsSideCard
               title="Monthly Sales"
               titleClassName="text-success"
@@ -69,7 +69,7 @@ export default async function AdminDashboardWrapper(props: Props) {
               }
               description="All time sales"
             />
-          </AnalyticsSideCardsHOC>
+          </AnalyticsSideCardsHOC> */}
         </AnalyticsChartAreaHOC>
       </div>
 
@@ -78,11 +78,11 @@ export default async function AdminDashboardWrapper(props: Props) {
           Recent Posts
         </HeaderText>
 
-        <RecentPosts
+        {/* <RecentPosts
           reposts={response?.recentPosts?.data}
           meta={response.recentPosts?.meta}
           states={states?.data}
-        />
+        /> */}
       </div>
     </div>
   );
