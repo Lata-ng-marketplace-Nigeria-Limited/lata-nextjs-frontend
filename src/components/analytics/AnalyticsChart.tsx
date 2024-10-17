@@ -19,7 +19,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface Props {
@@ -27,23 +27,23 @@ interface Props {
 }
 const AnalyticsChart = ({ chartsData }: Props) => {
   const productClicks = chartsData?.productClicksForAllMonths?.map(
-    (product) => product?.clicks
+    (product) => product?.product,
   );
 
   const productViews = chartsData?.productViewsForAllMonths?.map(
-    (product) => product?.views
+    (product) => product?.view,
   );
 
   const phoneClicks = chartsData?.phoneClicksForAllMonths?.map(
-    (phone) => phone?.clicks
+    (phone) => phone?.phone,
   );
 
   const messageClicks = chartsData?.messageClicksForAllMonths?.map(
-    (message) => message?.clicks
+    (message) => message?.message,
   );
 
-  const months = chartsData?.productClicksForAllMonths?.map(
-    (product) => product?.month.split(" ")[0]?.slice(0, 3)
+  const months = chartsData?.productClicksForAllMonths?.map((product) =>
+    product?.month.split(" ")[0]?.slice(0, 3),
   );
 
   const { data, options } = chartConfig(
@@ -51,11 +51,11 @@ const AnalyticsChart = ({ chartsData }: Props) => {
     productViews,
     phoneClicks,
     messageClicks,
-    months
+    months,
   );
 
   return (
-    <div className="lg:basis-[65%] xl:basis-[75%] w-full max-w-full h-full border rounded lg:rounded-none lg:border-0 p-6 lg:p-0">
+    <div className="h-full w-full max-w-full rounded border p-6 lg:basis-[65%] lg:rounded-none lg:border-0 lg:p-0 xl:basis-[75%]">
       <Bar datasetIdKey="datasetIdKey" data={data} options={options} />
     </div>
   );
