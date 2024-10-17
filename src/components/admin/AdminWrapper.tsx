@@ -19,7 +19,7 @@ interface Props {
 }
 // chartsData, states
 export default async function AdminDashboardWrapper(props: Props) {
-  const [response, chartsData, states] = await Promise.all([
+  const [response, states] = await Promise.all([
     getAdminAnalyticsApi(props.month),
     getAnalyticsClicksAndViews(),
     getAllStatesApi(),
@@ -49,7 +49,7 @@ export default async function AdminDashboardWrapper(props: Props) {
         />
 
         <AnalyticsChartAreaHOC>
-          <AnalyticsChart chartsData={chartsData} />
+          {/* <AnalyticsChart chartsData={chartsData} /> */}
 
           <AnalyticsSideCardsHOC>
             <AnalyticsSideCard
@@ -82,7 +82,7 @@ export default async function AdminDashboardWrapper(props: Props) {
         <RecentPosts
           reposts={response?.recentPosts?.data}
           meta={response.recentPosts?.meta}
-          states={states?.data}
+          states={states?.data || []}
         />
       </div>
     </div>

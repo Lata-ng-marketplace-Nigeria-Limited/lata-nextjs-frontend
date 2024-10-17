@@ -53,10 +53,10 @@ export default async function Home({
       <main className="">
         <Suspense fallback={<CentralizedRollerSpinner />}>
           <AdminDashboardWrapper
-            // username={session?.user?.name || "Admin"}
-            // month={selectedMonth}
-            username={"Admin"}
-            month={"6"}
+            username={session?.user?.name || "Admin"}
+            month={selectedMonth}
+            // username={"Admin"}
+            // month={"6"}
           />
         </Suspense>
       </main>
