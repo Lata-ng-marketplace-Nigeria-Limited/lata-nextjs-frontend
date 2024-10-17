@@ -14,7 +14,7 @@ import { selectedState } from "@/utils/location";
 
 interface Props {
   reposts: Product[];
-  meta?: FetchMeta;
+  meta: FetchMeta;
   states: State[]
 }
 
@@ -24,7 +24,7 @@ const RecentPosts = (props: Props) => {
     <>
       <TableWithRowGaps
         usePaginate
-        // meta={props.meta}
+        meta={props.meta}
         emptyTableTitle="No Recent Posts"
         emptyTableDescription="All newly uploaded products yet to be reviewed will appear here"
         tableData={props?.reposts?.map((post) => {
