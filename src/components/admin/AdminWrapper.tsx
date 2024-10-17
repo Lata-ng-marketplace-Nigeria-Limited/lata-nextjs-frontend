@@ -17,11 +17,12 @@ interface Props {
   username: string;
   month: string;
 }
+// chartsData, states
 export default async function AdminDashboardWrapper(props: Props) {
-  const [response, chartsData, states] = await Promise.all([
+  const [response, ] = await Promise.all([
     getAdminAnalyticsApi(props.month),
-    getAnalyticsClicksAndViews(),
-    getAllStatesApi(),
+    // getAnalyticsClicksAndViews(),
+    // getAllStatesApi(),
   ]);
 
   return (
@@ -48,7 +49,7 @@ export default async function AdminDashboardWrapper(props: Props) {
         />
 
         <AnalyticsChartAreaHOC>
-          <AnalyticsChart chartsData={chartsData} />
+          {/* <AnalyticsChart chartsData={chartsData} /> */}
 
           <AnalyticsSideCardsHOC>
             <AnalyticsSideCard
@@ -78,11 +79,11 @@ export default async function AdminDashboardWrapper(props: Props) {
           Recent Posts
         </HeaderText>
 
-        <RecentPosts
+        {/* <RecentPosts
           reposts={response?.recentPosts?.data}
           meta={response.recentPosts?.meta}
           states={states?.data}
-        />
+        /> */}
       </div>
     </div>
   );
