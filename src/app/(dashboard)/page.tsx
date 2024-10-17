@@ -48,20 +48,20 @@ export default async function Home({
   const isViewingAsAnotherUser =
     searchParams?.sessionSwitched && searchParams?.uid;
 
-  if (session?.role === "ADMIN" && !isViewingAsAnotherUser) {
+  if (session && session?.role === "ADMIN" && !isViewingAsAnotherUser) {
     return (
       <main className="">
         <Suspense fallback={<CentralizedRollerSpinner />}>
           <AdminDashboardWrapper
-            // username={session?.user?.name || "Admin"}
-            // month={selectedMonth}
-            username={"Admin"}
-            month={"6"}
+            username={session?.user?.name || "Admin"}
+            month={selectedMonth}
+            // username={"Admin"}
+            // month={"6"}
           />
         </Suspense>
       </main>
     );
-  } else if (session?.role === "STAFF" && !isViewingAsAnotherUser) {
+  } else if (session && session?.role === "STAFF" && !isViewingAsAnotherUser) {
     return (
       <main className="">
         <Suspense fallback={<CentralizedRollerSpinner />}>
