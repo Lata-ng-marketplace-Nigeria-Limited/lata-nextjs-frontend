@@ -55,8 +55,6 @@ export default async function Home({
           <AdminDashboardWrapper
             username={session?.user?.name || "Admin"}
             month={selectedMonth}
-            // username={"Admin"}
-            // month={"6"}
           />
         </Suspense>
       </main>
