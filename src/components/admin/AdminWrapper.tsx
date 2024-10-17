@@ -21,7 +21,7 @@ interface Props {
 export default async function AdminDashboardWrapper(props: Props) {
   const [response, states] = await Promise.all([
     getAdminAnalyticsApi(props.month),
-    getAnalyticsClicksAndViews(),
+    // getAnalyticsClicksAndViews(),
     getAllStatesApi(),
   ]);
 
