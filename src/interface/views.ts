@@ -27,8 +27,12 @@ export interface GetSellerAnalyticsResponse {
 
 export interface ChartAnalyticsMonthlyDataResponse {
   month: string;
-  views: number;
-  clicks: number;
+  // views: number;
+  // clicks: number;
+  phone: number;
+  product: number;
+  message: number;
+  view: number;
 }
 
 export interface MonthlyAnalyticsResponse {
