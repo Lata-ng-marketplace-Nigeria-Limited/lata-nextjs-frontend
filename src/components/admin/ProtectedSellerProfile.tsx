@@ -15,9 +15,11 @@ interface Props {
   query: string;
 }
 const ProtectedSellerProfile = async ({ sellerId, query }: Props) => {
-  const managers = await fetchAllMangersApi(query);
-  const response = await getProtectedSellerApi({ sellerId });
-  const statesData = await getAllStatesApi();
+  const [managers, response, statesData] = await Promise.all([
+    fetchAllMangersApi(query),
+    getProtectedSellerApi({ sellerId }),
+    getAllStatesApi(),
+  ]);
 
   const planDuration = () => {
     const duration = Number(response?.data?.plan?.duration);
