@@ -3,14 +3,16 @@ import AnalyticsSideCardsWrapper from "@components/analytics/AnalyticsSideCardsW
 import AnalyticsChartAreaHOC from "./AnalyticsChartAreaHOC";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import { MonthlyAnalyticsResponse } from "@/interface/views";
+import { getAnalyticsClicksAndViews } from "@/api/view";
 
 interface Props {
   selectedMonth: string;
   queries: SwitchedRoleQueries;
-  chartsData: MonthlyAnalyticsResponse;
 }
 
-const AnalyticsChartArea = ({ selectedMonth, chartsData, queries }: Props) => {
+const AnalyticsChartArea = async ({ selectedMonth, queries }: Props) => {
+  const chartsData = await getAnalyticsClicksAndViews(queries);
+
   return (
     <AnalyticsChartAreaHOC>
       <AnalyticsChart chartsData={chartsData} />
