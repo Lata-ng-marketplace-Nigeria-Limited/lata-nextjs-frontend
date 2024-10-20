@@ -11,6 +11,7 @@ import AnalyticsTopCardSkeleton from "@/components/skeleton/AnalyticsTopCardSkel
 import AnalyticsChartAreaSkeleton from "@/components/skeleton/AnalyticsChartAreaSkeleton";
 import ProductInsightsLoadingSkeleton from "@/components/skeleton/AnaltyicsProductInsightsSkeleton";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
+import { getAnalyticsClicksAndViews } from "@/api/view";
 
 export const metadata: Metadata = {
   title: "Analytics",
@@ -41,6 +42,8 @@ const page = async ({ searchParams }: { searchParams?: ISearchParams }) => {
     uid: searchParams?.uid || "",
   };
 
+  const chartsData = await getAnalyticsClicksAndViews(queries);
+
   return (
     <div>
       <HeaderText title>{`Seller's`} Analytics</HeaderText>
@@ -55,7 +58,11 @@ const page = async ({ searchParams }: { searchParams?: ISearchParams }) => {
       </Suspense>
 
       <Suspense key={month} fallback={<AnalyticsChartAreaSkeleton />}>
-        <AnalyticsChartArea selectedMonth={month} queries={queries} />
+        <AnalyticsChartArea
+          selectedMonth={month}
+          queries={queries}
+          chartsData={chartsData}
+        />
       </Suspense>
     </div>
   );
