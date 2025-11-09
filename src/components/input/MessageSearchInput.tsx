@@ -35,7 +35,7 @@ export default function MessageSearchInput(props: Props) {
   return (
     <div className={cn("relative w-full", props.wrapperClass)}>
       <input
-        {...props}
+        type="text"
         placeholder={"Search messages"}
         className={cn(
           `
