@@ -1,5 +1,5 @@
 import { ChatMessage, ChatUser } from "@/interface/chat";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import { cn } from "@/utils";
 import AppAvatar from "@molecule/Avatar";
@@ -21,10 +21,9 @@ interface Props {
   senderRole?: UserRole;
   receiverRole?: UserRole;
   productId?: string;
-  ref: any;
 }
 
-export default function MessagePreview(props: Props) {
+const MessagePreview = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const [name, setName] = useState("");
   const [lastMessageTime, setLastMessageTime] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
@@ -81,7 +80,7 @@ export default function MessagePreview(props: Props) {
         },
       )}
       onClick={props.onClick}
-      ref={props.ref}
+      ref={ref}
     >
       <div className={"grid place-items-center"}>
         <AppAvatar name={name} src={profilePicture} type={"message"} />
@@ -134,4 +133,8 @@ export default function MessagePreview(props: Props) {
       </div>
     </div>
   );
-}
+});
+
+MessagePreview.displayName = "MessagePreview";
+
+export default MessagePreview;
