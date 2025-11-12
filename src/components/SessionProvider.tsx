@@ -28,20 +28,36 @@ export const NextAuthProvider = ({ children, session }: Props) => {
       return;
     }
     console.log("🔌 Initializing socket connection...");
+    
+    let authTimeout: NodeJS.Timeout;
+    
     SocketService.boot({
       onAuthenticated: (data) => {
         console.log("🔐 Socket authentication:", data);
+        clearTimeout(authTimeout);
         setIsSocketConnected(data.isAuthorized);
         setHasInitializedSocketConnection(true);
       },
       onConnect: () => {
         console.log("✅ Socket connected");
+        
+        // Fallback: If no auth event is received within 3 seconds, assume connected
+        authTimeout = setTimeout(() => {
+          console.warn("⚠️ No socket:auth event received after 3s, assuming authenticated");
+          setIsSocketConnected(true);
+          setHasInitializedSocketConnection(true);
+        }, 3000);
       },
       onDisconnect: () => {
         console.log("❌ Socket disconnected");
+        clearTimeout(authTimeout);
       },
       token: session?.token,
     });
+    
+    return () => {
+      clearTimeout(authTimeout);
+    };
   }, [session?.token, setHasInitializedSocketConnection, setIsSocketConnected]);
 
   useEffect(() => {
@@ -80,6 +96,12 @@ export const NextAuthProvider = ({ children, session }: Props) => {
     SocketService.socket?.on(receiveChatsEvent, handleReceiveChats);
     SocketService.socket?.on(getAllChatsEvent, handleGetAllChats);
 
+    // Debug: Listen to ALL socket events to see what the server is actually sending
+    const debugHandler = (eventName: string, ...args: any[]) => {
+      console.log("🔔 ALL Socket events:", eventName, args);
+    };
+    SocketService.socket?.onAny(debugHandler);
+
     // Initial fetch
     console.log("🚀 Emitting initial chat request:", getAllChatsEvent);
     SocketService.socket?.emit(getAllChatsEvent);
@@ -89,6 +111,7 @@ export const NextAuthProvider = ({ children, session }: Props) => {
       console.log("🧹 Cleaning up chat listeners");
       SocketService.socket?.off(receiveChatsEvent, handleReceiveChats);
       SocketService.socket?.off(getAllChatsEvent, handleGetAllChats);
+      SocketService.socket?.offAny(debugHandler);
     };
   }, [
     hasInitializedSocketConnection,

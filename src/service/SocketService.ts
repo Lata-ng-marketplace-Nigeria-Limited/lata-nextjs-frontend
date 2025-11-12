@@ -37,16 +37,21 @@ class SocketServe {
     });
 
     this.socket.on("connect", () => {
-      // console.log("socket connected");
+      console.log("✅ Socket.io connected, socket ID:", this.socket?.id);
       this.onConnect?.();
     });
 
-    this.socket.on("disconnect", () => {
-      // console.log("socket disconnected");
+    this.socket.on("disconnect", (reason: string) => {
+      console.log("❌ Socket.io disconnected, reason:", reason);
       this.onDisconnect?.();
     });
 
+    this.socket.on("connect_error", (error: Error) => {
+      console.error("❌ Socket connection error:", error.message);
+    });
+
     this.socket.on("socket:auth", (data: SocketOnAuth) => {
+      console.log("🔐 Socket:auth event received:", data);
       this.onAuthenticated(data);
     });
   }
