@@ -42,16 +42,33 @@ export const NextAuthProvider = ({ children, session }: Props) => {
   useEffect(() => {
     if (!isSocketConnected) return;
     if (!hasInitializedSocketConnection) return;
-    SocketService.socket?.emit("get-all:chats" + session?.user?.id);
-    SocketService.socket?.on(
-      "receive-all:chats" + session?.user?.id,
-      (data: Chat[]) => {
-        setChats(data);
-      },
-    );
-    SocketService.socket?.on("get-all:chats" + session?.user?.id, () => {
-      SocketService.socket?.emit("get-all:chats" + session?.user?.id);
-    });
+    if (!session?.user?.id) return;
+
+    const receiveChatsEvent = "receive-all:chats" + session.user.id;
+    const getAllChatsEvent = "get-all:chats" + session.user.id;
+
+    const handleReceiveChats = (data: Chat[]) => {
+      console.log("Received chats:", data?.length);
+      setChats(data);
+    };
+
+    const handleGetAllChats = () => {
+      console.log("Re-fetching chats");
+      SocketService.socket?.emit(getAllChatsEvent);
+    };
+
+    // Register listeners
+    SocketService.socket?.on(receiveChatsEvent, handleReceiveChats);
+    SocketService.socket?.on(getAllChatsEvent, handleGetAllChats);
+
+    // Initial fetch
+    SocketService.socket?.emit(getAllChatsEvent);
+
+    // Cleanup function to remove listeners
+    return () => {
+      SocketService.socket?.off(receiveChatsEvent, handleReceiveChats);
+      SocketService.socket?.off(getAllChatsEvent, handleGetAllChats);
+    };
   }, [
     hasInitializedSocketConnection,
     isSocketConnected,
