@@ -35,7 +35,7 @@ class SocketServe {
     //     token: token || getCookies("token"),
     //   },
     // });
-    this.socket = io("lata-chat-production.up.railway.app", {
+    this.socket = io("https://lata-chat-production.up.railway.app/", {
       reconnectionDelayMax: 10000,
       auth: {
         token: token || getCookies("token"),
