@@ -7,8 +7,10 @@ import { signOut } from "next-auth/react";
 
 const noneAuthUrls = [""];
 
-const baseURL = process.env.NEXT_PUBLIC_LATA_API_URL;
-const baseURL2 = process.env.NEXT_PUBLIC_LATA_API_URL_2;
+// const baseURL = process.env.NEXT_PUBLIC_LATA_API_URL;
+// const baseURL2 = process.env.NEXT_PUBLIC_LATA_API_URL_2;
+const baseURL = "https://lata-backend-production.up.railway.app/v1";
+const baseURL2 = "https://lata-backend-production.up.railway.app/v1";
 
 export const $http = axios.create({
   baseURL,

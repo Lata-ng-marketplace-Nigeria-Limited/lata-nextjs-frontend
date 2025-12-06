@@ -48,7 +48,14 @@ class Fetch {
   $http = async (url: string, options?: FetchOptions) => {
     const session = await getServerSession(authConfig);
     let token = session?.token;
-    return await fetch(process.env.NEXT_PUBLIC_LATA_API_URL + url, {
+    // return await fetch(process.env.NEXT_PUBLIC_LATA_API_URL + url, {
+    //   ...(options || {}),
+    //   headers: {
+    //     ...options?.headers,
+    //     ...(token ? { Authorization: "Bearer " + token } : {}),
+    //   },
+    // });
+    return await fetch("https://lata-backend-production.up.railway.app/v1" + url, {
       ...(options || {}),
       headers: {
         ...options?.headers,
@@ -61,7 +68,14 @@ class Fetch {
 const FetchService = async (url: string, options?: FetchOptions) => {
   const session = await getServerSession(authConfig);
   let token = session?.token;
-  return await fetch(process.env.NEXT_PUBLIC_LATA_API_URL + url, {
+  // return await fetch(process.env.NEXT_PUBLIC_LATA_API_URL + url, {
+  //   ...(options || {}),
+  //   headers: {
+  //     ...options?.headers,
+  //     ...(token ? { Authorization: "Bearer " + token } : {}),
+  //   },
+  // });
+  return await fetch("https://lata-backend-production.up.railway.app/v1" + url, {
     ...(options || {}),
     headers: {
       ...options?.headers,

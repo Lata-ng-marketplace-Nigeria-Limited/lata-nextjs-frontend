@@ -29,7 +29,13 @@ class SocketServe {
     this.onDisconnect = onDisconnect || this.onDisconnect;
     this.onAuthenticated = onAuthenticated || this.onAuthenticated;
 
-    this.socket = io(process.env.NEXT_PUBLIC_CHAT_API_URL || "", {
+    // this.socket = io(process.env.NEXT_PUBLIC_CHAT_API_URL || "", {
+    //   reconnectionDelayMax: 10000,
+    //   auth: {
+    //     token: token || getCookies("token"),
+    //   },
+    // });
+    this.socket = io("lata-chat-production.up.railway.app", {
       reconnectionDelayMax: 10000,
       auth: {
         token: token || getCookies("token"),
