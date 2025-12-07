@@ -174,8 +174,10 @@ export function copyPrevLocalStore(prev: any) {
 }
 
 export const getApiUrl = (path: string) => {
-  // return process.env.NEXT_PUBLIC_LATA_API_URL + path;
-  return "https://lata-backend-production.up.railway.app/v1" + path;
+  return (
+    process.env.NEXT_PUBLIC_LATA_API_URL ||
+    "https://lata-backend-production.up.railway.app/v1" + path
+  );
 };
 
 export const sortArray = (
