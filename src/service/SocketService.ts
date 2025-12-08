@@ -1,5 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { getCookies } from "@/utils";
+import { SOCKET_API_URL } from "@/constants/env";
 
 export interface SocketOnAuth {
   message: string;
@@ -29,13 +30,7 @@ class SocketServe {
     this.onDisconnect = onDisconnect || this.onDisconnect;
     this.onAuthenticated = onAuthenticated || this.onAuthenticated;
 
-    // this.socket = io(process.env.NEXT_PUBLIC_CHAT_API_URL || "", {
-    //   reconnectionDelayMax: 10000,
-    //   auth: {
-    //     token: token || getCookies("token"),
-    //   },
-    // });
-    this.socket = io("wss://lata-chat-production.up.railway.app/", {
+    this.socket = io(SOCKET_API_URL, {
       reconnectionDelayMax: 10000,
       auth: {
         token: token || getCookies("token"),

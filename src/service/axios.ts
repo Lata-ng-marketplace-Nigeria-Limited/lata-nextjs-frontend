@@ -4,22 +4,16 @@ import { ApiErrorResponse } from "@/interface/general";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
 import { signOut } from "next-auth/react";
+import { API_URL, API_URL_2 } from "@/constants/env";
 
 const noneAuthUrls = [""];
 
-const baseURL =
-  process.env.NEXT_PUBLIC_LATA_API_URL ||
-  "https://lata-backend-production.up.railway.app/v1";
-const baseURL2 =
-  process.env.NEXT_PUBLIC_LATA_API_URL_2 ||
-  "https://lata-backend-production.up.railway.app/v1";
-
 export const $http = axios.create({
-  baseURL,
+  baseURL: API_URL,
 });
 
 export const $httpFile = axios.create({
-  baseURL: baseURL2,
+  baseURL: API_URL_2,
 });
 
 $httpFile.interceptors.request.use(async (config: any) => {

@@ -3,6 +3,7 @@
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
 import { getCookies } from "@/utils";
+import { API_URL } from "@/constants/env";
 
 export interface FetchOptions {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -48,17 +49,13 @@ class Fetch {
   $http = async (url: string, options?: FetchOptions) => {
     const session = await getServerSession(authConfig);
     let token = session?.token;
-    return await fetch(
-      process.env.NEXT_PUBLIC_LATA_API_URL ||
-        "https://lata-backend-production.up.railway.app/v1" + url,
-      {
-        ...(options || {}),
-        headers: {
-          ...options?.headers,
-          ...(token ? { Authorization: "Bearer " + token } : {}),
-        },
+    return await fetch(API_URL + url, {
+      ...(options || {}),
+      headers: {
+        ...options?.headers,
+        ...(token ? { Authorization: "Bearer " + token } : {}),
       },
-    );
+    });
   };
 }
 
@@ -66,17 +63,13 @@ const FetchService = async (url: string, options?: FetchOptions) => {
   const session = await getServerSession(authConfig);
   let token = session?.token;
 
-  return await fetch(
-    process.env.NEXT_PUBLIC_LATA_API_URL ||
-      "https://lata-backend-production.up.railway.app/v1" + url,
-    {
-      ...(options || {}),
-      headers: {
-        ...options?.headers,
-        ...(token ? { Authorization: "Bearer " + token } : {}),
-      },
+  return await fetch(API_URL + url, {
+    ...(options || {}),
+    headers: {
+      ...options?.headers,
+      ...(token ? { Authorization: "Bearer " + token } : {}),
     },
-  );
+  });
 };
 
 export default FetchService;

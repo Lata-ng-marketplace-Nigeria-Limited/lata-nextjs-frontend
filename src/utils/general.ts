@@ -5,6 +5,7 @@ import { User } from "@/interface/user";
 import { toast } from "@/components/ui/use-toast";
 import { clearAllCookies } from ".";
 import { signOut } from "next-auth/react";
+import { API_URL } from "@/constants/env";
 
 export const getEnv = (env: IEnv): string => {
   return process.env[env] || "";
@@ -174,10 +175,7 @@ export function copyPrevLocalStore(prev: any) {
 }
 
 export const getApiUrl = (path: string) => {
-  return (
-    process.env.NEXT_PUBLIC_LATA_API_URL ||
-    "https://lata-backend-production.up.railway.app/v1" + path
-  );
+  return API_URL + path;
 };
 
 export const sortArray = (
