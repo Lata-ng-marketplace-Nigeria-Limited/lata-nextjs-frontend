@@ -4,7 +4,7 @@ import { IFeedback } from "@/interface/feedback";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { Category, IProductStatusCount, Product } from "@/interface/products";
 import { ISubscribedUser, User } from "@/interface/user";
-import { getMonthInGMTPlus1 } from "@/utils";
+import { getApiUrl, getMonthInGMTPlus1 } from "@/utils";
 import { fetchData } from "./_helper";
 import { BlockedUserDetails } from "@/interface/blockedAccounts";
 
@@ -300,4 +300,73 @@ export const fetchAllBlockedAccountsApi = async ({
   }
 
   return fetchData(`/blocked-accounts?${params.toString()}`);
+};
+
+export type EmailBroadcastCategory =
+  | "all"
+  | "sellers"
+  | "buyers"
+  | "sellers_with_properties"
+  | "sellers_without_properties"
+  | "verified_users"
+  | "unverified_users"
+  | "active_subscribers"
+  | "expired_subscribers"
+  | "never_subscribed";
+
+export type EmailTemplateType = "custom" | "announcement" | "promotion";
+
+interface IGetUserCountByCategoryApi {
+  success: boolean;
+  message: string;
+  data: {
+    category: EmailBroadcastCategory;
+    count: number;
+  };
+}
+
+export const getUserCountByCategoryApi = async (
+  category: EmailBroadcastCategory,
+): Promise<IGetUserCountByCategoryApi> => {
+  return fetchData(`/admin/email-broadcast/user-count?category=${category}`);
+};
+
+interface ISendBroadcastEmailPayload {
+  category: EmailBroadcastCategory;
+  subject: string;
+  message: string;
+  templateType?: EmailTemplateType;
+}
+
+interface ISendBroadcastEmailApi {
+  success: boolean;
+  message: string;
+  data: {
+    totalRecipients: number;
+    category: EmailBroadcastCategory;
+  };
+}
+
+export const sendBroadcastEmailApi = async (
+  payload: ISendBroadcastEmailPayload,
+): Promise<ISendBroadcastEmailApi | undefined> => {
+  try {
+    const res = await fetch(getApiUrl("/admin/email-broadcast/send"), {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: "Failed to send broadcast email",
+        data: {
+          totalRecipients: 0,
+          category: payload.category,
+        },
+      };
+    }
+  } catch (error: any) {
+    throw error?.response || error;
+  }
 };
