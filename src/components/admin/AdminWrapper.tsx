@@ -2,7 +2,6 @@ import { getAdminAnalyticsApi } from "@/api/admin";
 import AdminAnalyticsWrapper from "@/components/admin/AdminAnalytics";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";
-import Button from "@/components/atom/Button";
 import RecentPosts from "@/components/admin/RecentPosts";
 import { getAnalyticsClicksAndViews } from "@/api/view";
 import AnalyticsChart from "@/components/analytics/AnalyticsChart";
@@ -12,6 +11,7 @@ import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
 import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
 import ProductInsights from "../analytics/ProductInsights";
 import { getAllStatesApi } from "@/api/location";
+import EmailBroadcastDialog from "@/components/admin/EmailBroadcastDialog";
 
 interface Props {
   username: string;
@@ -36,7 +36,7 @@ export default async function AdminDashboardWrapper(props: Props) {
             Hi {props?.username || "Admin"}, Welcome back!
           </HeaderSubText>
         </div>
-        <Button format="primary">Account Email</Button>
+        <EmailBroadcastDialog />
       </div>
 
       <AdminAnalyticsWrapper analyticsCount={response?.counts} />
