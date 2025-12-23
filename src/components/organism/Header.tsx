@@ -86,7 +86,7 @@ const Header = ({ noSideMenu, role }: Props) => {
     setIsSwitchingRole("");
     setSessionUser(null);
 
-    push(previousUrl || LANDING_ROUTE);
+    replace(previousUrl || LANDING_ROUTE);
   };
 
 

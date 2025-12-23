@@ -1,6 +1,55 @@
 import { $http } from "@/service/axios";
 import { createFormData } from "@/utils";
 
+export type EmailBroadcastCategory =
+  | "all"
+  | "sellers"
+  | "buyers"
+  | "sellers_with_properties"
+  | "sellers_without_properties"
+  | "verified_users"
+  | "unverified_users"
+  | "active_subscribers"
+  | "expired_subscribers"
+  | "never_subscribed";
+
+export type EmailTemplateType = "custom" | "announcement" | "promotion";
+
+export const getUserCountByCategoryApi = async (
+  category: EmailBroadcastCategory,
+): Promise<{
+  success: boolean;
+  message: string;
+  data: { category: EmailBroadcastCategory; count: number };
+}> => {
+  try {
+    const response = await $http.get("/admin/email-broadcast/user-count", {
+      params: { category },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const sendBroadcastEmailApi = async (payload: {
+  category: EmailBroadcastCategory;
+  subject: string;
+  message: string;
+  templateType?: EmailTemplateType;
+}): Promise<{
+  success: boolean;
+  message: string;
+  data: { totalRecipients: number; category: EmailBroadcastCategory };
+}> => {
+  try {
+    const response = await $http.post("/admin/email-broadcast/send", payload);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
 interface IChangeManagerApi {
   sellerId: string;
   managerId: string;

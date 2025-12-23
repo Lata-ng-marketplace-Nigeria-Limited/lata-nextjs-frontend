@@ -12,7 +12,7 @@ import {
   EmailTemplateType,
   getUserCountByCategoryApi,
   sendBroadcastEmailApi,
-} from "@/api/admin";
+} from "@/api/admin.client";
 import { useToast } from "@/components/ui/use-toast";
 
 const categoryOptions: { value: EmailBroadcastCategory; label: string }[] = [
@@ -64,7 +64,8 @@ export default function EmailBroadcast() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error?.message || "Failed to get user count",
+        description:
+          error?.data?.message || error?.message || "Failed to get user count",
         variant: "destructive",
       });
     } finally {
@@ -115,7 +116,8 @@ export default function EmailBroadcast() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error?.message || "Failed to send email",
+        description:
+          error?.data?.message || error?.message || "Failed to send email",
         variant: "destructive",
       });
     } finally {
