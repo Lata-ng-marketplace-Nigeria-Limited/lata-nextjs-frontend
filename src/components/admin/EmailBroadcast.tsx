@@ -43,6 +43,7 @@ const templateOptions: { value: EmailTemplateType; label: string }[] = [
 export default function EmailBroadcast() {
   const { toast } = useToast();
   const [category, setCategory] = useState<EmailBroadcastCategory>("all");
+  const [recipientEmail, setRecipientEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [templateType, setTemplateType] = useState<EmailTemplateType>("custom");
@@ -53,7 +54,10 @@ export default function EmailBroadcast() {
   const handleGetUserCount = async () => {
     setIsLoadingCount(true);
     try {
-      const response = await getUserCountByCategoryApi(category);
+      const response = await getUserCountByCategoryApi(
+        category,
+        recipientEmail.trim() || undefined,
+      );
       if (response.success) {
         setUserCount(response.data.count);
         toast({
@@ -98,6 +102,7 @@ export default function EmailBroadcast() {
     try {
       const response = await sendBroadcastEmailApi({
         category,
+        recipientEmail: recipientEmail.trim() || undefined,
         subject,
         message,
         templateType,
@@ -109,6 +114,7 @@ export default function EmailBroadcast() {
           description: `Email sent to ${response.data.totalRecipients} user(s)!`,
         });
         // Reset form
+        setRecipientEmail("");
         setSubject("");
         setMessage("");
         setUserCount(null);
@@ -132,6 +138,23 @@ export default function EmailBroadcast() {
       </HeaderText>
 
       <form onSubmit={handleSendEmail} className="space-y-6">
+        <div>
+          <TextInput
+            label="Recipient Email (optional)"
+            placeholder="Enter a single user's email to target"
+            value={recipientEmail}
+            onChange={(e) => {
+              setRecipientEmail(e.target.value);
+              setUserCount(null);
+            }}
+            name="recipientEmail"
+            inputClass="!h-12"
+          />
+          <Small className="mt-1 text-gray-500">
+            If provided, the broadcast will be sent only to this user.
+          </Small>
+        </div>
+
         <div>
           <label
             htmlFor="category"
@@ -250,6 +273,7 @@ export default function EmailBroadcast() {
             format="secondary"
             type="button"
             onClick={() => {
+              setRecipientEmail("");
               setSubject("");
               setMessage("");
               setUserCount(null);

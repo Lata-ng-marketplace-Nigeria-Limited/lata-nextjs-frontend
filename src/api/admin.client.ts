@@ -17,6 +17,7 @@ export type EmailTemplateType = "custom" | "announcement" | "promotion";
 
 export const getUserCountByCategoryApi = async (
   category: EmailBroadcastCategory,
+  recipientEmail?: string,
 ): Promise<{
   success: boolean;
   message: string;
@@ -24,7 +25,7 @@ export const getUserCountByCategoryApi = async (
 }> => {
   try {
     const response = await $http.get("/admin/email-broadcast/user-count", {
-      params: { category },
+      params: { category, recipientEmail },
     });
     return response.data;
   } catch (error: any) {
@@ -34,6 +35,7 @@ export const getUserCountByCategoryApi = async (
 
 export const sendBroadcastEmailApi = async (payload: {
   category: EmailBroadcastCategory;
+  recipientEmail?: string;
   subject: string;
   message: string;
   templateType?: EmailTemplateType;
