@@ -6,7 +6,7 @@ import { cn } from "@/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { revalidateTag } from "next/cache";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Button from "@atom/Button";
 import Category from "@components/product/Category";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -21,7 +21,7 @@ export const DashboardSelectCategories = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
     null,
   );
-  const params = new URLSearchParams(searchParams);
+  const params = useMemo(() => new URLSearchParams(searchParams), [searchParams]);
 
   const handleShowModal = () => {
     setShowModal((prev) => !prev);
@@ -66,7 +66,7 @@ export const DashboardSelectCategories = () => {
   return (
     <div
       className={
-        "xxss:items-center xxss:flex-row my-4 flex flex-col items-start justify-between gap-4"
+        "my-4 flex flex-col items-start justify-between gap-4 xxss:flex-row xxss:items-center"
       }
     >
       <SelectInput

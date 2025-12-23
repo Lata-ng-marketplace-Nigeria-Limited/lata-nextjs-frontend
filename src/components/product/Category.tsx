@@ -28,11 +28,15 @@ const Category = ({
     return true;
   };
 
+  const handleClick = () => {
+    setShowInnerModal(prev => !prev);
+  };
+
   return (
     <div className="cursor-pointer">
-      <div onClick={() => setShowInnerModal(!showInnerModal)}>
+      <div onClick={handleClick}>
         <div className="mb-3 flex min-h-[4.375rem] min-w-[4.375rem] items-center justify-center rounded-lg bg-purp1 px-2 py-5">
-          <Image src={data?.image} width={58} height={31} alt={` image`} />
+          <Image src={data?.image || ""} width={58} height={31} alt={` image`} />
         </div>
         <div className="flex justify-center">
           <p
@@ -46,7 +50,8 @@ const Category = ({
         </div>
       </div>
 
-      {showInnerModal ? (
+     
+      {showInnerModal && (
         <Modal
           isShown={showInnerModal}
           setIsShown={setShowInnerModal}
@@ -58,9 +63,8 @@ const Category = ({
             onModalClose={onModalClose}
           />
         </Modal>
-      ) : (
-        ""
       )}
+
     </div>
   );
 };
