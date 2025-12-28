@@ -35,6 +35,7 @@ export interface VerifyEmailApiOutput {
   verified: boolean;
   message: string;
   token?: string;
+  resetToken?: string;
   name?: string;
   email?: string;
   expiresAt?: string;

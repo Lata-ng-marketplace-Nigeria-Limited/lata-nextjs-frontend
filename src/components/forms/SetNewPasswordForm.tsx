@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { setPasswordSchema } from "@/store/schemas/setPasswordSchema";
@@ -14,7 +15,7 @@ import { LANDING_ROUTE, LOGIN_ROUTE } from "@/constants/routes";
 import { resetPasswordApi } from "@/api/auth";
 import { useToast } from "@components/ui/use-toast";
 import { ApiErrorResponse } from "@/interface/general";
-import { getFormErrorObject, setCookies } from "@/utils";
+import { getFormErrorObject } from "@/utils";
 import { VerifyEmailApiOutput } from "@/actions/auth";
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 export const SetNewPasswordForm = ({ response }: Props) => {
   const [loading, setLoading] = useState(true);
   const [isPasswordChanged, setIsPasswordChanged] = useState(false);
+  const router = useRouter();
   const {
     formState: { errors },
     handleSubmit,
@@ -35,27 +37,41 @@ export const SetNewPasswordForm = ({ response }: Props) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!response || !response.verified || !response.token) {
+    if (!response || !response.verified || !response.resetToken || !response.email) {
       setError("password", {
         type: "manual",
-        message: "Invalid code.",
+        message: "Invalid or expired code. Please request a new password reset.",
       });
-    }
-
-    if (response && response.verified && response.token) {
-      setCookies("token", response.token, {
-        isoDate: response.expiresAt,
-      });
+    } else {
       setLoading(false);
     }
   }, [response, setError]);
 
   const onSubmit = async (values: z.infer<typeof setPasswordSchema>) => {
+    if (!response?.email || !response?.resetToken) {
+      toast({
+        description: "Session expired. Please request a new password reset.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
-      const { passwordChanged } = await resetPasswordApi(values);
+      const { passwordChanged } = await resetPasswordApi({
+        password: values.password,
+        email: response.email,
+        resetToken: response.resetToken,
+      });
       if (passwordChanged) {
         setIsPasswordChanged(true);
+        toast({
+          description: "Your password has been changed successfully. Redirecting to login...",
+        });
+        // Redirect to login page after 2 seconds
+        setTimeout(() => {
+          router.push("/auth" + LOGIN_ROUTE);
+        }, 2000);
         return;
       }
 

@@ -126,7 +126,8 @@ export const resendOtpApi = async ({ email, type }: ResendOtpApiInput) => {
 
 interface ResetPasswordApiInput {
   password: string;
-  oldPassword?: string;
+  email: string;
+  resetToken: string;
 }
 
 export const resetPasswordApi = async (
@@ -136,10 +137,20 @@ export const resetPasswordApi = async (
   passwordChanged: boolean;
 }> => {
   try {
-    const res = await $http.post("/auth/change-password", payload);
-    return res.data;
+    const res = await fetch(getApiUrl("/auth/reset-password"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw { response: { data: errorData } };
+    }
+    return await res.json();
   } catch (error: any) {
-    throw error.response;
+    throw error.response || error;
   }
 };
 
