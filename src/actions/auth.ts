@@ -54,10 +54,13 @@ export const verifyOtpApi = async (
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.error("[verifyOtpApi] API error:", res.status, errorData);
       return null;
     }
     return await res.json();
   } catch (error: any) {
+    console.error("[verifyOtpApi] Network error:", error);
     throw error.response;
   }
 };
