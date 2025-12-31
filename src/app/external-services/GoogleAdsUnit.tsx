@@ -28,10 +28,10 @@ const GoogleAdsUnit = ({ ...props }: Props) => {
   return (
     <ins
       className="adsbygoogle"
-      style={{ display: "block", width: "100%", height: "280px" }}
+      style={{ display: "block", width: "100%", minHeight: "250px" }}
       data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
       data-ad-slot="4039248860"
-      data-ad-format="rectangle"
+      data-ad-format="auto"
       data-full-width-responsive="true"
       data-adtest={process.env.NODE_ENV === "development" ? "on" : undefined}
       {...props}
