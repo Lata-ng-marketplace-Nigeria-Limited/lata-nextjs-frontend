@@ -1,13 +1,11 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
 import React from "react";
 
 interface Props extends React.InsHTMLAttributes<HTMLElement> { }
 
 const GoogleAdsUnit = ({ ...props }: Props) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+
 
   const initialized = React.useRef(false);
 
