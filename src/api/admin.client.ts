@@ -1,5 +1,6 @@
 import { $http } from "@/service/axios";
 import { createFormData } from "@/utils";
+import { revalidateStatesTag } from "@/actions/revalidate";
 
 export type EmailBroadcastCategory =
   | "all"
@@ -164,6 +165,7 @@ export const createStateApi = async (payload: {
 }) => {
   try {
     const response = await $http.post(`/states`, payload);
+    await revalidateStatesTag();
     return response.data;
   } catch (error: any) {
     throw error.response;
@@ -188,6 +190,7 @@ export const createCityApi = async (payload: CreateCityInput) => {
 export const deleteStateApi = async (id: string) => {
   try {
     const response = await $http.delete(`/states/${id}`);
+    await revalidateStatesTag();
     return response.data;
   } catch (error: any) {
     throw error.response;

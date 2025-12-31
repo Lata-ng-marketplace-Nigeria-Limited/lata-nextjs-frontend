@@ -5,7 +5,7 @@ import GoogleAdsCard from "./GoogleAdsCard";
 import ProductCard from "@components/product/ProductCard";
 import { cn, formatPrice } from "@/utils";
 import ProductGridList from "@atom/ProductGridList";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { selectedCity, selectedState } from "@/utils/location";
@@ -21,6 +21,7 @@ interface Props {
   skeletonLength?: number;
   statesInNigeria: State[];
   adIndex?: number;
+  adInterval?: number;
 }
 
 export default function LazyLoadProducts(props: Props) {
@@ -54,13 +55,22 @@ export default function LazyLoadProducts(props: Props) {
     >
       {showingProducts.length ? (
         showingProducts.map((product, index) => (
-          <>
-            {props.adIndex === index && <GoogleAdsCard key="google-ads-card" />}
+          <React.Fragment key={product.id}>
+            {(props.adIndex === index ||
+              (props.adInterval &&
+                index > 0 &&
+                index % props.adInterval === 0)) && (
+                <GoogleAdsCard key={`google-ads-card-${index}`} />
+              )}
             <ProductCard
               price={formatPrice(product?.price)}
               productName={product?.name}
               description={product?.description}
-              state={selectedState(props.statesInNigeria, product?.state)}
+              state={selectedCity(
+                props.statesInNigeria,
+                product?.state,
+                product?.city,
+              )}
               city={selectedCity(
                 props.statesInNigeria,
                 product?.state,
@@ -73,7 +83,7 @@ export default function LazyLoadProducts(props: Props) {
               createProductPreview={false}
               key={product.id}
             />
-          </>
+          </React.Fragment>
         ))
       ) : props.hideFallback ? (
         <ProductListSkeleton length={props.skeletonLength || 4} />

@@ -15,6 +15,10 @@ export const getAllStatesApi = async (): Promise<IGetStatesApi> => {
       headers: {
         "Content-Type": "application/json",
       },
+      next: {
+        revalidate: 86400, // 24 hours
+        tags: ["all_states"],
+      },
     });
 
     if (!res.ok) {

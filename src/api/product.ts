@@ -44,6 +44,7 @@ export const getDashboardProductsApi = async (
       },
       next: {
         revalidate: 60 * 10,
+        tags: ["dashboard_products"],
       },
     });
     return await res.json();
@@ -206,6 +207,7 @@ export const deleteAProductApi = async (
 
   try {
     const res = await $http.delete(`products/${id}?${params}`);
+    revalidateTag("dashboard_products");
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -253,6 +255,7 @@ export const createAProductApi = async (
 
   try {
     const res = await $httpFile.post(`products?${params}`, payload);
+    revalidateTag("dashboard_products");
     return res.data;
   } catch (error: any) {
     console.log(error?.response?.data?.error);
@@ -273,6 +276,7 @@ export const updateAProductApi = async (
   try {
     const formData = createFormData(payload);
     const res = await $httpFile.put(`products/${id}?${params}`, formData);
+    revalidateTag("dashboard_products");
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -375,6 +379,7 @@ export const activateProductApi = async (
 }> => {
   try {
     const res = await $http.get(`products/activate/${id}`);
+    revalidateTag("dashboard_products");
     revalidatePath(ADMIN_REVIEW_PRODUCTS_ROUTE);
     return res.data;
   } catch (error: any) {
@@ -389,6 +394,7 @@ export const deactivateProductApi = async (
 }> => {
   try {
     const res = await $http.get(`products/deactivate/${id}`);
+    revalidateTag("dashboard_products");
     revalidatePath(ADMIN_REVIEW_PRODUCTS_ROUTE);
     return res.data;
   } catch (error: any) {
@@ -402,6 +408,7 @@ export const cancelProductApi = async (
 }> => {
   try {
     const res = await $http.get(`products/cancel/${id}`);
+    revalidateTag("dashboard_products");
     revalidatePath(ADMIN_REVIEW_PRODUCTS_ROUTE);
     return res.data;
   } catch (error: any) {
