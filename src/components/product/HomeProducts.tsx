@@ -50,6 +50,7 @@ export default async function HomeProducts({ query, subcategory }: Props) {
           offset={4}
           showLimit={4}
           hideFallback={(products?.otherProducts?.length || 0) > 0}
+          adIndex={10}
         />
       </div>
     </div>

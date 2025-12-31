@@ -48,7 +48,7 @@ export const getDashboardProductsApi = async (
     });
     return await res.json();
   } catch (e) {
-    console.error("Fetch error:");
+    console.error("Fetch error:", e);
     return null;
   }
 };

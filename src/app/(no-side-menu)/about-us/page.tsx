@@ -1,6 +1,5 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import GoogleAdsUnit from "@/app/external-services/GoogleAdsUnit";
 import HeroImage from "@/components/molecule/HeroImage";
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default async function Page() {
       </h1>
 
       <div className="mx-auto mb-10 w-full text-center">
-        <GoogleAdsUnit />
+        {/* <GoogleAdsUnit /> */}
       </div>
 
       <HeroImage

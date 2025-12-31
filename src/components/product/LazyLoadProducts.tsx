@@ -1,6 +1,7 @@
 "use client";
 
 import { Product } from "@/interface/products";
+import GoogleAdsCard from "./GoogleAdsCard";
 import ProductCard from "@components/product/ProductCard";
 import { cn, formatPrice } from "@/utils";
 import ProductGridList from "@atom/ProductGridList";
@@ -19,6 +20,7 @@ interface Props {
   hideFallback?: boolean;
   skeletonLength?: number;
   statesInNigeria: State[];
+  adIndex?: number;
 }
 
 export default function LazyLoadProducts(props: Props) {
@@ -51,24 +53,27 @@ export default function LazyLoadProducts(props: Props) {
       className={"relative"}
     >
       {showingProducts.length ? (
-        showingProducts.map((product) => (
-          <ProductCard
-            price={formatPrice(product?.price)}
-            productName={product?.name}
-            description={product?.description}
-            state={selectedState(props.statesInNigeria, product?.state)}
-            city={selectedCity(
-              props.statesInNigeria,
-              product?.state,
-              product?.city,
-            )}
-            imageSrc={product?.files?.[0]?.url}
-            product={product}
-            trending
-            onUnSave={props.onUnSave}
-            createProductPreview={false}
-            key={product.id}
-          />
+        showingProducts.map((product, index) => (
+          <>
+            {props.adIndex === index && <GoogleAdsCard key="google-ads-card" />}
+            <ProductCard
+              price={formatPrice(product?.price)}
+              productName={product?.name}
+              description={product?.description}
+              state={selectedState(props.statesInNigeria, product?.state)}
+              city={selectedCity(
+                props.statesInNigeria,
+                product?.state,
+                product?.city,
+              )}
+              imageSrc={product?.files?.[0]?.url}
+              product={product}
+              trending
+              onUnSave={props.onUnSave}
+              createProductPreview={false}
+              key={product.id}
+            />
+          </>
         ))
       ) : props.hideFallback ? (
         <ProductListSkeleton length={props.skeletonLength || 4} />
