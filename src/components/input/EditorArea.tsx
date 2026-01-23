@@ -1,5 +1,6 @@
 "use client";
-import { Editor, EditorProps } from "@components/input/Editor";
+import DynamicEditor from "@components/input/DynamicEditor";
+import type { EditorProps } from "@components/input/Editor";
 import { useCallback, useState } from "react";
 import { Toggle } from "@components/ui/toggle";
 import { updateALegalDocApi } from "@/api/legal";
@@ -60,7 +61,7 @@ export const EditorArea = ({ dontEdit, id, ...props }: Props) => {
         </div>
       ) : null}
 
-      <Editor
+      <DynamicEditor
         key={preview + ""}
         {...props}
         editable={dontEdit ? false : !preview}

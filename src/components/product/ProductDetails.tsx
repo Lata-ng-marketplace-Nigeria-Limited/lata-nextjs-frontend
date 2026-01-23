@@ -1,4 +1,4 @@
-import ProductCarousel from "@components/product/ProductCarousel";
+import ProductCarousel from "@components/product/DynamicProductCarousel";
 import { Product } from "@/interface/products";
 import { cn, formatPrice, getTimeFromNow } from "@/utils";
 import { ClockIcon } from "@atom/icons/Clock";
