@@ -13,7 +13,7 @@ import {
   organizationStructuredData,
   websiteStructuredData,
 } from "@/store/seo/structuredData";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import SpeedInsights from "@/components/DynamicSpeedInsights";
 import GoogleAnalytics from "../analytics/GoogleAnalytics";
 import { IEnv } from "@/interface/general";
 

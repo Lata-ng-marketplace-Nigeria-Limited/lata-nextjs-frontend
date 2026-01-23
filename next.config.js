@@ -2,7 +2,15 @@
 const nextConfig = {
   experimental: {
     swcPlugins: [],
-    optimizePackageImports: ["lucide-react", "@headlessui/react", "@radix-ui/react-icons", "flowbite-react"],
+    optimizePackageImports: [
+      "lucide-react",
+      "@headlessui/react",
+      "@radix-ui/react-icons",
+      "flowbite-react",
+      "lodash",
+      "@tiptap/react",
+      "@tiptap/starter-kit",
+    ],
   },
   images: {
     remotePatterns: [

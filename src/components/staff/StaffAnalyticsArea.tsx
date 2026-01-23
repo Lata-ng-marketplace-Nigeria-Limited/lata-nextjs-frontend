@@ -1,6 +1,6 @@
 import React from "react";
 import AnalyticsChartAreaHOC from "../analytics/AnalyticsChartAreaHOC";
-import StaffAnalytics from "./StaffAnalytics";
+import StaffAnalytics from "./DynamicStaffAnalytics";
 import AnalyticsSideCardsHOC from "../analytics/AnalyticsSideCardsHOC";
 import AnalyticsSideCard from "../analytics/AnalyticsSideCard";
 import { IGetTargets } from "@/api/staff";

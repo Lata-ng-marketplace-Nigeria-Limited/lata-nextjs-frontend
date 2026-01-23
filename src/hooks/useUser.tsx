@@ -33,7 +33,7 @@ export const useUser = () => {
     ) {
       logoutUser(clear, true);
     }
-  }, [user?.plan, user?.subscriptionStatus]);
+  }, [user?.plan, user?.subscriptionStatus, user?.expires_at, user?.isBlocked, clear]);
 
   const handleUpdate = useCallback(
     async (userData: User, token?: string) => {

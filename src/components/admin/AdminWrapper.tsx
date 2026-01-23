@@ -4,7 +4,7 @@ import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";
 import RecentPosts from "@/components/admin/RecentPosts";
 import { getAnalyticsClicksAndViews } from "@/api/view";
-import AnalyticsChart from "@/components/analytics/AnalyticsChart";
+import AnalyticsChart from "@/components/analytics/DynamicAnalyticsChart";
 import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
 import { formatNumber } from "@/utils";
 import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";

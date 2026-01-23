@@ -1,4 +1,4 @@
-import AnalyticsChart from "@components/analytics/AnalyticsChart";
+import AnalyticsChart from "@components/analytics/DynamicAnalyticsChart";
 import AnalyticsSideCardsWrapper from "@components/analytics/AnalyticsSideCardsWrapper";
 import AnalyticsChartAreaHOC from "./AnalyticsChartAreaHOC";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
