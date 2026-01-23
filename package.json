@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate": "pnpm install --strict-peer-dependencies && next build",
+    "prepare": "husky"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -71,6 +73,7 @@
     "clsx": "^2.0.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.4",
+    "husky": "^9.1.7",
     "postcss": "^8.4.32",
     "prettier": "^3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.11",
