@@ -24,14 +24,17 @@ const GoogleAdsCard = () => {
         items-center
         justify-center
         bg-white
+        self-start
+        lg:hidden
       `
             )}
         >
-            <div className="w-full h-full min-h-[250px] flex flex-col items-center justify-center overflow-hidden">
+            <div className="w-full max-sm:min-h-[200px] sm:h-[280px] flex flex-col items-center justify-center overflow-hidden">
                 <GoogleAdsUnit />
                 <p className="text-[10px] text-grey5 mt-2">Sponsored</p>
             </div>
         </div>
+
     );
 };
 

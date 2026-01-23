@@ -24,8 +24,6 @@ export const getDashboardProductsApi = async (
   trendingProducts: Product[];
   otherProducts: Product[];
 } | null> => {
-  // noStore();
-  // await new Promise((resolve) => setTimeout(resolve, 5000));
   try {
     const params = new URLSearchParams();
     if (query) {
