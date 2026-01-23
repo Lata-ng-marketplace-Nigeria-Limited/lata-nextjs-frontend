@@ -1,7 +1,6 @@
 import { appendQueryParams, getApiUrl } from "@/utils";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
-import { unstable_noStore } from "next/cache";
 import { CreateViewTypes, ViewTypes } from "@/interface/views";
 import { $http } from "@/service/axios";
 import {
@@ -40,7 +39,6 @@ export const getSellerAnalyticsApi = async ({
   const params = appendQueryParams(queries || {});
 
   try {
-    unstable_noStore();
     const session = await getServerSession(authConfig);
 
     const res = await fetch(
@@ -48,6 +46,10 @@ export const getSellerAnalyticsApi = async ({
       {
         headers: {
           Authorization: `Bearer ${session?.token}`,
+        },
+        next: {
+          revalidate: 120, // 2 minutes for analytics
+          tags: ["seller_analytics"],
         },
       },
     );
@@ -74,6 +76,10 @@ export const getAnalyticsClicksAndViews = async (
     const res = await fetch(getApiUrl(`/views/all?${params}`), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
+      },
+      next: {
+        revalidate: 120, // 2 minutes for analytics
+        tags: ["analytics_clicks_views"],
       },
     });
     if (!res.ok) {

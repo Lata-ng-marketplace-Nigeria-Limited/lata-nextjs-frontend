@@ -18,7 +18,10 @@ export const getBlockedUserDetailsApi = async (
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-cache",
+      next: {
+        revalidate: 300, // 5 minutes
+        tags: ["blocked_account"],
+      },
     });
 
     if (!res.ok) {

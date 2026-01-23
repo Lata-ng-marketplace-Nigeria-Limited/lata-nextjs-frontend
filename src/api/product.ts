@@ -9,7 +9,7 @@ import { appendQueryParams, createFormData, getApiUrl } from "@/utils";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
-import { revalidatePath, revalidateTag, unstable_noStore } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { $http, $httpFile } from "@/service/axios";
 import { User } from "@/interface/user";
 import { ADMIN_REVIEW_PRODUCTS_ROUTE } from "@/constants/routes";
@@ -64,13 +64,16 @@ export const findAProductApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    unstable_noStore();
     const session = await getServerSession(authConfig);
     const res = await fetch(
       getApiUrl(`/products/${productId}?${params.toString()}`),
       {
         headers: {
           Authorization: "Bearer " + session?.token,
+        },
+        next: {
+          revalidate: 120, // 2 minutes
+          tags: ["product_detail", `product_${productId}`],
         },
       },
     );
@@ -145,17 +148,17 @@ export const findAllMyProductsApi = async (
   statusCounts: IProductStatusCount;
 }> => {
   try {
-    unstable_noStore();
     const session = await getServerSession(authConfig);
     const params = appendQueryParams(queries || {});
-
-    console.log("params", params);
 
     const res = await fetch(getApiUrl(`/products/my?${params.toString()}`), {
       headers: {
         Authorization: "Bearer " + session?.token,
       },
-      cache: "no-cache",
+      next: {
+        revalidate: 30, // 30 seconds for user's own products
+        tags: ["my_products"],
+      },
     });
 
     if (!res.ok) {
@@ -189,7 +192,10 @@ export const findMySavedProductsApi = async (
       headers: {
         Authorization: "Bearer " + session?.token,
       },
-      cache: "no-cache",
+      next: {
+        revalidate: 30, // 30 seconds for saved products
+        tags: ["saved_products"],
+      },
     });
 
     if (!res.ok) {

@@ -93,7 +93,10 @@ export const getAllSellerFeedbacks = async (
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
-      cache: "no-cache",
+      next: {
+        revalidate: 60, // 1 minute
+        tags: ["seller-feedbacks"],
+      },
     });
     if (!res.ok) {
       throw await res.json();
@@ -130,8 +133,8 @@ export const getProductFeedback = async (
         headers: {
           Authorization: `Bearer ${session?.token}`,
         },
-        cache: "no-cache",
         next: {
+          revalidate: 120, // 2 minutes
           tags: ["product-feedback"],
         },
       },

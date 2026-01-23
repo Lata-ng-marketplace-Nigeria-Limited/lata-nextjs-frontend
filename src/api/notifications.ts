@@ -6,11 +6,7 @@ import { User } from "@/interface/user";
 import { $http } from "@/service/axios";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
-import {
-  revalidatePath,
-  revalidateTag,
-  unstable_noStore as noStore,
-} from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export interface IFindAllNotificationsApiQueries
@@ -26,11 +22,13 @@ export const findAllNotificationsApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    noStore();
     const session = await getServerSession(authConfig);
     const response = await fetch(getApiUrl(`/notifications?${params})`), {
       headers: { Authorization: "Bearer " + session?.token },
-      cache: "no-cache",
+      next: {
+        revalidate: 30, // 30 seconds for notifications
+        tags: ["notifications"],
+      },
     });
     if (!response.ok) {
       throw JSON.stringify(await response.json());

@@ -32,14 +32,18 @@ export default function ComboBox(props: Props) {
     query === ""
       ? props.options
       : props.options.filter((person) => {
-          return person.toLowerCase().includes(query.toLowerCase());
-        });
+        return person.toLowerCase().includes(query.toLowerCase());
+      });
 
   return (
     <Combobox
       defaultValue={props.defaultValue}
       value={props.value}
-      onChange={props.setValue}
+      onChange={(val) => {
+        if (props.setValue) {
+          props.setValue(val || "");
+        }
+      }}
       name={props.name}
     >
       <div className={cn(`relative w-full w-[1000px]`, props.wrapperClass)}>
@@ -115,7 +119,7 @@ export default function ComboBox(props: Props) {
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={() => {}}
+          afterLeave={() => { }}
         >
           <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {filteredPeople.length === 0 && query !== "" ? (
@@ -158,9 +162,8 @@ export default function ComboBox(props: Props) {
                   {({ selected, active }) => (
                     <>
                       <span
-                        className={`block truncate ${
-                          selected ? "font-medium" : "font-normal"
-                        }`}
+                        className={`block truncate ${selected ? "font-medium" : "font-normal"
+                          }`}
                       >
                         {person}
                       </span>

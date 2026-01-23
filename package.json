@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.17",
+    "@headlessui/react": "^2.2.0",
     "@hookform/resolvers": "^3.3.3",
     "@preact/signals-react": "^2.0.0",
     "@radix-ui/react-avatar": "^1.0.4",

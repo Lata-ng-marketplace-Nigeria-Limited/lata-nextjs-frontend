@@ -3,7 +3,6 @@
 import { User } from "@/interface/user";
 import { getApiUrl } from "@/utils";
 import { $http } from "@/service/axios";
-import { unstable_noStore as noStore } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@authConfig";
 
@@ -82,16 +81,14 @@ export const authCallbackApi = async (
 };
 
 export const getUserLatestDataApi = async (): Promise<User | null> => {
-  noStore();
   try {
-    // return
     const session = await getServerSession(authConfig);
     const res = await fetch(getApiUrl("/users/me"), {
       headers: {
         Authorization: "Bearer " + session?.token,
       },
-      cache: "no-store",
       next: {
+        revalidate: 30, // 30 seconds for user data
         tags: ["user_tag"],
       },
     });
@@ -163,11 +160,14 @@ export const getSellerProfileApi = async (
   viewed: boolean;
 }> => {
   try {
-    noStore();
     const session = await getServerSession(authConfig);
     const res = await fetch(getApiUrl(`/users/seller/${sellerId}`), {
       headers: {
         Authorization: "Bearer " + session?.token,
+      },
+      next: {
+        revalidate: 120, // 2 minutes for seller profiles
+        tags: ["seller_profile", `seller_${sellerId}`],
       },
     });
 

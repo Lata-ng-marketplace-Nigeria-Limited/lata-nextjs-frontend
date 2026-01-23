@@ -9,6 +9,10 @@ export const getAllCategoriesApi = async (): Promise<Category[]> => {
       headers: {
         "Content-Type": "application/json",
       },
+      next: {
+        revalidate: 86400, // 24 hours - categories rarely change
+        tags: ["categories"],
+      },
     });
 
     if (!res.ok) {

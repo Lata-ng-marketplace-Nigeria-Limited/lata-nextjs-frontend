@@ -1,23 +1,32 @@
 import { getApiUrl } from "@/utils";
 import { authConfig } from "@authConfig";
 import { getServerSession } from "next-auth";
-import { unstable_noStore } from "next/cache";
 
 export interface IErrorResponse {
   isError?: boolean;
   message?: string;
 }
 
-export const fetchData = async (url: string) => {
+export interface FetchDataOptions {
+  revalidate?: number;
+  tags?: string[];
+}
+
+export const fetchData = async (
+  url: string,
+  options: FetchDataOptions = { revalidate: 60 }
+) => {
   try {
-    unstable_noStore();
     const session = await getServerSession(authConfig);
 
     const res = await fetch(getApiUrl(url), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
       },
-      cache: "no-cache",
+      next: {
+        revalidate: options.revalidate ?? 60,
+        ...(options.tags && { tags: options.tags }),
+      },
     });
     const json = await res.text();
 
