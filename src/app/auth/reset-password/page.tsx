@@ -13,13 +13,12 @@ export const metadata: Metadata = {
   title: "Terms and Conditions",
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
+export default async function Page(props: {
+  searchParams: Promise<{
     code?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   const code = searchParams?.code || "";
   const session = await getServerSession(authConfig);
   if (session && session.user) {

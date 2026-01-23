@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     swcPlugins: [],
+    optimizePackageImports: ["lucide-react", "@headlessui/react", "@radix-ui/react-icons", "flowbite-react"],
   },
   images: {
     remotePatterns: [

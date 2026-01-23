@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   title: "Edit Product",
 };
 
-export default async function Page({
-  params: { id },
-}: {
-  params: {
+export default async function Page(props: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }) {
+  const params = await props.params;
+  const { id } = params;
   const session = await getServerSession(authConfig);
   const doc = await getALegalDocApi({ id });
 

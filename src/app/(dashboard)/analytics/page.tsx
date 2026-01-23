@@ -20,7 +20,8 @@ interface ISearchParams extends SwitchedRoleQueries {
   month?: string;
 }
 
-const page = async ({ searchParams }: { searchParams?: ISearchParams }) => {
+const page = async (props: { searchParams: Promise<ISearchParams> }) => {
+  const searchParams = await props.searchParams;
   function getMonthInGMTPlus1() {
     const date = new Date();
     const utcMonth = date.getUTCMonth(); // Get current UTC month

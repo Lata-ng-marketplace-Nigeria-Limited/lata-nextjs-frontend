@@ -27,8 +27,8 @@ interface Props {
 export default function LazyLoadProducts(props: Props) {
   const [offset, setOffset] = useState(12);
   const [showingProducts, setShowingProducts] = useState<Product[]>([]);
-  const ref = useRef<HTMLDivElement | null>(null);
-  const entry = useIntersectionObserver(ref, {});
+  const ref = useRef<HTMLDivElement>(null);
+  const entry = useIntersectionObserver(ref as any, {});
   const isVisible = !!entry?.isIntersecting;
 
   useEffect(() => {

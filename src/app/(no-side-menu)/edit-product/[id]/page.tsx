@@ -13,17 +13,17 @@ export const metadata: Metadata = {
   title: "Edit Product",
 };
 
-interface ISearchParms extends SwitchedRoleQueries {}
+interface ISearchParms extends SwitchedRoleQueries { }
 
-export default async function Page({
-  params: { id },
-  searchParams,
-}: {
-  params: {
+export default async function Page(props: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: ISearchParms;
+  }>;
+  searchParams: Promise<ISearchParms>;
 }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const { id } = params;
   const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {
@@ -47,7 +47,7 @@ export default async function Page({
       </Suspense>
 
       <Suspense key={id} fallback={<div>Loading</div>}>
-        <EditProduct id={id} queries={queries}/>
+        <EditProduct id={id} queries={queries} />
       </Suspense>
     </div>
   );

@@ -5,13 +5,13 @@ export const metadata: Metadata = {
   title: "Blocked Account",
 };
 
-const Page = ({
-  params: { userId },
-}: {
-  params: {
+const Page = async (props: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }) => {
+  const params = await props.params;
+  const { userId } = params;
   return (
     <main>
       <BlockedAccountHome userId={userId} />

@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   title: "Upload ID",
 };
 
-const Page = async ({
-  params: { userId },
-}: {
-  params: {
+const Page = async (props: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }) => {
+  const params = await props.params;
+  const { userId } = params;
   const response = await getBlockedUserDetailsApi(userId);
 
   if (response?.data && response?.data?.status !== "BLOCKED") {

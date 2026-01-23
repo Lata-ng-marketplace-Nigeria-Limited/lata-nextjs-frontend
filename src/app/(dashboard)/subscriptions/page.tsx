@@ -12,13 +12,12 @@ export const metadata: Metadata = {
   title: "Subscriptions",
 };
 
-interface ISearchParams extends SwitchedRoleQueries {}
+interface ISearchParams extends SwitchedRoleQueries { }
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: ISearchParams;
+export default async function Page(props: {
+  searchParams: Promise<ISearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {
@@ -30,7 +29,7 @@ export default async function Page({
     sessionSwitched: searchParams?.sessionSwitched || "",
     role: searchParams?.role || "",
   };
-  
+
   return (
     <div>
       <Suspense>

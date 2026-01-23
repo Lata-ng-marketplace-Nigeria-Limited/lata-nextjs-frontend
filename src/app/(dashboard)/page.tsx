@@ -36,11 +36,10 @@ interface ISearchParams extends SwitchedRoleQueries {
   month?: string;
 }
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams?: ISearchParams;
+export default async function Home(props: {
+  searchParams: Promise<ISearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authConfig);
   const query = searchParams?.category || "";
   const subcategory = searchParams?.subcategory || "";

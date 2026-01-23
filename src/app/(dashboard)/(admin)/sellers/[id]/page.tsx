@@ -9,15 +9,15 @@ import { authConfig } from "@authConfig";
 import { redirect } from "next/navigation";
 
 interface PageProps {
-  searchParams?: { query: string };
-  params: {
-    sellerId: string;
-  };
+  searchParams: Promise<{ query: string }>;
+  params: Promise<{
+    id: string;
+  }>;
 }
 
-export async function generateMetadata({
-  params: { sellerId },
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
+  const { id: sellerId } = params;
   const session = await getServerSession(authConfig);
   if (
     !session ||
@@ -33,10 +33,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({
-  searchParams,
-  params: { sellerId },
-}: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const { id: sellerId } = params;
   const query = searchParams?.query || "";
   return (
     <div>

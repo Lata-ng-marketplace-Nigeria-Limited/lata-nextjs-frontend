@@ -11,12 +11,13 @@ export const metadata: Metadata = {
 };
 
 interface Props {
-  searchParams?: {
+  searchParams: Promise<{
     isUpgradingToSeller?: string;
-  };
+  }>;
 }
 
-export default async function Page({ searchParams }: Props) {
+export default async function Page(props: Props) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authConfig);
   const isUpgradingToSeller = searchParams?.isUpgradingToSeller === "true";
   if (session && session.user && !isUpgradingToSeller) {

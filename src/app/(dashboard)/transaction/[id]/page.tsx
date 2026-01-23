@@ -2,13 +2,13 @@ import HeaderText from "@atom/HeaderText";
 import { Suspense } from "react";
 import { Transaction } from "@components/transaction/Transaction";
 
-export default async function Page({
-  params: { id },
-}: {
-  params: {
+export default async function Page(props: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }) {
+  const params = await props.params;
+  const { id } = params;
   return (
     <div>
       <HeaderText title className={"mb-6 md:mb-8"}>

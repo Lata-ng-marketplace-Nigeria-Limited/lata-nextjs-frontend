@@ -16,8 +16,8 @@ interface ChatMessageProps {
 }
 
 export default function MessageText(props: ChatMessageProps) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const entry = useIntersectionObserver(ref, {});
+  const ref = useRef<HTMLDivElement>(null);
+  const entry = useIntersectionObserver(ref as any, {});
   const visible = !!entry?.isIntersecting;
   const [hasMadeReadAtCall, setHasMadeReadAtCall] = useState(false);
   const { user, isSocketConnected } = useUser();

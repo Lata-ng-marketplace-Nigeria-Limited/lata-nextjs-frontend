@@ -13,15 +13,14 @@ export const metadata: Metadata = {
   title: "Posts",
 };
 
-export default async function Protected({
-  searchParams,
-}: {
-  searchParams: {
+export default async function Protected(props: {
+  searchParams: Promise<{
     query?: string;
     page: string;
     limit: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authConfig);
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");

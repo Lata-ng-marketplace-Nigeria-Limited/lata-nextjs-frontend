@@ -12,19 +12,19 @@ export const metadata: Metadata = {
   title: "Paid Sellers",
 };
 
-export default async function Protected({
-  params: { staffId },
-  searchParams,
-}: {
-  searchParams: {
+export default async function Protected(props: {
+  searchParams: Promise<{
     page: string;
     limit: string;
     tab: string;
-  };
-  params: {
+  }>;
+  params: Promise<{
     staffId: string;
-  };
+  }>;
 }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const { staffId } = params;
   const session = await getServerSession(authConfig);
   if (
     !session ||

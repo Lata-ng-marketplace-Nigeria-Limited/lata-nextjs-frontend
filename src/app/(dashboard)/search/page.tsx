@@ -11,15 +11,14 @@ export const metadata: Metadata = {
   title: "Search Products",
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
+export default async function Page(props: {
+  searchParams: Promise<{
     q?: string;
     loc?: string;
     page?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authConfig);
 
   const search = searchParams?.q || "";

@@ -12,19 +12,19 @@ import { findAllSellerProductsApi } from "@/api/admin";
 import { getAllStatesApi } from "@/api/location";
 
 interface IPageProps {
-  searchParams?: {
+  searchParams: Promise<{
     page?: string;
     status?: string;
-  };
-  params: {
+  }>;
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({
-  searchParams,
-  params: { id },
-}: IPageProps): Promise<Metadata> {
+export async function generateMetadata(props: IPageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const { id } = params;
   const page = searchParams?.page || "";
   const status = searchParams?.status || "";
 
@@ -42,10 +42,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({
-  searchParams,
-  params: { id },
-}: IPageProps) {
+export default async function Page(props: IPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const { id } = params;
   unstable_noStore();
   const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";

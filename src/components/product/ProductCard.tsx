@@ -36,15 +36,15 @@ type Props = {
   onUnSave?: (productId: string) => void;
   trending?: boolean;
 } & (
-  | {
+    | {
       product?: Product;
       createProductPreview: true;
     }
-  | {
+    | {
       product: Product;
       createProductPreview: false;
     }
-);
+  );
 
 export default function ProductCard(props: Props) {
   const nav = useRouter();
@@ -59,8 +59,8 @@ export default function ProductCard(props: Props) {
   const [initialAmount, setInitialAmount] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
 
-  const ref = useRef<HTMLDivElement | null>(null);
-  const entry = useIntersectionObserver(ref, {});
+  const ref = useRef<HTMLDivElement>(null);
+  const entry = useIntersectionObserver(ref as any, {});
   const isVisible = !!entry?.isIntersecting;
   const { toast } = useToast();
 

@@ -6,18 +6,18 @@ import { Metadata, ResolvingMetadata } from "next";
 import { getSellerProfileApi } from "@/api/auth";
 
 type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ pid?: string }>;
 };
 
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  props: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  // read route params
+  const params = await props.params;
   const id = params.id;
   // fetch data
-  const { seller, message } = await getSellerProfileApi(id);
+  const { seller } = await getSellerProfileApi(id);
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
@@ -27,7 +27,7 @@ export async function generateMetadata(
     openGraph: {
       images: [
         seller?.avatar ||
-          "https://res.cloudinary.com/dg9by7oca/image/upload/v1693411084/oggg_image_u5mv8f.webp",
+        "https://res.cloudinary.com/dg9by7oca/image/upload/v1693411084/oggg_image_u5mv8f.webp",
       ],
       title: seller?.name,
       description: seller?.aboutBusiness,
@@ -37,15 +37,15 @@ export async function generateMetadata(
   };
 }
 
-export default async function Page({
-  params: { id },
-  searchParams,
-}: {
-  params: {
+export default async function Page(props: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: { pid?: string };
+  }>;
+  searchParams: Promise<{ pid?: string }>;
 }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const { id } = params;
   const productId = searchParams.pid || "";
   return (
     <div>

@@ -13,13 +13,12 @@ export const metadata: Metadata = {
   title: "Notifications",
 };
 
-interface ISearchParams extends SwitchedRoleQueries, SearchQuery {}
+interface ISearchParams extends SwitchedRoleQueries, SearchQuery { }
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: ISearchParams;
+export default async function Page(props: {
+  searchParams: Promise<ISearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   unstable_noStore();
   const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";

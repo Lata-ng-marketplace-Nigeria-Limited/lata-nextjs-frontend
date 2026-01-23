@@ -9,14 +9,13 @@ export const metadata: Metadata = {
   title: "Verify Email",
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
+export default async function Page(props: {
+  searchParams: Promise<{
     code?: string;
     email?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   const code = searchParams?.code || "";
   const email = searchParams?.email || "";
 

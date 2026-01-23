@@ -9,14 +9,16 @@ import { unstable_noStore } from "next/cache";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  props: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
   // read route params
   const id = params.id;
   // fetch data
@@ -38,17 +40,18 @@ export async function generateMetadata(
   };
 }
 
-interface ISearchParms extends SwitchedRoleQueries {}
+interface ISearchParms extends SwitchedRoleQueries { }
 
-export default async function Page({
-  params: { id },
-  searchParams,
-}: {
-  params: {
+export default async function Page(props: {
+  params: Promise<{
     id: string;
-  };
-  searchParams?: ISearchParms;
+  }>;
+  searchParams: Promise<ISearchParms>;
 }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  const { id } = params;
+
   unstable_noStore();
   const queries: ISearchParms = {
     role: searchParams?.role || "",
@@ -62,7 +65,7 @@ export default async function Page({
       </Suspense>
 
       <Suspense key={id} fallback={<ViewProductSkeleton />}>
-        <ViewProduct id={id} queries={queries}/>
+        <ViewProduct id={id} queries={queries} />
       </Suspense>
     </div>
   );

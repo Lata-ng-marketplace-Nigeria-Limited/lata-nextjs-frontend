@@ -12,9 +12,10 @@ export const metadata: Metadata = {
   title: "Feedback",
 };
 
-interface ISearchParams extends IFeedbackQuery {}
+interface ISearchParams extends IFeedbackQuery { }
 
-const Page = async ({ searchParams }: { searchParams?: ISearchParams }) => {
+const Page = async (props: { searchParams: Promise<ISearchParams> }) => {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authConfig);
 
   if (!session || !session.user) {

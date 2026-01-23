@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   title: "Create Product",
 };
 
-export default async function Page({
-  params: { sellerId },
-}: {
-  params: {
+export default async function Page(props: {
+  params: Promise<{
     sellerId: string;
-  };
+  }>;
 }) {
+  const params = await props.params;
+  const { sellerId } = params;
   const session = await getServerSession(authConfig);
   if (!session || !session.user) {
     redirect("/auth");

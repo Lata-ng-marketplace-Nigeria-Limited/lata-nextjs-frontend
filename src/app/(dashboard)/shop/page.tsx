@@ -21,11 +21,10 @@ interface ISearchParams extends SwitchedRoleQueries {
   tab?: string;
 }
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: ISearchParams;
+export default async function Page(props: {
+  searchParams: Promise<ISearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   unstable_noStore();
   const session = await getServerSession(authConfig);
 

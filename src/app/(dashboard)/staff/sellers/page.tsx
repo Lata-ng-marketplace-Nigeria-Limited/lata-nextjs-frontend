@@ -7,13 +7,12 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
-async function Page({
-  searchParams,
-}: {
-  searchParams?: {
+async function Page(props: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authConfig);
   if (!session || !session.user || session.role !== "STAFF") {
     redirect("/");
