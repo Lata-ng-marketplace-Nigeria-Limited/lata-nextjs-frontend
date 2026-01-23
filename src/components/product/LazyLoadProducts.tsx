@@ -22,29 +22,52 @@ interface Props {
   statesInNigeria: State[];
   adIndex?: number;
   adInterval?: number;
+  isInfinite?: boolean;
+  loadMoreAction?: (page: number) => Promise<{ data: Product[]; hasMore: boolean }>;
 }
 
 export default function LazyLoadProducts(props: Props) {
   const [offset, setOffset] = useState(12);
   const [showingProducts, setShowingProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
   const ref = useRef<HTMLDivElement>(null);
   const entry = useIntersectionObserver(ref as any, {});
   const isVisible = !!entry?.isIntersecting;
 
   useEffect(() => {
-    if (!isVisible) return;
-    if (offset >= props.products?.length) return;
-    const nextTenProducts = props.products?.slice(
-      offset,
-      offset + props?.showLimit!,
-    );
-    setOffset((prev) => prev + props?.showLimit!);
-    setShowingProducts((prev) => [...prev, ...nextTenProducts]);
-  }, [isVisible, props?.products, offset, props?.showLimit]);
+    if (!isVisible || loading) return;
+
+    if (offset < (props.products?.length || 0)) {
+      const nextTenProducts = props.products?.slice(
+        offset,
+        offset + props?.showLimit!,
+      );
+      setOffset((prev) => prev + props?.showLimit!);
+      setShowingProducts((prev) => [...prev, ...nextTenProducts]);
+      return;
+    }
+
+    if (props.isInfinite && props.loadMoreAction && hasMore) {
+      setLoading(true);
+      props.loadMoreAction(currentPage + 1).then((res) => {
+        setShowingProducts((prev) => [...prev, ...res.data]);
+        setCurrentPage((prev) => prev + 1);
+        setHasMore(res.hasMore);
+        setLoading(false);
+      }).catch(() => {
+        setLoading(false);
+      });
+    }
+  }, [isVisible, props?.products, offset, props?.showLimit, props.isInfinite, props.loadMoreAction, currentPage, loading, hasMore]);
 
   useEffect(() => {
     setOffset(props.offset || 12);
-    setShowingProducts(props.products?.slice(0, props?.showLimit));
+    setShowingProducts((props.products || [])?.slice(0, props?.showLimit));
+    setCurrentPage(1);
+    setHasMore(true);
   }, [props?.offset, props?.showLimit, props?.products]);
 
   return (
@@ -55,7 +78,7 @@ export default function LazyLoadProducts(props: Props) {
     >
       {showingProducts.length ? (
         showingProducts.map((product, index) => (
-          <React.Fragment key={product.id}>
+          <React.Fragment key={product.id + index}>
             {props.adIndex === index ||
               (props.adInterval && index > 0 && index % props.adInterval === 0) ? (
               <GoogleAdsCard key={`google-ads-card-${index}`} />
@@ -91,7 +114,9 @@ export default function LazyLoadProducts(props: Props) {
         </div>
       )}
 
-      {props?.products?.length > showingProducts?.length ? (
+      {loading && <ProductListSkeleton length={4} />}
+
+      {(props.isInfinite ? hasMore : props?.products?.length > showingProducts?.length) ? (
         <div
           ref={ref}
           className={cn(`

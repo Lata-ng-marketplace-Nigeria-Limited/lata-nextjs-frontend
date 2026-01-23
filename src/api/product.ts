@@ -18,11 +18,13 @@ import { SwitchedRoleQueries } from "@/interface/switchedRole";
 export const getDashboardProductsApi = async (
   query?: string,
   subcategory?: string,
+  page?: number,
 ): Promise<{
   message: string;
   isTrending: boolean;
   trendingProducts: Product[];
   otherProducts: Product[];
+  meta?: FetchMeta;
 } | null> => {
   try {
     const params = new URLSearchParams();
@@ -31,6 +33,9 @@ export const getDashboardProductsApi = async (
     }
     if (subcategory) {
       params.append("subcategory", subcategory || "");
+    }
+    if (page) {
+      params.append("page", page.toString());
     }
 
     const url = `/products/trending?${params.toString()}`;

@@ -12,6 +12,16 @@ export default async function HomeProducts({ query, subcategory }: Props) {
     getDashboardProductsApi(query, subcategory),
     getAllStatesApi(),
   ]);
+
+  const loadMoreProducts = async (page: number) => {
+    "use server";
+    const res = await getDashboardProductsApi(query, subcategory, page);
+    return {
+      data: res?.otherProducts || [],
+      hasMore: !!res?.meta && res.meta.current_page < res.meta.last_page,
+    };
+  };
+
   const headerClass = cn(
     `text-sm xs:text-base tablet:text-[20px] text-grey9 font-medium`,
   );
@@ -53,6 +63,8 @@ export default async function HomeProducts({ query, subcategory }: Props) {
           showLimit={4}
           hideFallback={(products?.otherProducts?.length || 0) > 0}
           adInterval={4}
+          isInfinite
+          loadMoreAction={loadMoreProducts}
         />
       </div>
     </div>

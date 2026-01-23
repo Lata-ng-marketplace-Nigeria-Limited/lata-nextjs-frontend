@@ -9,31 +9,45 @@ export const ProductCardSkeleton = () => {
     <div
       className={cn(
         skeletonShimmerClass,
-        `relative 
-          overflow-hidden 
-          rounded-[0.625rem]
-          bg-gray-100 
-          p-1
-          shadow-sm
-          w-full
-          max-w-[17rem]
-          `,
+        `
+        relative
+        mx-auto
+        w-full
+        max-w-[17rem]
+        shrink-0
+        rounded-[0.625rem]
+        border
+        border-grey3
+        p-2
+        xms:mx-0
+        sm:px-2.5
+        sm:py-3
+        bg-white
+        overflow-hidden
+      `,
       )}
     >
-      <div className="flex p-2 sm:px-2.5 py-2 bg-white rounded-[0.625rem_0.625rem_0px_0px]">
-        <div className="h-[160px] w-[247px] rounded-[0.625rem] bg-gray-200" />
-      </div>
+      <div
+        className={cn(`
+            relative
+            h-[7.6rem]
+            w-full
+            rounded-[0.625rem]
+            sm:h-[10rem]
+            bg-gray-200
+        `)}
+      />
 
-      <div className="flex truncate bg-white px-2 sm:px-2.5 pb-2 justify-between gap-x-4 rounded-[0px_0px_0.625rem_0.625rem]">
-        <div className={"w-full flex flex-col gap-y-2"}>
-          <div className="h-6 w-full rounded-md bg-gray-200" />
-          <div className="h-5 w-full rounded-md bg-gray-200" />
-          <div className="h-9 w-full rounded-md bg-gray-200" />
-          <div className="h-5 w-full rounded-md bg-gray-200" />
+      <div className={"mt-2 flex justify-between sm:mt-3"}>
+        <div className={"flex w-full flex-col gap-y-2"}>
+          <div className="h-5 w-1/2 rounded-md bg-gray-100" />
+          <div className="h-4 w-3/4 rounded-md bg-gray-100" />
+          <div className="h-3 w-full rounded-md bg-gray-100" />
+          <div className="mt-auto h-3 w-1/2 rounded-md bg-gray-100" />
         </div>
 
-        <div className={"flex justify-end items-end"}>
-          <div className="h-6 w-6 rounded-md bg-gray-200" />
+        <div className={"flex items-end justify-end"}>
+          <div className="h-6 w-6 rounded-full bg-gray-100 sm:h-8 sm:w-8" />
         </div>
       </div>
     </div>
