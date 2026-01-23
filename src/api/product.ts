@@ -122,7 +122,7 @@ export const searchProductsApi = async ({
     if (!resp.ok) {
       return null;
     }
-    revalidateTag("get_recent_searches_api");
+    revalidateTag("get_recent_searches_api", "default");
     return await resp.json();
   } catch (error: any) {
     throw error.response || error;
@@ -210,7 +210,7 @@ export const deleteAProductApi = async (
 
   try {
     const res = await $http.delete(`products/${id}?${params}`);
-    revalidateTag("dashboard_products");
+    revalidateTag("dashboard_products", "default");
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -258,7 +258,7 @@ export const createAProductApi = async (
 
   try {
     const res = await $httpFile.post(`products?${params}`, payload);
-    revalidateTag("dashboard_products");
+    revalidateTag("dashboard_products", "default");
     return res.data;
   } catch (error: any) {
     console.log(error?.response?.data?.error);
@@ -279,7 +279,7 @@ export const updateAProductApi = async (
   try {
     const formData = createFormData(payload);
     const res = await $httpFile.put(`products/${id}?${params}`, formData);
-    revalidateTag("dashboard_products");
+    revalidateTag("dashboard_products", "default");
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -298,7 +298,7 @@ export const saveAProductApi = async (
   try {
     const res = await $http.get(`products/save/${productId}?${params}`);
     revalidatePath("/saved");
-    revalidateTag("user_tag");
+    revalidateTag("user_tag", "default");
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -318,7 +318,7 @@ export const unSaveAProductApi = async (
   try {
     const res = await $http.get(`products/un-save/${productId}?${params}`);
     revalidatePath("/saved");
-    revalidateTag("user_tag");
+    revalidateTag("user_tag", "default");
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -382,7 +382,7 @@ export const activateProductApi = async (
 }> => {
   try {
     const res = await $http.get(`products/activate/${id}`);
-    revalidateTag("dashboard_products");
+    revalidateTag("dashboard_products", "default");
     revalidatePath(ADMIN_REVIEW_PRODUCTS_ROUTE);
     return res.data;
   } catch (error: any) {
@@ -397,7 +397,7 @@ export const deactivateProductApi = async (
 }> => {
   try {
     const res = await $http.get(`products/deactivate/${id}`);
-    revalidateTag("dashboard_products");
+    revalidateTag("dashboard_products", "default");
     revalidatePath(ADMIN_REVIEW_PRODUCTS_ROUTE);
     return res.data;
   } catch (error: any) {
@@ -411,7 +411,7 @@ export const cancelProductApi = async (
 }> => {
   try {
     const res = await $http.get(`products/cancel/${id}`);
-    revalidateTag("dashboard_products");
+    revalidateTag("dashboard_products", "default");
     revalidatePath(ADMIN_REVIEW_PRODUCTS_ROUTE);
     return res.data;
   } catch (error: any) {

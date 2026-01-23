@@ -51,7 +51,7 @@ export const updatePlanApi = async (params: {
 
     const res = await $http.put(`/plans/${id}?${parameters}`, { price, discount });
     revalidatePath(ADMIN_EDIT_PLAN_ROUTE);
-    revalidateTag("getAllSubscriptionsApi");
+    revalidateTag("getAllSubscriptionsApi", "default");
     return res.data;
   } catch (error: any) {
     throw error.response || error;

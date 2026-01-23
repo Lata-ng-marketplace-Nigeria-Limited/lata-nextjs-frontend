@@ -15,7 +15,7 @@ import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export interface IFindAllNotificationsApiQueries
   extends SwitchedRoleQueries,
-    SearchQuery {}
+  SearchQuery { }
 export const findAllNotificationsApi = async (
   queries: IFindAllNotificationsApiQueries,
 ): Promise<{
@@ -51,7 +51,7 @@ export const readNotificationApi = async (
   try {
     const response = await $http.put(`/notifications/read?${params}` + id);
     revalidatePath("/notifications");
-    revalidateTag("user_tag");
+    revalidateTag("user_tag", "default");
     return response.data;
   } catch (error: any) {
     throw error.response || error;
@@ -65,7 +65,7 @@ export const readAllNotificationApi = async (queries?: SwitchedRoleQueries,): Pr
   try {
     const response = await $http.put(`/notifications/read-all?${params}`);
     revalidatePath("/notifications");
-    revalidateTag("user_tag");
+    revalidateTag("user_tag", "default");
     return response.data;
   } catch (error: any) {
     throw error.response || error;

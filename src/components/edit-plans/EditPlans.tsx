@@ -10,7 +10,6 @@ import { NumberTextInput } from "@components/input/NumberTextInput";
 import Button from "@atom/Button";
 import { useToast } from "@components/ui/use-toast";
 import { updatePlanApi } from "@/api/subscription";
-import { revalidatePath } from "next/cache";
 import { ADMIN_EDIT_PLAN_ROUTE } from "@/constants/routes";
 
 interface Props {
@@ -43,17 +42,17 @@ export const EditPlans = ({ subscriptions }: Props) => {
   const planOptions =
     subscriptionValue?.type === "COMBO"
       ? [
-          {
-            value: "Verified",
-            label: "Verified",
-          },
-        ]
+        {
+          value: "Verified",
+          label: "Verified",
+        },
+      ]
       : planList
-          .filter((plan) => plan !== "Free")
-          .map((plan) => ({
-            value: plan,
-            label: plan,
-          })) || [];
+        .filter((plan) => plan !== "Free")
+        .map((plan) => ({
+          value: plan,
+          label: plan,
+        })) || [];
 
   // useEffect(() => {
   //   console.log("subscriptions");
@@ -282,7 +281,7 @@ export const EditPlans = ({ subscriptions }: Props) => {
         format={"primary"}
         disabled={!plan || loadingUpdate}
         type={"submit"}
-        // onClick={handleUpdatePlan}
+      // onClick={handleUpdatePlan}
       >
         Update
       </Button>

@@ -56,7 +56,7 @@ export const saveCustomerFeedback = async (
       },
     });
     if (!res.ok) throw await res.json();
-    revalidateTag("product-feedback");
+    revalidateTag("product-feedback", "default");
     return await res.json();
   } catch (error: any) {
     console.log(error);
@@ -110,7 +110,7 @@ export interface IGetProductFeedback {
   isEmpty?: boolean;
 }
 
-interface IGetProductFeedbackQueries extends SwitchedRoleQueries, SearchQuery {}
+interface IGetProductFeedbackQueries extends SwitchedRoleQueries, SearchQuery { }
 
 export const getProductFeedback = async (
   productId: string,

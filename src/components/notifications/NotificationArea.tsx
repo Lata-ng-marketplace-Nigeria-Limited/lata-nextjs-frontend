@@ -4,7 +4,6 @@ import Button from "@atom/Button";
 import { useState } from "react";
 import { readAllNotificationApi } from "@/api/notifications";
 import { useToast } from "@components/ui/use-toast";
-import { revalidatePath } from "next/cache";
 import { FetchMeta } from "@/interface/general";
 import MobileBorderArea from "@atom/MobileBorderArea";
 import { cn } from "@/utils";
