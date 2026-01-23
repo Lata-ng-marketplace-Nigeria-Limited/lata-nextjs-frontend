@@ -136,9 +136,8 @@ const EditRewardForm = (props: EditRewardFormProps) => {
     }
 
     if (props.staffCategory === "older") {
-      return `This update will affect all staffs with accounts older than ${
-        props.selectedMonth
-      } ${Number(props.selectedMonth) === 1 ? "month" : "months"}`;
+      return `This update will affect all staffs with accounts older than ${props.selectedMonth
+        } ${Number(props.selectedMonth) === 1 ? "month" : "months"}`;
     }
   };
 
@@ -161,7 +160,7 @@ const EditRewardForm = (props: EditRewardFormProps) => {
       <h3 className="mb-6 text-xs font-normal italic text-grey7">
         {display()}
       </h3>
-      {(props.query === "bonus" || !props.query) && (
+      {props.query === "bonus" || !props.query ? (
         <Controller
           control={control}
           name="bonusAmount"
@@ -177,8 +176,8 @@ const EditRewardForm = (props: EditRewardFormProps) => {
             />
           )}
         />
-      )}
-      {props.query === "commission" && (
+      ) : null}
+      {props.query === "commission" ? (
         <Controller
           control={control}
           name="commissionPercentage"
@@ -203,7 +202,7 @@ const EditRewardForm = (props: EditRewardFormProps) => {
             />
           )}
         />
-      )}
+      ) : null}
 
       <div className="flex items-center gap-3">
         <Button

@@ -65,7 +65,7 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
               {props.description}
             </p>
           )}
-          {props.errorMessage && (
+          {props.errorMessage ? (
             <p
               className={cn(`
             whitespace-pre-wrap
@@ -75,7 +75,7 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
             >
               {props.errorMessage}
             </p>
-          )}
+          ) : null}
         </>
       ) : null}
 

@@ -189,11 +189,11 @@ export default function EmailBroadcast() {
           >
             {isLoadingCount ? "Loading..." : "Preview Recipient Count"}
           </Button>
-          {userCount !== null && (
+          {userCount !== null ? (
             <span className="text-sm font-semibold text-gray-700">
               {userCount} user(s) will receive this email
             </span>
-          )}
+          ) : null}
         </div>
 
         <div>
@@ -283,14 +283,14 @@ export default function EmailBroadcast() {
           </Button>
         </div>
 
-        {userCount !== null && userCount > 0 && (
+        {userCount !== null && userCount > 0 ? (
           <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
             <p className="text-sm text-yellow-800">
               ⚠️ Warning: This action will send an email to {userCount} user(s).
               Please review your message carefully before sending.
             </p>
           </div>
-        )}
+        ) : null}
       </form>
     </div>
   );

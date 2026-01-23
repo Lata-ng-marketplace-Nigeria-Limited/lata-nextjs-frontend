@@ -65,7 +65,7 @@ const TableWithRowGaps = (props: Props) => {
     <>
       {props.tableData && props.tableData.length > 0 ? (
         <Table className="border-collapse text-grey10">
-          {!props.hideHeaders && (
+          {props.hideHeaders ? null : (
             <TableHeader>
               <TableRow>
                 {keys?.map((key, index) => (

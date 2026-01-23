@@ -38,9 +38,9 @@ export default function LazyLoadProducts(props: Props) {
       offset,
       offset + props?.showLimit!,
     );
-    setOffset(offset + props?.showLimit!);
-    setShowingProducts([...showingProducts, ...nextTenProducts]);
-  }, [isVisible, props?.products, offset, showingProducts, props?.showLimit]);
+    setOffset((prev) => prev + props?.showLimit!);
+    setShowingProducts((prev) => [...prev, ...nextTenProducts]);
+  }, [isVisible, props?.products, offset, props?.showLimit]);
 
   useEffect(() => {
     setOffset(props.offset || 12);
@@ -56,12 +56,10 @@ export default function LazyLoadProducts(props: Props) {
       {showingProducts.length ? (
         showingProducts.map((product, index) => (
           <React.Fragment key={product.id}>
-            {(props.adIndex === index ||
-              (props.adInterval &&
-                index > 0 &&
-                index % props.adInterval === 0)) && (
-                <GoogleAdsCard key={`google-ads-card-${index}`} />
-              )}
+            {props.adIndex === index ||
+              (props.adInterval && index > 0 && index % props.adInterval === 0) ? (
+              <GoogleAdsCard key={`google-ads-card-${index}`} />
+            ) : null}
             <ProductCard
               price={formatPrice(product?.price)}
               productName={product?.name}
@@ -93,7 +91,7 @@ export default function LazyLoadProducts(props: Props) {
         </div>
       )}
 
-      {props?.products?.length > showingProducts?.length && (
+      {props?.products?.length > showingProducts?.length ? (
         <div
           ref={ref}
           className={cn(`
@@ -104,7 +102,7 @@ export default function LazyLoadProducts(props: Props) {
           bg-transparent
         `)}
         ></div>
-      )}
+      ) : null}
     </ProductGridList>
   );
 }

@@ -22,8 +22,11 @@ interface IPageProps {
 }
 
 export async function generateMetadata(props: IPageProps): Promise<Metadata> {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
+  const [searchParams, params, statesInNigeriaData] = await Promise.all([
+    props.searchParams,
+    props.params,
+    getAllStatesApi(),
+  ]);
   const { id } = params;
   const page = searchParams?.page || "";
   const status = searchParams?.status || "";
@@ -35,7 +38,6 @@ export async function generateMetadata(props: IPageProps): Promise<Metadata> {
   };
 
   const products = await findAllSellerProductsApi(info);
-  const statesInNigeriaData = await getAllStatesApi();
 
   return {
     title: products?.seller?.name + " Shop",
@@ -43,11 +45,13 @@ export async function generateMetadata(props: IPageProps): Promise<Metadata> {
 }
 
 export default async function Page(props: IPageProps) {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
+  const [searchParams, params, session] = await Promise.all([
+    props.searchParams,
+    props.params,
+    getServerSession(authConfig),
+  ]);
   const { id } = params;
   unstable_noStore();
-  const session = await getServerSession(authConfig);
   const page = searchParams?.page || "";
   const status = searchParams?.status || "";
 
@@ -57,8 +61,10 @@ export default async function Page(props: IPageProps) {
     sellerId: id,
   };
 
-  const products = await findAllSellerProductsApi(info);
-  const statesInNigeriaData = await getAllStatesApi();
+  const [products, statesInNigeriaData] = await Promise.all([
+    findAllSellerProductsApi(info),
+    getAllStatesApi(),
+  ]);
 
   if (!session || !session.user) {
     redirect("/auth/login");

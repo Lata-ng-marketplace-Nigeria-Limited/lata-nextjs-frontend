@@ -8,8 +8,10 @@ interface Props {
   subcategory?: string;
 }
 export default async function HomeProducts({ query, subcategory }: Props) {
-  const products = await getDashboardProductsApi(query, subcategory);
-  const statesInNigeriaData = await getAllStatesApi();
+  const [products, statesInNigeriaData] = await Promise.all([
+    getDashboardProductsApi(query, subcategory),
+    getAllStatesApi(),
+  ]);
   const headerClass = cn(
     `text-sm xs:text-base tablet:text-[20px] text-grey9 font-medium`,
   );

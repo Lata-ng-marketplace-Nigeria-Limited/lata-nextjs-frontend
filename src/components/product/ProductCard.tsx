@@ -250,7 +250,7 @@ export default function ProductCard(props: Props) {
           },
         )}
       >
-        {props.product?.status === "INACTIVE" && (
+        {props.product?.status === "INACTIVE" ? (
           <div
             className={cn(`
               absolute
@@ -269,9 +269,9 @@ export default function ProductCard(props: Props) {
           >
             Under Review
           </div>
-        )}
+        ) : null}
 
-        {planName && (
+        {planName ? (
           <div
             className={
               "absolute left-0 top-0 rounded-[3px] bg-primary px-4 py-[7px] text-white"
@@ -279,9 +279,9 @@ export default function ProductCard(props: Props) {
           >
             {planName}
           </div>
-        )}
+        ) : null}
 
-        {(!!props?.imageSrc || !props.createProductPreview) && image && (
+        {(!!props?.imageSrc || !props.createProductPreview) && image ? (
           <Image
             src={image}
             className={cn("h-full w-full  rounded-[0.625rem]", {
@@ -295,9 +295,9 @@ export default function ProductCard(props: Props) {
             blurDataURL={IMAGE_BLUR_URL}
             unoptimized
           />
-        )}
+        ) : null}
 
-        {!props?.imageSrc && props.createProductPreview && (
+        {!props?.imageSrc && props.createProductPreview ? (
           <p
             className={
               "text-sm font-medium text-grey8 sm:text-[0.9375rem] tablet:text-[1rem] sl:text-[1.25rem]"
@@ -305,7 +305,7 @@ export default function ProductCard(props: Props) {
           >
             Product Photo
           </p>
-        )}
+        ) : null}
       </div>
 
       <div className={"mt-2 flex justify-between sm:mt-3"}>
@@ -335,9 +335,7 @@ export default function ProductCard(props: Props) {
                 {formatPrice(initialAmount)}
               </p>
             </div>
-          ) : (
-            ""
-          )}
+          ) : null}
           <p className={"text-sm font-bold text-primary sm:text-base"}>
             {handlDisplayedPrice()}
           </p>

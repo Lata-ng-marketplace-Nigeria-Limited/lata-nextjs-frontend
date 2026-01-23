@@ -16,9 +16,8 @@ interface PageProps {
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
-  const params = await props.params;
+  const [params, session] = await Promise.all([props.params, getServerSession(authConfig)]);
   const { id: sellerId } = params;
-  const session = await getServerSession(authConfig);
   if (
     !session ||
     !session.user ||
@@ -34,8 +33,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default async function Page(props: PageProps) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
+  const [params, searchParams] = await Promise.all([props.params, props.searchParams]);
   const { id: sellerId } = params;
   const query = searchParams?.query || "";
   return (

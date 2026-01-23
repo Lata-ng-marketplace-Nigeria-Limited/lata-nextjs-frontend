@@ -50,8 +50,8 @@ const Category = ({
         </div>
       </div>
 
-     
-      {showInnerModal && (
+
+      {showInnerModal ? (
         <Modal
           isShown={showInnerModal}
           setIsShown={setShowInnerModal}
@@ -63,7 +63,7 @@ const Category = ({
             onModalClose={onModalClose}
           />
         </Modal>
-      )}
+      ) : null}
 
     </div>
   );

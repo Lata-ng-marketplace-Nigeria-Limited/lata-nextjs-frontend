@@ -14,12 +14,12 @@ export async function generateMetadata(
   props: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const params = await props.params;
+  const [params, parentData] = await Promise.all([props.params, parent]);
   const id = params.id;
   // fetch data
   const { seller } = await getSellerProfileApi(id);
   // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || [];
+  const previousImages = parentData.openGraph?.images || [];
 
   return {
     title: seller?.name || "Seller not found",
@@ -43,8 +43,7 @@ export default async function Page(props: {
   }>;
   searchParams: Promise<{ pid?: string }>;
 }) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
+  const [params, searchParams] = await Promise.all([props.params, props.searchParams]);
   const { id } = params;
   const productId = searchParams.pid || "";
   return (

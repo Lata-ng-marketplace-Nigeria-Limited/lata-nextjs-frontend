@@ -17,14 +17,17 @@ export async function generateMetadata(
   props: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
+  const [params, searchParams, parentData] = await Promise.all([
+    props.params,
+    props.searchParams,
+    parent,
+  ]);
   // read route params
   const id = params.id;
   // fetch data
   const data = await findAProductApi(id);
   // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || [];
+  const previousImages = parentData.openGraph?.images || [];
 
   return {
     title: data?.product.name || "Product not found",
@@ -48,8 +51,7 @@ export default async function Page(props: {
   }>;
   searchParams: Promise<ISearchParms>;
 }) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
+  const [params, searchParams] = await Promise.all([props.params, props.searchParams]);
   const { id } = params;
 
   unstable_noStore();

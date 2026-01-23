@@ -14,7 +14,7 @@ const LoadingSkeleton: React.FC<LoadingFeedbackContentProps> = ({
       <div className="mb-2 h-8 w-[5rem] animate-pulse rounded-lg bg-gray-300 tablet:mb-5"></div>
       <div className="mb-2 h-8 w-[10rem] animate-pulse bg-gray-300 tablet:mb-5"></div>
       <div className="h-4 w-[15rem] animate-pulse bg-gray-300"></div>
-      {!hideLink && (
+      {hideLink ? null : (
         <div
           className={cn(
             { hidden: hideLink },

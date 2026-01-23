@@ -45,7 +45,7 @@ const EditKPI = (props: Props) => {
             }}
           />
 
-          {props.selectedCategory === "older" && (
+          {props.selectedCategory === "older" ? (
             <SelectInput
               placeholder="Choose staff accounts older than..."
               options={Array.from({ length: 12 }, (_, index) => ({
@@ -67,9 +67,9 @@ const EditKPI = (props: Props) => {
                 }
               }}
             />
-          )}
+          ) : null}
 
-          {props.selectedCategory === "single" && (
+          {props.selectedCategory === "single" ? (
             <TextInput
               wrapperClass={"w-full mb-4"}
               placeholder={"Enter staff email"}
@@ -84,11 +84,12 @@ const EditKPI = (props: Props) => {
                 props.setShowFields(isValidEmail);
               }}
             />
-          )}
+          ) : null}
         </div>
 
-        {(props.selectedCategory === "all" || props.showFields) &&
-          props.children}
+        {props.selectedCategory === "all" || props.showFields
+          ? props.children
+          : null}
       </div>
     </div>
   );
