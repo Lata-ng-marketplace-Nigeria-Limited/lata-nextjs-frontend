@@ -34,7 +34,10 @@ export default function LazyLoadProducts(props: Props) {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0 });
+  const { ref, isIntersecting } = useIntersectionObserver({ 
+    threshold: 0,
+    rootMargin: '800px 0px', // Start loading when 800px away from trigger
+  });
   const isVisible = isIntersecting;
 
   useEffect(() => {
