@@ -2,7 +2,7 @@
 
 import Button from "@/components/atom/Button";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { startTransition, useEffect } from "react";
 
 export default function Error({
   error,
@@ -11,7 +11,7 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const { back } = useRouter();
+  const { back, refresh } = useRouter();
   useEffect(() => {
     console.error(error);
     console.log(error?.message);
@@ -27,10 +27,12 @@ export default function Error({
           </Button>
           <Button
             format="secondary"
-            onClick={
-              // Attempt to recover by trying to re-render the segment
-              () => reset()
-            }
+            onClick={() => {
+              startTransition(() => {
+                refresh();
+                reset();
+              });
+            }}
           >
             Please try again
           </Button>

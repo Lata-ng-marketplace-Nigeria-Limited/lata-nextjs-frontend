@@ -1,7 +1,8 @@
 "use client";
 
 import Button from "@/components/atom/Button";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { startTransition, useEffect } from "react";
 
 export default function Error({
   error,
@@ -10,20 +11,24 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   useEffect(() => {
     console.error(error);
   }, [error]);
 
   return (
-    <div className="flex h-screen">
-      <div className="m-auto">
-        <h2 className="mb-4 text-center font-bold">Something went wrong!</h2>
+    <div className="flex h-screen items-center justify-center">
+      <div className="text-center">
+        <h2 className="mb-4 font-bold text-xl">Something went wrong!</h2>
         <Button
           format="primary"
-          onClick={
-            // Attempt to recover by trying to re-render the segment
-            () => reset()
-          }
+          onClick={() => {
+            startTransition(() => {
+              router.refresh();
+              reset();
+            });
+          }}
         >
           Please try again
         </Button>

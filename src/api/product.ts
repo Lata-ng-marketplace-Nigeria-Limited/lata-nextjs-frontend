@@ -124,7 +124,6 @@ export const searchProductsApi = async ({
     if (!resp.ok) {
       return null;
     }
-    revalidateTag("get_recent_searches_api", "default");
     return await resp.json();
   } catch (error: any) {
     throw error.response || error;
