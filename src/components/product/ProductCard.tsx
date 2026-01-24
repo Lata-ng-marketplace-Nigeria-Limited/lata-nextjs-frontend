@@ -59,9 +59,8 @@ export default function ProductCard(props: Props) {
   const [initialAmount, setInitialAmount] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
 
-  const ref = useRef<HTMLDivElement>(null);
-  const entry = useIntersectionObserver(ref as any, {});
-  const isVisible = !!entry?.isIntersecting;
+  const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0 });
+  const isVisible = isIntersecting;
   const { toast } = useToast();
 
   const queries = useGetSwitchedRolesQueries();

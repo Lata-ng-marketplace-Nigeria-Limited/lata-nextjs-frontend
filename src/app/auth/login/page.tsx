@@ -2,8 +2,7 @@ import AuthFormArea from "@components/auth/AuthFormArea";
 import { LoginForm } from "@components/forms/LoginForm";
 import AuthImageArea from "@components/auth/AuthImageArea";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Login() {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (session && session.user) {
     redirect("/");
   }

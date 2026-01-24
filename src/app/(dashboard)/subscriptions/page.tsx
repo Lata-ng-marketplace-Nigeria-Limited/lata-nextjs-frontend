@@ -1,11 +1,10 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { SubscriptionListSkeleton } from "@components/skeleton/SubscriptionListSkeleton";
 import { Suspense } from "react";
 import { SubscriptionsWrapper } from "@components/subscription/SubscriptionsWrapper";
-import { authConfig } from "@authConfig";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ export default async function Page(props: {
   searchParams: Promise<ISearchParams>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/login");

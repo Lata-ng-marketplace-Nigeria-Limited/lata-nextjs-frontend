@@ -1,6 +1,5 @@
 import { getApiUrl } from "@/utils";
-import { authConfig } from "@authConfig";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 
 export interface IErrorResponse {
   isError?: boolean;
@@ -17,7 +16,7 @@ export const fetchData = async (
   options: FetchDataOptions = { revalidate: 60 }
 ) => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
 
     const res = await fetch(getApiUrl(url), {
       headers: {

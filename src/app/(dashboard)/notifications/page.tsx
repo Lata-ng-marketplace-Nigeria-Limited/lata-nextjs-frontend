@@ -1,11 +1,10 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { NotificationWrapper } from "@components/notifications/NotificationWrapper";
 import { unstable_noStore } from "next/cache";
-import { authConfig } from "@authConfig";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import { SearchQuery } from "@/interface/general";
 
@@ -20,7 +19,7 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   unstable_noStore();
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   const page = searchParams?.page || "";
   if (!session || !session.user) {
     redirect("/auth/login");

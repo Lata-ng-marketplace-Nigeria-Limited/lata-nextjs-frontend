@@ -1,5 +1,5 @@
 import React from "react";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export default async function Auth({

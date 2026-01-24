@@ -27,7 +27,10 @@
         "./src/*"
       ],
       "@auth": [
-        "./auth"
+        "./auth.ts"
+      ],
+      "@/auth": [
+        "./auth.ts"
       ],
       "@authConfig": [
         "./auth.config"

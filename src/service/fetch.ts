@@ -1,7 +1,6 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { getCookies } from "@/utils";
 import { API_URL } from "@/constants/env";
 
@@ -32,7 +31,7 @@ class Fetch {
   }
 
   init = async () => {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     let token = session?.token;
     // if (!session) {
     //   try {
@@ -47,7 +46,7 @@ class Fetch {
   };
 
   $http = async (url: string, options?: FetchOptions) => {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     let token = session?.token;
     return await fetch(API_URL + url, {
       ...(options || {}),
@@ -60,7 +59,7 @@ class Fetch {
 }
 
 const FetchService = async (url: string, options?: FetchOptions) => {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   let token = session?.token;
 
   return await fetch(API_URL + url, {

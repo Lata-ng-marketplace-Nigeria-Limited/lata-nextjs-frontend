@@ -1,10 +1,9 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import HeaderText from "@atom/HeaderText";
 import { SettingsForm } from "@components/forms/SettingsForm";
-import { authConfig } from "@authConfig";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/login");

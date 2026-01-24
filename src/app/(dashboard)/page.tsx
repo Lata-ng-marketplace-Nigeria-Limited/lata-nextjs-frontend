@@ -3,8 +3,7 @@ import HeroImage from "@/components/molecule/HeroImage";
 import HomeProducts from "@components/product/HomeProducts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { DashboardSelectCategories } from "@molecule/DashboardSelectCategories";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import AdminDashboardWrapper from "@/components/admin/AdminWrapper";
 import StaffDashboard from "@/components/staff/StaffDashboard";
 import HeaderText from "@/components/atom/HeaderText";
@@ -40,7 +39,7 @@ export default async function Home(props: {
   searchParams: Promise<ISearchParams>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   const query = searchParams?.category || "";
   const subcategory = searchParams?.subcategory || "";
   const selectedMonth = searchParams?.month || "";

@@ -2,9 +2,8 @@ import { getAllSellersAdminApi } from "@/api/admin";
 import AllSellers from "@/components/admin/AllSellers";
 import { GetUser } from "@/components/atom/GetUser";
 import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
-import { authConfig } from "@authConfig";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
@@ -21,7 +20,7 @@ export default async function Protected(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }

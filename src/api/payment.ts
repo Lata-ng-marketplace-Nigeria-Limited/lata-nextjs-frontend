@@ -9,8 +9,7 @@ import { User } from "@/interface/user";
 import { $http } from "@/service/axios";
 import { FetchMeta } from "@/interface/general";
 import { appendQueryParams, getApiUrl } from "@/utils";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export interface GetSubscriptionPaymentCredentialsInput {
@@ -51,7 +50,7 @@ export const getSubscriptionPaymentCredentialsApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/payments/subscribe?${params}`), {
       method: "POST",
       body: JSON.stringify(payload),
@@ -74,7 +73,7 @@ export const getWalletPaymentCredentialsApi = async (payload: {
   credentials: PaymentCredentials;
 }> => {
   try {
-    // const session = await getServerSession(authConfig);
+    // const session = await auth();
     const res = await $http.post("/payments/wallet", payload, {
       // headers: {
       //   Authorization: `Bearer ${session?.token}`,
@@ -98,7 +97,7 @@ export const verifyPaymentApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await $http.post(
       `/transactions?${params}`,
       { reference },
@@ -121,7 +120,7 @@ export const findTransactionApi = async (
   transaction: Transaction;
 }> => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/transactions/${transactionId}`), {
       headers: {
         Authorization: `Bearer ${session?.token}`,

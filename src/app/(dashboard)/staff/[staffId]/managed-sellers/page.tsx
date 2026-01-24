@@ -2,8 +2,7 @@ import { adminFetchSellersUnderStaff } from "@/api/admin";
 import { GetUser } from "@/components/atom/GetUser";
 import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
 import StaffSellers from "@/components/staff/StaffSellers";
-import { authConfig } from "@authConfig";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
@@ -18,7 +17,7 @@ async function Page(props: {
   const params = await props.params;
   const searchParams = await props.searchParams;
   const { staffId } = params;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }

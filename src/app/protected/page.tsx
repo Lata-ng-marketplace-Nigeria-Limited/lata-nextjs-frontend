@@ -1,9 +1,8 @@
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { authConfig } from "@authConfig";
 
 export default async function Protected() {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/login");

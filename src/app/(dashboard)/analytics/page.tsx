@@ -2,8 +2,7 @@ import { Metadata } from "next";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import HeaderText from "@/components/atom/HeaderText";
 import React, { Suspense } from "react";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import AnalyticsCardsWrapper from "@/components/analytics/AnalyticsCardsWrapper";
 import AnalyticsChartArea from "@/components/analytics/AnalyticsChartArea";
 import ProductInsights from "@/components/analytics/ProductInsights";
@@ -32,7 +31,7 @@ const page = async (props: { searchParams: Promise<ISearchParams> }) => {
     return gmtPlus1Month + 1; // Adding 1 to match month indexing (0-indexed to 1-indexed)
   }
 
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   const month = searchParams?.month || getMonthInGMTPlus1().toString();
 

@@ -1,13 +1,12 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import HeaderText from "@atom/HeaderText";
 import { Suspense } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { SavedProducts } from "@components/saved/SavedProducts";
 import { unstable_noStore } from "next/cache";
-import { authConfig } from "@authConfig";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import { findMySavedProductsApi } from "@/api/product";
 import { getAllStatesApi } from "@/api/location";
@@ -26,7 +25,7 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   unstable_noStore();
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   const page = searchParams?.page || "";
   if (!session || !session.user) {
     redirect("/auth/login");

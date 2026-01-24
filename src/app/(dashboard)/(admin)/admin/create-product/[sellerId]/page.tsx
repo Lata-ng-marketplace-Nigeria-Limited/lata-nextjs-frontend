@@ -1,10 +1,9 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { CreateOrEditProduct } from "@components/product/CreateOrEditProduct";
 import { Suspense } from "react";
-import { authConfig } from "@authConfig";
 import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const { sellerId } = params;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (!session || !session.user) {
     redirect("/auth");
   }

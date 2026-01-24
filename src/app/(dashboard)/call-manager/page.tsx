@@ -1,6 +1,6 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import MobileBorderArea from "@atom/MobileBorderArea";
 import { cn } from "@/utils";
@@ -8,14 +8,13 @@ import HeaderText from "@atom/HeaderText";
 import HeaderSubText from "@atom/HeaderSubText";
 import { CallManagerButton } from "@components/call-manager/CallManagerButton";
 import { Suspense } from "react";
-import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Call Manager",
 };
 
 export default async function Page() {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/login");

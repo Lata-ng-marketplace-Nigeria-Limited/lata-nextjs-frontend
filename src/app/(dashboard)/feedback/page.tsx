@@ -2,9 +2,8 @@ import { IFeedbackQuery, getAllSellerFeedbacks } from "@/api/feedback";
 import { GetUser } from "@/components/atom/GetUser";
 import FeedbackHeader from "@/components/feedback/FeedbackHeader";
 import SellerFeedbackList from "@/components/feedback/SellerFeedbackList";
-import { authConfig } from "@authConfig";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
@@ -16,7 +15,7 @@ interface ISearchParams extends IFeedbackQuery { }
 
 const Page = async (props: { searchParams: Promise<ISearchParams> }) => {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/login");

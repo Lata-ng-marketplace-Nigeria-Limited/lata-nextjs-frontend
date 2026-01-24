@@ -1,6 +1,6 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata, ResolvingMetadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { findAProductApi } from "@/api/product";
 import { ViewProductSkeleton } from "@components/skeleton/ViewProductSkeleton";
 import { Suspense } from "react";

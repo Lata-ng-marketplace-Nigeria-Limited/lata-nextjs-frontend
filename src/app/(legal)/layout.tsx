@@ -3,15 +3,14 @@ import { cn } from "@/utils";
 import Header from "@/components/organism/Header";
 import Footer from "@/components/organism/Footer";
 import { GetUser } from "@atom/GetUser";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 
 export default async function Legal({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   return (
     <main className={"h-full bg-white"}>
       <Suspense>

@@ -1,12 +1,11 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { findAProductApi } from "@/api/product";
 import { Suspense } from "react";
 import { CreateOrEditProduct } from "@components/product/CreateOrEditProduct";
 import EditProduct from "@components/product/EditProduct";
-import { authConfig } from "@authConfig";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export default async function Page(props: {
   const params = await props.params;
   const searchParams = await props.searchParams;
   const { id } = params;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth");

@@ -33,9 +33,8 @@ export default function LazyLoadProducts(props: Props) {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const ref = useRef<HTMLDivElement>(null);
-  const entry = useIntersectionObserver(ref as any, {});
-  const isVisible = !!entry?.isIntersecting;
+  const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0 });
+  const isVisible = isIntersecting;
 
   useEffect(() => {
     if (!isVisible || loading) return;

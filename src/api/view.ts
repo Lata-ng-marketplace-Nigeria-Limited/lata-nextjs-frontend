@@ -1,6 +1,5 @@
 import { appendQueryParams, getApiUrl } from "@/utils";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { CreateViewTypes, ViewTypes } from "@/interface/views";
 import { $http } from "@/service/axios";
 import {
@@ -39,7 +38,7 @@ export const getSellerAnalyticsApi = async ({
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
 
     const res = await fetch(
       getApiUrl(month ? `/views/month/${month}?${params}` : `/views?${params}`),
@@ -72,7 +71,7 @@ export const getAnalyticsClicksAndViews = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/views/all?${params}`), {
       headers: {
         Authorization: `Bearer ${session?.token}`,

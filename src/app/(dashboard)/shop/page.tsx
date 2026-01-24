@@ -1,12 +1,11 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { MyShop } from "@components/shop/MyShop";
 import { Suspense } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { unstable_noStore } from "next/cache";
-import { authConfig } from "@authConfig";
 import { findAllMyProductsApi } from "@/api/product";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
@@ -26,7 +25,7 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   unstable_noStore();
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   const queries: ISearchParams = {
     page: searchParams?.page || "",

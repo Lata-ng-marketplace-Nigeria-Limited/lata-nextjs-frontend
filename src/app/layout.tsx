@@ -4,9 +4,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/utils";
 import { NextAuthProvider } from "@/components/SessionProvider";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
-import { authConfig } from "@authConfig";
 import { Viewport } from "next";
 import Script from "next/script";
 import {
@@ -60,7 +59,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   return (
     <html lang="en">
       <GoogleAnalytics

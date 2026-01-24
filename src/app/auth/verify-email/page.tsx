@@ -1,9 +1,8 @@
 import { Metadata } from "next";
 import { verifyOtpApi } from "@/actions/auth";
 import { VerifyEmail } from "@organism/VerifyEmail";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Verify Email",
@@ -19,7 +18,7 @@ export default async function Page(props: {
   const code = searchParams?.code || "";
   const email = searchParams?.email || "";
 
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (session && session.user) {
     redirect("/");
   }

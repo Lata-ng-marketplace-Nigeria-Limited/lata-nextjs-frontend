@@ -7,8 +7,7 @@ import {
 } from "@/interface/products";
 import { appendQueryParams, createFormData, getApiUrl } from "@/utils";
 import { FetchMeta, SearchQuery } from "@/interface/general";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { $http, $httpFile } from "@/service/axios";
 import { User } from "@/interface/user";
@@ -64,7 +63,7 @@ export const findAProductApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(
       getApiUrl(`/products/${productId}?${params.toString()}`),
       {
@@ -148,7 +147,7 @@ export const findAllMyProductsApi = async (
   statusCounts: IProductStatusCount;
 }> => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const params = appendQueryParams(queries || {});
 
     const res = await fetch(getApiUrl(`/products/my?${params.toString()}`), {
@@ -187,7 +186,7 @@ export const findMySavedProductsApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/products/saved?${params.toString()}`), {
       headers: {
         Authorization: "Bearer " + session?.token,
@@ -335,7 +334,7 @@ export const getRecentSearchesApi = async (queries?: SwitchedRoleQueries,): Prom
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`products/searches?${params}`), {
       headers: {
         Authorization: "Bearer " + session?.token,

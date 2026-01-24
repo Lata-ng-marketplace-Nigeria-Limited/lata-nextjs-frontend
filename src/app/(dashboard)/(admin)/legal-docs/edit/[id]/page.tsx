@@ -1,10 +1,9 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getALegalDocApi } from "@/api/legal";
 import { EditorArea } from "@components/input/EditorArea";
-import { authConfig } from "@authConfig";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const { id } = params;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   const doc = await getALegalDocApi({ id });
 
   if (!session || !session.user || session.role !== "ADMIN") {

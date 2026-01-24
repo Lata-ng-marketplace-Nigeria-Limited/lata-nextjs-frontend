@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Button from "@atom/Button";
 import { signOut } from "next-auth/react";
@@ -12,7 +12,6 @@ import { cn } from "@/utils";
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
 import { unstable_noStore } from "next/cache";
-import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Logout",
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   unstable_noStore();
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/");

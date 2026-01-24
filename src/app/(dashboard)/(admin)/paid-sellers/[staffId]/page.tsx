@@ -2,9 +2,8 @@ import { getAllPaidSellersAdminApi } from "@/api/admin";
 import PaidSellers from "@/components/admin/PaidSellers";
 import { GetUser } from "@/components/atom/GetUser";
 import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
-import { authConfig } from "@authConfig";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
@@ -25,7 +24,7 @@ export default async function Protected(props: {
   const params = await props.params;
   const searchParams = await props.searchParams;
   const { staffId } = params;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (
     !session ||
     !session.user ||

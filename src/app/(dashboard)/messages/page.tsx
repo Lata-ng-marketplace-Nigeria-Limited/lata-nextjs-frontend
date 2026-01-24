@@ -1,17 +1,16 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { MessagesArea } from "@components/message/MessagesArea";
 import React, { Suspense } from "react";
-import { authConfig } from "@authConfig";
 
 export const metadata: Metadata = {
   title: "Messages",
 };
 
 export default async function Page() {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/login");

@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 import { GetUser } from "@atom/GetUser";
 import ProtectedSellerProfile from "@/components/admin/ProtectedSellerProfile";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export default async function Page(props: {
@@ -16,7 +15,7 @@ export default async function Page(props: {
   const params = await props.params;
   const searchParams = await props.searchParams;
   const { sellerId } = params;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (
     !session ||
     !session.user ||

@@ -4,8 +4,7 @@ import { ViewProductSkeleton } from "@components/skeleton/ViewProductSkeleton";
 import ProtectedSellerProfile from "@/components/admin/ProtectedSellerProfile";
 import { getProtectedSellerApi } from "@/api/admin";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 interface PageProps {
@@ -16,7 +15,7 @@ interface PageProps {
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
-  const [params, session] = await Promise.all([props.params, getServerSession(authConfig)]);
+  const [params, session] = await Promise.all([props.params, auth()]);
   const { id: sellerId } = params;
   if (
     !session ||

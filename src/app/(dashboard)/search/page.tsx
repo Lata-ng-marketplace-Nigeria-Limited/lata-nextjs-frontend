@@ -3,8 +3,7 @@ import HeaderText from "@atom/HeaderText";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { SearchProducts } from "@components/product/SearchProducts";
 import { Suspense } from "react";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { getAllStatesApi } from "@/api/location";
 
 export const metadata: Metadata = {
@@ -19,7 +18,7 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   const search = searchParams?.q || "";
   const location = searchParams?.loc || "";

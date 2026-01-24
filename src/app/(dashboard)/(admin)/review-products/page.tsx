@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { authConfig } from "@authConfig";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { ReviewProductWrapper } from "@components/reveiw-products/ReviewProductWrapper";
@@ -18,7 +17,7 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }

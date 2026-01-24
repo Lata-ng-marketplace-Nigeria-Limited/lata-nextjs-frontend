@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { deleteCookies, getCookies } from "@/utils";
 import { ApiErrorResponse } from "@/interface/general";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { signOut } from "next-auth/react";
 import { API_URL, API_URL_2 } from "@/constants/env";
 
@@ -47,7 +46,7 @@ const handleConfig = async (config: any) => {
   let token: string | undefined;
 
   if (isServer) {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     token = session?.token;
   } else {
     token = getCookies("token");
@@ -85,7 +84,7 @@ const handleErrorResponse = async (axiosResponse: any) => {
   ) {
     let isServer = typeof window === "undefined";
     if (isServer) {
-      const session = await getServerSession(authConfig);
+      const session = await auth();
       if (session?.user) {
         await fetch("/api/auth/signout", {
           method: "POST",

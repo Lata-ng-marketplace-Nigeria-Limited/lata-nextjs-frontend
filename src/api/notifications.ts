@@ -4,8 +4,7 @@ import { Notification } from "@/interface/Notification";
 import { appendQueryParams, getApiUrl } from "@/utils";
 import { User } from "@/interface/user";
 import { $http } from "@/service/axios";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
@@ -22,7 +21,7 @@ export const findAllNotificationsApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const response = await fetch(getApiUrl(`/notifications?${params})`), {
       headers: { Authorization: "Bearer " + session?.token },
       next: {

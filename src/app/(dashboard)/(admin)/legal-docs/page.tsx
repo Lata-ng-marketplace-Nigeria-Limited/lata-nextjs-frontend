@@ -1,8 +1,7 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { authConfig } from "@authConfig";
 import HeaderText from "@atom/HeaderText";
 import { LegalCardArea } from "@organism/LegalCardArea";
 import { Suspense } from "react";
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }

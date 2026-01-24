@@ -3,8 +3,7 @@
 import { Plan, Subscription } from "@/interface/payment";
 import { User } from "@/interface/user";
 import { appendQueryParams, getApiUrl } from "@/utils";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { $http } from "@/service/axios";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { ADMIN_EDIT_PLAN_ROUTE } from "@/constants/routes";
@@ -19,7 +18,7 @@ export const getAllSubscriptionsApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/subscriptions?${params}`), {
       headers: {
         "Content-Type": "application/json",

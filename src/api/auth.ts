@@ -3,8 +3,7 @@
 import { User } from "@/interface/user";
 import { getApiUrl } from "@/utils";
 import { $http } from "@/service/axios";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 
 interface LoginInput {
   email: string;
@@ -82,7 +81,7 @@ export const authCallbackApi = async (
 
 export const getUserLatestDataApi = async (): Promise<User | null> => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl("/users/me"), {
       headers: {
         Authorization: "Bearer " + session?.token,
@@ -160,7 +159,7 @@ export const getSellerProfileApi = async (
   viewed: boolean;
 }> => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/users/seller/${sellerId}`), {
       headers: {
         Authorization: "Bearer " + session?.token,

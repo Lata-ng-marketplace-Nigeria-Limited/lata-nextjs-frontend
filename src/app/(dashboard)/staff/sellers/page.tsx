@@ -2,8 +2,7 @@ import { getSellersUnderStaffApi } from "@/api/staff";
 import { GetUser } from "@/components/atom/GetUser";
 import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
 import StaffSellers from "@/components/staff/StaffSellers";
-import { authConfig } from "@authConfig";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
@@ -13,7 +12,7 @@ async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (!session || !session.user || session.role !== "STAFF") {
     redirect("/");
   }

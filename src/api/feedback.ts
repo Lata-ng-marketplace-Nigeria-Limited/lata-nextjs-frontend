@@ -9,8 +9,7 @@ import { FetchMeta, SearchQuery } from "@/interface/general";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import { $http } from "@/service/axios";
 import { appendQueryParams, getApiUrl } from "@/utils";
-import { authConfig } from "@authConfig";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { revalidateTag } from "next/cache";
 
 interface MessageLataApiInput {
@@ -46,7 +45,7 @@ export const saveCustomerFeedback = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/feedbacks?${params}`), {
       method: "POST",
       body: JSON.stringify(payload),
@@ -88,7 +87,7 @@ export const getAllSellerFeedbacks = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/feedbacks?${params}`), {
       headers: {
         Authorization: `Bearer ${session?.token}`,
@@ -126,7 +125,7 @@ export const getProductFeedback = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(
       getApiUrl(`/feedbacks/product/${productId}?${params}`),
       {

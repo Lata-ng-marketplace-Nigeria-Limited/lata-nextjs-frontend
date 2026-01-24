@@ -3,15 +3,14 @@
 import { getApiUrl } from "@/utils";
 import { $http } from "@/service/axios";
 import { LegalDoc, LegalDocNames } from "@/interface/legal";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 
 export const getLegalDocsApi = async (): Promise<{
   message: string;
   data: LegalDoc[];
 } | null> => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await fetch(getApiUrl(`/legal`), {
       headers: {
         Authorization: "Bearer " + session?.token,
@@ -34,7 +33,7 @@ export const getALegalDocApi = async ({
   name?: LegalDocNames;
 }): Promise<LegalDoc | null> => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const url = id ? `/legal/${id}` : `/legal/show?name=${name}`;
     const res = await fetch(getApiUrl(url), {
       headers: {
@@ -55,7 +54,7 @@ export const updateALegalDocApi = async (
   { json, html }: { html?: string; json?: string },
 ) => {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
     const res = await $http.put(
       "/legal",
       {

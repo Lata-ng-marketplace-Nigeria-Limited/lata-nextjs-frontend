@@ -3,8 +3,7 @@ import { cn } from "@/utils";
 import Header from "@/components/organism/Header";
 import SideMenu from "@/components/organism/SideMenu";
 import Footer from "@/components/organism/Footer";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 import { GetUser } from "@atom/GetUser";
 
 export default async function Dashboard({
@@ -12,7 +11,7 @@ export default async function Dashboard({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   return (
     <main className={"h-full bg-white"}>

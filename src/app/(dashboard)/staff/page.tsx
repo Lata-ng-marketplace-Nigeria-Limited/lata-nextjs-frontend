@@ -1,9 +1,8 @@
 import { getAllStaffAdminApi } from "@/api/admin";
 import AllStaff from "@/components/admin/AllStaff";
 import { GetUser } from "@/components/atom/GetUser";
-import { authConfig } from "@authConfig";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
@@ -19,7 +18,7 @@ export default async function Protected(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (!session || !session.user || session.role !== "ADMIN") {
     redirect("/");
   }

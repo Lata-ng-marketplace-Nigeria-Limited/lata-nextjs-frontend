@@ -1,12 +1,11 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { MyShop } from "@components/shop/MyShop";
 import { Suspense } from "react";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { unstable_noStore } from "next/cache";
-import { authConfig } from "@authConfig";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 import { findAllSellerProductsApi } from "@/api/admin";
 import { getAllStatesApi } from "@/api/location";
@@ -48,7 +47,7 @@ export default async function Page(props: IPageProps) {
   const [searchParams, params, session] = await Promise.all([
     props.searchParams,
     props.params,
-    getServerSession(authConfig),
+    auth(),
   ]);
   const { id } = params;
   unstable_noStore();

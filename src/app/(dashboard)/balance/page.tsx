@@ -1,12 +1,11 @@
 import { GetUser } from "@atom/GetUser";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import HeaderText from "@atom/HeaderText";
 import HeaderSubText from "@atom/HeaderSubText";
 import MobileBorderArea from "@atom/MobileBorderArea";
 import { formatPrice } from "@/utils";
-import { authConfig } from "@authConfig";
 import { Balance } from "@components/balance/Balance";
 import { Suspense } from "react";
 import { unstable_noStore } from "next/cache";
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   unstable_noStore();
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/login");

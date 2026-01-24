@@ -6,8 +6,7 @@ import { LOGIN_ROUTE } from "@/constants/routes";
 import { SetPasswordWrapper } from "@components/forms/SetPasswordWrapper";
 import { Suspense } from "react";
 import { SetPasswordSkeleton } from "@components/skeleton/SetPasswordSkeleton";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@authConfig";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: "Terms and Conditions",
@@ -20,7 +19,7 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const code = searchParams?.code || "";
-  const session = await getServerSession(authConfig);
+  const session = await auth();
   if (session && session.user) {
     redirect("/");
   }

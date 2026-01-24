@@ -16,16 +16,16 @@ interface ChatMessageProps {
 }
 
 export default function MessageText(props: ChatMessageProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const entry = useIntersectionObserver(ref as any, {});
-  const visible = !!entry?.isIntersecting;
+  const elementRef = useRef<HTMLDivElement>(null);
+  const { ref: observerRef, isIntersecting } = useIntersectionObserver({ threshold: 0 });
+  const visible = isIntersecting;
   const [hasMadeReadAtCall, setHasMadeReadAtCall] = useState(false);
   const { user, isSocketConnected } = useUser();
 
   useEffect(() => {
     if (!props.totalLength) return;
     if (props.index === props.totalLength - 1) {
-      props.lastRef.current = ref.current;
+      props.lastRef.current = elementRef.current;
 
       if (
         visible &&
@@ -79,7 +79,10 @@ export default function MessageText(props: ChatMessageProps) {
           "bg-white mr-6": props.owner === "other",
         },
       )}
-      ref={ref}
+      ref={(node) => {
+        elementRef.current = node as HTMLDivElement | null;
+        observerRef(node);
+      }}
     >
       <p className={"text-[10px] sm:text-[12px] text-grey8"}>{props.message}</p>
       <span className={"text-end text-[8px] sm:text-[10px] text-grey6"}>
