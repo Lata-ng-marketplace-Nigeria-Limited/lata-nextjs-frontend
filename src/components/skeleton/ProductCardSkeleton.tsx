@@ -15,15 +15,15 @@ export const ProductCardSkeleton = () => {
         w-full
         max-w-[17rem]
         shrink-0
+        overflow-hidden
         rounded-[0.625rem]
         border
         border-grey3
+        bg-white
         p-2
         xms:mx-0
         sm:px-2.5
         sm:py-3
-        bg-white
-        overflow-hidden
       `,
       )}
     >
@@ -33,8 +33,8 @@ export const ProductCardSkeleton = () => {
             h-[7.6rem]
             w-full
             rounded-[0.625rem]
-            sm:h-[10rem]
             bg-gray-200
+            sm:h-[10rem]
         `)}
       />
 

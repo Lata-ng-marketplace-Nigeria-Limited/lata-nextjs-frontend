@@ -5,11 +5,12 @@ import GoogleAdsCard from "./GoogleAdsCard";
 import ProductCard from "@components/product/ProductCard";
 import { cn, formatPrice } from "@/utils";
 import ProductGridList from "@atom/ProductGridList";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { selectedCity, selectedState } from "@/utils/location";
 import { State } from "@/interface/location";
+import RollerSpinner from "@/components/molecule/RollerSpinner";
 
 interface Props {
   products: Product[];
@@ -113,7 +114,11 @@ export default function LazyLoadProducts(props: Props) {
         </div>
       )}
 
-      {loading && <ProductListSkeleton length={4} />}
+      {loading && (
+        <div className="col-span-full flex justify-center py-8">
+          <RollerSpinner />
+        </div>
+      )}
 
       {(props.isInfinite ? hasMore : props?.products?.length > showingProducts?.length) ? (
         <div
