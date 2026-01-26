@@ -15,6 +15,7 @@ import {
 import SpeedInsights from "@/components/DynamicSpeedInsights";
 import GoogleAnalytics from "../analytics/GoogleAnalytics";
 import { IEnv } from "@/interface/general";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 

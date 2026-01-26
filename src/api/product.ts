@@ -45,7 +45,7 @@ export const getDashboardProductsApi = async (
         "Content-Type": "application/json",
       },
       next: {
-        revalidate: 60 * 10,
+        revalidate: 60 * 10, // 10 minutes
         tags: ["dashboard_products"],
       },
     });
