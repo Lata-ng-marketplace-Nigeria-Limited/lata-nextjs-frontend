@@ -157,29 +157,29 @@ export const SettingsForm = ({ image }: Props) => {
       };
     }
 
-    if(!sessionSwitched){
-      if (
-        values.phoneNumber &&
-        values.phoneNumber !== user?.phoneNumber &&
-        !hasUpdatedPhone
-      ) {
-        const phoneNumberSetting = user?.settings.find((set) => {
-          return set.columnName === USER_VERIFIED_PHONE;
-        });
+    // if(!sessionSwitched){
+    //   if (
+    //     values.phoneNumber &&
+    //     values.phoneNumber !== user?.phoneNumber &&
+    //     !hasUpdatedPhone
+    //   ) {
+    //     const phoneNumberSetting = user?.settings.find((set) => {
+    //       return set.columnName === USER_VERIFIED_PHONE;
+    //     });
   
-        if (
-          !phoneNumberSetting ||
-          (phoneNumberSetting &&
-            phoneNumberSetting?.columnValue?.phoneNumber !==
-              formatNigerianPhoneNumber(values.phoneNumber)) ||
-          (phoneNumberSetting && !phoneNumberSetting?.columnValue?.verified)
-        ) {
-          setUpdatePayload(payload);
-          setShowModal(true);
-          return;
-        }
-      }
-    }
+    //     if (
+    //       !phoneNumberSetting ||
+    //       (phoneNumberSetting &&
+    //         phoneNumberSetting?.columnValue?.phoneNumber !==
+    //           formatNigerianPhoneNumber(values.phoneNumber)) ||
+    //       (phoneNumberSetting && !phoneNumberSetting?.columnValue?.verified)
+    //     ) {
+    //       setUpdatePayload(payload);
+    //       setShowModal(true);
+    //       return;
+    //     }
+    //   }
+    // }
 
     setLoading(true);
     try {
