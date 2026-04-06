@@ -129,10 +129,12 @@ export default function LazyLoadProducts(props: Props) {
           className={cn(`
           absolute 
           bottom-[0rem] 
-          h-[120%]
+          h-px
           w-full
           bg-transparent
+          pointer-events-none
         `)}
+          aria-hidden="true"
         ></div>
       ) : null}
     </ProductGridList>
