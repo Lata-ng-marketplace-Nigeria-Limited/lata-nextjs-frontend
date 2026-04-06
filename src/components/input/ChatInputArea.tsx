@@ -13,6 +13,7 @@ import { EmojiIcon } from "@atom/icons/Emoji";
 interface Props {
   activeChat: Chat | undefined;
   isOwner: boolean;
+  onOptimisticSend?: (message: string) => void;
 }
 
 export default function ChatInputArea(props: Props) {
@@ -30,23 +31,40 @@ export default function ChatInputArea(props: Props) {
     }
   }, [isSocketConnected]);
 
+  useEffect(() => {
+    setMessage("");
+  }, [props.activeChat?.id]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const channel = `receive:chat-message${user.id}`;
+    const onReceive = () => {
+      setLoading(false);
+    };
+
+    SocketService.socket?.on(channel, onReceive);
+
+    return () => {
+      SocketService.socket?.off(channel, onReceive);
+    };
+  }, [user?.id]);
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!message) return;
-    const otherUserId = props.isOwner
-      ? props.activeChat?.sender?.id
-      : props.activeChat?.receiver?.id;
-    setLoading(true);
-    SocketService.socket?.emit(`send:message` + user?.id, {
-      chatId: props.activeChat?.id,
-      message: message,
-      userId: user?.id,
-      otherUserId,
-    });
-    SocketService.socket?.on(`receive:chat-message` + user?.id, () => {
-      setLoading(false);
-      setMessage("");
-    });
+    const nextMessage = message.trim();
+    if (!nextMessage) return;
+    if (!props.activeChat?.id || !user?.id) return;
+    if (!isSocketConnected) {
+      toast({
+        variant: "info",
+        title: "Chat is currently unavailable",
+        description: "Please try again later",
+      });
+      return;
+    }
+
+    props.onOptimisticSend?.(nextMessage);
+    setMessage("");
   }
 
   return (
@@ -110,9 +128,9 @@ export default function ChatInputArea(props: Props) {
       <Button
         format={"icon"}
         className={cn({
-          hidden: !message,
+          hidden: !message.trim(),
         })}
-        disabled={loading}
+        disabled={loading || !message.trim()}
       >
         <PaperPlaneRightIcon
           className={cn("w-4 h-4 sm:w-6 sm:h-6")}

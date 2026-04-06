@@ -13,26 +13,28 @@ interface Props {
 }
 
 export default function MessageListVirtualizer(props: Props) {
-  const containerRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const { user } = useUser();
 
   const virtualizer = useVirtualizer({
     count: props.chatList.length,
     getScrollElement: () => containerRef.current,
-    estimateSize: () => 45,
+    estimateSize: () => 92,
+    overscan: 6,
   });
+
+  const virtualItems = virtualizer.getVirtualItems();
 
   return (
     <div
       className={cn(`
-          flex
-          flex-col
-          gap-y-6 
+          w-full
           sm:max-h-[calc(100vh-317px)]
           max-h-[calc(100vh-200px)]
           sm:min-h-[calc(100vh-317px)]
           min-h-[calc(100vh-200px)]
           overflow-y-auto
+          pr-1
         `)}
       ref={containerRef}
     >
@@ -45,55 +47,39 @@ export default function MessageListVirtualizer(props: Props) {
           height: virtualizer.getTotalSize() + "px",
         }}
       >
-        <div
-          className={cn(`
-            absolute
-            top-0
-            left-0
-            w-full
-          `)}
-          style={{
-            transform: `translateY(${virtualizer.getVirtualItems()?.[0]
-              ?.start}px)`,
-          }}
-        >
-          {virtualizer.getVirtualItems().map((virtualRow, i) => (
-            <MessagePreview
+        {virtualItems.map((virtualRow) => {
+          const chat = props.chatList[virtualRow.index];
+          if (!chat) return null;
+
+          return (
+            <div
+              className={"absolute left-0 top-0 w-full"}
+              key={chat.id}
               ref={virtualizer.measureElement}
-              key={i}
-              onClick={() => {
-                // @ts-ignore
-                props.setActiveChat(undefined);
-                props.setActiveChat(props.chatList?.[virtualRow.index]);
-              }}
-              isActive={
-                props.activeChat?.id === props.chatList?.[virtualRow.index]?.id
-              }
-              lastMessageSender={
-                user?.id ===
-                props.chatList?.[virtualRow.index]?.lastMessageSenderId
-                  ? "me"
-                  : "other"
-              }
-              isOwnProduct={
-                user?.id === props.chatList?.[virtualRow.index]?.product?.userId
-              }
-              seller={props.chatList?.[virtualRow.index]?.receiver}
-              buyer={props.chatList?.[virtualRow.index]?.sender}
-              lastMessage={props.chatList?.[virtualRow.index]?.lastMessage}
-              productName={props.chatList?.[virtualRow.index]?.product?.name}
-              productId={props.chatList?.[virtualRow.index]?.product?.id}
-              senderRole={props.chatList?.[virtualRow.index]?.sender?.role as UserRole}
-              receiverRole={props.chatList?.[virtualRow.index]?.receiver?.role  as UserRole}
-              lastMessageTime={
-                props.chatList?.[virtualRow.index]?.lastMessageAt
-              }
-              lastMessageData={
-                props.chatList?.[virtualRow.index]?.lastMessageData
-              }
-            />
-          ))}
-        </div>
+              style={{ transform: `translateY(${virtualRow.start}px)` }}
+            >
+              <MessagePreview
+                onClick={() => {
+                  props.setActiveChat(chat);
+                }}
+                isActive={props.activeChat?.id === chat.id}
+                lastMessageSender={
+                  user?.id === chat.lastMessageSenderId ? "me" : "other"
+                }
+                isOwnProduct={user?.id === chat.product?.userId}
+                seller={chat.receiver}
+                buyer={chat.sender}
+                lastMessage={chat.lastMessage}
+                productName={chat.product?.name}
+                productId={chat.product?.id}
+                senderRole={chat.sender?.role as UserRole}
+                receiverRole={chat.receiver?.role as UserRole}
+                lastMessageTime={chat.lastMessageAt}
+                lastMessageData={chat.lastMessageData}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

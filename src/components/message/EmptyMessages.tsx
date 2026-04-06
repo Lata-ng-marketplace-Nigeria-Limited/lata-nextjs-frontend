@@ -23,7 +23,7 @@ export default function EmptyMessages(props: EmptyMessagesProps) {
         {!props.hasChat ? (
           <div
             className={
-              " flex flex-col justify-center items-center h-full gap-y-6"
+              " flex flex-col justify-center items-center h-full gap-y-4 sm:gap-y-6 px-4"
             }
           >
             <BigMessageIcon
@@ -31,10 +31,10 @@ export default function EmptyMessages(props: EmptyMessagesProps) {
             />
             <p
               className={
-                "text-sm leading-tight tracking-tight sm:text-base sm:font-medium text-grey9"
+                "text-sm leading-tight tracking-tight sm:text-base sm:font-medium text-grey9 text-center"
               }
             >
-              You have no messages yet
+              You have no messages yet. Your conversations will appear here.
             </p>
           </div>
         ) : (

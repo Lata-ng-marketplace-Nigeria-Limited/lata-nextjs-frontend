@@ -30,7 +30,7 @@ export default function MessageSearchInput(props: Props) {
       return isNameMatch || isProductMatch;
     });
     props.setFilteredChats(filteredChats);
-  });
+  }, [props.chats, props.setFilteredChats, search, user?.id]);
 
   return (
     <div className={cn("relative w-full", props.wrapperClass)}>
@@ -54,7 +54,6 @@ export default function MessageSearchInput(props: Props) {
         )}
         value={search}
         onInput={(e) => {
-          props.setFilteredChats([]);
           setSearch(e.currentTarget.value);
         }}
       />

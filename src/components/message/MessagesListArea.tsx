@@ -1,7 +1,5 @@
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { Chat } from "@/interface/chat";
-import { useMediaQuery } from "usehooks-ts";
-import { useVirtualizer } from "@tanstack/react-virtual";
 import { useLocalStore } from "@/store/states/localStore";
 import { cn } from "@/utils";
 import MessageSearchInput from "@components/input/MessageSearchInput";
@@ -13,37 +11,27 @@ interface Props {
 }
 
 export default function MessagesListArea(props: Props) {
-  const isSmall = useMediaQuery("(max-width: 640px)");
   const [chats, setChats] = useState<Chat[]>([]);
   const [filteredChats, setFilteredChats] = useState<Chat[]>([]);
-  const containerRef = useRef<any>(null);
-  const [count, setCount] = useState(0);
   const localStore = useLocalStore();
 
-  const virtualizer = useVirtualizer({
-    count,
-    getScrollElement: () => containerRef.current,
-    estimateSize: () => 45,
-    overscan: 5,
-  });
-
   useEffect(() => {
-    if (!localStore.chats?.length) return;
-    setChats(localStore.chats);
+    const nextChats = localStore.chats || [];
+    setChats(nextChats);
+
     if (props.activeChat) {
-      const activeChat = localStore.chats.find(
+      const activeChat = nextChats.find(
         (chat) => chat.id === props.activeChat?.id,
       );
-      if (!activeChat) return;
-      props.setActiveChat(activeChat);
+      if (activeChat) {
+        props.setActiveChat(activeChat);
+      }
     }
-  }, [localStore.chats, props, props.activeChat, props.setActiveChat]);
+  }, [localStore.chats, props.activeChat?.id, props.setActiveChat]);
 
   useEffect(() => {
-    setCount(filteredChats.length);
-  }, [filteredChats]);
-
-  const items = virtualizer.getVirtualItems();
+    setFilteredChats(chats);
+  }, [chats]);
 
   return (
     <div
@@ -92,7 +80,13 @@ export default function MessagesListArea(props: Props) {
           activeChat={props.activeChat}
           chatList={filteredChats}
         />
-      ) : null}
+      ) : (
+        <div className={"h-full min-h-[200px] grid place-items-center px-4"}>
+          <p className={"text-xs sm:text-sm text-grey8 text-center"}>
+            No conversations match your search.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
