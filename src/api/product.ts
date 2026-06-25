@@ -215,6 +215,11 @@ export const deleteAProductApi = async (
   try {
     const res = await $http.delete(`products/${id}?${params}`);
     revalidateTag("dashboard_products", "default");
+    revalidateTag(`product_${id}`, "default");
+    revalidateTag("my_products", "default");
+    revalidateTag("saved_products", "default");
+    revalidatePath("/dashboard");
+    revalidatePath(`/product/${id}`);
     return res.data;
   } catch (error: any) {
     throw error.response || error;
