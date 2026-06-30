@@ -40,6 +40,7 @@ export const sendBroadcastEmailApi = async (payload: {
   subject: string;
   message: string;
   templateType?: EmailTemplateType;
+  imageUrl?: string;
 }): Promise<{
   success: boolean;
   message: string;
@@ -200,6 +201,60 @@ export const deleteStateApi = async (id: string) => {
 export const deleteCityApi = async (id: string) => {
   try {
     const response = await $http.delete(`/cities/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export interface IEmailImagePreset {
+  id: string;
+  url: string;
+  label: string;
+  uploadedBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export const getEmailImagePresetsApi = async (): Promise<IEmailImagePreset[]> => {
+  try {
+    const response = await $http.get("/admin/email-image-presets");
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const createEmailImagePresetApi = async (payload: {
+  url: string;
+  label: string;
+}): Promise<IEmailImagePreset> => {
+  try {
+    const response = await $http.post("/admin/email-image-presets", payload);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const deleteEmailImagePresetApi = async (id: string): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await $http.delete(`/admin/email-image-presets/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+export const uploadEmailImagePresetApi = async (file: File): Promise<{ url: string }> => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await $http.post("/admin/email-image-presets/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error: any) {
     throw error.response;

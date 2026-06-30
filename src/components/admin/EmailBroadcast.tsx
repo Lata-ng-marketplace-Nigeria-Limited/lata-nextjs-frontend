@@ -14,6 +14,7 @@ import {
   sendBroadcastEmailApi,
 } from "@/api/admin.client";
 import { useToast } from "@/components/ui/use-toast";
+import PresetImagePickerModal from "./PresetImagePickerModal";
 
 const categoryOptions: { value: EmailBroadcastCategory; label: string }[] = [
   { value: "all", label: "All Users" },
@@ -50,6 +51,8 @@ export default function EmailBroadcast() {
   const [userCount, setUserCount] = useState<number | null>(null);
   const [isLoadingCount, setIsLoadingCount] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleGetUserCount = async () => {
     setIsLoadingCount(true);
@@ -106,6 +109,7 @@ export default function EmailBroadcast() {
         subject,
         message,
         templateType,
+        imageUrl: imageUrl || undefined,
       });
 
       if (response?.success) {
@@ -117,6 +121,7 @@ export default function EmailBroadcast() {
         setRecipientEmail("");
         setSubject("");
         setMessage("");
+        setImageUrl("");
         setUserCount(null);
       }
     } catch (error: any) {
@@ -260,6 +265,49 @@ export default function EmailBroadcast() {
           </div>
         </div>
 
+        {/* Preset Image Picker UI */}
+        <div className="flex flex-col items-start gap-3">
+          <label className="text-sm font-medium text-gray-700">
+            Email Image Banner (Optional)
+          </label>
+          <Button
+            format="secondary"
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {imageUrl ? "Change Image" : "Add Image"}
+          </Button>
+
+          {imageUrl && (
+            <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-lg p-2.5 max-w-md w-full">
+              <div className="h-14 w-14 rounded overflow-hidden border border-gray-300 relative flex-shrink-0 bg-white">
+                <img
+                  src={imageUrl}
+                  alt="Selected Preset Preview"
+                  className="object-contain w-full h-full"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-gray-500 truncate">{imageUrl}</p>
+                <button
+                  type="button"
+                  onClick={() => setImageUrl("")}
+                  className="text-xs font-semibold text-red-600 hover:text-red-700 underline"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          )}
+
+          <PresetImagePickerModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSelect={(url) => setImageUrl(url)}
+            currentSelectedUrl={imageUrl}
+          />
+        </div>
+
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Button
             format="primary"
@@ -276,6 +324,7 @@ export default function EmailBroadcast() {
               setRecipientEmail("");
               setSubject("");
               setMessage("");
+              setImageUrl("");
               setUserCount(null);
             }}
           >
