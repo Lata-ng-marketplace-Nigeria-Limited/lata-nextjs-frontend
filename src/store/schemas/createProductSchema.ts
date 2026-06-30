@@ -25,4 +25,5 @@ export const createProductSchema = z.object({
   subCategoryId: z.string().min(1, "Please select a subcategory."),
   productType: z.string().min(1, "Please select a product type."),
   discount: z.string().optional().nullable(),
+  sellerRole: z.string().min(1, "Please select what best describes you."),
 });

@@ -17,6 +17,7 @@ export interface CreateProductApiInput {
   deleteImages?: string;
   selectedCategory?: string;
   userId?: string;
+  sellerRole?: string;
 }
 
 interface CreateProductApiOutput {
@@ -36,7 +37,11 @@ export const createAProductApi = async (
 
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.post(`products?${params}`, formData);
+    const res = await $httpFile.post(`products?${params}`, formData, {
+      headers: {
+        "X-Client-Platform": "web",
+      },
+    });
     return res.data;
   } catch (error: any) {
     console.log(error?.response?.data?.error);
@@ -56,7 +61,11 @@ export const updateAProductApi = async (
 
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.put(`products/${id}?${params}`, formData);
+    const res = await $httpFile.put(`products/${id}?${params}`, formData, {
+      headers: {
+        "X-Client-Platform": "web",
+      },
+    });
     return res.data;
   } catch (error: any) {
     throw error.response || error;

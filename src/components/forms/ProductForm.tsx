@@ -90,6 +90,7 @@ export default function ProductForm({
       subCategoryId: "",
       productType: "",
       discount: "",
+      sellerRole: "",
     },
   });
   const { push: nav, back } = useRouter();
@@ -132,6 +133,9 @@ export default function ProductForm({
     setValue("description", product.description);
     setValue("discount", product.discount?.toString());
     setValue("productType", product.productType);
+    if (product.sellerRole) {
+      setValue("sellerRole", product.sellerRole || "");
+    }
     setHasSetFormValue(true);
   }, [hasSetFormValue, product, setSelectedPhotos, setValue]);
 
@@ -627,27 +631,56 @@ export default function ProductForm({
           />
         </div>
 
-        <Controller
-          control={control}
-          name="city"
-          render={({ field }) => (
-            <SelectInput
-              inputProps={{ ...field }}
-              placeholder={"Select city"}
-              options={cities}
-              inputClass="!min-h-12"
-              name={field.name}
-              disabled={loading || !hasSelectedState}
-              value={field.value || ""}
-              onValueChange={(value) => {
-                field.onChange(value);
-                onSelectCity(value);
-              }}
-              emptyMessage={"No Cities"}
-              errorMessage={errors.city?.message}
-            />
-          )}
-        />
+        <div className={flexInputs}>
+          <Controller
+            control={control}
+            name="city"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"Select city"}
+                options={cities}
+                inputClass="!min-h-12"
+                name={field.name}
+                disabled={loading || !hasSelectedState}
+                value={field.value || ""}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  onSelectCity(value);
+                }}
+                emptyMessage={"No Cities"}
+                errorMessage={errors.city?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="sellerRole"
+            render={({ field }) => (
+              <SelectInput
+                inputProps={{ ...field }}
+                placeholder={"What best describes you?"}
+                options={[
+                  { label: "Owner", value: "owner" },
+                  { label: "Direct Mandate", value: "direct_mandate" },
+                  { label: "Agent", value: "agent" },
+                  { label: "Reseller", value: "reseller" },
+                  { label: "Freelancer", value: "freelancer" },
+                ]}
+                inputClass="!min-h-12"
+                name={field.name}
+                disabled={loading}
+                value={field.value || ""}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                }}
+                emptyMessage={"No Options"}
+                errorMessage={errors.sellerRole?.message}
+              />
+            )}
+          />
+        </div>
 
         <Controller
           control={control}

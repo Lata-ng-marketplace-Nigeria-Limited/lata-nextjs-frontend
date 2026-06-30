@@ -1,6 +1,7 @@
 "use client";
 
 import TextInput from "@components/input/TextInput";
+import { SelectInput } from "@components/input/SelectInput";
 import React, { useEffect, useState } from "react";
 import Button from "@atom/Button";
 import AuthParagraph from "@atom/AuthParagraph";
@@ -35,6 +36,7 @@ export const BuyerSignUpForm = () => {
       email: "",
       phoneNumber: "",
       password: "",
+      buyerRole: undefined,
     },
   });
 
@@ -131,6 +133,31 @@ export const BuyerSignUpForm = () => {
         )}
         name={"phoneNumber"}
         control={control}
+      />
+
+      <Controller
+        control={control}
+        name="buyerRole"
+        render={({ field }) => (
+          <SelectInput
+            inputProps={{ ...field }}
+            placeholder={"Select what best describes you"}
+            options={[
+              { label: "Direct Buyer", value: "direct_buyer" },
+              { label: "Direct Mandate", value: "direct_mandate" },
+              { label: "Agent", value: "agent" },
+            ]}
+            inputClass="!min-h-12"
+            name={field.name}
+            disabled={loading}
+            value={field.value || ""}
+            onValueChange={(value) => {
+              field.onChange(value);
+            }}
+            emptyMessage={"No options"}
+            errorMessage={errors.buyerRole?.message}
+          />
+        )}
       />
 
       <Controller

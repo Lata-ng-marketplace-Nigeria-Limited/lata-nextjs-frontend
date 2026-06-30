@@ -38,6 +38,7 @@ export interface Product {
   planName?: string;
   discount?: string;
   productType: string;
+  sellerRole?: string;
 }
 
 export interface SubCategoryItems {

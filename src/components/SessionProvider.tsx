@@ -7,6 +7,7 @@ import { useUserStore } from "@/store/states/userState";
 import { useLocalStore } from "@/store/states/localStore";
 import { Chat } from "@/interface/chat";
 import { SessionData } from "@/interface/next-auth";
+import BuyerRolePromptModal from "@/components/organism/BuyerRolePromptModal";
 
 type Props = {
   children?: React.ReactNode;
@@ -120,5 +121,10 @@ export const NextAuthProvider = ({ children, session }: Props) => {
     session?.user?.id,
   ]);
 
-  return <SessionProvider session={session as any}>{children}</SessionProvider>;
+  return (
+    <SessionProvider session={session as any}>
+      {children}
+      <BuyerRolePromptModal />
+    </SessionProvider>
+  );
 };

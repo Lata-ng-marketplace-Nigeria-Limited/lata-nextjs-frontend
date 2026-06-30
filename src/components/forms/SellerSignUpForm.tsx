@@ -186,7 +186,7 @@ export const SellerSignUpForm = () => {
         if (errorObj.file) setImageErrorMessage(errorObj.file);
         const errorArray = Object.entries(errorObj);
         errorArray.forEach(([key, value]) => {
-          setError(key as keyof z.infer<typeof buyerSignUpSchema>, {
+          setError(key as keyof z.infer<typeof sellerSignUpSchema>, {
             type: "manual",
             message: value,
           });

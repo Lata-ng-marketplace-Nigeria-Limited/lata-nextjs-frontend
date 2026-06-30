@@ -6,6 +6,7 @@ import { SwitchedRoleQueries } from "@/interface/switchedRole";
 interface BuyerRegisterApiInput {
   role: "BUYER";
   phoneNumber?: string;
+  buyerRole?: string;
 }
 
 interface SellerRegisterApiInput {
@@ -44,7 +45,11 @@ export const registerApi = async (
 }> => {
   try {
     const formData = createFormData(data);
-    const response = await $http.post("/auth/register", formData);
+    const response = await $http.post("/auth/register", formData, {
+      headers: {
+        "X-Client-Platform": "web",
+      },
+    });
     return response.data;
   } catch (error: any) {
     throw error.response;
@@ -82,6 +87,7 @@ export interface UpdateUserProfileInput {
   subscription?: boolean;
   message?: boolean;
   feedback?: boolean;
+  buyerRole?: string;
 }
 
 export const updateUserProfileApi = async (
@@ -95,7 +101,11 @@ export const updateUserProfileApi = async (
 
   try {
     const formData = createFormData(payload);
-    const { data } = await $http.put(`users?${params}`, formData);
+    const { data } = await $http.put(`users?${params}`, formData, {
+      headers: {
+        "X-Client-Platform": "web",
+      },
+    });
     return data;
   } catch (error: any) {
     throw error.response || error;
