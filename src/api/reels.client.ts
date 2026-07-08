@@ -29,9 +29,13 @@ export const createReelApi = async (
   }
 };
 
-export const deleteReelApi = async (id: string): Promise<any> => {
+export const deleteReelApi = async (id: string, deleteReason?: string): Promise<any> => {
   try {
-    const res = await $httpFile.delete(`reels/${id}`);
+    const params: Record<string, string> = {};
+    if (deleteReason) {
+      params.delete_reason = deleteReason;
+    }
+    const res = await $httpFile.delete(`reels/${id}`, { params });
     return res.data;
   } catch (error: any) {
     console.error("Error deleting reel:", error?.response?.data);

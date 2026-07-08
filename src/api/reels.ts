@@ -20,6 +20,7 @@ export interface Reel {
   cloudinary_public_id: string;
   created_at: string;
   status: "ACTIVE" | "INACTIVE" | "CANCELLED";
+  rejection_reason?: string | null;
 }
 
 export interface GroupedReels {
@@ -128,14 +129,16 @@ export const activateReelApi = async (id: string) => {
   }
 };
 
-export const cancelReelApi = async (id: string) => {
+export const cancelReelApi = async (id: string, rejectionReason: string) => {
   try {
     const session = await auth();
     const res = await fetch(getApiUrl(`/admin/reels/cancel/${id}`), {
-      method: "GET",
+      method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`,
       },
+      body: JSON.stringify({ rejection_reason: rejectionReason }),
     });
     if (!res.ok) {
       throw new Error("Failed to cancel reel");

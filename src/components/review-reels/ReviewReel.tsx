@@ -29,6 +29,12 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalProps, setModalProps] = useState<PromptProps>({});
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectingReel, setRejectingReel] = useState<Reel | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteReason, setDeleteReason] = useState("");
+  const [deletingReel, setDeletingReel] = useState<Reel | null>(null);
   const { replace, refresh } = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -74,67 +80,15 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
   };
 
   const handleDeleteReel = (reel: Reel) => {
-    setShowModal(true);
-    setModalProps({
-      type: "error",
-      title: "Delete Reel",
-      confirmText: "Delete",
-      confirmType: "danger",
-      description:
-        "Are you sure you want to delete this reel? This action is irreversible.",
-      onConfirm: async () => {
-        setModalButtonLoading(true);
-        try {
-          await deleteReelApi(reel.id);
-          toast({
-            title: "Reel Deleted",
-            description: "Reel has been deleted",
-            variant: "success",
-          });
-          refresh();
-        } catch (error) {
-          toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
-        } finally {
-          handleCancel();
-        }
-      },
-    });
+    setDeletingReel(reel);
+    setDeleteReason("");
+    setShowDeleteModal(true);
   };
 
   const handleRejectReel = (reel: Reel) => {
-    setShowModal(true);
-    setModalProps({
-      type: "error",
-      title: "Reject Reel",
-      confirmText: "Reject",
-      confirmType: "danger",
-      description:
-        "Are you sure you want to reject this reel? This reel will no longer be listed under review reels and will not be published on the feed.",
-      onConfirm: async () => {
-        setModalButtonLoading(true);
-        try {
-          await cancelReelApi(reel.id);
-          toast({
-            title: "Success",
-            description: "Reel has been rejected",
-            variant: "success",
-          });
-          refresh();
-        } catch (error) {
-          toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
-        } finally {
-          handleCancel();
-        }
-      },
-    });
+    setRejectingReel(reel);
+    setRejectionReason("");
+    setShowRejectModal(true);
   };
 
   const tableData = reels.map((reel) => ({
@@ -224,6 +178,119 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
           onCancel={handleCancel}
           confirmLoading={modalButtonLoading}
         />
+      </Modal>
+
+      <Modal isShown={showRejectModal} setIsShown={setShowRejectModal}>
+        <div className="p-6 max-w-[400px] mx-auto bg-white rounded-xl text-left" onClick={(e) => e.stopPropagation()}>
+          <h3 className="text-base font-bold text-grey10 mb-2">Reject Reel</h3>
+          <p className="text-xs text-grey6 leading-relaxed mb-4">
+            Please enter a reason for rejecting the reel <strong>"{rejectingReel?.title}"</strong>. This explanation will be emailed to the seller and displayed on their dashboard.
+          </p>
+          
+          <textarea
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            className="w-full h-[100px] p-2.5 text-xs text-grey8 bg-offwhite border border-grey3 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 resize-none mb-4"
+            placeholder="Type rejection reason here (e.g. video quality, offensive content)..."
+            required
+          />
+
+          <div className="flex gap-3 justify-end">
+            <Button
+              format="secondary"
+              className="px-4 py-2 text-xs font-semibold rounded-lg"
+              disabled={modalButtonLoading}
+              onClick={() => setShowRejectModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              format="danger"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-danger text-white hover:bg-danger/80 disabled:opacity-50 disabled:pointer-events-none"
+              disabled={modalButtonLoading || !rejectionReason.trim()}
+              onClick={async () => {
+                if (!rejectingReel || !rejectionReason.trim()) return;
+                setModalButtonLoading(true);
+                try {
+                  await cancelReelApi(rejectingReel.id, rejectionReason.trim());
+                  toast({
+                    title: "Success",
+                    description: "Reel has been rejected and email sent",
+                    variant: "success",
+                  });
+                  setShowRejectModal(false);
+                  refresh();
+                } catch (error) {
+                  toast({
+                    title: "Something went wrong",
+                    description: "Please try again later",
+                    variant: "destructive",
+                  });
+                } finally {
+                  setModalButtonLoading(false);
+                }
+              }}
+            >
+              Reject Reel
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal isShown={showDeleteModal} setIsShown={setShowDeleteModal}>
+        <div className="p-6 max-w-[400px] mx-auto bg-white rounded-xl text-left" onClick={(e) => e.stopPropagation()}>
+          <h3 className="text-base font-bold text-grey10 mb-2">Delete Reel</h3>
+          <p className="text-xs text-grey6 leading-relaxed mb-4">
+            Are you sure you want to delete the reel <strong>"{deletingReel?.title}"</strong>? This action is irreversible. You can optionally enter a reason for the deletion below to notify the seller.
+          </p>
+          
+          <textarea
+            value={deleteReason}
+            onChange={(e) => setDeleteReason(e.target.value)}
+            className="w-full h-[100px] p-2.5 text-xs text-grey8 bg-offwhite border border-grey3 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 resize-none mb-4"
+            placeholder="Type deletion reason here (optional)..."
+          />
+
+          <div className="flex gap-3 justify-end">
+            <Button
+              format="secondary"
+              className="px-4 py-2 text-xs font-semibold rounded-lg"
+              disabled={modalButtonLoading}
+              onClick={() => setShowDeleteModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              format="danger"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-danger text-white hover:bg-danger/80"
+              disabled={modalButtonLoading}
+              onClick={async () => {
+                if (!deletingReel) return;
+                setModalButtonLoading(true);
+                try {
+                  await deleteReelApi(deletingReel.id, deleteReason.trim() || undefined);
+                  toast({
+                    title: "Success",
+                    description: "Reel has been deleted",
+                    variant: "success",
+                  });
+                  setShowDeleteModal(false);
+                  refresh();
+                } catch (error) {
+                  toast({
+                    title: "Something went wrong",
+                    description: "Please try again later",
+                    variant: "destructive",
+                  });
+                } finally {
+                  setModalButtonLoading(false);
+                }
+              }}
+            >
+              Delete Reel
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

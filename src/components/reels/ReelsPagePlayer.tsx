@@ -214,7 +214,20 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
                     Pending Approval
                   </span>
                 )}
+                {reel.status === "CANCELLED" && (
+                  <span className="text-danger font-bold uppercase tracking-wider text-[8px]">
+                    Rejected
+                  </span>
+                )}
               </div>
+
+              {/* Custom Rejection Reason Banner */}
+              {reel.status === "CANCELLED" && reel.rejection_reason && (
+                <div className="mt-2.5 p-2 bg-red-950/80 border border-red-500/40 rounded text-red-200 text-[10px] leading-relaxed">
+                  <strong className="text-red-400 block mb-0.5">Rejection Reason:</strong>
+                  "{reel.rejection_reason}"
+                </div>
+              )}
             </div>
           </div>
         ))}
