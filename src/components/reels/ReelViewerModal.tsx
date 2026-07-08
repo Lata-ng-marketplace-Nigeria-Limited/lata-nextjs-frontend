@@ -6,6 +6,7 @@ import { GroupedReels, Reel, ReelUser } from "@/api/reels";
 import { X, Volume2, VolumeX, ChevronUp, ChevronDown } from "lucide-react";
 import { cn } from "@/utils";
 import Button from "@atom/Button";
+import Link from "next/link";
 
 interface Props {
   isOpen: boolean;
@@ -221,8 +222,15 @@ export const ReelViewerModal = ({
               {/* Details Overlay (scoped to each reel video panel) */}
               <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/45 to-transparent flex flex-col text-white z-10 select-none">
                 {/* User Header */}
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                <Link
+                  href={`/seller-profile/${reel.sellerId}`}
+                  className="flex items-center gap-2 mb-3 hover:underline group cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClose();
+                  }}
+                >
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20 group-hover:opacity-80 transition-opacity">
                     <Image
                       src={reel.user.avatar || "/images/avatar-placeholder.png"}
                       alt={reel.user.name}
@@ -235,7 +243,7 @@ export const ReelViewerModal = ({
                     <span className="text-xs font-bold">{reel.user.name}</span>
                     <span className="text-[10px] text-white/70">Seller</span>
                   </div>
-                </div>
+                </Link>
 
                 {/* Reel Title */}
                 <h3 className="text-sm font-bold mb-1.5">{reel.title}</h3>

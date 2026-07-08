@@ -47,13 +47,11 @@ export default function ComboBox(props: Props) {
       name={props.name}
     >
       <div className={cn(`relative w-full w-[1000px]`, props.wrapperClass)}>
-        <div className="relative flex w-full cursor-default overflow-hidden bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-transparent focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:text-sm">
+        <div className="relative flex w-full items-center cursor-default overflow-hidden bg-white border border-grey3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/30 rounded-lg text-left shadow-sm focus:outline-none sm:text-sm">
           <Combobox.Input
             required={props.required}
             className={cn(`
               w-full 
-              border 
-              border-black 
               py-2 
               pl-3 
               pr-1 
@@ -62,8 +60,7 @@ export default function ComboBox(props: Props) {
               
               h-[25px] 
               sm:h-[36px]
-              rounded-[5px]
-              bg-offwhite
+              bg-white
               px-2.5 
               text-xs
               outline-none
