@@ -35,6 +35,7 @@ import {
   DASHBOARD_SUBSCRIPTIONS_ROUTE,
   VIEW_SELLERS_ROUTE,
   ADMIN_EDIT_KPI_ROUTE,
+  DASHBOARD_REELS_ROUTE,
 } from "@/constants/routes";
 import { NewProductIcon } from "@/components/atom/icons/Admin";
 import { EditIcon } from "@/components/atom/icons/Edit";
@@ -48,6 +49,7 @@ import {
   LockKeyhole,
   Pencil,
   Edit,
+  Play,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
@@ -82,6 +84,20 @@ export const sideMenu: {
     hideFromBuyer: false,
     fill: false,
     href: "/",
+  },
+  {
+    title: "Reels",
+    icon: <Play className="w-5 h-5 text-grey6" />,
+    isSeller: false,
+    isAdmin: false,
+    isAuth: false,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: false,
+    hideFromSeller: false,
+    hideFromBuyer: false,
+    fill: false,
+    href: DASHBOARD_REELS_ROUTE,
   },
   {
     title: "Sellers",

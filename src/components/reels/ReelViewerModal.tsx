@@ -26,7 +26,7 @@ export const ReelViewerModal = ({
 }: Props) => {
   const [reelQueue, setReelQueue] = useState<ReelWithUser[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [isDescExpanded, setIsDescExpanded] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);

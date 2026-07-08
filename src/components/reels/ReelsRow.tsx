@@ -39,12 +39,12 @@ export const ReelsRow = ({ reelsGrouped }: Props) => {
 
   return (
     <div className="w-full mt-4 mb-6">
-      <div className="flex items-center gap-2 mb-3">
+      {/* <div className="flex items-center gap-2 mb-3">
         <div className="w-2 h-5 bg-primary rounded-full"></div>
         <h2 className="text-sm font-semibold text-grey9 sm:text-lg sm:font-bold">
           Lata Reels
         </h2>
-      </div>
+      </div> */}
 
       <div className="flex gap-5 sm:gap-6 overflow-x-auto pb-3 pt-1 scrollbar-none">
         {allReels.map((reel) => {

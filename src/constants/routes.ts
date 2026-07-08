@@ -56,3 +56,4 @@ export const CONTACT_SUPPORT_ROUTE = "/contact-support";
 export const UPLOAD_ID_ROUTE = "/upload-id";
 export const ADMIN_REVIEW_REELS_ROUTE = "/review-reels";
 export const DASHBOARD_REEL_CREATE_ROUTE = "/create-reel";
+export const DASHBOARD_REELS_ROUTE = "/reels";
