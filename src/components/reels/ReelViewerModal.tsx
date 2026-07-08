@@ -198,7 +198,7 @@ export const ReelViewerModal = ({
         <div
           ref={containerRef}
           onScroll={handleScroll}
-          className="w-full h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth pr-1 scrollbar-thin scrollbar-thumb-primary/70 scrollbar-track-white/10"
+          className="w-full h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth scrollbar-none"
         >
           {reelQueue.map((reel, idx) => (
             <div
@@ -220,42 +220,20 @@ export const ReelViewerModal = ({
 
               {/* Details Overlay (scoped to each reel video panel) */}
               <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/45 to-transparent flex flex-col text-white z-10 select-none">
-                {/* User Header & Action Links */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
-                      <Image
-                        src={reel.user.avatar || "/images/avatar-placeholder.png"}
-                        alt={reel.user.name}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-xs font-bold">{reel.user.name}</span>
-                      <span className="text-[10px] text-white/70">Seller</span>
-                    </div>
+                {/* User Header */}
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                    <Image
+                      src={reel.user.avatar || "/images/avatar-placeholder.png"}
+                      alt={reel.user.name}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
                   </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-2">
-                    <Button
-                      as="link"
-                      href={`/seller-profile/${reel.sellerId}`}
-                      format="secondary"
-                      className="px-2.5 py-1 text-[10px] font-semibold rounded bg-white/20 hover:bg-white/30 border-none text-white transition-all shadow-sm"
-                    >
-                      Shop
-                    </Button>
-                    <Button
-                      as="link"
-                      href={`/messages?userId=${reel.user.id}`}
-                      format="primary"
-                      className="px-2.5 py-1 text-[10px] font-semibold rounded bg-primary hover:bg-primary/80 border-none text-white transition-all shadow-sm"
-                    >
-                      Message
-                    </Button>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold">{reel.user.name}</span>
+                    <span className="text-[10px] text-white/70">Seller</span>
                   </div>
                 </div>
 

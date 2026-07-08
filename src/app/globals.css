@@ -61,4 +61,14 @@ input::-ms-clear {
   }
 }
 
+/* Hide scrollbars utility class */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
 

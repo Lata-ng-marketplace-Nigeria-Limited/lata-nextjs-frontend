@@ -46,7 +46,7 @@ export const ReelsRow = ({ reelsGrouped }: Props) => {
         </h2>
       </div>
 
-      <div className="flex gap-5 sm:gap-6 overflow-x-auto pb-3 pt-1 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
+      <div className="flex gap-5 sm:gap-6 overflow-x-auto pb-3 pt-1 scrollbar-none">
         {allReels.map((reel) => {
           const thumbnail = getThumbnailUrl(reel.video_url);
           return (
