@@ -10,6 +10,7 @@ import { findAllMyProductsApi } from "@/api/product";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import { getAllStatesApi } from "@/api/location";
+import { getReelsApi } from "@/api/reels";
 
 export const metadata: Metadata = {
   title: "My Shop",
@@ -35,12 +36,13 @@ export default async function Page(props: {
     uid: searchParams?.uid || "",
   };
 
-  const products = await findAllMyProductsApi(queries);
-  const statesInNigeriaData = await getAllStatesApi();
-
   if (!session || !session.user) {
     redirect("/auth/login");
   }
+
+  const products = await findAllMyProductsApi(queries);
+  const statesInNigeriaData = await getAllStatesApi();
+  const reelsData = await getReelsApi({ sellerId: session.user.id });
 
   return (
     <div>
@@ -54,6 +56,7 @@ export default async function Page(props: {
           products={products.data}
           meta={products?.meta}
           isEmpty={products?.isEmpty}
+          reelsGrouped={reelsData?.reels || []}
         />
       </Suspense>
     </div>

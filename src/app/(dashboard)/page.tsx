@@ -10,6 +10,8 @@ import HeaderText from "@/components/atom/HeaderText";
 import HeaderSubText from "@/components/atom/HeaderSubText";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
 import CentralizedRollerSpinner from "@/components/molecule/CentralizedRollerSpinner";
+import { getReelsApi } from "@/api/reels";
+import { ReelsRow } from "@/components/reels/ReelsRow";
 
 export const metadata = {
   title: "Buy, sell, or rent products or search for your dream job on Lata.ng",
@@ -68,6 +70,8 @@ export default async function Home(props: {
       </main>
     );
   } else {
+    const reelsGrouped = await getReelsApi();
+
     return (
       <main className="">
         <HeroImage
@@ -76,6 +80,7 @@ export default async function Home(props: {
           }
           alt={`Buy and sell products online`}
         />
+        <ReelsRow reelsGrouped={reelsGrouped?.reels || []} />
         <DashboardSelectCategories />
         <Suspense key={query} fallback={<ProductListSkeleton />}>
           <HomeProducts query={query} subcategory={subcategory} />

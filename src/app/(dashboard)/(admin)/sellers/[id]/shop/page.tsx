@@ -9,6 +9,7 @@ import { unstable_noStore } from "next/cache";
 import ShopTopArea from "@/components/shop/ShopTopArea";
 import { findAllSellerProductsApi } from "@/api/admin";
 import { getAllStatesApi } from "@/api/location";
+import { getReelsApi } from "@/api/reels";
 
 interface IPageProps {
   searchParams: Promise<{
@@ -60,14 +61,15 @@ export default async function Page(props: IPageProps) {
     sellerId: id,
   };
 
-  const [products, statesInNigeriaData] = await Promise.all([
-    findAllSellerProductsApi(info),
-    getAllStatesApi(),
-  ]);
-
   if (!session || !session.user) {
     redirect("/auth/login");
   }
+
+  const [products, statesInNigeriaData, reelsData] = await Promise.all([
+    findAllSellerProductsApi(info),
+    getAllStatesApi(),
+    getReelsApi({ sellerId: id }),
+  ]);
 
   return (
     <div>
@@ -84,6 +86,7 @@ export default async function Page(props: IPageProps) {
           products={products.data}
           meta={products?.meta}
           isEmpty={products?.isEmpty}
+          reelsGrouped={reelsData?.reels || []}
         />
       </Suspense>
     </div>
