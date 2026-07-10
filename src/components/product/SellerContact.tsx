@@ -17,7 +17,43 @@ interface Props {
   productName?: string;
   productId?: string;
   productOwnerId?: string;
+  sellerRole?: string;
 }
+
+const getDisplayRole = (user?: User | null) => {
+  if (!user) return "";
+  if (user.role === "BUYER" && user.buyerRole) {
+    switch (user.buyerRole) {
+      case "direct_buyer":
+        return "Direct Buyer";
+      case "direct_mandate":
+        return "Direct Mandate";
+      case "agent":
+        return "Agent";
+      default:
+        return user.buyerRole.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+    }
+  }
+  return user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase();
+};
+
+const getDisplaySellerRole = (role?: string) => {
+  if (!role) return "";
+  switch (role) {
+    case "owner":
+      return "Owner";
+    case "direct_mandate":
+      return "Direct Mandate";
+    case "agent":
+      return "Agent";
+    case "reseller":
+      return "Reseller";
+    case "freelancer":
+      return "Freelancer";
+    default:
+      return role.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  }
+};
 
 export default function SellerContact(props: Props) {
   const [typeMessage, setTypeMessage] = useState(false);
@@ -124,9 +160,14 @@ export default function SellerContact(props: Props) {
         />
 
         <div>
-          <p className={"font-bold mb-2 text-black"}>
+          <p className={"font-bold text-black"}>
             {props.sellerInfo?.name}
           </p>
+          {(props.sellerRole || props.sellerInfo?.role) && (
+            <p className={"text-[11px] font-semibold text-primary/90 mt-0.5 mb-1 bg-primary/10 px-2 py-0.5 rounded-full w-max"}>
+              {props.sellerRole ? getDisplaySellerRole(props.sellerRole) : getDisplayRole(props.sellerInfo)}
+            </p>
+          )}
           <p className={"text-xs text-grey9"}>
             {props.sellerInfo?.phoneNumber}
           </p>

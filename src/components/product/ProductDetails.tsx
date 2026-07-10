@@ -9,6 +9,24 @@ import PercentageOff from "../atom/PercentageOff";
 import { selectedState } from "@/utils/location";
 import { State } from "@/interface/location";
 
+const getDisplaySellerRole = (role?: string) => {
+  if (!role) return "";
+  switch (role) {
+    case "owner":
+      return "Owner";
+    case "direct_mandate":
+      return "Direct Mandate";
+    case "agent":
+      return "Agent";
+    case "reseller":
+      return "Reseller";
+    case "freelancer":
+      return "Freelancer";
+    default:
+      return role.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  }
+};
+
 interface Props {
   product: Product;
   statesInNigeria: State[]
@@ -74,6 +92,14 @@ export default function ProductDetails(props: Props) {
               {selectedState(props.statesInNigeria, props.product?.state)}
             </span>
           </p>
+
+          {props.product?.sellerRole && (
+            <p className={"flex shrink-0 items-center"}>
+              <span className="bg-primary/10 text-primary text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
+                {getDisplaySellerRole(props.product.sellerRole)}
+              </span>
+            </p>
+          )}
         </div>
 
         <Hr className={"border-grey1"} />
