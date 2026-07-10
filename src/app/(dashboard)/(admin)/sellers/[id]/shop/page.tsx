@@ -15,6 +15,8 @@ interface IPageProps {
   searchParams: Promise<{
     page?: string;
     status?: string;
+    tab?: string;
+    type?: string;
   }>;
   params: Promise<{
     id: string;
@@ -29,7 +31,7 @@ export async function generateMetadata(props: IPageProps): Promise<Metadata> {
   ]);
   const { id } = params;
   const page = searchParams?.page || "";
-  const status = searchParams?.status || "";
+  const status = searchParams?.status || searchParams?.tab || "";
 
   const info = {
     page,
@@ -53,7 +55,8 @@ export default async function Page(props: IPageProps) {
   const { id } = params;
   unstable_noStore();
   const page = searchParams?.page || "";
-  const status = searchParams?.status || "";
+  const status = searchParams?.status || searchParams?.tab || "";
+  const activeView = searchParams?.type === "reels" ? "reels" : "products";
 
   const info = {
     page,
@@ -71,22 +74,36 @@ export default async function Page(props: IPageProps) {
     getReelsApi({ sellerId: id }),
   ]);
 
+  const sellerReels = reelsData?.reels ? reelsData.reels.flatMap((g) => g.reels) : [];
+  const reelsStatusCounts = {
+    active: sellerReels.filter((r) => r.status === "ACTIVE" || !r.status).length,
+    reviewing: sellerReels.filter((r) => r.status === "INACTIVE").length,
+    denied: sellerReels.filter((r) => r.status === "CANCELLED").length,
+    draft: 0,
+    other: 0,
+    unsubscribed: 0,
+  };
+
+  const statusCounts = activeView === "reels" ? reelsStatusCounts : (products?.statusCounts || { active: 0, reviewing: 0, denied: 0, draft: 0, unsubscribed: 0 });
+
   return (
     <div>
       <Suspense>
         <GetUser />
       </Suspense>
       <ShopTopArea
-        statusCounts={products?.statusCounts || 0}
+        statusCounts={statusCounts}
+        status={status}
         seller={products?.seller}
       />
-      <Suspense key={page} fallback={<ProductListSkeleton />}>
+      <Suspense key={`${page}-${activeView}-${status}`} fallback={<ProductListSkeleton />}>
         <MyShop
           statesInNigeria={statesInNigeriaData?.data || []}
           products={products.data}
           meta={products?.meta}
           isEmpty={products?.isEmpty}
           reelsGrouped={reelsData?.reels || []}
+          activeView={activeView}
         />
       </Suspense>
     </div>

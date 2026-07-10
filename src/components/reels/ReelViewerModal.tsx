@@ -287,10 +287,10 @@ export const ReelViewerModal = ({
                 </div>
 
                 {/* Custom Rejection Reason Banner */}
-                {reel.status === "CANCELLED" && reel.rejection_reason && (
+                {reel.status === "CANCELLED" && (reel.rejection_reason || (reel as any).rejectionReason) && (
                   <div className="mt-2.5 p-2 bg-red-950/80 border border-red-500/40 rounded text-red-200 text-[10px] leading-relaxed">
                     <strong className="text-red-400 block mb-0.5">Rejection Reason:</strong>
-                    "{reel.rejection_reason}"
+                    "{reel.rejection_reason || (reel as any).rejectionReason}"
                   </div>
                 )}
               </div>
