@@ -7,7 +7,7 @@ import { useToast } from "@components/ui/use-toast";
 import TextInput from "@components/input/TextInput";
 import TextAreaInput from "@components/input/TextAreaInput";
 import Button from "@atom/Button";
-import { UploadCloud, Play, FileVideo, AlertCircle, Trash2 } from "lucide-react";
+import { UploadCloud, Play, FileVideo, AlertCircle, Trash2, Video, PlusCircle } from "lucide-react";
 import { cn } from "@/utils";
 
 export const ReelUploadForm = () => {
@@ -126,12 +126,15 @@ export const ReelUploadForm = () => {
       <div className="border-b border-grey2 pb-4 mb-6">
         <h1 className="text-xl md:text-2xl font-bold text-grey10">Create Reel</h1>
         <p className="text-sm text-grey6 mt-1">
-          Share short videos of your products to attract buyers. Web uploads require admin review before appearing in the public feed.
+          Share your moments with the world
+        </p>
+        <p className="text-xs text-grey5 mt-1 leading-normal">
+          Uploads require admin review before appearing in the public feed.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-6 md:gap-10">
-        {/* Left Column: Video Select & Preview (replicates mobile create screen video select) */}
+        {/* Left Column: Video Select & Preview */}
         <div className="flex-1 flex flex-col gap-4">
           <label className="text-xs font-semibold text-grey8 uppercase tracking-wider">
             Video Selection
@@ -144,10 +147,10 @@ export const ReelUploadForm = () => {
               onDrop={onDrop}
               onClick={() => fileInputRef.current?.click()}
               className={cn(
-                "h-[320px] md:h-[450px] border-2 border-dashed rounded-xl flex flex-col items-center justify-center gap-3 p-6 text-center cursor-pointer transition-all duration-200 select-none",
+                "h-[320px] md:h-[450px] border-2 border-dashed rounded-xl flex flex-col items-center justify-center gap-2 p-6 text-center cursor-pointer transition-all duration-200 select-none",
                 dragActive
                   ? "border-primary bg-purp2 text-primary"
-                  : "border-grey3 hover:border-primary hover:bg-purp1 text-grey6"
+                  : "border-primary/60 hover:border-primary bg-purp1/20 hover:bg-purp1/40 text-primary"
               )}
             >
               <input
@@ -161,12 +164,15 @@ export const ReelUploadForm = () => {
                   }
                 }}
               />
-              <UploadCloud className="w-12 h-12 stroke-[1.5]" />
+              <Video className="w-16 h-16 text-primary stroke-[1.2] mb-1" />
               <div className="flex flex-col gap-1">
-                <span className="font-semibold text-sm text-grey9">
-                  Click to upload or drag & drop
+                <span className="font-bold text-base text-primary">
+                  Select Video
                 </span>
-                <span className="text-xs">
+                <span className="text-xs text-grey6">
+                  Tap to choose a video file
+                </span>
+                <span className="text-[10px] text-grey5 mt-1 font-medium">
                   MP4, MOV, or WEBM (Max size 60MB)
                 </span>
               </div>
@@ -199,13 +205,13 @@ export const ReelUploadForm = () => {
         <div className="w-full md:w-[360px] flex flex-col justify-between">
           <div className="flex flex-col gap-5">
             <div>
-              <label className="text-xs font-semibold text-grey8 uppercase tracking-wider block mb-2">
-                Reel Title *
+              <label className="text-sm font-semibold text-grey8 block mb-2">
+                Title
               </label>
               <TextInput
                 value={title}
                 setValue={setTitle}
-                placeholder="Give your reel a catchy title"
+                placeholder="Enter a catchy title"
                 wrapperClass="w-full"
                 inputClass="h-11 border-grey3 focus:border-primary text-sm rounded-lg"
               />
@@ -215,13 +221,13 @@ export const ReelUploadForm = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-grey8 uppercase tracking-wider block mb-2">
-                Description (Optional)
+              <label className="text-sm font-semibold text-grey8 block mb-2">
+                Description <span className="text-xs text-grey5 font-normal">(Optional)</span>
               </label>
               <TextAreaInput
                 value={description}
                 setValue={setDescription}
-                placeholder="Tell viewers more about this product..."
+                placeholder="Tell us about your reel"
                 inputClass="h-[120px] border-grey3 focus:border-primary text-sm rounded-lg py-2.5"
               />
             </div>
@@ -229,7 +235,7 @@ export const ReelUploadForm = () => {
             <div className="flex items-start gap-2 bg-yellow-50 text-yellow-800 border border-yellow-200 p-3 rounded-lg text-xs leading-normal">
               <AlertCircle className="w-4 h-4 shrink-0 text-yellow-600 mt-0.5" />
               <span>
-                Reels uploaded on web must be approved by an administrator before they become visible to other buyers on the platform.
+                Reels must be approved by an administrator before they become visible to other buyers on the platform.
               </span>
             </div>
           </div>
@@ -239,9 +245,16 @@ export const ReelUploadForm = () => {
               type="submit"
               format="primary"
               disabled={loading || !title.trim() || !videoFile}
-              className="w-full py-3 text-sm font-semibold rounded-lg shadow-sm"
+              className="w-full py-3 text-sm font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2"
             >
-              {loading ? "Uploading Reel..." : "Create Reel"}
+              {loading ? (
+                "Uploading Reel..."
+              ) : (
+                <>
+                  <PlusCircle className="w-4.5 h-4.5 stroke-[2]" />
+                  Create Reel
+                </>
+              )}
             </Button>
           </div>
         </div>

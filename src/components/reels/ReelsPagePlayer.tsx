@@ -7,6 +7,7 @@ import { Volume2, VolumeX, ChevronUp, ChevronDown } from "lucide-react";
 import { cn } from "@/utils";
 import Button from "@atom/Button";
 import Link from "next/link";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   reelsGrouped: GroupedReels[];
@@ -15,6 +16,7 @@ interface Props {
 type ReelWithUser = Reel & { user: ReelUser; sellerId: string };
 
 export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
+  const { user } = useUser();
   const [reelQueue, setReelQueue] = useState<ReelWithUser[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
@@ -132,6 +134,20 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
           {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
         </button>
       </div>
+
+      {/* Create Reel Button (Fixed Overlay for Sellers) */}
+      {user?.role === "SELLER" && (
+        <div className="absolute top-4 right-4 z-[1010]">
+          <Button
+            as="link"
+            href="/create-reel"
+            format="primary"
+            className="py-2 px-4 text-xs font-semibold rounded-full shadow-md bg-primary hover:bg-primary/95 text-white border border-white/10 flex items-center gap-1.5"
+          >
+            <span>+ Create Reel</span>
+          </Button>
+        </div>
+      )}
 
       {/* Scrollable Container with native CSS scroll snapping */}
       <div
