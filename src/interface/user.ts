@@ -46,6 +46,7 @@ export interface User {
   referrerCode?: string;
   referral?: IReferral;
   buyerRole?: string;
+  dateOfBirth?: string;
 }
 
 export type UserRole = "BUYER" | "SELLER" | "ADMIN" | "STAFF";

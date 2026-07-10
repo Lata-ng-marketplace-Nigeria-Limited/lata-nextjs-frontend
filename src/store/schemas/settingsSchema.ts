@@ -14,5 +14,6 @@ export const settingsSchema = z
       .string()
       .nonempty("Please enter your full name.")
       .min(3, "Please enter a minimum of 3 characters."),
+    dateOfBirth: z.string().optional(),
   })
   .and(phoneNumberSchema(true));

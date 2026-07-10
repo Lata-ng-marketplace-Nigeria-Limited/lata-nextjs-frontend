@@ -60,7 +60,10 @@ export const getReelsApi = async (queries?: {
       return null;
     }
     return await res.json();
-  } catch (error) {
+  } catch (error: any) {
+    if (error && (error.digest === "DYNAMIC_SERVER_USAGE" || error.message?.includes("Dynamic server usage"))) {
+      throw error;
+    }
     console.error("Error in getReelsApi:", error);
     return null;
   }
@@ -102,7 +105,10 @@ export const getInActiveReelsApi = async (queries?: {
       return null;
     }
     return await res.json();
-  } catch (error) {
+  } catch (error: any) {
+    if (error && (error.digest === "DYNAMIC_SERVER_USAGE" || error.message?.includes("Dynamic server usage"))) {
+      throw error;
+    }
     console.error("Error in getInActiveReelsApi:", error);
     return null;
   }

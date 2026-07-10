@@ -99,6 +99,7 @@ export const SettingsForm = ({ image }: Props) => {
     setValue("phoneNumber", userDataInfo?.phoneNumber || "");
     setValue("address", userDataInfo?.address || "");
     setValue("aboutBusiness", userDataInfo?.aboutBusiness || "");
+    setValue("dateOfBirth", userDataInfo?.dateOfBirth || "");
     setRole(userDataInfo?.role || "BUYER");
 
     const notifSettings = user?.settings.find(
@@ -293,6 +294,24 @@ export const SettingsForm = ({ image }: Props) => {
               </FormTopLabel>
             )}
             name={"phoneNumber"}
+            control={control}
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormTopLabel label={"Date of birth (Optional)"}>
+                <TextInput
+                  {...field}
+                  placeholder={"Select your date of birth"}
+                  type={"date"}
+                  name={field.name}
+                  value={field.value || ""}
+                  disabled={loading}
+                  errorMessage={errors.dateOfBirth?.message}
+                />
+              </FormTopLabel>
+            )}
+            name={"dateOfBirth"}
             control={control}
           />
 

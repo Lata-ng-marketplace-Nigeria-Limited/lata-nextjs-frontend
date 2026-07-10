@@ -37,6 +37,7 @@ export const BuyerSignUpForm = () => {
       phoneNumber: "",
       password: "",
       buyerRole: undefined,
+      dateOfBirth: "",
     },
   });
 
@@ -132,6 +133,21 @@ export const BuyerSignUpForm = () => {
           />
         )}
         name={"phoneNumber"}
+        control={control}
+      />
+
+      <Controller
+        render={({ field }) => (
+          <TextInput
+            {...field}
+            placeholder={"Select Date of Birth (Optional)"}
+            label={"Date of Birth (Optional)"}
+            type={"date"}
+            disabled={loading}
+            errorMessage={errors.dateOfBirth?.message}
+          />
+        )}
+        name={"dateOfBirth"}
         control={control}
       />
 

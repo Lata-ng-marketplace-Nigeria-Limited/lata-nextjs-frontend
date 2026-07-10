@@ -7,6 +7,7 @@ interface BuyerRegisterApiInput {
   role: "BUYER";
   phoneNumber?: string;
   buyerRole?: string;
+  dateOfBirth?: string;
 }
 
 interface SellerRegisterApiInput {
@@ -16,6 +17,7 @@ interface SellerRegisterApiInput {
   aboutBusiness: string;
   file?: File;
   shouldCompleteProfile?: boolean;
+  dateOfBirth?: string;
 }
 
 interface StaffRegisterApiInput {
@@ -88,6 +90,7 @@ export interface UpdateUserProfileInput {
   message?: boolean;
   feedback?: boolean;
   buyerRole?: string;
+  dateOfBirth?: string;
 }
 
 export const updateUserProfileApi = async (
