@@ -35,6 +35,8 @@ interface ISearchParams extends SwitchedRoleQueries {
   subcategory?: string;
   page?: string;
   month?: string;
+  type?: string;
+  q?: string;
 }
 
 export default async function Home(props: {
@@ -55,6 +57,9 @@ export default async function Home(props: {
           <AdminDashboardWrapper
             username={session?.user?.name || "Admin"}
             month={selectedMonth}
+            type={searchParams?.type || "posts"}
+            page={searchParams?.page || "1"}
+            search={searchParams?.q || ""}
           />
         </Suspense>
       </main>

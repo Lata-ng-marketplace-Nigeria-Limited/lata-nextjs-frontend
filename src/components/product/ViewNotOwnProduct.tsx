@@ -285,11 +285,6 @@ export default function ViewNotOwnProduct(props: Props) {
       <Modal
         isShown={showModal}
         setIsShown={setShowModal}
-        onOpenChange={(open) => {
-          if (!open) {
-            handleCancel();
-          }
-        }}
       >
         <Prompt
           {...modalProps}

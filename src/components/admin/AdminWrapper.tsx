@@ -12,17 +12,28 @@ import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
 import ProductInsights from "../analytics/ProductInsights";
 import { getAllStatesApi } from "@/api/location";
 import EmailBroadcastDialog from "@/components/admin/EmailBroadcastDialog";
+import { getInActiveReelsApi } from "@/api/reels";
+import { ReviewReel } from "@components/review-reels/ReviewReel";
+import AdminHomeTabs from "@/components/admin/AdminHomeTabs";
 
 interface Props {
   username: string;
   month: string;
+  type: string;
+  page: string;
+  search: string;
 }
 
 export default async function AdminDashboardWrapper(props: Props) {
-  const [response, states, chartsData] = await Promise.all([
+  const isReels = props.type === "reels";
+
+  const [response, states, chartsData, reelsResponse] = await Promise.all([
     getAdminAnalyticsApi(props.month),
     getAllStatesApi(),
     getAnalyticsClicksAndViews(),
+    isReels
+      ? getInActiveReelsApi({ page: props.page, search: props.search })
+      : Promise.resolve(null),
   ]);
 
   return (
@@ -76,14 +87,24 @@ export default async function AdminDashboardWrapper(props: Props) {
 
       <div>
         <HeaderText title className="mb-7 md:mb-7">
-          Recent Posts
+          Recent Uploads
         </HeaderText>
+        <AdminHomeTabs activeTab={props.type} />
 
-        <RecentPosts
-          reposts={response?.recentPosts?.data}
-          meta={response.recentPosts?.meta}
-          states={states?.data || []}
-        />
+        {isReels ? (
+          <ReviewReel
+            reels={reelsResponse?.data || []}
+            meta={reelsResponse?.meta}
+            page={props.page}
+            urlSearch={props.search}
+          />
+        ) : (
+          <RecentPosts
+            reposts={response?.recentPosts?.data}
+            meta={response.recentPosts?.meta}
+            states={states?.data || []}
+          />
+        )}
       </div>
     </div>
   );

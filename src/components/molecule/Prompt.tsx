@@ -3,6 +3,7 @@
 import Button, { ButtonType } from "../atom/Button";
 import { cn } from "@/utils";
 import React from "react";
+import { Loader2 } from "lucide-react";
 import TextAreaInput from "../input/TextAreaInput";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -102,16 +103,24 @@ const Prompt = React.forwardRef((props: PromptProps, ref) => {
                     {props.cancelText || "Cancel"}
                   </Button>
 
-                  <Button
+                   <Button
                     className={cn(`
                     sm:px-3
                     sm:py-2
+                    flex items-center justify-center gap-x-2
                    `)}
                     format={props.confirmType || "primary"}
                     onClick={props.onConfirm}
                     disabled={props.confirmLoading || props.confirmDisabled}
                   >
-                    {props.confirmText || "Confirm"}
+                    {props.confirmLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      props.confirmText || "Confirm"
+                    )}
                   </Button>
                 </>
               )}

@@ -14,7 +14,9 @@ import ReelTableCard from "@components/table/ReelTableCard";
 import UserTableCard from "@components/table/UserTableCard";
 import TableActions from "@components/table/TableActions";
 import { Table } from "@components/table/Table";
+import EmptyTable from "@components/table/EmptyTable";
 import Modal from "@molecule/Modal";
+import { Loader2 } from "lucide-react";
 
 interface Props {
   reels: (Reel & { user: ReelUser })[];
@@ -35,6 +37,7 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteReason, setDeleteReason] = useState("");
   const [deletingReel, setDeletingReel] = useState<Reel | null>(null);
+  const [previewReel, setPreviewReel] = useState<Reel | null>(null);
   const { replace, refresh } = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -94,6 +97,14 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
   const tableData = reels.map((reel) => ({
     reelSummary: <ReelTableCard reel={reel} />,
     seller: <UserTableCard user={reel.user as any} />,
+    reels: (
+      <button
+        onClick={() => setPreviewReel(reel)}
+        className="cursor-pointer text-primary font-medium hover:underline text-sm"
+      >
+        see reel
+      </button>
+    ),
     actions: (
       <TableActions
         buttons={[
@@ -130,14 +141,14 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
     const params = new URLSearchParams(searchParams);
     params.set("q", search);
     params.set("page", "1");
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const handlePageChange = (page: number) => {
     if (loading) return;
     const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -159,15 +170,22 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
         </Button>
       </form>
 
-      <Table
-        tableData={tableData}
-        keyNotCursor={["actions"]}
-        uesPaginate
-        meta={meta}
-        currentPage={Number(page || "1")}
-        onPageChange={handlePageChange}
-        loading={loading}
-      />
+      {reels.length > 0 ? (
+        <Table
+          tableData={tableData}
+          keyNotCursor={["actions"]}
+          uesPaginate
+          meta={meta}
+          currentPage={Number(page || "1")}
+          onPageChange={handlePageChange}
+          loading={loading}
+        />
+      ) : (
+        <EmptyTable
+          title="No Recent Reels"
+          description="All newly uploaded reels yet to be reviewed will appear here"
+        />
+      )}
 
       <Modal
         isShown={showModal}
@@ -204,9 +222,9 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
             >
               Cancel
             </Button>
-            <Button
+             <Button
               format="danger"
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-danger text-white hover:bg-danger/80 disabled:opacity-50 disabled:pointer-events-none"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-danger text-white hover:bg-danger/80 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-x-2"
               disabled={modalButtonLoading || !rejectionReason.trim()}
               onClick={async () => {
                 if (!rejectingReel || !rejectionReason.trim()) return;
@@ -231,7 +249,14 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
                 }
               }}
             >
-              Reject Reel
+              {modalButtonLoading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+                  <span>Rejecting...</span>
+                </>
+              ) : (
+                "Reject Reel"
+              )}
             </Button>
           </div>
         </div>
@@ -260,9 +285,9 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
             >
               Cancel
             </Button>
-            <Button
+             <Button
               format="danger"
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-danger text-white hover:bg-danger/80"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-danger text-white hover:bg-danger/80 flex items-center justify-center gap-x-2"
               disabled={modalButtonLoading}
               onClick={async () => {
                 if (!deletingReel) return;
@@ -287,9 +312,43 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
                 }
               }}
             >
-              Delete Reel
+              {modalButtonLoading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+                  <span>Deleting...</span>
+                </>
+              ) : (
+                "Delete Reel"
+              )}
             </Button>
           </div>
+        </div>
+      </Modal>
+
+      <Modal isShown={!!previewReel} setIsShown={(val) => { if (!val) setPreviewReel(null); }}>
+        <div className="p-4 bg-white rounded-lg flex flex-col items-center">
+          <div className="flex justify-between items-center w-full mb-3 pb-2 border-b border-grey2">
+            <h4 className="font-bold text-grey9 text-sm truncate max-w-[80%]">
+              {previewReel?.title || "Reel Preview"}
+            </h4>
+            <button
+              onClick={() => setPreviewReel(null)}
+              className="text-grey6 hover:text-grey9 text-xs font-bold"
+            >
+              Close
+            </button>
+          </div>
+          {previewReel && (
+            <div className="relative w-full aspect-[9/16] max-w-[320px] bg-black rounded-lg overflow-hidden border border-grey3">
+              <video
+                src={previewReel.video_url}
+                className="w-full h-full object-contain"
+                controls
+                autoPlay
+                playsInline
+              />
+            </div>
+          )}
         </div>
       </Modal>
     </div>
