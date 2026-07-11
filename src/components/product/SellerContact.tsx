@@ -164,7 +164,7 @@ export default function SellerContact(props: Props) {
             {props.sellerInfo?.name}
           </p>
           {(props.sellerRole || props.sellerInfo?.role) && (
-            <p className={"text-[11px] font-semibold text-primary/90 mt-0.5 mb-1 bg-primary/10 px-2 py-0.5 rounded-full w-max"}>
+            <p className={"text-xs font-semibold text-primary/90 mt-0.5 mb-1 bg-primary/10 px-2.5 py-0.5 rounded-full w-max"}>
               {props.sellerRole ? getDisplaySellerRole(props.sellerRole) : getDisplayRole(props.sellerInfo)}
             </p>
           )}

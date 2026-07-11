@@ -95,7 +95,7 @@ export default function ProductDetails(props: Props) {
 
           {props.product?.sellerRole && (
             <p className={"flex shrink-0 items-center"}>
-              <span className="bg-primary/10 text-primary text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
+              <span className="bg-primary/10 text-primary text-xs font-semibold px-2.5 py-0.5 rounded-full">
                 {getDisplaySellerRole(props.product.sellerRole)}
               </span>
             </p>
