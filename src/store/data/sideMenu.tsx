@@ -22,6 +22,7 @@ import {
   ADMIN_VERIFY_TRANSFERS_ROUTE,
   DASHBOARD_ANALYTICS_ROUTE,
   DASHBOARD_BALANCE_ROUTE,
+  DASHBOARD_REQUEST_LOAN_ROUTE,
   DASHBOARD_CALL_MANAGER_ROUTE,
   DASHBOARD_FEEDBACK_ROUTE,
   DASHBOARD_LOGOUT_ROUTE,
@@ -50,6 +51,7 @@ import {
   Pencil,
   Edit,
   Play,
+  HandCoins,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
@@ -168,6 +170,20 @@ export const sideMenu: {
     hideFromBuyer: true,
     fill: false,
     href: DASHBOARD_MY_SHOP_ROUTE,
+  },
+  {
+    title: "Request Loan",
+    icon: <HandCoins className="w-5 h-5 text-grey6" />,
+    isSeller: false,
+    isAdmin: false,
+    isAuth: true,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: false,
+    hideFromSeller: false,
+    hideFromBuyer: false,
+    fill: false,
+    href: DASHBOARD_REQUEST_LOAN_ROUTE,
   },
   {
     title: "Balance",

@@ -11,6 +11,7 @@ export const DASHBOARD_MESSAGES_ROUTE = "/messages";
 export const DASHBOARD_SAVED_ROUTE = "/saved";
 export const DASHBOARD_MY_SHOP_ROUTE = "/shop";
 export const DASHBOARD_BALANCE_ROUTE = "/balance";
+export const DASHBOARD_REQUEST_LOAN_ROUTE = "/request-loan";
 export const DASHBOARD_NOTIFICATIONS_ROUTE = "/notifications";
 export const DASHBOARD_SETTINGS_ROUTE = "/settings";
 export const DASHBOARD_FEEDBACK_ROUTE = "/feedback";
