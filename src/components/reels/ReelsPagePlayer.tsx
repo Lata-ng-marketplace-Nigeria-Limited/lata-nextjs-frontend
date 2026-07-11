@@ -3,11 +3,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { GroupedReels, Reel, ReelUser } from "@/api/reels";
-import { Volume2, VolumeX, ChevronUp, ChevronDown } from "lucide-react";
+import { Volume2, VolumeX, ChevronUp, ChevronDown, Share2 } from "lucide-react";
 import { cn } from "@/utils";
 import Button from "@atom/Button";
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
+import { useToast } from "@components/ui/use-toast";
 
 interface Props {
   reelsGrouped: GroupedReels[];
@@ -24,6 +25,8 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  const { toast } = useToast();
 
   // 1. Flatten all reels from all sellers to build the playback queue
   useEffect(() => {
@@ -51,6 +54,74 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
       containerRef.current.scrollTop = 0;
     }
   }, [reelsGrouped]);
+
+  // Handle initial scroll/snap to a shared reel ID on load
+  useEffect(() => {
+    if (reelQueue.length === 0 || !containerRef.current) return;
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const sharedReelId = queryParams.get("id");
+    if (!sharedReelId) return;
+
+    const targetIdx = reelQueue.findIndex((r) => r.id === sharedReelId);
+    if (targetIdx !== -1) {
+      setActiveIndex(targetIdx);
+      const container = containerRef.current;
+      const height = container.clientHeight;
+      if (height > 0) {
+        container.scrollTop = targetIdx * height;
+      } else {
+        setTimeout(() => {
+          container.scrollTop = targetIdx * container.clientHeight;
+        }, 150);
+      }
+    }
+  }, [reelQueue]);
+
+  // Update URL search parameter when activeIndex changes
+  useEffect(() => {
+    if (reelQueue.length > 0 && reelQueue[activeIndex]) {
+      const activeReelId = reelQueue[activeIndex].id;
+      const url = new URL(window.location.href);
+      url.searchParams.set("id", activeReelId);
+      window.history.replaceState(
+        { ...window.history.state, as: url.pathname + url.search, url: url.href },
+        "",
+        url.pathname + url.search
+      );
+    }
+  }, [activeIndex, reelQueue]);
+
+  const handleShare = () => {
+    if (reelQueue.length === 0 || !reelQueue[activeIndex]) return;
+    const activeReelId = reelQueue[activeIndex].id;
+    const shareUrl = `${window.location.origin}/reels?id=${activeReelId}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => {
+          toast({
+            title: "Link Copied!",
+            description: "Reel link has been copied to your clipboard.",
+            variant: "success",
+          });
+        })
+        .catch((err) => {
+          console.error("Failed to copy link:", err);
+          toast({
+            title: "Copy Failed",
+            description: "Please copy the URL from your address bar.",
+            variant: "destructive",
+          });
+        });
+    } else {
+      toast({
+        title: "Copy Link",
+        description: `Copy this link: ${shareUrl}`,
+        variant: "info",
+      });
+    }
+  };
 
   // Handle active video playing and pausing
   useEffect(() => {
@@ -125,13 +196,21 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
 
   return (
     <div className="relative w-full max-w-[450px] h-full sm:h-[95%] bg-black sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col border border-white/5">
-      {/* Global Mute Button (Fixed Overlay) */}
+      {/* Global Mute & Share Buttons (Fixed Overlay) */}
       <div className="absolute top-4 left-4 z-[1010] flex gap-3">
         <button
           onClick={() => setIsMuted(!isMuted)}
           className="w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-all border border-white/10"
+          title={isMuted ? "Unmute" : "Mute"}
         >
           {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+        </button>
+        <button
+          onClick={handleShare}
+          className="w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-all border border-white/10"
+          title="Share Reel"
+        >
+          <Share2 className="w-5 h-5" />
         </button>
       </div>
 
