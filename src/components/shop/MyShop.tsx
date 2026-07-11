@@ -11,7 +11,7 @@ import { useToast } from "@components/ui/use-toast";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Button from "@atom/Button";
-import { Play, Trash2, VideoOff } from "lucide-react";
+import { Play, Trash2, VideoOff, Share2 } from "lucide-react";
 import { cn } from "@/utils";
 import { ReelViewerModal } from "../reels/ReelViewerModal";
 import Modal from "@molecule/Modal";
@@ -72,6 +72,36 @@ export const MyShop = ({
     e.stopPropagation();
     setReelToDelete(reel);
     setShowDeleteModal(true);
+  };
+
+  const handleShareClick = (e: React.MouseEvent, reel: Reel) => {
+    e.stopPropagation();
+    const shareUrl = `${window.location.origin}/reels?id=${reel.id}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => {
+          toast({
+            title: "Link Copied!",
+            description: "Reel link has been copied to your clipboard.",
+            variant: "success",
+          });
+        })
+        .catch((err) => {
+          console.error("Failed to copy link:", err);
+          toast({
+            title: "Copy Failed",
+            description: "Please copy the URL from the active reel view.",
+            variant: "destructive",
+          });
+        });
+    } else {
+      toast({
+        title: "Copy Link",
+        description: `Copy this link: ${shareUrl}`,
+        variant: "info",
+      });
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -251,13 +281,23 @@ export const MyShop = ({
                         )}
                       </div>
 
-                      {/* Action buttons (Delete) */}
-                      <button
-                        onClick={(e) => handleDeleteClick(e, reel)}
-                        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-red-600 transition-colors z-10"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      {/* Action buttons (Share & Delete) */}
+                      <div className="absolute top-2 right-2 flex gap-1.5 z-10">
+                        <button
+                          onClick={(e) => handleShareClick(e, reel)}
+                          className="w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-primary transition-colors"
+                          title="Share Reel"
+                        >
+                          <Share2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => handleDeleteClick(e, reel)}
+                          className="w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-red-600 transition-colors"
+                          title="Delete Reel"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
 
                       {/* Title Overlay */}
                       <div className="absolute bottom-0 inset-x-0 p-2.5 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex flex-col justify-end">

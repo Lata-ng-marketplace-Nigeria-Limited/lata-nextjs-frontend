@@ -3,10 +3,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { GroupedReels, Reel, ReelUser } from "@/api/reels";
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown } from "lucide-react";
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Share2 } from "lucide-react";
 import { cn } from "@/utils";
 import Button from "@atom/Button";
 import Link from "next/link";
+import { useToast } from "@components/ui/use-toast";
 
 interface Props {
   isOpen: boolean;
@@ -32,6 +33,39 @@ export const ReelViewerModal = ({
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  const { toast } = useToast();
+
+  const handleShare = () => {
+    if (reelQueue.length === 0 || !reelQueue[activeIndex]) return;
+    const activeReelId = reelQueue[activeIndex].id;
+    const shareUrl = `${window.location.origin}/reels?id=${activeReelId}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => {
+          toast({
+            title: "Link Copied!",
+            description: "Reel link has been copied to your clipboard.",
+            variant: "success",
+          });
+        })
+        .catch((err) => {
+          console.error("Failed to copy link:", err);
+          toast({
+            title: "Copy Failed",
+            description: "Please copy the URL from your browser address bar.",
+            variant: "destructive",
+          });
+        });
+    } else {
+      toast({
+        title: "Copy Link",
+        description: `Copy this link: ${shareUrl}`,
+        variant: "info",
+      });
+    }
+  };
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -170,13 +204,21 @@ export const ReelViewerModal = ({
       {/* Background Close Click */}
       <div className="absolute inset-0 cursor-default" />
 
-      {/* Global Mute Button & Close Button (Fixed Overlay) */}
+      {/* Global Mute & Share Buttons (Fixed Overlay) */}
       <div className="absolute top-4 left-4 z-[1010] flex gap-3" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={() => setIsMuted(!isMuted)}
           className="w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-all border border-white/10"
+          title={isMuted ? "Unmute" : "Mute"}
         >
           {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+        </button>
+        <button
+          onClick={handleShare}
+          className="w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-all border border-white/10"
+          title="Share Reel"
+        >
+          <Share2 className="w-5 h-5" />
         </button>
       </div>
 
