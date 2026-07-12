@@ -7,8 +7,8 @@ interface Props {
 }
 
 export default function ReelTableCard({ reel }: Props) {
-  const getThumbnailUrl = (videoUrl: string) => {
-    if (videoUrl.includes("cloudinary.com")) {
+  const getThumbnailUrl = (videoUrl?: string) => {
+    if (videoUrl && videoUrl.includes("cloudinary.com")) {
       return videoUrl
         .replace("/video/upload/", "/video/upload/so_0/")
         .replace(/\.[^/.]+$/, ".jpg");
@@ -23,15 +23,15 @@ export default function ReelTableCard({ reel }: Props) {
           className="object-cover w-full h-full rounded-md"
           fill
           sizes="64px"
-          src={getThumbnailUrl(reel.video_url)}
-          alt={reel.title}
+          src={getThumbnailUrl(reel?.video_url)}
+          alt={reel?.title || "Reel"}
           unoptimized
         />
       </div>
 
       <div className="flex flex-col max-w-[300px]">
-        <p className="text-sm font-medium text-grey9 truncate">{reel.title}</p>
-        <p className="text-xs text-grey6 line-clamp-2 mt-0.5">{reel.description || "No description"}</p>
+        <p className="text-sm font-medium text-grey9 truncate">{reel?.title || "No Title"}</p>
+        <p className="text-xs text-grey6 line-clamp-2 mt-0.5">{reel?.description || "No description"}</p>
       </div>
     </div>
   );

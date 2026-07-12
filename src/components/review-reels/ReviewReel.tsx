@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import TextInput from "@components/input/TextInput";
-import { cn } from "@/utils";
+import { cn, getTimeFromNow } from "@/utils";
 import Button from "@atom/Button";
 import { Reel, ReelUser, activateReelApi, cancelReelApi } from "@/api/reels";
 import { deleteReelApi } from "@/api/reels.client";
@@ -23,9 +23,10 @@ interface Props {
   meta: FetchMeta;
   page: string;
   urlSearch: string;
+  hideActions?: boolean;
 }
 
-export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
+export const ReviewReel = ({ reels, meta, page, urlSearch, hideActions = false }: Props) => {
   const [loading, setLoading] = useState(false);
   const [modalButtonLoading, setModalButtonLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -94,46 +95,73 @@ export const ReviewReel = ({ reels, meta, page, urlSearch }: Props) => {
     setShowRejectModal(true);
   };
 
-  const tableData = reels.map((reel) => ({
-    reelSummary: <ReelTableCard reel={reel} />,
-    seller: <UserTableCard user={reel.user as any} />,
-    reels: (
-      <button
-        onClick={() => setPreviewReel(reel)}
-        className="cursor-pointer text-primary font-medium hover:underline text-sm"
-      >
-        see reel
-      </button>
-    ),
-    actions: (
-      <TableActions
-        buttons={[
-          {
-            format: "primary",
-            label: "Approve",
-            onClick: () => {
-              handleApproveReel(reel);
+  const tab = searchParams.get("tab") || "ACTIVE";
+
+  const tableData = reels.map((reel) => {
+    const row: any = {
+      reel: <ReelTableCard reel={reel} />,
+      uploadedBy: <UserTableCard user={reel.user as any} />,
+      dateUploaded: (
+        <p className="text-sm font-medium text-grey7 whitespace-nowrap">
+          {getTimeFromNow(reel.created_at)}
+        </p>
+      ),
+      status: (
+        <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap">
+          {reel.status || "INACTIVE"}
+        </span>
+      ),
+      preview: (
+        <button
+          onClick={() => setPreviewReel(reel)}
+          className="cursor-pointer text-primary font-medium hover:underline text-sm whitespace-nowrap"
+        >
+          see reel
+        </button>
+      ),
+    };
+
+    if (tab === "CANCELLED") {
+      row.rejectionReason = (
+        <p className="text-sm text-red-600 max-w-[250px] break-words bg-red-50 border border-red-100 rounded px-2.5 py-1 italic font-normal">
+          {reel.rejection_reason || "No reason specified"}
+        </p>
+      );
+    }
+
+    if (!hideActions) {
+      row.actions = (
+        <TableActions
+          buttons={[
+            {
+              format: "primary",
+              label: "Approve",
+              onClick: () => {
+                handleApproveReel(reel);
+              },
             },
-          },
-          {
-            format: "secondary",
-            label: "Reject",
-            onClick: () => {
-              handleRejectReel(reel);
+            {
+              format: "secondary",
+              label: "Reject",
+              onClick: () => {
+                handleRejectReel(reel);
+              },
             },
-          },
-          {
-            format: "danger",
-            label: "Delete",
-            onClick: () => {
-              handleDeleteReel(reel);
+            {
+              format: "danger",
+              label: "Delete",
+              onClick: () => {
+                handleDeleteReel(reel);
+              },
             },
-          },
-        ]}
-      />
-    ),
-    rowData: reel,
-  }));
+          ]}
+        />
+      );
+    }
+
+    row.rowData = reel;
+    return row;
+  });
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

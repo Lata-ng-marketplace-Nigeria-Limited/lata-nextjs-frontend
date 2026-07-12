@@ -73,6 +73,8 @@ export const getInActiveReelsApi = async (queries?: {
   page?: string;
   limit?: string;
   search?: string;
+  all?: string;
+  status?: string;
 }): Promise<{
   meta: any;
   data: (Reel & { user: ReelUser })[];
@@ -82,6 +84,8 @@ export const getInActiveReelsApi = async (queries?: {
     if (queries?.page) params.append("page", queries.page);
     if (queries?.limit) params.append("limit", queries.limit);
     if (queries?.search) params.append("search", queries.search);
+    if (queries?.all) params.append("all", queries.all);
+    if (queries?.status) params.append("status", queries.status);
 
     const url = `/admin/reels?${params.toString()}`;
     const session = await auth();
@@ -110,6 +114,41 @@ export const getInActiveReelsApi = async (queries?: {
       throw error;
     }
     console.error("Error in getInActiveReelsApi:", error);
+    return null;
+  }
+};
+
+export interface ReelsStats {
+  total: number;
+  active: number;
+  pending: number;
+  rejected: number;
+}
+
+export const getReelsStatsApi = async (): Promise<ReelsStats | null> => {
+  try {
+    const session = await auth();
+    if (!session || !session.token) {
+      return null;
+    }
+
+    const res = await fetch(getApiUrl("/admin/reels/stats"), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      next: {
+        revalidate: 0,
+      },
+    });
+
+    if (!res.ok) {
+      return null;
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("Error in getReelsStatsApi:", error);
     return null;
   }
 };
