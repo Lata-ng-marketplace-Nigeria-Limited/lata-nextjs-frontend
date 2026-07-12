@@ -7,6 +7,7 @@ import { ISubscribedUser, User } from "@/interface/user";
 import { getApiUrl, getMonthInGMTPlus1 } from "@/utils";
 import { fetchData } from "./_helper";
 import { BlockedUserDetails } from "@/interface/blockedAccounts";
+import { auth } from "@/auth";
 
 export interface IAdminAnalytics {
   success: boolean;
@@ -368,5 +369,57 @@ export const sendBroadcastEmailApi = async (
     }
   } catch (error: any) {
     throw error?.response || error;
+  }
+};
+
+export interface AdminLoan {
+  id: string;
+  userId: string;
+  amount: number;
+  purpose: string;
+  duration: number;
+  monthlyIncome: number;
+  employmentStatus: string;
+  bvn?: string | null;
+  additionalInfo?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user?: User | null;
+}
+
+export const getLoansAdminApi = async (queries?: {
+  page?: string;
+  limit?: string;
+  search?: string;
+}): Promise<{
+  data: AdminLoan[];
+  meta: FetchMeta;
+} | null> => {
+  try {
+    const params = new URLSearchParams();
+    if (queries?.page) params.append("page", queries.page);
+    if (queries?.limit) params.append("limit", queries.limit);
+    if (queries?.search) params.append("search", queries.search);
+
+    const session = await auth();
+    if (!session || !session.token) {
+      return null;
+    }
+
+    const res = await fetch(getApiUrl(`/admin/loans?${params.toString()}`), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      return null;
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("Error in getLoansAdminApi:", error);
+    return null;
   }
 };
