@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { GroupedReels, Reel, ReelUser } from "@/api/reels";
-import { Volume2, VolumeX, ChevronUp, ChevronDown, Share2, Loader } from "lucide-react";
+import { Volume2, VolumeX, ChevronUp, ChevronDown, Share2, Loader, Play, Pause } from "lucide-react";
 import { cn } from "@/utils";
 import Button from "@atom/Button";
 import Link from "next/link";
@@ -23,11 +23,52 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [isDescExpanded, setIsDescExpanded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const { toast } = useToast();
+
+  const handlePlayPause = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const currentVideo = videoRefs.current[activeIndex];
+    if (!currentVideo) return;
+    
+    if (currentVideo.paused) {
+      currentVideo.play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.log("Play failed:", err));
+    } else {
+      currentVideo.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    const index = videoRefs.current.indexOf(video);
+    if (index === activeIndex) {
+      setCurrentTime(video.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    const index = videoRefs.current.indexOf(video);
+    if (index === activeIndex) {
+      setDuration(video.duration);
+    }
+  };
+
+  const formatTime = (secs: number) => {
+    if (isNaN(secs)) return "0:00";
+    const minutes = Math.floor(secs / 60);
+    const seconds = Math.floor(secs % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
 
   // 1. Flatten all reels from all sellers to build the playback queue
   useEffect(() => {
@@ -105,6 +146,7 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
             title: "Link Copied!",
             description: "Reel link has been copied to your clipboard.",
             variant: "success",
+            className: "mt-16 sm:mt-0",
           });
         })
         .catch((err) => {
@@ -113,6 +155,7 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
             title: "Copy Failed",
             description: "Please copy the URL from your address bar.",
             variant: "destructive",
+            className: "mt-16 sm:mt-0",
           });
         });
     } else {
@@ -120,6 +163,7 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
         title: "Copy Link",
         description: `Copy this link: ${shareUrl}`,
         variant: "info",
+        className: "mt-16 sm:mt-0",
       });
     }
   };
@@ -133,9 +177,12 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
         video.currentTime = 0;
         const playPromise = video.play();
         if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.log("Playback prevented:", error);
-          });
+          playPromise
+            .then(() => setIsPlaying(true))
+            .catch((error) => {
+              console.log("Playback prevented:", error);
+              setIsPlaying(false);
+            });
         }
       } else {
         video.pause();
@@ -256,7 +303,8 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
           return (
             <div
               key={reel.id}
-              className="w-full h-full flex-shrink-0 snap-start snap-always relative flex items-center justify-center bg-black"
+              onClick={handlePlayPause}
+              className="w-full h-full flex-shrink-0 snap-start snap-always relative flex items-center justify-center bg-black cursor-pointer"
             >
               {/* Video Player */}
               {isVisible ? (
@@ -271,6 +319,8 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
                   autoPlay={idx === activeIndex}
                   muted={isMuted}
                   preload={idx === activeIndex ? "auto" : idx === activeIndex + 1 ? "metadata" : "none"}
+                  onTimeUpdate={handleTimeUpdate}
+                  onLoadedMetadata={handleLoadedMetadata}
                 />
               ) : (
                 /* Poster fallback image for non-loaded videos */
@@ -284,6 +334,41 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
                   />
                   <div className="absolute animate-pulse text-white/40 flex flex-col items-center gap-2">
                     <Loader className="w-6 h-6 animate-spin" />
+                  </div>
+                </div>
+              )}
+
+              {/* Play Icon overlay */}
+              {!isPlaying && activeIndex === idx && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/10 z-20 pointer-events-none">
+                  <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center text-white backdrop-blur-sm">
+                    <Play className="w-6 h-6 fill-current translate-x-0.5" />
+                  </div>
+                </div>
+              )}
+
+              {/* Video Progress Bar */}
+              {activeIndex === idx && duration > 0 && (
+                <div 
+                  className="absolute bottom-0 inset-x-0 h-1 bg-white/20 cursor-pointer z-20 group hover:h-2 transition-all"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const width = rect.width;
+                    const newTime = (clickX / width) * duration;
+                    const activeVideo = videoRefs.current[activeIndex];
+                    if (activeVideo) {
+                      activeVideo.currentTime = newTime;
+                      setCurrentTime(newTime);
+                    }
+                  }}
+                >
+                  <div 
+                    className="h-full bg-primary transition-all duration-75 relative"
+                    style={{ width: `${(currentTime / duration) * 100}%` }}
+                  >
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </div>
               )}
@@ -307,7 +392,14 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xs font-bold">{reel.user.name}</span>
-                  <span className="text-[10px] text-white/70">Seller</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-white/70">Seller</span>
+                    {activeIndex === idx && duration > 0 && (
+                      <span className="text-[10px] text-white/60 bg-white/10 px-1 rounded font-mono">
+                        {formatTime(currentTime)} / {formatTime(duration)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </Link>
 
