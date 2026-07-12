@@ -5,6 +5,7 @@ import Image from "next/image";
 import { GroupedReels, Reel } from "@/api/reels";
 import { ReelViewerModal } from "./ReelViewerModal";
 import { Play } from "lucide-react";
+import { getThumbnailUrl } from "@/utils";
 
 interface Props {
   reelsGrouped: GroupedReels[];
@@ -19,16 +20,6 @@ export const ReelsRow = ({ reelsGrouped }: Props) => {
   if (activeGroups.length === 0) {
     return null;
   }
-
-  // Cloudinary helper to get first frame poster image
-  const getThumbnailUrl = (videoUrl: string) => {
-    if (videoUrl.includes("cloudinary.com")) {
-      return videoUrl
-        .replace("/video/upload/", "/video/upload/so_0/")
-        .replace(/\.[^/.]+$/, ".jpg");
-    }
-    return "/images/video-placeholder.jpg"; // Fallback image if not Cloudinary
-  };
 
   return (
     <div className="w-full mt-4 mb-6">

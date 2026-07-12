@@ -3,11 +3,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { GroupedReels, Reel, ReelUser } from "@/api/reels";
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Share2 } from "lucide-react";
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Share2, Loader } from "lucide-react";
 import { cn } from "@/utils";
 import Button from "@atom/Button";
 import Link from "next/link";
 import { useToast } from "@components/ui/use-toast";
+import { getThumbnailUrl, getOptimizedVideoUrl } from "@/utils";
 
 interface Props {
   isOpen: boolean;
@@ -243,23 +244,45 @@ export const ReelViewerModal = ({
           onScroll={handleScroll}
           className="w-full h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth scrollbar-none"
         >
-          {reelQueue.map((reel, idx) => (
-            <div
-              key={reel.id}
-              className="w-full h-full flex-shrink-0 snap-start snap-always relative flex items-center justify-center bg-black"
-            >
-              {/* Video Player */}
-              <video
-                ref={(el) => {
-                  videoRefs.current[idx] = el;
-                }}
-                src={reel.video_url}
-                className="w-full h-full object-contain"
-                loop
-                playsInline
-                autoPlay={idx === 0}
-                muted={isMuted}
-              />
+          {reelQueue.map((reel, idx) => {
+            const isVisible = idx >= activeIndex - 1 && idx <= activeIndex + 1;
+            const thumbnail = getThumbnailUrl(reel.video_url);
+            const optimizedVideoUrl = getOptimizedVideoUrl(reel.video_url);
+
+            return (
+              <div
+                key={reel.id}
+                className="w-full h-full flex-shrink-0 snap-start snap-always relative flex items-center justify-center bg-black"
+              >
+                {/* Video Player */}
+                {isVisible ? (
+                  <video
+                    ref={(el) => {
+                      videoRefs.current[idx] = el;
+                    }}
+                    src={optimizedVideoUrl}
+                    className="w-full h-full object-contain"
+                    loop
+                    playsInline
+                    autoPlay={idx === activeIndex}
+                    muted={isMuted}
+                    preload={idx === activeIndex ? "auto" : idx === activeIndex + 1 ? "metadata" : "none"}
+                  />
+                ) : (
+                  /* Poster fallback image for non-loaded videos */
+                  <div className="absolute inset-0 flex items-center justify-center bg-black">
+                    <Image
+                      src={thumbnail}
+                      alt={reel.title}
+                      fill
+                      className="object-cover opacity-60 filter blur-sm"
+                      unoptimized
+                    />
+                    <div className="absolute animate-pulse text-white/40 flex flex-col items-center gap-2">
+                      <Loader className="w-6 h-6 animate-spin" />
+                    </div>
+                  </div>
+                )}
 
               {/* Details Overlay (scoped to each reel video panel) */}
               <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/45 to-transparent flex flex-col text-white z-10 select-none">
@@ -335,9 +358,10 @@ export const ReelViewerModal = ({
                     "{reel.rejection_reason || (reel as any).rejectionReason}"
                   </div>
                 )}
-              </div>
             </div>
-          ))}
+          </div>
+        );
+      })}
         </div>
 
         {/* Navigation Overlay Arrows (Desktop only, Fixed on container) */}
