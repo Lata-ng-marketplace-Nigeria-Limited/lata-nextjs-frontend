@@ -210,8 +210,28 @@ export const ReviewReel = ({ reels, meta, page, urlSearch, hideActions = false }
         />
       ) : (
         <EmptyTable
-          title="No Recent Reels"
-          description="All newly uploaded reels yet to be reviewed will appear here"
+          title={
+            tab === "ALL"
+              ? "No Reels Uploaded"
+              : tab === "ACTIVE"
+              ? "No Active Reels"
+              : tab === "INACTIVE"
+              ? "No Pending Reels"
+              : tab === "CANCELLED"
+              ? "No Rejected Reels"
+              : "No Recent Reels"
+          }
+          description={
+            tab === "ALL"
+              ? "All uploaded reels from sellers will appear here."
+              : tab === "ACTIVE"
+              ? "All approved and visible reels will appear here."
+              : tab === "INACTIVE"
+              ? "All reels awaiting admin review will appear here."
+              : tab === "CANCELLED"
+              ? "All rejected or cancelled reels will appear here."
+              : "All newly uploaded reels yet to be reviewed will appear here."
+          }
         />
       )}
 

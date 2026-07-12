@@ -228,12 +228,25 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
         </div>
       )}
 
-      {/* Scrollable Container with native CSS scroll snapping */}
-      <div
-        ref={containerRef}
-        onScroll={handleScroll}
-        className="w-full h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth scrollbar-none"
-      >
+      {reelQueue.length === 0 ? (
+        <div className="w-full h-full flex flex-col items-center justify-center text-white p-6 text-center gap-4 bg-black">
+          <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-white/40">
+            <VolumeX className="w-8 h-8" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold">No Reels Available</h2>
+            <p className="text-sm text-white/60 max-w-[300px] mt-1">
+              Check back later to watch exciting product videos uploaded by sellers.
+            </p>
+          </div>
+        </div>
+      ) : (
+        /* Scrollable Container with native CSS scroll snapping */
+        <div
+          ref={containerRef}
+          onScroll={handleScroll}
+          className="w-full h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth scrollbar-none"
+        >
         {reelQueue.map((reel, idx) => (
           <div
             key={reel.id}
@@ -327,6 +340,7 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
           </div>
         ))}
       </div>
+      )}
 
       {/* Navigation Overlay Arrows (Desktop only, Fixed on container) */}
       <div className="hidden md:flex flex-col gap-3 absolute right-4 top-1/2 -translate-y-1/2 z-[1010]">
