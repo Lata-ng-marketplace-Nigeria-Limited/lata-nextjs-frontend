@@ -15,7 +15,14 @@ export const ReelsRow = ({ reelsGrouped }: Props) => {
   const [selectedReel, setSelectedReel] = useState<Reel | null>(null);
   const [selectedSellerId, setSelectedSellerId] = useState<string | null>(null);
 
-  const activeGroups = reelsGrouped.filter((group) => group.reels && group.reels.length > 0);
+  const activeGroups = reelsGrouped
+    .filter((group) => group.reels && group.reels.length > 0)
+    .map((group) => ({
+      ...group,
+      reels: [...group.reels].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      ),
+    }));
 
   if (activeGroups.length === 0) {
     return null;
@@ -80,7 +87,7 @@ export const ReelsRow = ({ reelsGrouped }: Props) => {
           }}
           initialReelId={selectedReel.id}
           initialSellerId={selectedSellerId}
-          reelsGrouped={reelsGrouped}
+          reelsGrouped={activeGroups}
         />
       )}
     </div>
