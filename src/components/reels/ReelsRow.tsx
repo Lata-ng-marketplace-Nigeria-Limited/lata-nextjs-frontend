@@ -22,7 +22,12 @@ export const ReelsRow = ({ reelsGrouped }: Props) => {
       reels: [...group.reels].sort(
         (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       ),
-    }));
+    }))
+    .sort((groupA, groupB) => {
+      const newestA = new Date(groupA.reels[0].created_at).getTime();
+      const newestB = new Date(groupB.reels[0].created_at).getTime();
+      return newestB - newestA;
+    });
 
   if (activeGroups.length === 0) {
     return null;
