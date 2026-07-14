@@ -170,11 +170,13 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
 
   // Handle active video playing and pausing
   useEffect(() => {
+    let activeVideo: HTMLVideoElement | null = null;
     videoRefs.current.forEach((video, index) => {
       if (!video) return;
       if (index === activeIndex) {
         video.muted = isMuted;
         video.currentTime = 0;
+        activeVideo = video;
         const playPromise = video.play();
         if (playPromise !== undefined) {
           playPromise
@@ -188,6 +190,15 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
         video.pause();
       }
     });
+
+    if (activeVideo) {
+      setCurrentTime(0);
+      setDuration((activeVideo as HTMLVideoElement).duration || 0);
+    } else {
+      setCurrentTime(0);
+      setDuration(0);
+    }
+
     setIsDescExpanded(false); // Reset description expansion on reel change
   }, [activeIndex, isMuted, reelQueue]);
 
