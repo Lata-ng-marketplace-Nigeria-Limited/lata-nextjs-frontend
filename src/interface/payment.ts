@@ -74,6 +74,7 @@ export interface Transaction {
   verifyNarration?: string;
   meta?: string | null;
   plan?: Plan;
+  user?: User;
   createdAt: string;
   updatedAt: string;
 }

@@ -155,3 +155,44 @@ export const findAllTransactionsApi = async ({
     throw error.response || error;
   }
 };
+
+export const findAdminTransactionsApi = async ({
+  page,
+  limit,
+  type,
+  q,
+}: {
+  page: number;
+  limit: number;
+  type?: string;
+  q?: string;
+}): Promise<{
+  message: string;
+  transactions: {
+    meta: FetchMeta;
+    data: Transaction[];
+  };
+}> => {
+  try {
+    const session = await auth();
+    const params = new URLSearchParams();
+    params.append("page", String(page || 1));
+    params.append("limit", String(limit || 10));
+    params.append("isAdmin", "true");
+    if (type) {
+      params.append("type", type);
+    }
+    if (q) {
+      params.append("query", q);
+    }
+    const res = await fetch(getApiUrl(`/transactions?${params.toString()}`), {
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+    });
+    if (!res.ok) throw await res.json();
+    return await res.json();
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};

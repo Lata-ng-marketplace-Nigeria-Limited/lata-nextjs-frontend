@@ -66,20 +66,25 @@ export default async function AdminDashboardWrapper(props: Props) {
             <AnalyticsSideCard
               title="Monthly Sales"
               titleClassName="text-success"
-              isMoney
+              isMoney={true}
               clicksCount={
-                formatNumber(Number(response?.sales?.monthlySales)) || 0
+                Number(response?.sales?.monthlySales || 0).toLocaleString()
               }
               description={response?.sales?.month}
+              route="/revenue"
+              isClickable={true}
             />
 
             <AnalyticsSideCard
               title="Total Sales"
               titleClassName="text-grey10"
+              isMoney={true}
               clicksCount={
-                "₦" + formatNumber(Number(response?.sales?.totalSales)) || 0
+                Number(response?.sales?.totalSales || 0).toLocaleString()
               }
               description="All time sales"
+              route="/revenue"
+              isClickable={true}
             />
           </AnalyticsSideCardsHOC>
         </AnalyticsChartAreaHOC>
