@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
 import { useToast } from "@components/ui/use-toast";
 import { getThumbnailUrl, getOptimizedVideoUrl } from "@/utils";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 interface Props {
   reelsGrouped: GroupedReels[];
@@ -180,7 +181,14 @@ export const ReelsPagePlayer = ({ reelsGrouped }: Props) => {
         const playPromise = video.play();
         if (playPromise !== undefined) {
           playPromise
-            .then(() => setIsPlaying(true))
+            .then(() => {
+              setIsPlaying(true);
+              const activeReel = reelQueue[activeIndex];
+              if (activeReel) {
+                generateSellerAnalyticsApi("REEL", undefined, activeReel.sellerId, {}, activeReel.id)
+                  .catch((e) => console.error("Error logging reel view:", e));
+              }
+            })
             .catch((error) => {
               console.log("Playback prevented:", error);
               setIsPlaying(false);

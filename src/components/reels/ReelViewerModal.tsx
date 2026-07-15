@@ -9,6 +9,7 @@ import Button from "@atom/Button";
 import Link from "next/link";
 import { useToast } from "@components/ui/use-toast";
 import { getThumbnailUrl, getOptimizedVideoUrl } from "@/utils";
+import { generateSellerAnalyticsApi } from "@/api/view";
 
 interface Props {
   isOpen: boolean;
@@ -184,7 +185,14 @@ export const ReelViewerModal = ({
         const playPromise = video.play();
         if (playPromise !== undefined) {
           playPromise
-            .then(() => setIsPlaying(true))
+            .then(() => {
+              setIsPlaying(true);
+              const activeReel = reelQueue[activeIndex];
+              if (activeReel) {
+                generateSellerAnalyticsApi("REEL", undefined, activeReel.sellerId, {}, activeReel.id)
+                  .catch((e) => console.error("Error logging reel view:", e));
+              }
+            })
             .catch((error) => {
               console.log("Playback prevented:", error);
               setIsPlaying(false);

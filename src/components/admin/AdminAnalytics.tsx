@@ -28,6 +28,12 @@ const AdminAnalyticsWrapper = (props: Props) => {
   const totalPostsCount = formatNumber(
     Number(props?.analyticsCount?.totalPosts),
   );
+  const totalReelsCount = formatNumber(
+    Number(props?.analyticsCount?.totalActiveReels),
+  );
+  const totalReelsViewsCount = formatNumber(
+    Number(props?.analyticsCount?.totalReelsViews),
+  );
 
   return (
     <AnalyticsTopCardsHOC>
@@ -59,6 +65,18 @@ const AdminAnalyticsWrapper = (props: Props) => {
         isClickable
         route={ADMIN_ALL_POSTS}
         description="The total number of approved posts"
+      />
+      <AnalyticsTopCards
+        title="Active Reels"
+        number={totalReelsCount}
+        isClickable
+        route="/shop?tab=reels"
+        description="The total number of active approved reels"
+      />
+      <AnalyticsTopCards
+        title="Reels Views"
+        number={totalReelsViewsCount}
+        description="The total views across all reels"
       />
     </AnalyticsTopCardsHOC>
   );

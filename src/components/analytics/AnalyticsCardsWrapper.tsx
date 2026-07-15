@@ -21,6 +21,8 @@ const AnalyticsCardsWrapper = async (props: Props) => {
   const productClicks = formatNumber(response?.productClicks);
   const phoneClicks = formatNumber(response?.phoneClicks);
   const messageClicks = formatNumber(response?.messageClicks);
+  const reelsViews = formatNumber(response?.totalReelsViews);
+  const totalReels = formatNumber(response?.totalReels);
 
   return (
     <div>
@@ -45,6 +47,16 @@ const AnalyticsCardsWrapper = async (props: Props) => {
           title="Total message clicks"
           number={messageClicks}
           description="Total message clicks"
+        />
+        <AnalyticsTopCards
+          title="Reels Views"
+          number={reelsViews}
+          description="Total views across all reels"
+        />
+        <AnalyticsTopCards
+          title="Total Reels"
+          number={totalReels}
+          description="Total number of uploaded reels"
         />
       </AnalyticsTopCardsHOC>
     </div>

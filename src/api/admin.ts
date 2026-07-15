@@ -16,6 +16,9 @@ export interface IAdminAnalytics {
     paidSellersCount: number;
     totalPosts: number;
     staff: number;
+    totalActiveReels?: number;
+    totalPendingReels?: number;
+    totalReelsViews?: number;
   };
   recentPosts: {
     data: Product[];

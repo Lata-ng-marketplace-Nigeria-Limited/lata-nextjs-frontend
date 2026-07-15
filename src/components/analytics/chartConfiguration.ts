@@ -28,6 +28,7 @@ export const chartConfig = (
   productViews: number[],
   phoneClicks: number[],
   messageClicks: number[],
+  reelsViews: number[],
   months: string[]
 ) => {
   const data = {
@@ -61,6 +62,14 @@ export const chartConfig = (
         label: "Message clicks",
         data: messageClicks,
         backgroundColor: "#8F59FC",
+        borderColor: "#fff",
+        maxBarThickness: 40,
+        minBarThickness: 30,
+      },
+      {
+        label: "Reels views",
+        data: reelsViews,
+        backgroundColor: "#D946EF",
         borderColor: "#fff",
         maxBarThickness: 40,
         minBarThickness: 30,

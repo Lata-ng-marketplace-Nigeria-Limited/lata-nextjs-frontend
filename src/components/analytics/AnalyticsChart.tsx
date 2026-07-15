@@ -42,6 +42,10 @@ const AnalyticsChart = ({ chartsData }: Props) => {
     (message) => message?.message,
   );
 
+  const reelsViews = chartsData?.reelsViewsForAllMonths?.map(
+    (reel) => reel?.reel || 0,
+  );
+
   const months = chartsData?.productClicksForAllMonths?.map((product) =>
     product?.month.split(" ")[0]?.slice(0, 3),
   );
@@ -51,6 +55,7 @@ const AnalyticsChart = ({ chartsData }: Props) => {
     productViews,
     phoneClicks,
     messageClicks,
+    reelsViews,
     months,
   );
 

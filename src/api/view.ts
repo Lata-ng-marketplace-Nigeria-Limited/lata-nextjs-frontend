@@ -10,15 +10,17 @@ import { SwitchedRoleQueries } from "@/interface/switchedRole";
 
 export async function generateSellerAnalyticsApi(
   type: ViewTypes,
-  productId: string,
+  productId: string | undefined,
   userId: string,
-  queries: SwitchedRoleQueries,
+  queries?: Partial<SwitchedRoleQueries>,
+  reelId?: string,
 ) {
   const params = appendQueryParams(queries || {});
   try {
     const viewDetails: CreateViewTypes = {
       type,
       productId,
+      reelId,
       userId,
     };
     const res = await $http.post(`views?${params}`, viewDetails);
