@@ -20,7 +20,7 @@ const ProductInsights = ({ selectedMonth, title, titleClass }: Props) => {
   const handleMonthChange = (month: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("month", month);
-    router.replace(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
