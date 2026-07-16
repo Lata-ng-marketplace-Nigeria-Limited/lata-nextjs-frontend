@@ -70,7 +70,7 @@ const AdminAnalyticsWrapper = (props: Props) => {
         title="Active Reels"
         number={totalReelsCount}
         isClickable
-        route="/shop?tab=reels"
+        route="/reels?tab=ACTIVE"
         description="The total number of active approved reels"
       />
       <AnalyticsTopCards
