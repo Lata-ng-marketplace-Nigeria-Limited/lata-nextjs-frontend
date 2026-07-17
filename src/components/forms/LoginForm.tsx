@@ -8,9 +8,10 @@ import AuthParagraph from "@atom/AuthParagraph";
 import React, { SetStateAction, useEffect, useState } from "react";
 import Alert from "@atom/Alert";
 import { loginApi, resendOtpApi } from "@/api/auth";
-import { useFastLocalStore } from "@/store/states/localStore";
+import { useFastLocalStore, useLocalStore } from "@/store/states/localStore";
 import { useUser } from "@/hooks/useUser";
 import ResendEmail from "@molecule/ResendEmail";
+import posthog from "posthog-js";
 
 export const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -59,6 +60,16 @@ export const LoginForm = () => {
           setLoading(false);
           return;
         }
+
+        const freshUser = useLocalStore.getState().user;
+        if (freshUser) {
+          posthog.identify(freshUser.id, {
+            email: freshUser.email,
+            name: freshUser.name,
+            role: freshUser.role,
+          });
+        }
+        posthog.capture("user_logged_in", { role: freshUser?.role || "" });
       }
     } catch (error) {
       setLoading(false);

@@ -8,6 +8,7 @@ import { cn } from "@/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import posthog from "posthog-js";
 
 interface Props {
   recentSearches?: string[];
@@ -36,6 +37,9 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
     } else {
       params.delete("loc");
     }
+    posthog.capture("product_search_performed", {
+      has_location_filter: location !== "any",
+    });
     const url = `/search?${params.toString()}`;
     if (pathname.includes("/search")) {
       replace(url);

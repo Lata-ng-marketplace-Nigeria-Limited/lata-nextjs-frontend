@@ -33,6 +33,7 @@ import {
 } from "@/api/auth.client";
 import { useRoleSwitchStore } from "@/store/states/localStore";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import posthog from "posthog-js";
 
 interface Props {
   image?: string;
@@ -167,7 +168,7 @@ export const SettingsForm = ({ image }: Props) => {
     //     const phoneNumberSetting = user?.settings.find((set) => {
     //       return set.columnName === USER_VERIFIED_PHONE;
     //     });
-  
+
     //     if (
     //       !phoneNumberSetting ||
     //       (phoneNumberSetting &&
@@ -186,6 +187,7 @@ export const SettingsForm = ({ image }: Props) => {
     try {
       const { userData } = await updateUserProfileApi(payload);
       updateUser(userData);
+      posthog.capture("profile_updated", { role });
       toast({
         title: "Success!",
         description: "Profile updated successfully",
