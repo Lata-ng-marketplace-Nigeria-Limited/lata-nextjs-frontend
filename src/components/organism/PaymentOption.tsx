@@ -24,6 +24,7 @@ import { TRANSACTION_ROUTE } from "@/constants/routes";
 import { User } from "@/interface/user";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 import { useRoleSwitchStore } from "@/store/states/localStore";
+import posthog from "posthog-js";
 
 interface Props {
   setShowModal?: React.Dispatch<SetStateAction<boolean>>;
@@ -101,6 +102,10 @@ export default function PaymentOption({
           queries,
         );
         await updateUser(userData);
+        posthog.capture("subscription_payment_completed", {
+          plan_name: plan?.name || "",
+          plan_duration: plan?.duration,
+        });
         handlePaymentSuccess(transaction);
         setShowModal?.(false);
       } catch (error) {
@@ -113,18 +118,21 @@ export default function PaymentOption({
         setLoading(false);
       }
     },
-    [handlePaymentSuccess, setShowModal, toast, updateUser],
+    [handlePaymentSuccess, plan, setShowModal, toast, updateUser],
   );
 
   const onCancel = useCallback(() => {
     setPaymentResponse(undefined);
     setLoading(false);
+    posthog.capture("subscription_payment_cancelled", {
+      plan_name: plan?.name || "",
+    });
     toast({
       variant: "warning",
       title: "Payment Cancelled",
       description: "You can try again",
     });
-  }, [toast]);
+  }, [plan, toast]);
 
   const onBankTransferConfirmationPending = useCallback(() => {
     toast({
@@ -138,11 +146,20 @@ export default function PaymentOption({
     async (isTransfer?: boolean) => {
       if (!plan) return;
       setLoading(true);
-      const { credentials } = await getSubscriptionPaymentCredentialsApi({
-        type: isTransfer ? "transfer" : "paystack",
-        planId: plan.id,
-        useWallet,
-      }, queries);
+      posthog.capture("subscription_payment_initiated", {
+        plan_name: plan.name,
+        plan_duration: plan.duration,
+        payment_type: isTransfer ? "transfer" : "paystack",
+        use_wallet: useWallet,
+      });
+      const { credentials } = await getSubscriptionPaymentCredentialsApi(
+        {
+          type: isTransfer ? "transfer" : "paystack",
+          planId: plan.id,
+          useWallet,
+        },
+        queries,
+      );
       setLoading(false);
       setPaymentResponse(credentials);
 
@@ -186,6 +203,7 @@ export default function PaymentOption({
       setLoading(false);
       setTransfer(false);
       setShowModal?.(false);
+      posthog.capture("wallet_funded", { amount: amountToPay });
       const paystackConfig = createPaystackConfig({
         onSuccess,
         credentials,

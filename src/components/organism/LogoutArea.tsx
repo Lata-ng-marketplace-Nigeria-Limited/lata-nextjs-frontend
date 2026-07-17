@@ -6,6 +6,7 @@ import { clearAllCookies, deleteCookies } from "@/utils";
 import { Toggle } from "@molecule/Toggle";
 import { LOGIN_ROUTE } from "@/constants/routes";
 import { useState } from "react";
+import posthog from "posthog-js";
 
 export const LogoutArea = () => {
   const { clear } = useUser();
@@ -15,6 +16,8 @@ export const LogoutArea = () => {
     setLoading(true);
     if (loading) return;
     try {
+      posthog.capture("user_logged_out");
+      posthog.reset();
       localStorage.clear();
       sessionStorage.clear();
       clearAllCookies();

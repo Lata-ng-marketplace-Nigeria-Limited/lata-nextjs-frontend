@@ -29,6 +29,8 @@ import { useFastLocalStore } from "@/store/states/localStore";
 import { useRegistrationFormStore } from "@/store/states/userState";
 import { signOut } from "next-auth/react";
 import { registerApi } from "@/api/auth.client";
+import posthog from "posthog-js";
+import { useLocalStore } from "@/store/states/localStore";
 
 export const SellerSignUpForm = () => {
   const [loading, setLoading] = useState(false);
@@ -161,9 +163,19 @@ export const SellerSignUpForm = () => {
       // For sellers that have completed their registration. They can login
       if (authorized && publicToken && !isUpgradingToSeller) {
         await loginUser(publicToken, isUpgradingToSeller);
+        const freshUser = useLocalStore.getState().user;
+        if (freshUser) {
+          posthog.identify(freshUser.id, {
+            email: freshUser.email,
+            name: freshUser.name,
+            role: freshUser.role,
+          });
+        }
+        posthog.capture("seller_signed_up", { is_upgrade: false });
       }
 
       if (authorized && publicToken && isUpgradingToSeller) {
+        posthog.capture("seller_signed_up", { is_upgrade: true });
         toast({
           title: "Success",
           variant: "success",

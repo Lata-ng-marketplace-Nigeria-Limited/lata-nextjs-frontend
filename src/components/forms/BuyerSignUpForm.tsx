@@ -17,6 +17,8 @@ import { getFormErrorObject } from "@/utils";
 import { useUser } from "@/hooks/useUser";
 import { useToast } from "@components/ui/use-toast";
 import { registerApi } from "@/api/auth.client";
+import posthog from "posthog-js";
+import { useLocalStore } from "@/store/states/localStore";
 
 export const BuyerSignUpForm = () => {
   const [loading, setLoading] = useState(false);
@@ -56,6 +58,17 @@ export const BuyerSignUpForm = () => {
 
       if (publicToken) {
         await loginUser(publicToken);
+        const freshUser = useLocalStore.getState().user;
+        if (freshUser) {
+          posthog.identify(freshUser.id, {
+            email: freshUser.email,
+            name: freshUser.name,
+            role: freshUser.role,
+          });
+        }
+        posthog.capture("buyer_signed_up", {
+          buyer_role: values.buyerRole || "",
+        });
       }
     } catch (error: any) {
       const errorResponse: ApiErrorResponse<z.infer<typeof buyerSignUpSchema>> =
@@ -193,7 +206,7 @@ export const BuyerSignUpForm = () => {
       />
 
       <div className={"flex flex-col items-center"}>
-        <div className={"w-full flex flex-col gap-y-2"}>
+        <div className={"flex w-full flex-col gap-y-2"}>
           <Button
             type={"submit"}
             disabled={loading}
