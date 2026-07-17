@@ -15,6 +15,7 @@ import { loanSchema } from "@/store/schemas/loanSchema";
 import { createLoanApi } from "@/api/loan.client";
 import { cn, getFormErrorObject } from "@/utils";
 import { ApiErrorResponse } from "@/interface/general";
+import posthog from "posthog-js";
 
 export const RequestLoanForm = () => {
   const [loading, setLoading] = useState(false);
@@ -52,6 +53,10 @@ export const RequestLoanForm = () => {
         additionalInfo: values.additionalInfo || undefined,
       });
 
+      posthog.capture("loan_application_submitted", {
+        duration: values.duration,
+        employment_status: values.employmentStatus,
+      });
       setShowLoanModal(true);
       setLoading(false);
     } catch (error: any) {
@@ -166,7 +171,7 @@ export const RequestLoanForm = () => {
               disabled={loading}
               wrapperClass={"w-full"}
               errorMessage={errors?.purpose?.message}
-                            inputClass={"py-[1.6rem]"}
+              inputClass={"py-[1.6rem]"}
 
               // rows={4}
             />
@@ -231,7 +236,7 @@ export const RequestLoanForm = () => {
             You are not qualified for a loan yet. Please maintain active shop
             operations, subscriptions, and transaction history to become
             eligible.
-            <span className="block mt-2 font-bold text-primary">
+            <span className="mt-2 block font-bold text-primary">
               COMING SOON!!!
             </span>
           </p>

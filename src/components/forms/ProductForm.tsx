@@ -39,6 +39,7 @@ import { useRoleSwitchStore } from "@/store/states/localStore";
 import { State } from "@/interface/location";
 import { selectedCity, selectedState } from "@/utils/location";
 import { NumericFormat } from "react-number-format";
+import posthog from "posthog-js";
 
 interface Props {
   product?: Product;
@@ -239,9 +240,18 @@ export default function ProductForm({
       let productData = product;
       if (product) {
         await updateAProductApi(product.id, payload, queries);
+        posthog.capture("product_updated", {
+          category: values.categoryId,
+          product_type: values.productType,
+        });
       } else {
         const res = await createAProductApi(payload, queries);
         productData = res.product;
+        posthog.capture("product_created", {
+          category: payload.selectedCategory || "",
+          product_type: values.productType,
+          saved_in_draft: res?.savedInDraft ?? false,
+        });
 
         if (res.msg) {
           toast({
