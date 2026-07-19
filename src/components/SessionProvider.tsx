@@ -8,6 +8,8 @@ import { useLocalStore } from "@/store/states/localStore";
 import { Chat } from "@/interface/chat";
 import { SessionData } from "@/interface/next-auth";
 import BuyerRolePromptModal from "@/components/organism/BuyerRolePromptModal";
+import { getCookies, setCookies } from "@/utils";
+
 
 type Props = {
   children?: React.ReactNode;
@@ -22,6 +24,15 @@ export const NextAuthProvider = ({ children, session }: Props) => {
     hasInitializedSocketConnection,
   } = useUserStore();
   const { setChats } = useLocalStore();
+
+  useEffect(() => {
+    if (session?.token) {
+      const currentCookie = getCookies("token");
+      if (currentCookie !== session.token) {
+        setCookies("token", session.token, { days: 30 });
+      }
+    }
+  }, [session]);
 
   useEffect(() => {
     if (!session?.token) {
