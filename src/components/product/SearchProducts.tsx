@@ -22,7 +22,7 @@ export const SearchProducts = async ({
     search,
     page,
     token,
-    ...(location && { location }),
+    ...(location && { state: location }),
     limit: "20",
   });
 

@@ -16,7 +16,8 @@ export default async function Legal({
       <Suspense>
         <GetUser />
       </Suspense>
-      <Header role={session?.role} />
+      <Header role={session?.role} noSideMenu={true} />
+
       <div
         className={cn(`
            mx-auto

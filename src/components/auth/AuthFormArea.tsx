@@ -12,7 +12,6 @@ import {
 import AuthParagraph from "@atom/AuthParagraph";
 import ALink from "@atom/ALink";
 import GoogleButton from "@components/auth/GoogleButton";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRegistrationFormStore } from "@/store/states/userState";
 import { usePathname } from "next/navigation";
 
@@ -73,13 +72,9 @@ export default function AuthFormArea(props: Props) {
         </div>
       )}
 
-      <GoogleOAuthProvider
-        clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
-      >
-        {hideGoogleButton ? null : (
-          <GoogleButton className={"py-2.5 border-grey5"} />
-        )}
-      </GoogleOAuthProvider>
+      {hideGoogleButton ? null : (
+        <GoogleButton className={"py-2.5 border-grey5"} />
+      )}
 
       <AuthParagraph>
         {shouldCompleteForm && isUpgradingToSeller

@@ -17,6 +17,8 @@ import GoogleAnalytics from "../analytics/GoogleAnalytics";
 import { IEnv } from "@/interface/general";
 import { Analytics } from "@vercel/analytics/next";
 
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
@@ -115,7 +117,11 @@ export default async function RootLayout({
             alt=""
           />
         </noscript>
-        <NextAuthProvider session={session as any}>{children}</NextAuthProvider>
+        <NextAuthProvider session={session as any}>
+          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
+            {children}
+          </GoogleOAuthProvider>
+        </NextAuthProvider>
         <Toaster />
         <SpeedInsights />
       </body>

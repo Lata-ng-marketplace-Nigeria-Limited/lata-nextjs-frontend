@@ -91,16 +91,89 @@ const Header = ({ noSideMenu, role }: Props) => {
     replace(previousUrl || LANDING_ROUTE);
   };
 
+  const renderSellButton = () => {
+    return (
+      <Button
+        type={"submit"}
+        as={"link"}
+        href={handleSearchSwitchUrl(
+          DASHBOARD_PRODUCT_CREATE_ROUTE,
+          isSwitchingRole,
+          searchQuery,
+        )}
+        format={"primary"}
+        onClick={(e) => {
+          if (role === "BUYER") {
+            e.preventDefault();
+
+            toast({
+              title: "Only sellers can sell products",
+              variant: "info",
+              action: (
+                <ToastAction
+                  altText={"Switch to seller account"}
+                  onClick={handleSwitchToSeller}
+                >
+                  Become a seller
+                </ToastAction>
+              ),
+            });
+          }
+        }}
+        className={cn(`
+          px-[8px]
+          py-[4px]
+          
+          text-xs
+          sm:px-4
+          sm:py-1.5
+          sm:text-base
+          tablet:px-6
+          tablet:py-3     
+        `)}
+      >
+        SELL
+      </Button>
+    );
+  };
+
+  const renderAuthActions = () => {
+    if (!user) {
+      return (
+        <div className="flex items-center gap-1 sm:gap-2">
+          {renderSellButton()}
+          <Button
+            as="link"
+            href="/auth/login"
+            format="secondary"
+            className="px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs md:text-sm border-grey3 hover:border-primary text-grey9 bg-white shadow-sm shrink-0 font-medium rounded-lg"
+          >
+            Login
+          </Button>
+        </div>
+      );
+    }
+
+    if (role === "ADMIN" && !isSwitchingRole) return null;
+
+    if (role === "STAFF") {
+      return (
+        <ProfileSummary
+          name={user?.name as string}
+          imgSrc={user?.avatar as string}
+        />
+      );
+    }
+
+    return renderSellButton();
+  };
 
   return (
-    <header className="shadow-header sticky top-0 z-30  h-[50px]  bg-white px-1  xs:px-2.5 sm:px-4 md:h-[60px] md:px-6">
-      <div className="flex items-center justify-between gap-x-1.5 sm:gap-x-3 w-full overflow-hidden">
-        <div
-          className={
-            "flex flex-1 min-w-0 items-center justify-between gap-x-[6px] xls:gap-x-[20px] xs:gap-x-[50px] md:gap-x-[100px] lg:gap-x-[190px] mr-2 md:mr-4"
-          }
-        >
-          <div className={"flex items-center"}>
+    <header className="shadow-header sticky top-0 z-30 h-auto md:h-[60px] bg-white px-1 xs:px-2.5 sm:px-4 md:px-6 py-2 md:py-0 flex flex-col justify-center">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-y-2 md:gap-y-0 w-full">
+        {/* Top Header Row (Logo, Hamburger, Sell button on Mobile) */}
+        <div className="flex items-center justify-between w-full md:w-auto">
+          <div className="flex items-center">
             {!noSideMenu ? <HeaderHamburgerButton /> : null}
 
             <Link href={"/"}>
@@ -112,68 +185,20 @@ const Header = ({ noSideMenu, role }: Props) => {
             </Link>
           </div>
 
+          {/* Sell Button / Profile Summary (Mobile Only) */}
+          <div className="flex md:hidden items-center shrink-0">
+            {renderAuthActions()}
+          </div>
+        </div>
+
+        {/* Search Product Form (Centered on Desktop, Full-width row below on Mobile) */}
+        <div className="w-full md:flex-1 md:max-w-[400px] lg:max-w-[600px] md:mx-4">
           <SearchProductForm recentSearches={recentSearches} />
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/*
-          <Button
-            onClick={() => setShowLoanModal(true)}
-            format="secondary"
-            className="px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs md:text-sm border-grey3 hover:border-primary text-grey9 bg-white shadow-sm shrink-0 font-medium rounded"
-          >
-            Get Loan
-          </Button>
-          */}
-
-          {role === "ADMIN" && !isSwitchingRole ? null : role === "STAFF" ? (
-            <ProfileSummary
-              name={user?.name as string}
-              imgSrc={user?.avatar as string}
-            />
-          ) : (
-            <Button
-              type={"submit"}
-              as={"link"}
-              href={handleSearchSwitchUrl(
-                DASHBOARD_PRODUCT_CREATE_ROUTE,
-                isSwitchingRole,
-                searchQuery,
-              )}
-              format={"primary"}
-              onClick={(e) => {
-                if (role === "BUYER") {
-                  e.preventDefault();
-
-                  toast({
-                    title: "Only sellers can sell products",
-                    variant: "info",
-                    action: (
-                      <ToastAction
-                        altText={"Switch to seller account"}
-                        onClick={handleSwitchToSeller}
-                      >
-                        Become a seller
-                      </ToastAction>
-                    ),
-                  });
-                }
-              }}
-              className={cn(`
-            px-[8px]
-            py-[4px]
-            
-            text-xs
-            sm:px-4
-            sm:py-1.5
-            sm:text-base
-            tablet:px-6
-            tablet:py-3     
-          `)}
-            >
-              SELL
-            </Button>
-          )}
+        {/* Sell Button / Profile Summary (Desktop Only) */}
+        <div className="hidden md:flex items-center shrink-0">
+          {renderAuthActions()}
         </div>
       </div>
       {params.get("sessionSwitched") && params.get("uid") && (
