@@ -161,11 +161,13 @@ export const findAdminTransactionsApi = async ({
   limit,
   type,
   q,
+  month,
 }: {
   page: number;
   limit: number;
   type?: string;
   q?: string;
+  month?: string;
 }): Promise<{
   message: string;
   transactions: {
@@ -184,6 +186,9 @@ export const findAdminTransactionsApi = async ({
     }
     if (q) {
       params.append("query", q);
+    }
+    if (month) {
+      params.append("month", month);
     }
     const res = await fetch(getApiUrl(`/transactions?${params.toString()}`), {
       headers: {

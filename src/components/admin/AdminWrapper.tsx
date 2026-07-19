@@ -6,7 +6,7 @@ import RecentPosts from "@/components/admin/RecentPosts";
 import { getAnalyticsClicksAndViews } from "@/api/view";
 import AnalyticsChart from "@/components/analytics/DynamicAnalyticsChart";
 import AnalyticsSideCard from "@/components/analytics/AnalyticsSideCard";
-import { formatNumber } from "@/utils";
+import { formatNumber, getMonthInGMTPlus1 } from "@/utils";
 import AnalyticsChartAreaHOC from "@components/analytics/AnalyticsChartAreaHOC";
 import AnalyticsSideCardsHOC from "@components/analytics/AnalyticsSideCardsHOC";
 import ProductInsights from "../analytics/ProductInsights";
@@ -71,7 +71,7 @@ export default async function AdminDashboardWrapper(props: Props) {
                 Number(response?.sales?.monthlySales || 0).toLocaleString()
               }
               description={response?.sales?.month}
-              route="/revenue"
+              route={`/revenue?month=${props.month || getMonthInGMTPlus1().toString()}`}
               isClickable={true}
             />
 

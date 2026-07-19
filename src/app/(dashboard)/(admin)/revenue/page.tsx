@@ -16,6 +16,7 @@ export default async function Page(props: {
     page?: string;
     type?: string;
     query?: string;
+    month?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
@@ -27,12 +28,14 @@ export default async function Page(props: {
   const page = searchParams?.page || "1";
   const type = searchParams?.type || "";
   const queryTerm = searchParams?.query || "";
+  const month = searchParams?.month || "";
 
   const response = await findAdminTransactionsApi({
     page: Number(page),
     limit: 10,
     type,
     q: queryTerm,
+    month,
   });
 
   return (
