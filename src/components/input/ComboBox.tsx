@@ -2,6 +2,7 @@ import React, { SetStateAction, useState, Fragment } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { cn } from "@/utils";
 import { SearchIcon } from "@atom/icons/Search";
+import { SpinnerIcon } from "@atom/icons/Spinner";
 import Button from "@atom/Button";
 
 interface Props {
@@ -23,6 +24,7 @@ interface Props {
   defaultValue?: string;
   pattern?: string;
   title?: string;
+  loading?: boolean;
 }
 
 export default function ComboBox(props: Props) {
@@ -50,6 +52,7 @@ export default function ComboBox(props: Props) {
         <div className="relative flex w-full items-center cursor-default overflow-hidden bg-white border border-grey3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/30 rounded-lg text-left shadow-sm focus:outline-none sm:text-sm">
           <Combobox.Input
             required={props.required}
+            disabled={props.disabled || props.loading}
             className={cn(`
               w-full 
               py-2 
@@ -94,21 +97,25 @@ export default function ComboBox(props: Props) {
               props.buttonClass,
             )}
             aria-label={"Search"}
-            disabled={props.disabled}
+            disabled={props.disabled || props.loading}
             type={"submit"}
           >
-            <SearchIcon
-              className={cn(
-                `
-              w-3
-              h-3
-              sm:w-4
-              sm:h-4
-            `,
-                props.searchIconClass,
-              )}
-              pathClass={props.searchIconPathClass}
-            />
+            {props.loading ? (
+              <SpinnerIcon className="animate-spin h-3 w-3 sm:h-4 sm:w-4 text-white" />
+            ) : (
+              <SearchIcon
+                className={cn(
+                  `
+                w-3
+                h-3
+                sm:w-4
+                sm:h-4
+              `,
+                  props.searchIconClass,
+                )}
+                pathClass={props.searchIconPathClass}
+              />
+            )}
           </Button>
         </div>
         <Transition

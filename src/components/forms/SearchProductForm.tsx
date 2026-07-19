@@ -17,6 +17,7 @@ interface Props {
 export const SearchProductForm = ({ recentSearches }: Props) => {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("any");
+  const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, push } = useRouter();
@@ -32,6 +33,7 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (query.trim().length < 3) return;
+    setLoading(true);
     const params = new URLSearchParams(searchParams);
     params.set("page", "1");
     if (query) {
@@ -56,6 +58,7 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
   };
 
   useEffect(() => {
+    setLoading(false);
     const q = searchParams.get("q")?.toString();
     const loc = searchParams.get("loc")?.toString();
 
@@ -90,6 +93,7 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
           defaultValue={searchParams.get("q")?.toString()}
           pattern=".{3,}"
           title="Please enter at least 3 characters"
+          loading={loading}
         />
 
         <SelectInput
