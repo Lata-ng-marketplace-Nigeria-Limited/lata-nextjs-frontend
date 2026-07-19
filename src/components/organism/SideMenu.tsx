@@ -56,27 +56,33 @@ const SideMenu = ({ isLoggedIn, role }: SideMenuProps) => {
           z-50 
           h-max 
           max-h-[calc(100vh-50px)]
+          max-h-[calc(100dvh-50px)]
           min-h-[calc(100vh-50px)]
+          min-h-[calc(100dvh-50px)]
           w-max
           shrink-0
           -translate-x-[100%]
-          overflow-auto
+          overflow-y-auto
           border-b
           border-r
           border-grey1
           bg-white
-          py-1.5
+          pt-1.5
+          pb-20
           opacity-0
           transition-transform
           tablet:sticky
           tablet:top-[60px]
           tablet:z-0
           
-          tablet:max-h-full
+          tablet:max-h-[calc(100vh-60px)]
+          tablet:max-h-[calc(100dvh-60px)]
           tablet:min-h-[calc(100vh-60px)]
+          tablet:min-h-[calc(100dvh-60px)]
           tablet:w-[200px]
           tablet:translate-x-0
-          tablet:py-6
+          tablet:pt-6
+          tablet:pb-28
           tablet:opacity-100
           xl:w-[230px]
         `,
