@@ -61,6 +61,28 @@ const Header = ({ noSideMenu, role }: Props) => {
     })();
   }, []);
 
+  const [showMobileSearch, setShowMobileSearch] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY <= 10) {
+        setShowMobileSearch(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setShowMobileSearch(false);
+      } else if (currentScrollY < lastScrollY) {
+        setShowMobileSearch(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   const handleSwitchToSeller = useCallback(() => {
     if (!user) return;
     setRegistrationForm({
@@ -169,10 +191,10 @@ const Header = ({ noSideMenu, role }: Props) => {
   };
 
   return (
-    <header className="shadow-header sticky top-0 z-30 h-auto md:h-[60px] bg-white px-1 xs:px-2.5 sm:px-4 md:px-6 py-2 md:py-0 flex flex-col justify-center">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-y-2 md:gap-y-0 w-full">
-        {/* Top Header Row (Logo, Hamburger, Sell button on Mobile) */}
-        <div className="flex items-center justify-between w-full md:w-auto">
+    <>
+      <header className="shadow-header sticky top-0 z-30 h-[50px] md:h-[60px] bg-white px-1 xs:px-2.5 sm:px-4 md:px-6 flex items-center">
+        <div className="flex items-center justify-between w-full">
+          {/* Top Header Row (Logo, Hamburger) */}
           <div className="flex items-center">
             {!noSideMenu ? <HeaderHamburgerButton /> : null}
 
@@ -185,21 +207,26 @@ const Header = ({ noSideMenu, role }: Props) => {
             </Link>
           </div>
 
-          {/* Sell Button / Profile Summary (Mobile Only) */}
-          <div className="flex md:hidden items-center shrink-0">
+          {/* Search Product Form (Centered on Desktop, Hidden on Mobile) */}
+          <div className="hidden md:block md:flex-1 md:max-w-[400px] lg:max-w-[600px] md:mx-4">
+            <SearchProductForm recentSearches={recentSearches} />
+          </div>
+
+          {/* Auth/Sell Actions (Desktop & Mobile) */}
+          <div className="flex items-center shrink-0">
             {renderAuthActions()}
           </div>
         </div>
+      </header>
 
-        {/* Search Product Form (Centered on Desktop, Full-width row below on Mobile) */}
-        <div className="w-full md:flex-1 md:max-w-[400px] lg:max-w-[600px] md:mx-4">
-          <SearchProductForm recentSearches={recentSearches} />
-        </div>
-
-        {/* Sell Button / Profile Summary (Desktop Only) */}
-        <div className="hidden md:flex items-center shrink-0">
-          {renderAuthActions()}
-        </div>
+      {/* Mobile Search Bar Row (Renders below header, slides up when scrolling down, reveals when scrolling up) */}
+      <div className={cn(
+        "md:hidden w-full bg-white px-2.5 py-2 shadow-sm border-b border-grey2 sticky top-[50px] z-20 transition-all duration-300 ease-in-out transform origin-top",
+        showMobileSearch 
+          ? "translate-y-0 opacity-100 visible" 
+          : "-translate-y-full opacity-0 invisible pointer-events-none"
+      )}>
+        <SearchProductForm recentSearches={recentSearches} />
       </div>
       {params.get("sessionSwitched") && params.get("uid") && (
         <div className="flex justify-center">
@@ -293,7 +320,7 @@ const Header = ({ noSideMenu, role }: Props) => {
           )}
         </div>
       </Modal>
-    </header>
+    </>
   );
 };
 
