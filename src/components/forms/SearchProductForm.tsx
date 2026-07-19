@@ -17,14 +17,23 @@ interface Props {
 export const SearchProductForm = ({ recentSearches }: Props) => {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("any");
+  const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, push } = useRouter();
   const isSmall = useMediaQuery("(max-width: 370px)");
+  const isMobile = useMediaQuery("(max-width: 640px)");
+
+  const placeholderText = isSmall
+    ? "Search..."
+    : isMobile
+    ? "Search products, categories..."
+    : "Search for products, categories, or brands...";
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (query.trim().length < 3) return;
+    setLoading(true);
     const params = new URLSearchParams(searchParams);
     params.set("page", "1");
     if (query) {
@@ -49,6 +58,7 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
   };
 
   useEffect(() => {
+    setLoading(false);
     const q = searchParams.get("q")?.toString();
     const loc = searchParams.get("loc")?.toString();
 
@@ -68,21 +78,22 @@ export const SearchProductForm = ({ recentSearches }: Props) => {
 
   return (
     <div className={"w-full"}>
-      <form className={" flex w-fit items-center gap-x-2"} onSubmit={onSubmit}>
+      <form className={" flex w-full items-center gap-x-2"} onSubmit={onSubmit}>
         <ComboBox
           options={recentSearches || []}
           value={query}
           setValue={setQuery}
           required
           wrapperClass={
-            "w-full max-w-[200px] sm:max-w-full sm:w-[300px] md:w-[350px] lg:w-[400px]"
+            "w-full flex-1 sm:max-w-full sm:w-[300px] md:w-[350px] lg:w-[400px]"
           }
-          placeholder={isSmall ? "Search..." : "Search for products here"}
+          placeholder={placeholderText}
           hideNoResult
           name={"query"}
           defaultValue={searchParams.get("q")?.toString()}
           pattern=".{3,}"
           title="Please enter at least 3 characters"
+          loading={loading}
         />
 
         <SelectInput

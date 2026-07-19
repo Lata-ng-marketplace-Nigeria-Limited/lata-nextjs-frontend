@@ -4,6 +4,7 @@ import HomeProducts from "@components/product/HomeProducts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
 import { DashboardSelectCategories } from "@molecule/DashboardSelectCategories";
 import { auth } from "@/auth";
+import GoogleOneTapWrapper from "@/components/auth/GoogleOneTapWrapper";
 import AdminDashboardWrapper from "@/components/admin/AdminWrapper";
 import StaffDashboard from "@/components/staff/StaffDashboard";
 import HeaderText from "@/components/atom/HeaderText";
@@ -79,6 +80,7 @@ export default async function Home(props: {
 
     return (
       <main className="">
+        <GoogleOneTapWrapper />
         <HeroImage
           src={
             "https://res.cloudinary.com/dg9by7oca/image/upload/v1690621836/gghgh_h3coii.webp"

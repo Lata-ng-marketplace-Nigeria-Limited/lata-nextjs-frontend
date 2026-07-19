@@ -8,7 +8,6 @@ import {
   CredentialResponse,
   TokenResponse,
   useGoogleLogin,
-  useGoogleOneTapLogin,
 } from "@react-oauth/google";
 import { useFastLocalStore, useIsUserBlocked } from "@/store/states/localStore";
 import { AuthorizeResponse } from "@/interface/user";
@@ -114,13 +113,7 @@ export default function GoogleButton(props: Props) {
     ],
   );
 
-  useGoogleOneTapLogin({
-    onSuccess: handleOnSuccess,
-    onError: () => {
-      setLoading(false);
-    },
-    disabled: disableOneTap,
-  });
+
 
   const login = useGoogleLogin({
     onSuccess: handleOnSuccess,

@@ -34,23 +34,23 @@ export default function MessageText(props: ChatMessageProps) {
       if (props.lastRef) {
         props.lastRef.current = elementRef.current;
       }
+    }
 
-      if (
-        !props.messageData?.id?.startsWith("temp-") &&
-        visible &&
-        props.owner === "other" &&
-        !props.messageData?.isRead &&
-        user?.id !== props.messageData?.userId &&
-        readEventSentForMessage.current !== props.messageData?.id
-      ) {
-        if (!isSocketConnected) return;
-        SocketService.socket?.emit("read:message" + user?.id, {
-          chatId: props.chatId || props.messageData?.chatId,
-          messageId: props.messageData?.id,
-          messageData: props.messageData,
-        });
-        readEventSentForMessage.current = props.messageData?.id || null;
-      }
+    if (
+      !props.messageData?.id?.startsWith("temp-") &&
+      visible &&
+      props.owner === "other" &&
+      !props.messageData?.isRead &&
+      user?.id !== props.messageData?.userId &&
+      readEventSentForMessage.current !== props.messageData?.id
+    ) {
+      if (!isSocketConnected) return;
+      SocketService.socket?.emit("read:message" + user?.id, {
+        chatId: props.chatId || props.messageData?.chatId,
+        messageId: props.messageData?.id,
+        messageData: props.messageData,
+      });
+      readEventSentForMessage.current = props.messageData?.id || null;
     }
   }, [
     props.chatId,

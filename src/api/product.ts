@@ -87,7 +87,7 @@ export const findAProductApi = async (
 
 export interface SearchProductsApiInput {
   search: string;
-  location?: string;
+  state?: string;
   page?: string;
   limit?: string;
   token?: string;

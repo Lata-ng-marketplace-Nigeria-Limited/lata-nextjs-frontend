@@ -61,6 +61,28 @@ const Header = ({ noSideMenu, role }: Props) => {
     })();
   }, []);
 
+  const [showMobileSearch, setShowMobileSearch] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY <= 10) {
+        setShowMobileSearch(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setShowMobileSearch(false);
+      } else if (currentScrollY < lastScrollY) {
+        setShowMobileSearch(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   const handleSwitchToSeller = useCallback(() => {
     if (!user) return;
     setRegistrationForm({
@@ -91,16 +113,89 @@ const Header = ({ noSideMenu, role }: Props) => {
     replace(previousUrl || LANDING_ROUTE);
   };
 
+  const renderSellButton = () => {
+    return (
+      <Button
+        type={"submit"}
+        as={"link"}
+        href={handleSearchSwitchUrl(
+          DASHBOARD_PRODUCT_CREATE_ROUTE,
+          isSwitchingRole,
+          searchQuery,
+        )}
+        format={"primary"}
+        onClick={(e) => {
+          if (role === "BUYER") {
+            e.preventDefault();
+
+            toast({
+              title: "Only sellers can sell products",
+              variant: "info",
+              action: (
+                <ToastAction
+                  altText={"Switch to seller account"}
+                  onClick={handleSwitchToSeller}
+                >
+                  Become a seller
+                </ToastAction>
+              ),
+            });
+          }
+        }}
+        className={cn(`
+          px-[8px]
+          py-[4px]
+          
+          text-xs
+          sm:px-4
+          sm:py-1.5
+          sm:text-base
+          tablet:px-6
+          tablet:py-3     
+        `)}
+      >
+        SELL
+      </Button>
+    );
+  };
+
+  const renderAuthActions = () => {
+    if (!user) {
+      return (
+        <div className="flex items-center gap-1 sm:gap-2">
+          {renderSellButton()}
+          <Button
+            as="link"
+            href="/auth/login"
+            format="secondary"
+            className="px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs md:text-sm border-grey3 hover:border-primary text-grey9 bg-white shadow-sm shrink-0 font-medium rounded-lg"
+          >
+            Login
+          </Button>
+        </div>
+      );
+    }
+
+    if (role === "ADMIN" && !isSwitchingRole) return null;
+
+    if (role === "STAFF") {
+      return (
+        <ProfileSummary
+          name={user?.name as string}
+          imgSrc={user?.avatar as string}
+        />
+      );
+    }
+
+    return renderSellButton();
+  };
 
   return (
-    <header className="shadow-header sticky top-0 z-30  h-[50px]  bg-white px-1  xs:px-2.5 sm:px-4 md:h-[60px] md:px-6">
-      <div className="flex items-center justify-between gap-x-1.5 sm:gap-x-3 w-full overflow-hidden">
-        <div
-          className={
-            "flex flex-1 min-w-0 items-center justify-between gap-x-[6px] xls:gap-x-[20px] xs:gap-x-[50px] md:gap-x-[100px] lg:gap-x-[190px] mr-2 md:mr-4"
-          }
-        >
-          <div className={"flex items-center"}>
+    <>
+      <header className="shadow-header sticky top-0 z-30 h-[50px] md:h-[60px] bg-white px-1 xs:px-2.5 sm:px-4 md:px-6 flex items-center">
+        <div className="flex items-center justify-between w-full">
+          {/* Top Header Row (Logo, Hamburger) */}
+          <div className="flex items-center">
             {!noSideMenu ? <HeaderHamburgerButton /> : null}
 
             <Link href={"/"}>
@@ -112,69 +207,26 @@ const Header = ({ noSideMenu, role }: Props) => {
             </Link>
           </div>
 
-          <SearchProductForm recentSearches={recentSearches} />
+          {/* Search Product Form (Centered on Desktop, Hidden on Mobile) */}
+          <div className="hidden md:block md:flex-1 md:max-w-[400px] lg:max-w-[600px] md:mx-4">
+            <SearchProductForm recentSearches={recentSearches} />
+          </div>
+
+          {/* Auth/Sell Actions (Desktop & Mobile) */}
+          <div className="flex items-center shrink-0">
+            {renderAuthActions()}
+          </div>
         </div>
+      </header>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/*
-          <Button
-            onClick={() => setShowLoanModal(true)}
-            format="secondary"
-            className="px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs md:text-sm border-grey3 hover:border-primary text-grey9 bg-white shadow-sm shrink-0 font-medium rounded"
-          >
-            Get Loan
-          </Button>
-          */}
-
-          {role === "ADMIN" && !isSwitchingRole ? null : role === "STAFF" ? (
-            <ProfileSummary
-              name={user?.name as string}
-              imgSrc={user?.avatar as string}
-            />
-          ) : (
-            <Button
-              type={"submit"}
-              as={"link"}
-              href={handleSearchSwitchUrl(
-                DASHBOARD_PRODUCT_CREATE_ROUTE,
-                isSwitchingRole,
-                searchQuery,
-              )}
-              format={"primary"}
-              onClick={(e) => {
-                if (role === "BUYER") {
-                  e.preventDefault();
-
-                  toast({
-                    title: "Only sellers can sell products",
-                    variant: "info",
-                    action: (
-                      <ToastAction
-                        altText={"Switch to seller account"}
-                        onClick={handleSwitchToSeller}
-                      >
-                        Become a seller
-                      </ToastAction>
-                    ),
-                  });
-                }
-              }}
-              className={cn(`
-            px-[8px]
-            py-[4px]
-            
-            text-xs
-            sm:px-4
-            sm:py-1.5
-            sm:text-base
-            tablet:px-6
-            tablet:py-3     
-          `)}
-            >
-              SELL
-            </Button>
-          )}
-        </div>
+      {/* Mobile Search Bar Row (Renders below header, slides up when scrolling down, reveals when scrolling up) */}
+      <div className={cn(
+        "md:hidden w-full bg-white px-2.5 py-2 shadow-sm border-b border-grey2 sticky top-[50px] z-20 transition-all duration-300 ease-in-out transform origin-top",
+        showMobileSearch 
+          ? "translate-y-0 opacity-100 visible" 
+          : "-translate-y-full opacity-0 invisible pointer-events-none"
+      )}>
+        <SearchProductForm recentSearches={recentSearches} />
       </div>
       {params.get("sessionSwitched") && params.get("uid") && (
         <div className="flex justify-center">
@@ -268,7 +320,7 @@ const Header = ({ noSideMenu, role }: Props) => {
           )}
         </div>
       </Modal>
-    </header>
+    </>
   );
 };
 
