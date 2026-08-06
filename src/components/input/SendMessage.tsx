@@ -153,10 +153,11 @@ export default function SendMessage(props: Props) {
         }
         return;
       } else {
-        if (error && error?.data && error?.data?.message) {
+        const errMsg = error?.message || error?.data?.message;
+        if (errMsg) {
           toast({
             title: "Error",
-            description: error?.data?.message,
+            description: errMsg,
             variant: "destructive",
           });
           return;

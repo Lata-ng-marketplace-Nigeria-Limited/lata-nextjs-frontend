@@ -386,13 +386,9 @@ export default function ProductForm({
           }
         }
       }
-      if (
-        error &&
-        error?.data &&
-        error?.data?.message &&
-        typeof error?.data?.message === "string"
-      ) {
-        showToast(error?.data?.message, "destructive");
+      const errMsg = error?.message || error?.data?.message;
+      if (errMsg && typeof errMsg === "string") {
+        showToast(errMsg, "destructive");
       } else {
         toast({
           title: "Something went wrong",
