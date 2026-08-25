@@ -20,6 +20,8 @@ export default async function Page(props: {
   searchParams: Promise<{
     q?: string;
     page?: string;
+    sessionSwitched?: string;
+    uid?: string;
   }>;
 }) {
   unstable_noStore();
@@ -32,8 +34,9 @@ export default async function Page(props: {
 
   const search = searchParams?.q || "";
   const page = searchParams?.page || "";
+  const isViewingAsAnotherUser = searchParams?.sessionSwitched && searchParams?.uid;
 
-  if (session.role === "ADMIN") {
+  if (session.role === "ADMIN" && !isViewingAsAnotherUser) {
     return (
       <div className="flex flex-col gap-y-6 px-4 py-6 sm:px-6">
         <Suspense>

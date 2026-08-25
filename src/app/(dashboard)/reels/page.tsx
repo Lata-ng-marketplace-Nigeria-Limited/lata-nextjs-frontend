@@ -19,6 +19,8 @@ export default async function Page(props: {
     q?: string;
     page?: string;
     tab?: string;
+    sessionSwitched?: string;
+    uid?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
@@ -27,8 +29,9 @@ export default async function Page(props: {
   const search = searchParams?.q || "";
   const page = searchParams?.page || "";
   const tab = searchParams?.tab || "ACTIVE";
+  const isViewingAsAnotherUser = searchParams?.sessionSwitched && searchParams?.uid;
 
-  if (session && session.user && session.role === "ADMIN") {
+  if (session && session.user && session.role === "ADMIN" && !isViewingAsAnotherUser) {
     return (
       <div className={"flex flex-col gap-y-6 px-4 py-6 sm:px-6"}>
         <Suspense>

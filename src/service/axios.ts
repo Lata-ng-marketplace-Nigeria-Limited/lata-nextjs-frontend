@@ -59,6 +59,19 @@ const handleConfig = async (config: any) => {
       Authorization: "Bearer " + token,
     };
   }
+
+  if (!isServer) {
+    const searchParams = new URLSearchParams(window.location.search);
+    const switchedUid = searchParams.get("uid");
+    const sessionSwitched = searchParams.get("sessionSwitched");
+    if (sessionSwitched === "true" && switchedUid) {
+      config.headers = {
+        ...config.headers,
+        "X-Impersonate-User-Id": switchedUid,
+      };
+    }
+  }
+
   return config;
 };
 
