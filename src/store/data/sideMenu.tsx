@@ -12,6 +12,7 @@ import { SalesAgreementIcon } from "@/components/atom/icons/SalesAgreement";
 import {
   ADMIN_ALL_BUYERS,
   ADMIN_BLOCKED_ACCOUNTS_ROUTE,
+  ADMIN_AUDIT_LOGS_ROUTE,
   ADMIN_EDIT_CATEGORY_ROUTE,
   ADMIN_EDIT_LOCATION_ROUTE,
   ADMIN_EDIT_PLAN_ROUTE,
@@ -52,6 +53,7 @@ import {
   Edit,
   Play,
   HandCoins,
+  History,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
@@ -212,6 +214,20 @@ export const sideMenu: {
     hideFromBuyer: true,
     fill: false,
     href: ADMIN_BLOCKED_ACCOUNTS_ROUTE,
+  },
+  {
+    title: "Audit Logs",
+    icon: <History className={"w-4 h-4"} />,
+    isSeller: false,
+    isAdmin: true,
+    isAuth: true,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: true,
+    hideFromSeller: true,
+    hideFromBuyer: true,
+    fill: false,
+    href: ADMIN_AUDIT_LOGS_ROUTE,
   },
   {
     title: "Edit Category",
