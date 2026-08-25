@@ -64,8 +64,9 @@ export default function PresetImagePickerModal({
     }
   };
 
-  const handleUploadAndSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUploadAndSave = async (e?: React.FormEvent | React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     if (!file) {
       toast({
         title: "Validation Error",
@@ -156,11 +157,8 @@ export default function PresetImagePickerModal({
           </DialogTitle>
         </DialogHeader>
 
-        {/* Upload Form */}
-        <form
-          onSubmit={handleUploadAndSave}
-          className="flex flex-col items-end gap-3 rounded-lg border border-purp2 bg-purp1 p-4 md:flex-row"
-        >
+        {/* Upload Container */}
+        <div className="flex flex-col items-end gap-3 rounded-lg border border-purp2 bg-purp1 p-4 md:flex-row">
           <div className="flex w-full flex-1 flex-col gap-1">
             <span className="text-xs font-semibold text-gray-700">
               Upload New Preset Image
@@ -185,7 +183,8 @@ export default function PresetImagePickerModal({
             />
           </div>
           <button
-            type="submit"
+            type="button"
+            onClick={handleUploadAndSave}
             disabled={isUploading || !file || !label}
             className="flex h-[38px] min-w-[120px] items-center justify-center gap-1 rounded bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -201,7 +200,7 @@ export default function PresetImagePickerModal({
               </>
             )}
           </button>
-        </form>
+        </div>
 
         {/* Preset Library Grid */}
         <div className="max-h-[400px] min-h-[250px] flex-1 overflow-y-auto">

@@ -299,13 +299,6 @@ export default function EmailBroadcast() {
               </div>
             </div>
           )}
-
-          <PresetImagePickerModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSelect={(url) => setImageUrl(url)}
-            currentSelectedUrl={imageUrl}
-          />
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
@@ -341,6 +334,13 @@ export default function EmailBroadcast() {
           </div>
         ) : null}
       </form>
+
+      <PresetImagePickerModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSelect={(url) => setImageUrl(url)}
+        currentSelectedUrl={imageUrl}
+      />
     </div>
   );
 }
