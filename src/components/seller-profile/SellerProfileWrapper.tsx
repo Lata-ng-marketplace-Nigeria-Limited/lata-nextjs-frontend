@@ -1,5 +1,6 @@
 import { getSellerProfileApi } from "@/api/auth";
 import { getAllStatesApi } from "@/api/location";
+import { getReelsApi } from "@/api/reels";
 import { SellerProfile } from "@components/seller-profile/SellerProfile";
 
 interface Props {
@@ -7,8 +8,13 @@ interface Props {
   productId?: string;
 }
 export const SellerProfileWrapper = async ({ id, productId }: Props) => {
-  const { seller, message } = await getSellerProfileApi(id);
-  const statesInNigeriaData = await getAllStatesApi();
+  const [sellerData, statesInNigeriaData, reelsData] = await Promise.all([
+    getSellerProfileApi(id),
+    getAllStatesApi(),
+    getReelsApi({ sellerId: id }),
+  ]);
+
+  const { seller, message } = sellerData;
 
   return (
     <div>
@@ -18,6 +24,7 @@ export const SellerProfileWrapper = async ({ id, productId }: Props) => {
           seller={seller}
           productId={productId}
           statesInNigeria={statesInNigeriaData?.data || []}
+          reelsGrouped={reelsData?.reels || []}
         />
       )}
     </div>
