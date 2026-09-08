@@ -54,6 +54,7 @@ import {
   Play,
   HandCoins,
   History,
+  ShoppingBag,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
@@ -102,6 +103,20 @@ export const sideMenu: {
     hideFromBuyer: false,
     fill: false,
     href: DASHBOARD_REELS_ROUTE,
+  },
+  {
+    title: "Buyer Requests",
+    icon: <ShoppingBag className="w-5 h-5 text-grey6" />,
+    isSeller: false,
+    isAdmin: false,
+    isAuth: false,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: false,
+    hideFromSeller: false,
+    hideFromBuyer: false,
+    fill: false,
+    href: "/requests",
   },
   {
     title: "Sellers",

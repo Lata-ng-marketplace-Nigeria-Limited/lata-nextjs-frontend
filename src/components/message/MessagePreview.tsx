@@ -40,6 +40,25 @@ const MessagePreview = forwardRef<HTMLDivElement, Props>((props, ref) => {
       : props.senderRole?.toLowerCase() || "user";
   const showUnread = props.lastMessageSender === "other" && !isLastMessageRead;
 
+  // Determine intelligent title instead of showing generic "Untitled product"
+  const displayTitle = (() => {
+    if (
+      props.productName &&
+      props.productName.trim() &&
+      props.productName.toLowerCase() !== "untitled product"
+    ) {
+      return props.productName;
+    }
+
+    const messageStr = props.lastMessage || "";
+    const requestMatch = messageStr.match(/request for ["']([^"']+)["']/i);
+    if (requestMatch && requestMatch[1]) {
+      return `Request: ${requestMatch[1]}`;
+    }
+
+    return "Product Inquiry";
+  })();
+
   return (
     <div
       className={cn(
@@ -97,7 +116,7 @@ const MessagePreview = forwardRef<HTMLDivElement, Props>((props, ref) => {
             "font-extrabold": showUnread,
           })}
         >
-          {props.productName || "Untitled product"}
+          {displayTitle}
         </p>
         <p
           className={cn(
