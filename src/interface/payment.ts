@@ -85,7 +85,11 @@ export type PaymentProviders = "paystack" | "flutterwave";
 
 export type TransactionStatus = "PENDING" | "SUCCESS" | "FAIL" | "INITIALIZE";
 
-export type TransactionType = "subscription" | "wallet:credit" | "wallet:debit";
+export type TransactionType =
+  | "subscription"
+  | "wallet:credit"
+  | "wallet:debit"
+  | "single_product_promotion";
 
 export interface PaystackMetadata {
   type?: TransactionType;

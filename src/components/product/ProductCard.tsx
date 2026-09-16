@@ -129,6 +129,13 @@ export default function ProductCard(props: Props) {
       const meta = safeParseJSON(props.product?.meta);
       setPlanName(meta?.planName);
     }
+
+    if (
+      (props.product as any)?.isPromoted ||
+      (props.product as any)?.promotionType === "MINI"
+    ) {
+      setPlanName("Mini");
+    }
   }, [
     user,
     props.product,

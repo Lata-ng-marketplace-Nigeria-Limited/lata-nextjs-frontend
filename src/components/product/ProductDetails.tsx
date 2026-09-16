@@ -8,6 +8,7 @@ import { useDiscount } from "@/hooks/useDiscount";
 import PercentageOff from "../atom/PercentageOff";
 import { selectedState } from "@/utils/location";
 import { State } from "@/interface/location";
+import SellerContact from "@components/product/SellerContact";
 
 const getDisplaySellerRole = (role?: string) => {
   if (!role) return "";
@@ -101,6 +102,18 @@ export default function ProductDetails(props: Props) {
             </p>
           )}
         </div>
+
+        <Hr className={"border-grey1"} />
+
+        {/* Seller Contact Card placed UP above Product Description */}
+        <SellerContact
+          productName={props.product?.name}
+          sellerInfo={props.product?.user}
+          productId={props.product?.id}
+          productOwnerId={props.product?.userId}
+          type={"compact"}
+          sellerRole={props.product?.sellerRole}
+        />
 
         <Hr className={"border-grey1"} />
 

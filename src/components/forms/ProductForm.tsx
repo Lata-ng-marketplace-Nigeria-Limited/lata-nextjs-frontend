@@ -40,6 +40,7 @@ import { State } from "@/interface/location";
 import { selectedCity, selectedState } from "@/utils/location";
 import { NumericFormat } from "react-number-format";
 import posthog from "posthog-js";
+import PromotePostModal from "@components/modals/PromotePostModal";
 
 interface Props {
   product?: Product;
@@ -100,6 +101,11 @@ export default function ProductForm({
   const [hasSelectedState, setHasSelectedState] = useState(false);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
+  const [createdProductForPromote, setCreatedProductForPromote] = useState<{
+    id: string;
+    name?: string;
+    redirectUrl: string;
+  } | null>(null);
   const { user } = useUser();
 
   const queries = useGetSwitchedRolesQueries();
@@ -244,6 +250,15 @@ export default function ProductForm({
           category: values.categoryId,
           product_type: values.productType,
         });
+        setTimeout(() => {
+          nav(
+            handleSearchSwitchUrl(
+              DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id,
+              isSwitchingRole,
+              searchQuery,
+            ),
+          );
+        }, 800);
       } else {
         const res = await createAProductApi(payload, queries);
         productData = res.product;
@@ -261,16 +276,27 @@ export default function ProductForm({
             duration: 15000,
           });
         }
-      }
-      setTimeout(() => {
-        nav(
-          handleSearchSwitchUrl(
-            DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id,
-            isSwitchingRole,
-            searchQuery,
-          ),
+
+        const redirectUrl = handleSearchSwitchUrl(
+          DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id,
+          isSwitchingRole,
+          searchQuery,
         );
-      }, 800);
+
+        if (productData?.id && !res?.savedInDraft) {
+          setCreatedProductForPromote({
+            id: productData.id,
+            name: productData.name,
+            redirectUrl,
+          });
+          setLoading(false);
+          return;
+        }
+
+        setTimeout(() => {
+          nav(redirectUrl);
+        }, 800);
+      }
     } catch (error: any) {
       setLoading(false);
       console.log(error);
@@ -743,6 +769,18 @@ export default function ProductForm({
           </Button>
         </div>
       </form>
+
+      {createdProductForPromote && (
+        <PromotePostModal
+          isOpen={!!createdProductForPromote}
+          productId={createdProductForPromote.id}
+          productName={createdProductForPromote.name}
+          onClose={() => setCreatedProductForPromote(null)}
+          onSuccessRedirect={() => {
+            nav(createdProductForPromote.redirectUrl);
+          }}
+        />
+      )}
     </div>
   );
 }

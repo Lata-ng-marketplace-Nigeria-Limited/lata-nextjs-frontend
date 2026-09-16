@@ -38,6 +38,7 @@ import {
   VIEW_SELLERS_ROUTE,
   ADMIN_EDIT_KPI_ROUTE,
   DASHBOARD_REELS_ROUTE,
+  ADMIN_PROMO_CODES_ROUTE,
 } from "@/constants/routes";
 import { NewProductIcon } from "@/components/atom/icons/Admin";
 import { EditIcon } from "@/components/atom/icons/Edit";
@@ -285,6 +286,20 @@ export const sideMenu: {
     fill: false,
     isAuth: true,
     href: ADMIN_EDIT_PLAN_ROUTE,
+  },
+  {
+    title: "Promo Codes",
+    icon: <HandCoins className={"w-4 h-4"} />,
+    isSeller: false,
+    isAdmin: true,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: true,
+    hideFromSeller: true,
+    hideFromBuyer: true,
+    fill: false,
+    isAuth: true,
+    href: ADMIN_PROMO_CODES_ROUTE,
   },
   {
     title: "Edit KPI",
