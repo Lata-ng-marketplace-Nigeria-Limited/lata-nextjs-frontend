@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Category } from "@/interface/products";
 import { cn } from "@/utils";
-import { Hash, Search, Users, Sparkles, MessageSquare } from "lucide-react";
+import { Hash, Search, Users, Sparkles, MessageSquare, User } from "lucide-react";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   categories: Category[];
@@ -20,11 +21,14 @@ export const GroupChatSidebar: React.FC<Props> = ({
   totalRequestsCount,
   unreadCounts = {},
 }) => {
+  const { user } = useUser();
   const [filterQuery, setFilterQuery] = useState("");
 
-  const filteredCategories = categories.filter((cat) =>
-    cat.name.toLowerCase().includes(filterQuery.toLowerCase())
-  );
+  const filteredCategories = useMemo(() => {
+    return categories.filter((cat) =>
+      cat.name.toLowerCase().includes(filterQuery.toLowerCase())
+    );
+  }, [categories, filterQuery]);
 
   return (
     <div className="w-full md:w-80 bg-white border-r border-grey2 flex flex-col h-full shrink-0 select-none">
@@ -64,6 +68,56 @@ export const GroupChatSidebar: React.FC<Props> = ({
 
       {/* Group Channels List */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin">
+        {/* "My Requests" Channel for logged-in users */}
+        {user && (
+          <button
+            onClick={() => onSelectCategory("MY_REQUESTS")}
+            className={cn(
+              "w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all duration-150 group mb-1 border",
+              selectedCategoryId === "MY_REQUESTS"
+                ? "bg-primary text-white font-semibold shadow-sm border-primary"
+                : "bg-purp2/50 hover:bg-purp2 text-primary font-bold border-primary/20"
+            )}
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                className={cn(
+                  "w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+                  selectedCategoryId === "MY_REQUESTS"
+                    ? "bg-white/20 text-white"
+                    : "bg-primary/10 text-primary group-hover:bg-primary/20"
+                )}
+              >
+                <User className="w-3.5 h-3.5" />
+              </div>
+              <div className="truncate">
+                <p
+                  className={cn(
+                    "text-xs truncate font-bold",
+                    selectedCategoryId === "MY_REQUESTS" ? "text-white" : "text-primary"
+                  )}
+                >
+                  # My Requests
+                </p>
+                <span
+                  className={cn(
+                    "text-[10px] block truncate font-normal",
+                    selectedCategoryId === "MY_REQUESTS" ? "text-white/80" : "text-grey6"
+                  )}
+                >
+                  Your posted requests
+                </span>
+              </div>
+            </div>
+            <span
+              className={cn(
+                "w-2 h-2 rounded-full",
+                selectedCategoryId === "MY_REQUESTS" ? "bg-emerald-300" : "bg-primary"
+              )}
+            />
+          </button>
+        )}
+
         {/* "All Categories / Global Feed" Channel */}
         <button
           onClick={() => onSelectCategory("")}

@@ -7,6 +7,7 @@ import { Category } from "@/interface/products";
 import { getAllCategoriesApi } from "@/api/category";
 import { createProductRequestApi } from "@/api/productRequest";
 import { useToast } from "@components/ui/use-toast";
+import { useUser } from "@/hooks/useUser";
 import { Loader2, PackagePlus, X } from "lucide-react";
 import Input from "../atom/Input";
 
@@ -23,13 +24,22 @@ export const CreateRequestModal: React.FC<Props> = ({
   onSuccess,
   categories: initialCategories,
 }) => {
+  const { user } = useUser();
   const [categories, setCategories] = useState<Category[]>(initialCategories || []);
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
   const [state, setState] = useState("");
+  const [requesterType, setRequesterType] = useState("I'm a direct buyer");
+  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (user?.phoneNumber && !phoneNumber) {
+      setPhoneNumber(user.phoneNumber);
+    }
+  }, [user?.phoneNumber]);
 
   const { toast } = useToast();
 
@@ -71,6 +81,15 @@ export const CreateRequestModal: React.FC<Props> = ({
       return;
     }
 
+    if (!phoneNumber.trim()) {
+      toast({
+        title: "Phone Number Required",
+        description: "Please enter your phone number so sellers can contact you.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setSubmitting(true);
       await createProductRequestApi({
@@ -79,6 +98,8 @@ export const CreateRequestModal: React.FC<Props> = ({
         description: description.trim() || undefined,
         budget: budget ? Number(budget) : undefined,
         state: state.trim() || undefined,
+        requesterType,
+        phoneNumber: phoneNumber.trim(),
       });
 
       toast({
@@ -92,6 +113,7 @@ export const CreateRequestModal: React.FC<Props> = ({
       setDescription("");
       setBudget("");
       setState("");
+      setRequesterType("I'm a direct buyer");
 
       onSuccess();
       onClose();
@@ -107,19 +129,23 @@ export const CreateRequestModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal isShown={isOpen} setIsShown={onClose}>
+    <Modal
+      isShown={isOpen}
+      setIsShown={onClose}
+      contentClass="!w-[94vw] !max-w-[560px] !p-0 border-none bg-transparent shadow-none"
+    >
       <div
-        className="w-full max-w-[500px] bg-white rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto"
+        className="w-full bg-white rounded-2xl p-4 sm:p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-grey5 hover:text-grey9 transition-colors p-1 rounded-full hover:bg-grey1"
+          className="absolute top-4 right-4 text-grey5 hover:text-grey9 transition-colors p-1 rounded-full hover:bg-grey1 z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center gap-3 mb-5 pr-6">
           <div className="w-10 h-10 rounded-full bg-purp2 text-primary flex items-center justify-center shrink-0">
             <PackagePlus className="w-5 h-5" />
           </div>
@@ -134,6 +160,38 @@ export const CreateRequestModal: React.FC<Props> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* What best describes you? */}
+          <div>
+            <label className="block text-xs font-semibold text-grey9 mb-1">
+              What best describes you? <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={requesterType}
+              onChange={(e) => setRequesterType(e.target.value)}
+              className="w-full h-11 rounded-lg border border-grey3 bg-white px-3 text-xs sm:text-sm text-grey9 outline-none focus:border-primary transition-colors font-medium"
+              required
+            >
+              <option value="I'm a direct buyer">I'm a direct buyer</option>
+              <option value="I'm a Direct mandate">I'm a Direct mandate</option>
+              <option value="I am an agent">I am an agent</option>
+            </select>
+          </div>
+
+          {/* Phone Number */}
+          <div>
+            <label className="block text-xs font-semibold text-grey9 mb-1">
+              Phone Number <span className="text-red-500">*</span>
+            </label>
+            <Input
+              type="tel"
+              placeholder="e.g. 08012345678"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              className="w-full text-xs sm:text-sm"
+              required
+            />
+          </div>
+
           {/* Item Name / Title */}
           <div>
             <label className="block text-xs font-semibold text-grey9 mb-1">

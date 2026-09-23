@@ -113,6 +113,17 @@ const Header = ({ noSideMenu, role }: Props) => {
     replace(previousUrl || LANDING_ROUTE);
   };
 
+  const renderBuyerRequestsButton = () => {
+    return (
+      <Link
+        href="/requests"
+        className="px-2 py-1 text-[11px] font-semibold sm:px-3 sm:py-1.5 sm:text-xs md:text-sm bg-lime-500 hover:bg-lime-600 text-white rounded-lg transition-colors flex items-center gap-1 shrink-0 whitespace-nowrap ml-1 sm:ml-3"
+      >
+        BUYER REQUESTS
+      </Link>
+    );
+  };
+
   const renderSellButton = () => {
     return (
       <Button

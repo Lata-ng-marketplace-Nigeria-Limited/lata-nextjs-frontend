@@ -34,7 +34,8 @@ export interface ProductRequest {
   budget?: number | null;
   state?: string | null;
   city?: string | null;
-  status: "OPEN" | "FULFILLED" | "CLOSED";
+  requesterType?: string | null;
+  status: "OPEN" | "FULFILLED" | "CLOSED" | "INACTIVE";
   createdAt: string;
   updatedAt: string;
   user: ProductRequestUser;
@@ -61,6 +62,7 @@ export const getProductRequestsApi = async (queries?: {
   search?: string;
   state?: string;
   status?: string;
+  mine?: boolean | string;
 }): Promise<ProductRequestsResponse | null> => {
   try {
     const params = new URLSearchParams();
@@ -71,6 +73,7 @@ export const getProductRequestsApi = async (queries?: {
     if (queries?.search) params.append("search", queries.search);
     if (queries?.state) params.append("state", queries.state);
     if (queries?.status) params.append("status", queries.status);
+    if (queries?.mine !== undefined) params.append("mine", String(queries.mine));
 
     const url = `/product-requests?${params.toString()}`;
     const session = await auth();
@@ -110,6 +113,8 @@ export const createProductRequestApi = async (payload: {
   budget?: number;
   state?: string;
   city?: string;
+  requesterType?: string;
+  phoneNumber?: string;
 }) => {
   try {
     const session = await auth();

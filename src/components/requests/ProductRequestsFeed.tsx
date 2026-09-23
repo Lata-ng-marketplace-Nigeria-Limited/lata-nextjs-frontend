@@ -5,7 +5,6 @@ import { Category } from "@/interface/products";
 import { ProductRequest, getProductRequestsApi } from "@/api/productRequest";
 import { RequestCard } from "./RequestCard";
 import { GroupChatSidebar } from "./GroupChatSidebar";
-import { QuickRequestComposer } from "./QuickRequestComposer";
 import { CreateRequestModal } from "./CreateRequestModal";
 import Button from "@atom/Button";
 import { useUser } from "@/hooks/useUser";
@@ -42,6 +41,8 @@ export const ProductRequestsFeed: React.FC<Props> = ({
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(urlCategoryId);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [requests, setRequests] = useState<ProductRequest[]>(initialRequests);
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -55,12 +56,24 @@ export const ProductRequestsFeed: React.FC<Props> = ({
     }
   }, [urlCategoryId]);
 
-  const fetchRequests = async (catId?: string, search?: string) => {
+  // Debounce search query input by 350ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const fetchRequests = async (catId?: string, search?: string, status?: string) => {
     try {
       setLoading(true);
+      const isMineView = catId === "MY_REQUESTS";
       const res = await getProductRequestsApi({
-        categoryId: catId || undefined,
+        mine: isMineView ? "true" : undefined,
+        categoryId: !isMineView && catId ? catId : undefined,
         search: search || undefined,
+        status: isMineView && status && status !== "ALL" ? status : undefined,
       });
       if (res && res.data) {
         setRequests(res.data);
@@ -75,7 +88,7 @@ export const ProductRequestsFeed: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    fetchRequests(selectedCategoryId, searchQuery);
+    fetchRequests(selectedCategoryId, debouncedSearchQuery, statusFilter);
 
     if (selectedCategoryId) {
       setUnreadCounts((prev) => ({
@@ -88,7 +101,7 @@ export const ProductRequestsFeed: React.FC<Props> = ({
         all: 0,
       }));
     }
-  }, [selectedCategoryId]);
+  }, [selectedCategoryId, debouncedSearchQuery, statusFilter]);
 
   const handleSelectCategory = (catId: string) => {
     setSelectedCategoryId(catId);
@@ -114,7 +127,7 @@ export const ProductRequestsFeed: React.FC<Props> = ({
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchRequests(selectedCategoryId, searchQuery);
+    fetchRequests(selectedCategoryId, searchQuery, statusFilter);
   };
 
   const handleOpenModal = () => {
@@ -131,8 +144,10 @@ export const ProductRequestsFeed: React.FC<Props> = ({
   };
 
   const currentCategoryName =
-    categories.find((c) => c.id === selectedCategoryId)?.name ||
-    "All Category Requests";
+    selectedCategoryId === "MY_REQUESTS"
+      ? "My Requests"
+      : categories.find((c) => c.id === selectedCategoryId)?.name ||
+        "All Category Requests";
 
   return (
     <div className="w-full max-w-[1450px] mx-auto p-2 sm:p-4">
@@ -228,6 +243,31 @@ export const ProductRequestsFeed: React.FC<Props> = ({
             </div>
           </div>
 
+          {/* Status Filter Tabs for My Requests View */}
+          {selectedCategoryId === "MY_REQUESTS" && (
+            <div className="bg-white border-b border-grey2 px-4 py-2 flex items-center gap-2 overflow-x-auto scrollbar-none text-xs">
+              {[
+                { id: "ALL", label: "All Requests" },
+                { id: "OPEN", label: "Active" },
+                { id: "INACTIVE", label: "Expired (>7 days)" },
+                { id: "CLOSED", label: "Closed" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setStatusFilter(tab.id)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0",
+                    statusFilter === tab.id
+                      ? "bg-primary text-white shadow-2xs"
+                      : "bg-grey1/70 text-grey7 hover:bg-grey2 hover:text-grey10"
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Group Room Chat Stream */}
           <div className="flex-1 overflow-y-auto divide-y divide-grey2/40 scrollbar-thin">
             {loading ? (
@@ -238,24 +278,36 @@ export const ProductRequestsFeed: React.FC<Props> = ({
                 </p>
               </div>
             ) : requests.length === 0 ? (
-              <div className="p-12 text-center flex flex-col items-center justify-center gap-3 my-auto">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-                  <ShoppingBag className="w-7 h-7" />
+              <div className="p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3 my-auto">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                  <ShoppingBag className="w-7 h-7 sm:w-8 sm:h-8" />
                 </div>
-                <div>
-                  <h3 className="text-base font-bold text-grey9">
-                    No Requests in #{currentCategoryName}
-                  </h3>
-                  <p className="text-xs text-grey6 max-w-[380px] mt-1">
-                    Be the first buyer to post a request in this group room!
-                  </p>
-                </div>
+                {selectedCategoryId === "MY_REQUESTS" ? (
+                  <div className="max-w-[420px]">
+                    <h3 className="text-base sm:text-lg font-bold text-grey10">
+                      You Haven't Posted Any Requests Yet
+                    </h3>
+                    <p className="text-xs sm:text-sm text-grey6 mt-1.5 leading-relaxed">
+                      Do you have a specific product in mind? Post a request now and verified sellers on Lata.ng will reach out directly to you with great offers!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="max-w-[380px]">
+                    <h3 className="text-base font-bold text-grey9">
+                      No Requests in #{currentCategoryName}
+                    </h3>
+                    <p className="text-xs text-grey6 mt-1">
+                      Be the first buyer to post a request in this group room!
+                    </p>
+                  </div>
+                )}
                 <Button
                   format="primary"
                   onClick={handleOpenModal}
-                  className="mt-2 py-2 px-4 text-xs font-semibold rounded-xl"
+                  className="mt-2 py-2.5 px-5 text-xs sm:text-sm font-bold rounded-xl flex items-center gap-2 shadow-sm"
                 >
-                  Post First Request
+                  <PlusCircle className="w-4 h-4" />
+                  <span>{selectedCategoryId === "MY_REQUESTS" ? "Post a Request" : "Post First Request"}</span>
                 </Button>
               </div>
             ) : (
@@ -270,14 +322,6 @@ export const ProductRequestsFeed: React.FC<Props> = ({
               </div>
             )}
           </div>
-
-          {/* Bottom Quick Chat Input Bar */}
-          <QuickRequestComposer
-            selectedCategoryId={selectedCategoryId}
-            categories={categories}
-            onRequestCreated={() => fetchRequests(selectedCategoryId, searchQuery)}
-            onOpenFullModal={handleOpenModal}
-          />
         </div>
       </div>
 

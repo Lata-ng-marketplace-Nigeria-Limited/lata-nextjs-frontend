@@ -62,12 +62,9 @@ export default function Modal(props: Props) {
         onPointerDownOutside={handleClickOutside}
         onEscapeKeyDown={handleEscapeClick}
         className={cn(
-          "rounded-[6px] overflow-y-auto max-w-fit max-h-[calc(100vh-16px)] px-[16px] py-[12px] sm:px-[40px] sm:py-[24px] w-fit",
-          props.contentClass
+          "rounded-[6px] overflow-y-auto max-h-[calc(100vh-16px)] px-[16px] py-[12px] sm:px-[40px] sm:py-[24px]",
+          props.contentClass || "w-fit max-w-fit"
         )}
-        style={{
-          maxWidth: "fit-content",
-        }}
       >
         {props.children}
       </DialogContent>
