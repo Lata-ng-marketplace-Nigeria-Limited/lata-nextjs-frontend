@@ -7,6 +7,7 @@ interface Props {
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>;
   contentClass?: string;
   children: React.ReactNode;
+  hideCloseButton?: boolean;
 }
 const ResizableDialog = (props: Props) => {
   const handleEscapeClick = () => {
@@ -22,6 +23,7 @@ const ResizableDialog = (props: Props) => {
       <DialogContent
         onPointerDownOutside={handleClickOutside}
         onEscapeKeyDown={handleEscapeClick}
+        hideCloseButton={props.hideCloseButton}
         className={cn(
           "max-h-[calc(100vh-100px)] overflow-y-auto px-2 outline-none xls:px-4 xs:px-6",
           props.contentClass,

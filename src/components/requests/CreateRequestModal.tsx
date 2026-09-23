@@ -132,6 +132,7 @@ export const CreateRequestModal: React.FC<Props> = ({
     <Modal
       isShown={isOpen}
       setIsShown={onClose}
+      hideCloseButton
       contentClass="!w-[94vw] !max-w-[560px] !p-0 border-none bg-transparent shadow-none"
     >
       <div

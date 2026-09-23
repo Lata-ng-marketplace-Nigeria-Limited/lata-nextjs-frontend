@@ -32,8 +32,32 @@ export const AdminAlertsList = () => {
   >("all");
   const [ctaLabel, setCtaLabel] = useState("");
   const [ctaLink, setCtaLink] = useState("");
+  const [selectedRouteValue, setSelectedRouteValue] = useState("none");
   const [promoCode, setPromoCode] = useState("");
   const [isActive, setIsActive] = useState(true);
+
+  const PRESET_ROUTES = [
+    "none",
+    "/subscriptions",
+    "/requests",
+    "/create-product",
+    "/reels",
+    "/shop",
+    "/messages",
+    "/settings",
+  ];
+
+  const ROUTE_OPTIONS = [
+    { label: "None (No Action Link)", value: "none" },
+    { label: "Subscriptions Page (/subscriptions)", value: "/subscriptions" },
+    { label: "Buyer Requests Feed (/requests)", value: "/requests" },
+    { label: "Post a Product / Request (/create-product)", value: "/create-product" },
+    { label: "Video Reels (/reels)", value: "/reels" },
+    { label: "My Shop / Products (/shop)", value: "/shop" },
+    { label: "Messages Inbox (/messages)", value: "/messages" },
+    { label: "User Settings (/settings)", value: "/settings" },
+    { label: "Custom Route / URL...", value: "CUSTOM" },
+  ];
 
   const fetchAlerts = async () => {
     setLoading(true);
@@ -67,7 +91,15 @@ export const AdminAlertsList = () => {
     setSeverity(alert.severity || "promo");
     setTargetAudience(alert.targetAudience || "all");
     setCtaLabel(alert.ctaLabel || "");
-    setCtaLink(alert.ctaLink || "");
+    const link = alert.ctaLink || "";
+    setCtaLink(link);
+    if (!link || link === "none") {
+      setSelectedRouteValue("none");
+    } else if (PRESET_ROUTES.includes(link)) {
+      setSelectedRouteValue(link);
+    } else {
+      setSelectedRouteValue("CUSTOM");
+    }
     setPromoCode(alert.promoCode || "");
     setIsActive(alert.isActive);
     setIsModalOpen(true);
@@ -142,6 +174,7 @@ export const AdminAlertsList = () => {
     setTargetAudience("all");
     setCtaLabel("");
     setCtaLink("");
+    setSelectedRouteValue("none");
     setPromoCode("");
     setIsActive(true);
   };
@@ -278,6 +311,7 @@ export const AdminAlertsList = () => {
       <Modal
         isShown={isModalOpen}
         setIsShown={setIsModalOpen}
+        hideCloseButton
         contentClass="!w-[94vw] !max-w-[560px] p-4 sm:p-6 bg-white rounded-2xl"
       >
         <div className="space-y-4 w-full bg-white max-h-[80vh] overflow-y-auto pr-1">
@@ -285,18 +319,26 @@ export const AdminAlertsList = () => {
             {editingAlert ? "Edit System Alert" : "Create System Alert / Announcement"}
           </h3>
           <form onSubmit={handleSaveAlert} className="space-y-4">
-            <TextInput
-              label="Alert Title"
-              placeholder="e.g. 20% Off Subscriptions"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Alert Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 20% Off Subscriptions"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-1 focus:ring-[#5113A1] focus:border-[#5113A1] focus:outline-none"
+                required
+              />
+            </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Alert Message</label>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Alert Message <span className="text-red-500">*</span>
+              </label>
               <textarea
-                className="w-full border border-gray-300 rounded-md p-2.5 text-xs sm:text-sm focus:ring-1 focus:ring-[#5113A1] focus:border-[#5113A1] focus:outline-none"
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-1 focus:ring-[#5113A1] focus:border-[#5113A1] focus:outline-none"
                 rows={3}
                 placeholder="e.g. New users can now purchase subscription plans at 20% discount using code DISCOUNT20."
                 value={message}
@@ -339,12 +381,17 @@ export const AdminAlertsList = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <TextInput
-                label="Promo Code (Optional)"
-                placeholder="e.g. DISCOUNT20"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-              />
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Promo Code (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. DISCOUNT20"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-1 focus:ring-[#5113A1] focus:border-[#5113A1] focus:outline-none"
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Display Type</label>
                 <SelectInput
@@ -358,19 +405,53 @@ export const AdminAlertsList = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <TextInput
-                label="Action Button Label (Optional)"
-                placeholder="e.g. Subscribe Now"
-                value={ctaLabel}
-                onChange={(e) => setCtaLabel(e.target.value)}
-              />
-              <TextInput
-                label="Action Link (Optional)"
-                placeholder="e.g. /subscriptions"
-                value={ctaLink}
-                onChange={(e) => setCtaLink(e.target.value)}
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Action Button Label (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Subscribe Now"
+                  value={ctaLabel}
+                  onChange={(e) => setCtaLabel(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-1 focus:ring-[#5113A1] focus:border-[#5113A1] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Action Link Route (Optional)</label>
+                <SelectInput
+                  value={selectedRouteValue}
+                  onValueChange={(val) => {
+                    setSelectedRouteValue(val);
+                    if (val === "none") {
+                      setCtaLink("");
+                    } else if (val !== "CUSTOM") {
+                      setCtaLink(val);
+                    }
+                  }}
+                  options={ROUTE_OPTIONS}
+                />
+              </div>
+            </div>
+
+            {selectedRouteValue === "CUSTOM" && (
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Custom Redirect URL / Route</label>
+                <input
+                  type="text"
+                  placeholder="e.g. /custom-page or https://..."
+                  value={ctaLink}
+                  onChange={(e) => setCtaLink(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs sm:text-sm focus:ring-1 focus:ring-[#5113A1] focus:border-[#5113A1] focus:outline-none"
+                />
+              </div>
+            )}
+
+            <div className="bg-purple-50 border border-purple-100 rounded-lg p-2.5 text-xs text-purple-900 leading-relaxed">
+              <p className="font-semibold text-[#5113A1]">Redirect Route Information</p>
+              <p className="text-gray-600 mt-0.5">
+                Select the target application route users will be navigated to when clicking the action button (e.g. Subscriptions or Buyer Requests).
+              </p>
             </div>
 
             <div className="flex items-center gap-2 pt-2">

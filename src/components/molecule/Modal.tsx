@@ -14,6 +14,7 @@ interface Props {
   preventOverlayClose?: boolean;
   openModal?: boolean;
   contentClass?: string;
+  hideCloseButton?: boolean;
 }
 
 export default function Modal(props: Props) {
@@ -36,6 +37,11 @@ export default function Modal(props: Props) {
     props.setIsShown(false);
   };
 
+  const handleOpenChange = (open: boolean) => {
+    props.setIsShown(open);
+    props.onOpenChange?.(open);
+  };
+
   useEffect(() => {
     if (onMounted) return;
     if (props.isShown) {
@@ -56,11 +62,12 @@ export default function Modal(props: Props) {
     <Dialog
       open={props.isShown}
       modal={props.modal !== undefined ? props.modal : true}
-      onOpenChange={props.onOpenChange}
+      onOpenChange={handleOpenChange}
     >
       <DialogContent
         onPointerDownOutside={handleClickOutside}
         onEscapeKeyDown={handleEscapeClick}
+        hideCloseButton={props.hideCloseButton}
         className={cn(
           "rounded-[16px] overflow-y-auto max-h-[calc(100vh-16px)]",
           props.contentClass || "!w-[94vw] !max-w-[500px] bg-white p-4 sm:p-6"
