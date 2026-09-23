@@ -67,7 +67,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
       </div>
 
       {/* Group Channels List */}
-      <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-1 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-1 custom-scrollbar">
         {/* "My Requests" Channel for logged-in users */}
         {user && (
           <button

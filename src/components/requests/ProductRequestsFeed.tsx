@@ -178,7 +178,7 @@ export const ProductRequestsFeed: React.FC<Props> = ({
         </div>
 
         {/* Right Panel - Active Group Room Chat Feed */}
-        <div className="flex-1 flex flex-col h-full bg-grey1/20 min-w-0">
+        <div className="flex-1 flex flex-col h-full min-h-0 max-h-full bg-grey1/20 min-w-0">
           {/* Active Room Top Bar */}
           <div className="bg-white border-b border-grey2 p-3 sm:p-4 flex items-center justify-between gap-3 shadow-xs">
             <div className="flex items-center gap-2.5 min-w-0">
@@ -269,7 +269,7 @@ export const ProductRequestsFeed: React.FC<Props> = ({
           )}
 
           {/* Group Room Chat Stream */}
-          <div className="flex-1 overflow-y-auto divide-y divide-grey2/40 scrollbar-thin">
+          <div className="flex-1 overflow-y-auto min-h-0 divide-y divide-grey2/40 custom-scrollbar pb-8">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 text-grey6 gap-3">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
