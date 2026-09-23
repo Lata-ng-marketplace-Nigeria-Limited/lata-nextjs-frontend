@@ -265,7 +265,7 @@ export const PromoCodesList = () => {
       <Modal
         isShown={isModalOpen}
         setIsShown={setIsModalOpen}
-        contentClass="max-w-[500px] p-6 bg-white rounded-2xl shadow-xl border border-gray-100"
+        contentClass="!w-[94vw] !max-w-[520px] p-4 sm:p-6 bg-white rounded-2xl border border-gray-100"
       >
         <div className="flex flex-col gap-y-4">
           <h3 className="text-xl font-bold text-gray-900">Create New Promo Code</h3>

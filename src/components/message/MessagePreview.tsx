@@ -90,39 +90,33 @@ const MessagePreview = forwardRef<HTMLDivElement, Props>((props, ref) => {
         flex 
         w-full 
         flex-col 
-        gap-y-1.5 
+        gap-y-1 
         border-b
         border-grey1
         pb-2.5
         sm:gap-x-2
-        
       `)}
       >
         <div
-          className={cn("flex w-full justify-between gap-x-2", {
+          className={cn("flex w-full justify-between items-center gap-x-2", {
             "font-extrabold": showUnread,
           })}
         >
-          <p className={cn("text-[10px] text-grey8 sm:text-[12px] truncate")}>{name}</p>
+          <p className={cn("text-xs font-semibold text-grey11 sm:text-sm xl:text-base truncate", { "font-extrabold text-gray-900": showUnread })}>
+            {name}
+          </p>
           <div className={"flex items-center gap-x-1.5 shrink-0"}>
             {showUnread ? <span className={"h-1.5 w-1.5 rounded-full bg-primary"} /> : null}
-            <p className={"text-[8px] text-grey6 sm:text-[10px]"}>
+            <p className={"text-[9px] text-grey6 sm:text-[11px]"}>
               {lastMessageTime}
             </p>
           </div>
         </div>
         <p
-          className={cn("text-sm text-grey11 sm:text-sm xl:text-base truncate", {
-            "font-extrabold": showUnread,
-          })}
-        >
-          {displayTitle}
-        </p>
-        <p
           className={cn(
             "text-xs leading-tight tracking-tight text-grey8 xl:text-sm truncate",
             {
-              "font-extrabold": showUnread,
+              "font-semibold text-gray-800": showUnread,
             },
           )}
           title={props.lastMessage || ""}

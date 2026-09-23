@@ -18,7 +18,7 @@ const ResizableDialog = (props: Props) => {
   };
 
   return (
-    <Dialog open={props.isShown} modal>
+    <Dialog open={props.isShown} onOpenChange={props.setIsShown} modal>
       <DialogContent
         onPointerDownOutside={handleClickOutside}
         onEscapeKeyDown={handleEscapeClick}

@@ -137,7 +137,7 @@ export default function EmailBroadcast() {
   };
 
   return (
-    <div className="rounded-lg bg-white p-6 shadow-md">
+    <div>
       <HeaderText title className="mb-6">
         Send Email Broadcast
       </HeaderText>

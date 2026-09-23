@@ -61,10 +61,17 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
     if (!user) {
       toast({
         title: "Login Required",
-        description: "Please sign in to text and chat with direct buyers.",
+        description: "Please sign in or register as a seller to text and chat with direct buyers.",
         variant: "info",
+        action: (
+          <ToastAction
+            altText="Sign In"
+            onClick={() => router.push("/auth/login")}
+          >
+            Sign In / Register
+          </ToastAction>
+        ),
       });
-      router.push("/auth/login");
       return false;
     }
 
@@ -173,7 +180,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
       <AppAvatar
         src={productRequest.user?.avatar}
         name={buyerName}
-        className="w-8 h-8 text-xs font-bold shrink-0 mt-0.5 border border-grey2 shadow-2xs"
+        className="w-8 h-8 text-xs font-bold shrink-0 mt-0.5 border border-grey2"
       />
 
       {/* Message Content */}
@@ -185,7 +192,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
           </span>
 
           {isOwner ? (
-            <span className="text-[11px] bg-primary text-white font-bold px-2.5 py-0.5 rounded-full shadow-2xs tracking-wider">
+            <span className="text-[11px] bg-primary text-white font-bold px-2.5 py-0.5 rounded-full tracking-wider">
               YOUR REQUEST
             </span>
           ) : (
@@ -218,7 +225,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
         </div>
 
         {/* Minimal Chat Bubble */}
-        <div className="inline-block bg-white border border-grey2 rounded-2xl rounded-tl-xs p-3 text-xs text-grey9 max-w-2xl shadow-2xs w-full">
+        <div className="inline-block bg-white border border-grey2 rounded-2xl rounded-tl-xs p-3 text-xs text-grey9 max-w-2xl w-full">
           <p className="font-semibold text-xs sm:text-sm text-grey10">
             {productRequest.title}
           </p>
@@ -276,13 +283,13 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
                   </button>
                 )}
               </div>
-            ) : isSeller ? (
+            ) : (!user || isSeller) ? (
               <div className="flex items-center gap-1.5 ml-auto flex-wrap">
                 {/* In-App Chat Button */}
                 <button
                   disabled={loadingChat}
                   onClick={handleRespond}
-                  className="px-2.5 py-1 bg-primary text-white hover:bg-primary/90 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-2xs disabled:opacity-50"
+                  className="px-2.5 py-1 bg-primary text-white hover:bg-primary/90 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all disabled:opacity-50"
                   title="Chat in Lata App"
                 >
                   {loadingChat ? (
@@ -298,7 +305,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
                 {/* WhatsApp Button */}
                 <button
                   onClick={handleWhatsApp}
-                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-2xs"
+                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all"
                   title="Text Buyer via WhatsApp"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />

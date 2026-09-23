@@ -275,8 +275,12 @@ export const AdminAlertsList = () => {
       )}
 
       {/* Create / Edit Alert Modal */}
-      <Modal isShown={isModalOpen} setIsShown={setIsModalOpen}>
-        <div className="p-4 sm:p-6 space-y-4 max-w-lg w-full bg-white max-h-[85vh] overflow-y-auto">
+      <Modal
+        isShown={isModalOpen}
+        setIsShown={setIsModalOpen}
+        contentClass="!w-[94vw] !max-w-[560px] p-4 sm:p-6 bg-white rounded-2xl"
+      >
+        <div className="space-y-4 w-full bg-white max-h-[80vh] overflow-y-auto pr-1">
           <h3 className="text-base sm:text-lg font-bold text-gray-900">
             {editingAlert ? "Edit System Alert" : "Create System Alert / Announcement"}
           </h3>

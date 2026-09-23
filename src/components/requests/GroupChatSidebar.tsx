@@ -31,9 +31,9 @@ export const GroupChatSidebar: React.FC<Props> = ({
   }, [categories, filterQuery]);
 
   return (
-    <div className="w-full md:w-80 bg-white border-r border-grey2 flex flex-col h-full shrink-0 select-none">
+    <div className="w-full md:w-80 bg-white border-r border-grey2 flex flex-col h-full min-h-0 max-h-full shrink-0 select-none">
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-grey2 flex flex-col gap-3 bg-grey1/20">
+      <div className="p-4 border-b border-grey2 flex flex-col gap-3 bg-grey1/20 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
@@ -67,7 +67,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
       </div>
 
       {/* Group Channels List */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-1 scrollbar-thin">
         {/* "My Requests" Channel for logged-in users */}
         {user && (
           <button
@@ -75,7 +75,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
             className={cn(
               "w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all duration-150 group mb-1 border",
               selectedCategoryId === "MY_REQUESTS"
-                ? "bg-primary text-white font-semibold shadow-sm border-primary"
+                ? "bg-primary text-white font-semibold border-primary"
                 : "bg-purp2/50 hover:bg-purp2 text-primary font-bold border-primary/20"
             )}
           >
@@ -124,7 +124,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
           className={cn(
             "w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all duration-150 group",
             selectedCategoryId === ""
-              ? "bg-primary text-white font-semibold shadow-sm"
+              ? "bg-primary text-white font-semibold"
               : "hover:bg-grey1 text-grey8 hover:text-grey10"
           )}
         >
@@ -165,7 +165,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
 
           <div className="flex items-center gap-1.5 shrink-0 ml-1">
             {selectedCategoryId !== "" && (unreadCounts["all"] || 0) > 0 ? (
-              <span className="px-1.5 py-0.5 min-w-[18px] bg-emerald-500 text-white text-[10px] font-bold rounded-full text-center shadow-2xs">
+              <span className="px-1.5 py-0.5 min-w-[18px] bg-emerald-500 text-white text-[10px] font-bold rounded-full text-center">
                 {unreadCounts["all"]}
               </span>
             ) : (
@@ -197,7 +197,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
               className={cn(
                 "w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all duration-150 group",
                 isSelected
-                  ? "bg-primary text-white font-semibold shadow-sm"
+                  ? "bg-primary text-white font-semibold"
                   : hasUnread
                   ? "bg-emerald-50/40 hover:bg-emerald-50/80 text-grey10 font-bold"
                   : "hover:bg-grey1 text-grey8 hover:text-grey10"
@@ -246,7 +246,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
 
               <div className="flex items-center gap-1.5 shrink-0 ml-1">
                 {hasUnread ? (
-                  <span className="px-1.5 py-0.5 min-w-[20px] bg-emerald-500 text-white text-[10px] font-bold rounded-full text-center shadow-xs">
+                  <span className="px-1.5 py-0.5 min-w-[20px] bg-emerald-500 text-white text-[10px] font-bold rounded-full text-center">
                     {unreadCount}
                   </span>
                 ) : (
