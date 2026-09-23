@@ -50,32 +50,36 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
   );
 
   const isSubscribed = Boolean(
-    user && user.subscriptionStatus === "ACTIVE" && user.planId
+    user &&
+      (user.subscriptionStatus === "ACTIVE" ||
+        Boolean(user.planId) ||
+        Boolean(user.subscriptionId) ||
+        Boolean(user.plan))
   );
 
-  const isSeller = Boolean(
-    user && (user.role === "SELLER" || user.role === "ADMIN" || user.planId)
+  const canMessageBuyer = Boolean(
+    !user || isSubscribed || user.role === "SELLER" || user.role === "ADMIN"
   );
 
   const checkSubscription = () => {
     if (!user) {
       toast({
         title: "Login Required",
-        description: "Please sign in or register as a seller to text and chat with direct buyers.",
+        description: "Please sign in to text and chat with direct buyers.",
         variant: "info",
         action: (
           <ToastAction
             altText="Sign In"
             onClick={() => router.push("/auth/login")}
           >
-            Sign In / Register
+            Sign In
           </ToastAction>
         ),
       });
       return false;
     }
 
-    if (!isSubscribed) {
+    if (!isSubscribed && user.role !== "SELLER" && user.role !== "ADMIN") {
       toast({
         title: "Subscription Required",
         description: "Please subscribe to a plan to text and chat with direct buyers.",
@@ -115,10 +119,11 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
         description: "Redirecting to your conversation with the buyer...",
         variant: "success",
       });
+      const defaultMessage = `Hi ${productRequest.user?.name || "Buyer"}! I saw your request for "${productRequest.title}" on Lata.ng and I have it available.`;
       if (res?.data?.chatId) {
-        router.push(`/messages?id=${res.data.chatId}`);
+        router.push(`/messages?id=${res.data.chatId}&text=${encodeURIComponent(defaultMessage)}`);
       } else {
-        router.push("/messages");
+        router.push(`/messages?text=${encodeURIComponent(defaultMessage)}`);
       }
     } catch (err: any) {
       toast({
@@ -180,14 +185,17 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
       <AppAvatar
         src={productRequest.user?.avatar}
         name={buyerName}
-        className="w-8 h-8 text-xs font-bold shrink-0 mt-0.5 border border-grey2"
+        className={cn(
+          "w-8 h-8 text-xs font-bold shrink-0 mt-0.5 border border-grey2",
+          !user && "blur-sm select-none"
+        )}
       />
 
       {/* Message Content */}
       <div className="flex-1 min-w-0">
         {/* Header: Name, Category, Timestamp, YOUR REQUEST Badge */}
         <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-          <span className="text-xs font-bold text-grey10">
+          <span className={cn("text-xs font-bold text-grey10", !user && "blur-sm select-none")}>
             {buyerName}
           </span>
 
@@ -283,7 +291,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
                   </button>
                 )}
               </div>
-            ) : (!user || isSeller) ? (
+            ) : canMessageBuyer ? (
               <div className="flex items-center gap-1.5 ml-auto flex-wrap">
                 {/* In-App Chat Button */}
                 <button
@@ -314,7 +322,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
               </div>
             ) : (
               <span className="ml-auto text-[11px] font-medium text-grey6 bg-grey1 px-2.5 py-1 rounded-lg border border-grey2">
-                Sellers can respond
+                Subscribe to respond
               </span>
             )}
           </div>

@@ -9,6 +9,7 @@ import { PaperPlaneRightIcon } from "@atom/icons/PaperPlaneRight";
 import TextInput from "@components/input/TextInput";
 import EmojiPopover from "@components/input/EmojiPopover";
 import { EmojiIcon } from "@atom/icons/Emoji";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   activeChat: Chat | undefined;
@@ -22,6 +23,8 @@ export default function ChatInputArea(props: Props) {
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const initialText = searchParams.get("text");
 
   useEffect(() => {
     if (!isSocketConnected) {
@@ -32,8 +35,12 @@ export default function ChatInputArea(props: Props) {
   }, [isSocketConnected]);
 
   useEffect(() => {
-    setMessage("");
-  }, [props.activeChat?.id]);
+    if (initialText) {
+      setMessage(initialText);
+    } else {
+      setMessage("");
+    }
+  }, [props.activeChat?.id, initialText]);
 
   useEffect(() => {
     if (!user?.id) return;
