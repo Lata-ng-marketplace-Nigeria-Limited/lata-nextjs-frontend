@@ -8,7 +8,7 @@ import ProductGridList from "@atom/ProductGridList";
 import React, { useEffect, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 import { ProductListSkeleton } from "@components/skeleton/ProductCardSkeleton";
-import { selectedCity } from "@/utils/location";
+import { selectedCity, selectedState } from "@/utils/location";
 import { State } from "@/interface/location";
 import RollerSpinner from "@/components/molecule/RollerSpinner";
 
@@ -90,10 +90,9 @@ export default function LazyLoadProducts(props: Props) {
               price={formatPrice(product?.price)}
               productName={product?.name}
               description={product?.description}
-              state={selectedCity(
+              state={selectedState(
                 props.statesInNigeria,
                 product?.state,
-                product?.city,
               )}
               city={selectedCity(
                 props.statesInNigeria,
