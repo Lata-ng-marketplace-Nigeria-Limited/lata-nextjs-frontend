@@ -27,6 +27,7 @@ export interface PromoCode {
 export const validatePromoCodeApi = async (
   code: string,
   productId?: string,
+  planId?: string,
 ): Promise<{
   message: string;
   valid: boolean;
@@ -38,6 +39,7 @@ export const validatePromoCodeApi = async (
     const res = await $http.post("/payments/validate-promo-code", {
       code,
       productId,
+      planId,
     });
     return res.data;
   } catch (error: any) {

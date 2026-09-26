@@ -117,6 +117,7 @@ interface PaystackCustomFields {
 }
 
 export interface PaystackConfig {
+  key?: string;
   publicKey: string;
   email: string;
   firstname?: string;
@@ -125,6 +126,8 @@ export interface PaystackConfig {
   amount: number;
   ref?: string;
   reference?: string;
+  paymentUrl?: string;
+  authorization_url?: string;
   metadata?: Partial<PaystackMetadata>;
   currency?: "NGN" | "GHS" | "USD" | "ZAR" | string;
   channels?: PaymentChannels[];

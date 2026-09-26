@@ -11,7 +11,7 @@ import {
 import { deleteAProductApi } from "@/api/product";
 import ProductAsideArea from "@atom/ProductAsideArea";
 import MobileBorderArea from "@atom/MobileBorderArea";
-import { cn } from "@/utils";
+import { cn, safeParseJSON } from "@/utils";
 import Button from "@atom/Button";
 import HeaderText from "@atom/HeaderText";
 import Hr from "@atom/Hr";
@@ -21,6 +21,8 @@ import { SavedIcon } from "@atom/icons/Saved";
 import { ProfileIcon } from "@atom/icons/Profile";
 import { CallIcon } from "../atom/icons/Call";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import { Sparkles, CheckCircle2 } from "lucide-react";
+import PromotePostModal from "@components/modals/PromotePostModal";
 
 interface Props {
   product?: Product;
@@ -29,6 +31,7 @@ interface Props {
 export default function ProductInsights(props: Props) {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const [showPromoteModal, setShowPromoteModal] = useState(false);
   const { push: nav } = useRouter();
   const { toast } = useToast();
 
@@ -52,6 +55,15 @@ export default function ProductInsights(props: Props) {
       });
     }
   };
+
+  const metaObj = safeParseJSON(props.product?.meta || "{}");
+  const isPromoted = Boolean(
+    props.product?.isPromoted ||
+    metaObj?.isPromoted ||
+    props.product?.promotionType === "MINI" ||
+    props.product?.promotionType === "Mini" ||
+    (props.product?.promotionExpiresAt && new Date(props.product.promotionExpiresAt) > new Date())
+  );
 
   return (
     <ProductAsideArea>
@@ -102,12 +114,35 @@ export default function ProductInsights(props: Props) {
 
       {props.product?.status || user?.email.includes("rnwonder") ? (
         <MobileBorderArea
-          className={"flex h-fit flex-col px-2.5 py-6 sm:px-6"}
+          className={"flex h-fit flex-col gap-y-3 px-2.5 py-6 sm:px-6"}
           showBorderInDesktop
         >
+          {isPromoted && (
+            <div className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 p-3">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <div className="text-left">
+                <p className="text-xs font-bold text-emerald-800">
+                  Promotion Active ({props.product?.promotionType || "Mini"})
+                </p>
+                <p className="text-[11px] text-emerald-600">
+                  This post is currently featured in Trending
+                </p>
+              </div>
+            </div>
+          )}
+          <Button
+            className={`w-full flex items-center justify-center gap-2 ${isPromoted ? "!bg-emerald-600 hover:!bg-emerald-700 !text-white" : ""}`}
+            format={isPromoted ? "secondary" : "primary"}
+            onClick={() => {
+              setShowPromoteModal(true);
+            }}
+          >
+            {isPromoted ? <CheckCircle2 className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+            {isPromoted ? "Extend Promotion" : "Promote Post"}
+          </Button>
           <Button
             className={"w-full"}
-            format={"primary"}
+            format={"secondary"}
             onClick={() => {
               nav(DASHBOARD_PRODUCT_EDIT_ROUTE + "/" + props.product?.id);
             }}
@@ -150,6 +185,16 @@ export default function ProductInsights(props: Props) {
           </p>
         </MobileBorderArea>
       ) : null}
+
+      {showPromoteModal && props.product?.id && (
+        <PromotePostModal
+          isOpen={showPromoteModal}
+          productId={props.product.id}
+          productName={props.product.name}
+          isAlreadyPromoted={isPromoted}
+          onClose={() => setShowPromoteModal(false)}
+        />
+      )}
     </ProductAsideArea>
   );
 }

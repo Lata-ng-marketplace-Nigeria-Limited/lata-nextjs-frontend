@@ -12,12 +12,14 @@ import {
   verifySingleProductPromotionPaymentApi,
 } from "@/api/payment.client";
 import { validatePromoCodeApi } from "@/api/promo.client";
+// import { Sparkles } from "lucide-react";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   productId: string;
   productName?: string;
+  isAlreadyPromoted?: boolean;
   onSuccessRedirect?: () => void;
 }
 
@@ -26,6 +28,7 @@ export default function PromotePostModal({
   onClose,
   productId,
   productName,
+  isAlreadyPromoted,
   onSuccessRedirect,
 }: Props) {
   const [loading, setLoading] = useState(false);
@@ -95,7 +98,12 @@ export default function PromotePostModal({
         credentials: { paystackConfig } as any,
         onSuccess: async (response) => {
           setLoading(true);
-          const paymentRef = response.reference || response.trxref || "";
+          const paymentRef =
+            response.reference ||
+            response.trxref ||
+            paystackConfig?.reference ||
+            paystackConfig?.ref ||
+            "";
           try {
             await verifySingleProductPromotionPaymentApi(paymentRef);
             showToast(
@@ -149,19 +157,29 @@ export default function PromotePostModal({
         if (!show) handleNotNow();
       }}
       preventOverlayClose={false}
+      hideCloseButton
       contentClass="max-w-[460px] p-6 bg-white rounded-2xl shadow-xl border border-gray-100"
     >
       <div className="flex flex-col items-center text-center gap-y-4 py-2">
-        <div className="w-14 h-14 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-2xl mb-1">
-          🚀
-        </div>
+        {/* <div className={`w-12 h-12 rounded-full ${isAlreadyPromoted ? "bg-emerald-100 text-emerald-600" : "bg-purple-100 text-primary"} flex items-center justify-center mb-1`}>
+          <Sparkles className="w-6 h-6" />
+        </div> */}
 
         <h3 className="text-xl font-bold text-gray-900">
-          Promote only this post?
+          {isAlreadyPromoted ? "Extend Post Promotion" : "Promote only this post?"}
         </h3>
 
         <p className="text-sm text-gray-600 leading-relaxed">
-          {productName ? (
+          {isAlreadyPromoted ? (
+            productName ? (
+              <span>
+                <strong>"{productName}"</strong> is currently promoted! Extend your promotion for an additional{" "}
+                <strong>{settings.durationDays} days</strong>.
+              </span>
+            ) : (
+              `This post is currently promoted! Extend your promotion for an additional ${settings.durationDays} days.`
+            )
+          ) : productName ? (
             <span>
               Promote <strong>"{productName}"</strong> exclusively for{" "}
               {settings.durationDays} days!
@@ -184,17 +202,20 @@ export default function PromotePostModal({
               type="text"
               placeholder="e.g. WELCOME50"
               value={promoInput}
-              onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+              onChange={(e) => {
+                setPromoInput(e.target.value.toUpperCase());
+                if (appliedPromo) setAppliedPromo(null);
+              }}
               className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:border-primary uppercase font-mono"
             />
             <Button
               format="secondary"
               type="button"
               onClick={handleApplyPromo}
-              disabled={validatingPromo || !promoInput.trim()}
-              className="py-1.5 px-3 text-xs"
+              disabled={validatingPromo || !promoInput.trim() || !!appliedPromo}
+              className={`py-1.5 px-3 text-xs ${appliedPromo ? "!bg-emerald-600 !text-white" : ""}`}
             >
-              {validatingPromo ? "..." : "Apply"}
+              {validatingPromo ? "..." : appliedPromo ? "Applied" : "Apply"}
             </Button>
           </div>
           {appliedPromo && (
@@ -219,12 +240,14 @@ export default function PromotePostModal({
         <div className="flex flex-col gap-y-3 w-full mt-2">
           <Button
             format="primary"
-            className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 text-white rounded-xl"
+            className={`w-full h-12 text-base font-semibold ${isAlreadyPromoted ? "bg-emerald-600 hover:bg-emerald-700" : "bg-primary hover:bg-primary/90"} text-white rounded-xl`}
             onClick={handlePromoteYes}
             disabled={loading}
           >
             {loading
               ? "Processing..."
+              : isAlreadyPromoted
+              ? `Extend for ${formatPrice(finalPayAmount)}`
               : `YES - Pay ${formatPrice(finalPayAmount)}`}
           </Button>
 

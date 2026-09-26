@@ -24,6 +24,8 @@ import { generateSellerAnalyticsApi } from "@/api/view";
 import PercentageOff from "../atom/PercentageOff";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 import { useRoleSwitchStore } from "@/store/states/localStore";
+import { Sparkles, CheckCircle2 } from "lucide-react";
+import PromotePostModal from "@components/modals/PromotePostModal";
 
 type Props = {
   imageSrc?: string;
@@ -58,6 +60,21 @@ export default function ProductCard(props: Props) {
   const [planName, setPlanName] = useState("");
   const [initialAmount, setInitialAmount] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
+  const [showPromoteModal, setShowPromoteModal] = useState(false);
+  const isOwner = !!user?.id && !!props.product?.userId && user?.id === props.product?.userId;
+  const metaObj = typeof props.product?.meta === "string"
+    ? safeParseJSON(props.product?.meta || "{}")
+    : (props.product?.meta || {});
+
+  const isPromoted = Boolean(
+    props.product?.isPromoted ||
+    metaObj?.isPromoted ||
+    (props.product as any)?.promotionType === "MINI" ||
+    (props.product as any)?.promotionType === "Mini" ||
+    metaObj?.promotionType === "MINI" ||
+    metaObj?.promotionType === "Mini" ||
+    (props.product?.promotionExpiresAt && !isNaN(new Date(props.product.promotionExpiresAt).getTime()) && new Date(props.product.promotionExpiresAt) > new Date())
+  );
 
   const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0 });
   const isVisible = isIntersecting;
@@ -121,20 +138,25 @@ export default function ProductCard(props: Props) {
       handleImage();
     }
 
-    if (props?.product?.planName) {
+    const metaObjInEffect = typeof props.product?.meta === "string"
+      ? safeParseJSON(props.product?.meta || "{}")
+      : (props.product?.meta || {});
+
+    const isPromotedInEffect = Boolean(
+      props.product?.isPromoted ||
+      metaObjInEffect?.isPromoted ||
+      (props.product as any)?.promotionType === "MINI" ||
+      (props.product as any)?.promotionType === "Mini" ||
+      metaObjInEffect?.promotionType === "MINI" ||
+      metaObjInEffect?.promotionType === "Mini"
+    );
+
+    if (isPromotedInEffect) {
+      setPlanName(props.product?.promotionType || metaObjInEffect?.promotionType || "Mini");
+    } else if (metaObjInEffect?.planName) {
+      setPlanName(metaObjInEffect.planName);
+    } else if (props?.product?.planName) {
       setPlanName(props?.product?.planName);
-    }
-
-    if (props.product?.meta) {
-      const meta = safeParseJSON(props.product?.meta);
-      setPlanName(meta?.planName);
-    }
-
-    if (
-      (props.product as any)?.isPromoted ||
-      (props.product as any)?.promotionType === "MINI"
-    ) {
-      setPlanName("Mini");
     }
   }, [
     user,
@@ -373,29 +395,69 @@ export default function ProductCard(props: Props) {
           </p>
         </Link>
 
-        <div
-          className={cn("flex items-end justify-end", {
-            hidden: props.createProductPreview || !showSaved,
-          })}
-        >
-          <Button
-            format={"icon"}
-            className={
-              "grid h-6 w-6 place-items-center rounded-full bg-offwhite after:hidden hover:bg-offwhite sm:h-8 sm:w-8"
-            }
-            onClick={handleSaveProduct}
-            disabled={loading}
-            aria-label={saved ? "un save product" : "save product"}
-          >
-            <SavedIcon
-              className={"h-4 w-4 sm:h-6 sm:w-6"}
-              pathClass={cn("stroke-primary", {
-                "fill-primary": saved,
-              })}
-            />
-          </Button>
-        </div>
+        {isOwner && !props.createProductPreview ? (
+          <div className="flex items-end justify-end">
+            {isPromoted ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowPromoteModal(true);
+                }}
+                className="flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-semibold text-emerald-700 transition-colors hover:bg-emerald-600 hover:text-white sm:px-2.5 sm:text-xs"
+                title="This post is currently promoted. Click to extend."
+              >
+                <CheckCircle2 className="h-3 w-3" />
+                <span>Promoted</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowPromoteModal(true);
+                }}
+                className="flex items-center gap-1 rounded-full bg-purple-100 px-2 py-1 text-[10px] font-semibold text-primary transition-colors hover:bg-primary hover:text-white sm:px-2.5 sm:text-xs"
+                title="Promote this post"
+              >
+                <Sparkles className="h-3 w-3" />
+                <span>Promote</span>
+              </button>
+            )}
+          </div>
+        ) : !props.createProductPreview && showSaved ? (
+          <div className="flex items-end justify-end">
+            <Button
+              format={"icon"}
+              className={
+                "grid h-6 w-6 place-items-center rounded-full bg-offwhite after:hidden hover:bg-offwhite sm:h-8 sm:w-8"
+              }
+              onClick={handleSaveProduct}
+              disabled={loading}
+              aria-label={saved ? "un save product" : "save product"}
+            >
+              <SavedIcon
+                className={"h-4 w-4 sm:h-6 sm:w-6"}
+                pathClass={cn("stroke-primary", {
+                  "fill-primary": saved,
+                })}
+              />
+            </Button>
+          </div>
+        ) : null}
       </div>
+
+      {showPromoteModal && props.product?.id && (
+        <PromotePostModal
+          isOpen={showPromoteModal}
+          productId={props.product.id}
+          productName={props.product.name}
+          isAlreadyPromoted={isPromoted}
+          onClose={() => setShowPromoteModal(false)}
+        />
+      )}
     </div>
   );
 }
