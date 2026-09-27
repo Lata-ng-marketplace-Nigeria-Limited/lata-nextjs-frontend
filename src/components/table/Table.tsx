@@ -149,29 +149,27 @@ export const Table = (props: Props) => {
                         );
                       } else {
                         return (
-                          <>
-                            <td
-                              className={cn(
-                                "px-6 py-4",
-                                {
-                                  "cursor-pointer":
-                                    !!props.onColumnClick &&
-                                    !props.keyNotCursor?.includes(key),
-                                },
-                                props.tdClassName,
-                              )}
-                              key={index}
-                              onClick={() =>
-                                props.onColumnClick?.({
-                                  key,
-                                  rowData:
-                                    props.tableData?.[mainIndex]?.rowData,
-                                })
-                              }
-                            >
-                              {row[key]}
-                            </td>
-                          </>
+                          <td
+                            className={cn(
+                              "px-6 py-4",
+                              {
+                                "cursor-pointer":
+                                  !!props.onColumnClick &&
+                                  !props.keyNotCursor?.includes(key),
+                              },
+                              props.tdClassName,
+                            )}
+                            key={key || index}
+                            onClick={() =>
+                              props.onColumnClick?.({
+                                key,
+                                rowData:
+                                  props.tableData?.[mainIndex]?.rowData,
+                              })
+                            }
+                          >
+                            {row[key]}
+                          </td>
                         );
                       }
                     })}

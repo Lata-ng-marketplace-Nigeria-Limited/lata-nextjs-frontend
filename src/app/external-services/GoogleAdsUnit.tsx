@@ -10,19 +10,33 @@ const GoogleAdsUnit = ({ ...props }: Props) => {
 
   React.useEffect(() => {
     if (initialized.current) return;
-    try {
+
+    const pushAd = () => {
+      if (initialized.current) return;
       if (
         typeof window !== "undefined" &&
         adRef.current &&
+        adRef.current.offsetWidth > 0 &&
         !adRef.current.getAttribute("data-adsbygoogle-status")
       ) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-          {}
-        );
-        initialized.current = true;
+        try {
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
+            {}
+          );
+          initialized.current = true;
+        } catch (err) {
+          console.error("Google Ads error:", err);
+        }
       }
-    } catch (err) {
-      console.error("Google Ads error:", err);
+    };
+
+    pushAd();
+
+    if (!initialized.current) {
+      const rafId = requestAnimationFrame(() => {
+        pushAd();
+      });
+      return () => cancelAnimationFrame(rafId);
     }
   }, []);
 

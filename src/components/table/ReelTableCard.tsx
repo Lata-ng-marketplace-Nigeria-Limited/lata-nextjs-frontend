@@ -1,31 +1,19 @@
 import { Reel } from "@/api/reels";
 import { cn } from "@/utils";
-import Image from "next/image";
+import ReelThumbnail from "@components/reels/ReelThumbnail";
 
 interface Props {
   reel: Reel;
 }
 
 export default function ReelTableCard({ reel }: Props) {
-  const getThumbnailUrl = (videoUrl?: string) => {
-    if (videoUrl && videoUrl.includes("cloudinary.com")) {
-      return videoUrl
-        .replace("/video/upload/", "/video/upload/so_0/")
-        .replace(/\.[^/.]+$/, ".jpg");
-    }
-    return "/images/video-placeholder.jpg";
-  };
-
   return (
     <div className={cn("flex gap-x-3 items-center")}>
       <div className={cn("w-16 h-16 rounded-md shrink-0 relative overflow-hidden bg-black border border-grey2")}>
-        <Image
-          className="object-cover w-full h-full rounded-md"
-          fill
-          sizes="64px"
-          src={getThumbnailUrl(reel?.video_url)}
-          alt={reel?.title || "Reel"}
-          unoptimized
+        <ReelThumbnail
+          videoUrl={reel?.video_url}
+          thumbnailUrl={reel?.thumbnail_url}
+          title={reel?.title}
         />
       </div>
 

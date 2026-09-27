@@ -6,6 +6,7 @@ import { GroupedReels, Reel } from "@/api/reels";
 import { ReelViewerModal } from "./ReelViewerModal";
 import { Play } from "lucide-react";
 import { getThumbnailUrl } from "@/utils";
+import ReelThumbnail from "./ReelThumbnail";
 
 interface Props {
   reelsGrouped: GroupedReels[];
@@ -61,13 +62,11 @@ export const ReelsRow = ({ reelsGrouped, title, singleSellerMode }: Props) => {
                 {/* Circular Card Container */}
                 <div className="relative w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] rounded-full p-[2.5px] border-2 border-primary bg-white transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
                   <div className="relative w-full h-full rounded-full overflow-hidden bg-grey1">
-                    <Image
-                      src={thumbnail || activeGroups[0].user.avatar}
-                      alt={reel.title}
-                      fill
-                      sizes="(max-width: 640px) 70px, 85px"
-                      className="object-cover"
-                      unoptimized
+                    <ReelThumbnail
+                      videoUrl={reel.video_url}
+                      thumbnailUrl={reel.thumbnail_url}
+                      fallbackAvatar={activeGroups[0].user.avatar}
+                      title={reel.title}
                     />
                     {/* Play Hover Overlay */}
                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full">
@@ -86,7 +85,6 @@ export const ReelsRow = ({ reelsGrouped, title, singleSellerMode }: Props) => {
         ) : (
           activeGroups.map((group) => {
             const firstReel = group.reels[0];
-            const thumbnail = getThumbnailUrl(firstReel.video_url);
             return (
               <div
                 key={group.user_id}
@@ -99,13 +97,11 @@ export const ReelsRow = ({ reelsGrouped, title, singleSellerMode }: Props) => {
                 {/* Circular Card Container */}
                 <div className="relative w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] rounded-full p-[2.5px] border-2 border-primary bg-white transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
                   <div className="relative w-full h-full rounded-full overflow-hidden bg-grey1">
-                    <Image
-                      src={group.user.avatar || thumbnail}
-                      alt={firstReel.title}
-                      fill
-                      sizes="(max-width: 640px) 70px, 85px"
-                      className="object-cover"
-                      unoptimized
+                    <ReelThumbnail
+                      videoUrl={firstReel.video_url}
+                      thumbnailUrl={firstReel.thumbnail_url}
+                      fallbackAvatar={group.user.avatar}
+                      title={firstReel.title}
                     />
                     {/* Play Hover Overlay */}
                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full">

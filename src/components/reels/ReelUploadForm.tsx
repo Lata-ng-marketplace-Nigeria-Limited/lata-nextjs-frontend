@@ -9,6 +9,7 @@ import TextAreaInput from "@components/input/TextAreaInput";
 import Button from "@atom/Button";
 import { UploadCloud, Play, FileVideo, AlertCircle, Trash2, Video, PlusCircle } from "lucide-react";
 import { cn } from "@/utils";
+import { generateVideoThumbnail } from "@/utils/reels";
 
 export const ReelUploadForm = () => {
   const [title, setTitle] = useState("");
@@ -95,10 +96,13 @@ export const ReelUploadForm = () => {
 
     setLoading(true);
     try {
+      const thumbnailBlob = await generateVideoThumbnail(videoFile);
+
       await createReelApi({
         title: title.trim(),
         description: description.trim(),
         file: videoFile,
+        thumbnail: thumbnailBlob,
       });
 
       toast({

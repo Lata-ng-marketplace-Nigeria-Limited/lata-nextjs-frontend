@@ -2,13 +2,23 @@
 
 import React, { useState } from "react";
 import AppAvatar from "@molecule/Avatar";
-import { ProductRequest, respondToProductRequestApi, closeProductRequestApi } from "@/api/productRequest";
+import {
+  ProductRequest,
+  respondToProductRequestApi,
+  closeProductRequestApi,
+} from "@/api/productRequest";
 import { formatPrice, cn } from "@/utils";
 import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import { useToast } from "@components/ui/use-toast";
 import { ToastAction } from "@components/ui/toast";
-import { MessageSquare, MapPin, Loader2, MessageCircle, XCircle } from "lucide-react";
+import {
+  MessageSquare,
+  MapPin,
+  Loader2,
+  MessageCircle,
+  XCircle,
+} from "lucide-react";
 
 interface Props {
   productRequest: ProductRequest;
@@ -46,7 +56,9 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
   const currentUserId = user?.id || (user as any)?._id;
   const requestUserId = productRequest.userId || productRequest.user?.id;
   const isOwner = Boolean(
-    currentUserId && requestUserId && String(currentUserId) === String(requestUserId)
+    currentUserId &&
+      requestUserId &&
+      String(currentUserId) === String(requestUserId),
   );
 
   const isSubscribed = Boolean(
@@ -54,11 +66,11 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
       (user.subscriptionStatus === "ACTIVE" ||
         Boolean(user.planId) ||
         Boolean(user.subscriptionId) ||
-        Boolean(user.plan))
+        Boolean(user.plan)),
   );
 
   const canMessageBuyer = Boolean(
-    !user || isSubscribed || user.role === "SELLER" || user.role === "ADMIN"
+    !user || isSubscribed || user.role === "SELLER" || user.role === "ADMIN",
   );
 
   const checkSubscription = () => {
@@ -82,7 +94,8 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
     if (!isSubscribed && user.role !== "SELLER" && user.role !== "ADMIN") {
       toast({
         title: "Subscription Required",
-        description: "Please subscribe to a plan to text and chat with direct buyers.",
+        description:
+          "Please subscribe to a plan to text and chat with direct buyers.",
         variant: "info",
         action: (
           <ToastAction
@@ -121,7 +134,9 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
       });
       const defaultMessage = `Hi ${productRequest.user?.name || "Buyer"}! I saw your request for "${productRequest.title}" on Lata.ng and I have it available.`;
       if (res?.data?.chatId) {
-        router.push(`/messages?id=${res.data.chatId}&text=${encodeURIComponent(defaultMessage)}`);
+        router.push(
+          `/messages?id=${res.data.chatId}&text=${encodeURIComponent(defaultMessage)}`,
+        );
       } else {
         router.push(`/messages?text=${encodeURIComponent(defaultMessage)}`);
       }
@@ -143,7 +158,8 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
     if (!rawPhone) {
       toast({
         title: "No Phone Number",
-        description: "Buyer has not provided a phone number for direct WhatsApp messaging.",
+        description:
+          "Buyer has not provided a phone number for direct WhatsApp messaging.",
         variant: "info",
       });
       return;
@@ -155,7 +171,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
     }
 
     const message = encodeURIComponent(
-      `Hi ${productRequest.user?.name || "Buyer"}! I saw your request for "${productRequest.title}" on Lata.ng and I have it available.`
+      `Hi ${productRequest.user?.name || "Buyer"}! I saw your request for "${productRequest.title}" on Lata.ng and I have it available.`,
     );
 
     window.open(`https://wa.me/${cleanPhone}?text=${message}`, "_blank");
@@ -173,95 +189,105 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
     return `${Math.floor(diff / 86400)}d ago`;
   };
 
-  const createdDate = productRequest.createdAt || (productRequest as any).created_at;
+  const createdDate =
+    productRequest.createdAt || (productRequest as any).created_at;
   const buyerName = productRequest.user?.name || "Buyer";
 
   return (
-    <div className={cn(
-      "flex gap-2.5 px-3 py-3 transition-colors border-b border-grey2/40",
-      isOwner ? "bg-purple-50/30 border-l-4 border-l-primary" : "hover:bg-grey1/30"
-    )}>
+    <div
+      className={cn(
+        "flex gap-2.5 border-b border-grey2/40 px-3 py-3 transition-colors",
+        isOwner
+          ? "border-l-4 border-l-primary bg-purple-50/30"
+          : "hover:bg-grey1/30",
+      )}
+    >
       {/* Buyer Initials Avatar */}
       <AppAvatar
         src={productRequest.user?.avatar}
         name={buyerName}
         className={cn(
-          "w-8 h-8 text-xs font-bold shrink-0 mt-0.5 border border-grey2",
-          !user && "blur-sm select-none"
+          "mt-0.5 h-8 w-8 shrink-0 border border-grey2 text-xs font-bold",
+          !user && "select-none blur-sm",
         )}
       />
 
       {/* Message Content */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         {/* Header: Name, Category, Timestamp, YOUR REQUEST Badge */}
-        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-          <span className={cn("text-xs font-bold text-grey10", !user && "blur-sm select-none")}>
+        <div className="mb-1.5 flex flex-wrap items-center gap-2">
+          <span
+            className={cn(
+              "text-xs font-bold text-grey10",
+              !user && "select-none blur-sm",
+            )}
+          >
             {buyerName}
           </span>
 
           {isOwner ? (
-            <span className="text-[11px] bg-primary text-white font-bold px-2.5 py-0.5 rounded-full tracking-wider">
+            <span className="rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-bold tracking-wider text-white">
               YOUR REQUEST
             </span>
           ) : (
-            <span className="text-[10px] font-semibold text-primary bg-purp2/80 px-2 py-0.5 rounded-full">
+            <span className="rounded-full bg-purp2/80 px-2 py-0.5 text-[10px] font-semibold text-primary">
               #{productRequest.category?.name || "General"}
             </span>
           )}
 
           {isOwner && (
-            <span className="text-[10px] font-semibold text-primary bg-purp2/80 px-2 py-0.5 rounded-full">
+            <span className="rounded-full bg-purp2/80 px-2 py-0.5 text-[10px] font-semibold text-primary">
               #{productRequest.category?.name || "General"}
             </span>
           )}
 
           {productRequest.status === "INACTIVE" && (
-            <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-300">
+            <span className="rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
               EXPIRED (7+ DAYS)
             </span>
           )}
 
           {productRequest.status === "CLOSED" && (
-            <span className="text-[10px] bg-grey2 text-grey7 font-bold px-2 py-0.5 rounded-full border border-grey3">
+            <span className="rounded-full border border-grey3 bg-grey2 px-2 py-0.5 text-[10px] font-bold text-grey7">
               CLOSED
             </span>
           )}
 
-          <span className="text-[10px] text-grey5 ml-auto">
+          <span className="ml-auto text-[10px] text-grey5">
             {timeAgo(createdDate)}
           </span>
         </div>
 
         {/* Minimal Chat Bubble */}
-        <div className="inline-block bg-white border border-grey2 rounded-2xl rounded-tl-xs p-3 text-xs text-grey9 max-w-2xl w-full">
-          <p className="font-semibold text-xs sm:text-sm text-grey10">
+        <div className="rounded-tl-xs inline-block w-full max-w-2xl rounded-2xl border border-grey2 bg-white p-3 text-xs text-grey9">
+          <p className="text-xs font-semibold text-grey10 sm:text-sm">
             {productRequest.title}
           </p>
 
           {productRequest.description && (
-            <p className="text-xs text-grey7 mt-1 leading-relaxed">
+            <p className="mt-1 text-xs leading-relaxed text-grey7">
               {productRequest.description}
             </p>
           )}
 
           {/* Badges & Action */}
-          <div className="flex flex-wrap items-center justify-between gap-2 mt-2 pt-2 border-t border-grey1">
-            <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-grey1 pt-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               {productRequest.requesterType && (
-                <span className="px-2 py-0.5 bg-blue-50 text-blue-700 font-semibold rounded-md text-[11px] border border-blue-200/60">
+                <span className="rounded-md border border-blue-200/60 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
                   {productRequest.requesterType}
                 </span>
               )}
 
               {productRequest.budget && (
-                <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded-md text-[11px] border border-emerald-200/60">
+                <span className="rounded-md border border-emerald-200/60 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
                   {formatPrice(productRequest.budget)}
                 </span>
               )}
 
               {productRequest.state && (
-                <span className="px-2 py-0.5 bg-grey1 text-grey7 rounded-md text-[11px] border border-grey2 flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-grey5" />
+                <span className="flex items-center gap-1 rounded-md border border-grey2 bg-grey1 px-2 py-0.5 text-[11px] text-grey7">
+                  <MapPin className="h-3 w-3 text-grey5" />
                   {productRequest.city ? `${productRequest.city}, ` : ""}
                   {productRequest.state}
                 </span>
@@ -269,22 +295,22 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
             </div>
 
             {isOwner ? (
-              <div className="flex items-center gap-2 ml-auto">
-                <span className="text-[11px] font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-lg">
+              <div className="ml-auto flex items-center gap-2">
+                <span className="rounded-lg bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
                   Posted by You
                 </span>
                 {productRequest.status === "OPEN" && (
                   <button
                     disabled={loadingClose}
                     onClick={handleCloseRequest}
-                    className="px-2 py-1 bg-grey1 hover:bg-grey2 text-grey8 hover:text-grey10 rounded-lg text-xs font-medium flex items-center gap-1 transition-all border border-grey3 disabled:opacity-50"
+                    className="flex items-center gap-1 rounded-lg border border-grey3 bg-grey1 px-2 py-1 text-xs font-medium text-grey8 transition-all hover:bg-grey2 hover:text-grey10 disabled:opacity-50"
                     title="Close this request"
                   >
                     {loadingClose ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <Loader2 className="h-3 w-3 animate-spin" />
                     ) : (
                       <>
-                        <XCircle className="w-3.5 h-3.5 text-red-500" />
+                        <XCircle className="h-3.5 w-3.5 text-red-500" />
                         <span>Close Request</span>
                       </>
                     )}
@@ -292,19 +318,19 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
                 )}
               </div>
             ) : canMessageBuyer ? (
-              <div className="flex items-center gap-1.5 ml-auto flex-wrap">
+              <div className="ml-auto flex flex-wrap items-center gap-1.5">
                 {/* In-App Chat Button */}
                 <button
                   disabled={loadingChat}
                   onClick={handleRespond}
-                  className="px-2.5 py-1 bg-primary text-white hover:bg-primary/90 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-white transition-all hover:bg-primary/90 disabled:opacity-50"
                   title="Chat in Lata App"
                 >
                   {loadingChat ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <Loader2 className="h-3 w-3 animate-spin" />
                   ) : (
                     <>
-                      <MessageSquare className="w-3 h-3" />
+                      <MessageSquare className="h-3 w-3" />
                       <span>In-App Chat</span>
                     </>
                   )}
@@ -313,15 +339,15 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
                 {/* WhatsApp Button */}
                 <button
                   onClick={handleWhatsApp}
-                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all"
+                  className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white transition-all hover:bg-emerald-700"
                   title="Text Buyer via WhatsApp"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
+                  <MessageCircle className="h-3.5 w-3.5" />
                   <span>WhatsApp</span>
                 </button>
               </div>
             ) : (
-              <span className="ml-auto text-[11px] font-medium text-grey6 bg-grey1 px-2.5 py-1 rounded-lg border border-grey2">
+              <span className="ml-auto rounded-lg border border-grey2 bg-grey1 px-2.5 py-1 text-[11px] font-medium text-grey6">
                 Subscribe to respond
               </span>
             )}
