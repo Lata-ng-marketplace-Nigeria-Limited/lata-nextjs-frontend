@@ -216,7 +216,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
       <div
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
         className={cn(
-          "w-full h-11 sm:h-12 px-3 flex items-center justify-between border border-grey5 rounded-lg bg-white cursor-pointer hover:border-grey7 transition select-none text-xs sm:text-sm",
+          "w-full h-11 min-h-[40px] sm:h-12 px-3 flex items-center justify-between border border-grey5 rounded-lg bg-white cursor-pointer hover:border-grey7 transition select-none text-base",
           {
             "border-primary ring-1 ring-primary/20": isOpen,
             "opacity-50 cursor-not-allowed bg-gray-50": disabled,

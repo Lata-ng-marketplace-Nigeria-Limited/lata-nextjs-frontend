@@ -49,7 +49,7 @@ export default function ComboBox(props: Props) {
       name={props.name}
     >
       <div className={cn(`relative w-full w-[1000px]`, props.wrapperClass)}>
-        <div className="relative flex w-full items-center cursor-default overflow-hidden bg-white border border-grey3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/30 rounded-lg text-left shadow-sm focus:outline-none sm:text-sm">
+        <div className="relative flex w-full items-center cursor-default overflow-hidden bg-white border border-grey3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/30 rounded-lg text-left shadow-sm focus:outline-none text-base">
           <Combobox.Input
             required={props.required}
             disabled={props.disabled || props.loading}
@@ -61,11 +61,12 @@ export default function ComboBox(props: Props) {
               leading-5 
               text-gray-900 
               
-              h-[25px] 
-              sm:h-[36px]
+              h-[40px] 
+              min-h-[40px]
+              sm:h-[48px]
               bg-white
               px-2.5 
-              text-xs
+              text-base
               outline-none
               border-none
               hover:border-none
@@ -91,8 +92,9 @@ export default function ComboBox(props: Props) {
               
               sm:py-2.5
               sm:px-2
-              h-[25px] 
-              sm:h-[36px]
+              h-[40px] 
+              min-h-[40px]
+              sm:h-[48px]
             `,
               props.buttonClass,
             )}

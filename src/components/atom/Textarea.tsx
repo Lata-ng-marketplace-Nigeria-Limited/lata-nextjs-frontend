@@ -30,14 +30,14 @@ const Textarea = React.forwardRef(
         ref={ref as any}
         className={cn(
           `
+          min-h-[40px]
           h-[3.125rem]
           sm:h-[4.375rem]
           px-4
           w-full
           rounded-md
           outline-none
-          text-xs
-          sm:text-sm
+          text-base
           text-grey9
           placeholder:text-grey5
           border

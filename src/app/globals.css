@@ -91,5 +91,13 @@ input::-ms-clear {
   scrollbar-color: #cbd5e1 #f1f5f9;
 }
 
+/* Global input sizing rules: at least 40px height and 16px (1rem) font size */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+select,
+textarea {
+  min-height: 40px;
+  font-size: 1rem;
+}
+
 
 

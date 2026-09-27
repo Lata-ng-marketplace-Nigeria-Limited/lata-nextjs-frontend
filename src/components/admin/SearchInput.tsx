@@ -63,13 +63,15 @@ const SearchInput = React.forwardRef(
           className={cn(
             `
               relative
-              h-[35px]
+              h-[40px]
+              min-h-[40px]
               w-full
               rounded-[10px]
-            bg-offwhite
+              bg-offwhite
               px-2
               indent-6
               outline-none
+              text-base
               sm:h-[50px]
               sm:px-4
               `,

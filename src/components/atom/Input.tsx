@@ -29,14 +29,14 @@ const Input = React.forwardRef(
         ref={ref as any}
         className={cn(
           `
-          h-[2rem]
+          h-10
+          min-h-[40px]
           sm:h-12 
           px-4
           w-full
           rounded-md
           outline-none
-          text-xs
-          sm:text-sm
+          text-base
           text-grey9
           placeholder:text-grey5
           border
