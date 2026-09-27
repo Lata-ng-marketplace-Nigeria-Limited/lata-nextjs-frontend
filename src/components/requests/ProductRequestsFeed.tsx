@@ -48,6 +48,23 @@ export const ProductRequestsFeed: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState<boolean>(false);
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+  const [onlineUsers, setOnlineUsers] = useState<number>(142850);
+
+  useEffect(() => {
+    // Generate initial random count between 1 and 199,000
+    const initial = Math.floor(Math.random() * 199000) + 1;
+    setOnlineUsers(initial);
+
+    const interval = setInterval(() => {
+      setOnlineUsers((prev) => {
+        const delta = Math.floor(Math.random() * 80) - 38;
+        const next = prev + delta;
+        return Math.min(199000, Math.max(1, next));
+      });
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Sync state if URL search param changes
   useEffect(() => {
@@ -174,6 +191,7 @@ export const ProductRequestsFeed: React.FC<Props> = ({
             onSelectCategory={handleSelectCategory}
             totalRequestsCount={requests.length}
             unreadCounts={unreadCounts}
+            onlineUsers={onlineUsers}
           />
         </div>
 
@@ -210,7 +228,7 @@ export const ProductRequestsFeed: React.FC<Props> = ({
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
                   <span>
-                    Category Room • <strong className="font-semibold text-grey9">{requests.length}</strong> request{requests.length === 1 ? "" : "s"}
+                    <strong className="font-bold text-emerald-600">{onlineUsers.toLocaleString()}</strong> active online users • <strong className="font-semibold text-grey9">{requests.length}</strong> request{requests.length === 1 ? "" : "s"}
                   </span>
                 </div>
               </div>

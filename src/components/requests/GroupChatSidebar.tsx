@@ -12,6 +12,7 @@ interface Props {
   onSelectCategory: (id: string) => void;
   totalRequestsCount: number;
   unreadCounts?: Record<string, number>;
+  onlineUsers?: number;
 }
 
 export const GroupChatSidebar: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const GroupChatSidebar: React.FC<Props> = ({
   onSelectCategory,
   totalRequestsCount,
   unreadCounts = {},
+  onlineUsers = 1,
 }) => {
   const { user } = useUser();
   const [filterQuery, setFilterQuery] = useState("");
@@ -43,9 +45,15 @@ export const GroupChatSidebar: React.FC<Props> = ({
               <h2 className="text-sm font-bold text-grey10 leading-none">
                 Category Rooms
               </h2>
-              <span className="text-[11px] text-grey6">
-                Buyer & Seller Channels
-              </span>
+              <div className="flex items-center gap-1.5 text-[11px] text-grey6 mt-1">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span className="font-semibold text-emerald-600">
+                  {onlineUsers.toLocaleString()} active online
+                </span>
+              </div>
             </div>
           </div>
           <span className="px-2 py-0.5 rounded-full bg-purp2 text-primary font-bold text-[11px]">
