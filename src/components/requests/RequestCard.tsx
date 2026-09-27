@@ -13,11 +13,20 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@components/ui/use-toast";
 import { ToastAction } from "@components/ui/toast";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@components/ui/dialog";
+import {
   MessageSquare,
   MapPin,
   Loader2,
   MessageCircle,
   XCircle,
+  Crown,
 } from "lucide-react";
 
 interface Props {
@@ -31,6 +40,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
   const { toast } = useToast();
   const [loadingChat, setLoadingChat] = useState(false);
   const [loadingClose, setLoadingClose] = useState(false);
+  const [showSubModal, setShowSubModal] = useState(false);
 
   const handleCloseRequest = async () => {
     try {
@@ -65,10 +75,6 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
     user && user.subscriptionStatus === "ACTIVE"
   );
 
-  const canMessageBuyer = Boolean(
-    !user || isSubscribed || user.role === "ADMIN"
-  );
-
   const checkSubscription = () => {
     if (!user) {
       toast({
@@ -88,20 +94,7 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
     }
 
     if (!isSubscribed && user.role !== "ADMIN") {
-      toast({
-        title: "Subscription Required",
-        description:
-          "Please subscribe to an active plan to text and chat with direct buyers.",
-        variant: "info",
-        action: (
-          <ToastAction
-            altText="Subscribe Now"
-            onClick={() => router.push("/subscriptions")}
-          >
-            Subscribe Now
-          </ToastAction>
-        ),
-      });
+      setShowSubModal(true);
       return false;
     }
 
@@ -190,166 +183,200 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
   const buyerName = productRequest.user?.name || "Buyer";
 
   return (
-    <div
-      className={cn(
-        "flex gap-2.5 border-b border-grey2/40 px-3 py-3 transition-colors",
-        isOwner
-          ? "border-l-4 border-l-primary bg-purple-50/30"
-          : "hover:bg-grey1/30",
-      )}
-    >
-      {/* Buyer Initials Avatar */}
-      <AppAvatar
-        src={productRequest.user?.avatar}
-        name={buyerName}
+    <>
+      <div
         className={cn(
-          "mt-0.5 h-8 w-8 shrink-0 border border-grey2 text-xs font-bold",
-          !user && "select-none blur-sm",
+          "flex gap-2.5 border-b border-grey2/40 px-3 py-3 transition-colors",
+          isOwner
+            ? "border-l-4 border-l-primary bg-purple-50/30"
+            : "hover:bg-grey1/30",
         )}
-      />
-
-      {/* Message Content */}
-      <div className="min-w-0 flex-1">
-        {/* Header: Name, Category, Timestamp, YOUR REQUEST Badge */}
-        <div className="mb-1.5 flex flex-wrap items-center gap-2">
-          <span
-            className={cn(
-              "text-xs font-bold text-grey10",
-              !user && "select-none blur-sm",
-            )}
-          >
-            {buyerName}
-          </span>
-
-          {isOwner ? (
-            <span className="rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-bold tracking-wider text-white">
-              YOUR REQUEST
-            </span>
-          ) : (
-            <span className="rounded-full bg-purp2/80 px-2 py-0.5 text-[10px] font-semibold text-primary">
-              #{productRequest.category?.name || "General"}
-            </span>
+      >
+        {/* Buyer Initials Avatar */}
+        <AppAvatar
+          src={productRequest.user?.avatar}
+          name={buyerName}
+          className={cn(
+            "mt-0.5 h-8 w-8 shrink-0 border border-grey2 text-xs font-bold",
+            !user && "select-none blur-sm",
           )}
+        />
 
-          {isOwner && (
-            <span className="rounded-full bg-purp2/80 px-2 py-0.5 text-[10px] font-semibold text-primary">
-              #{productRequest.category?.name || "General"}
-            </span>
-          )}
-
-          {productRequest.status === "INACTIVE" && (
-            <span className="rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
-              EXPIRED (7+ DAYS)
-            </span>
-          )}
-
-          {productRequest.status === "CLOSED" && (
-            <span className="rounded-full border border-grey3 bg-grey2 px-2 py-0.5 text-[10px] font-bold text-grey7">
-              CLOSED
-            </span>
-          )}
-
-          <span className="ml-auto text-[10px] text-grey5">
-            {timeAgo(createdDate)}
-          </span>
-        </div>
-
-        {/* Minimal Chat Bubble */}
-        <div className="rounded-tl-xs inline-block w-full max-w-2xl rounded-2xl border border-grey2 bg-white p-3 text-xs text-grey9">
-          <p className="text-xs font-semibold text-grey10 sm:text-sm">
-            {productRequest.title}
-          </p>
-
-          {productRequest.description && (
-            <p className="mt-1 text-xs leading-relaxed text-grey7">
-              {productRequest.description}
-            </p>
-          )}
-
-          {/* Badges & Action */}
-          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-grey1 pt-2">
-            <div className="flex flex-wrap items-center gap-1.5">
-              {productRequest.requesterType && (
-                <span className="rounded-md border border-blue-200/60 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
-                  {productRequest.requesterType}
-                </span>
+        {/* Message Content */}
+        <div className="min-w-0 flex-1">
+          {/* Header: Name, Category, Timestamp, YOUR REQUEST Badge */}
+          <div className="mb-1.5 flex flex-wrap items-center gap-2">
+            <span
+              className={cn(
+                "text-xs font-bold text-grey10",
+                !user && "select-none blur-sm",
               )}
-
-              {productRequest.budget && (
-                <span className="rounded-md border border-emerald-200/60 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
-                  {formatPrice(productRequest.budget)}
-                </span>
-              )}
-
-              {productRequest.state && (
-                <span className="flex items-center gap-1 rounded-md border border-grey2 bg-grey1 px-2 py-0.5 text-[11px] text-grey7">
-                  <MapPin className="h-3 w-3 text-grey5" />
-                  {productRequest.city ? `${productRequest.city}, ` : ""}
-                  {productRequest.state}
-                </span>
-              )}
-            </div>
+            >
+              {buyerName}
+            </span>
 
             {isOwner ? (
-              <div className="ml-auto flex items-center gap-2">
-                <span className="rounded-lg bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
-                  Posted by You
-                </span>
-                {productRequest.status === "OPEN" && (
+              <span className="rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-bold tracking-wider text-white">
+                YOUR REQUEST
+              </span>
+            ) : (
+              <span className="rounded-full bg-purp2/80 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                #{productRequest.category?.name || "General"}
+              </span>
+            )}
+
+            {isOwner && (
+              <span className="rounded-full bg-purp2/80 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                #{productRequest.category?.name || "General"}
+              </span>
+            )}
+
+            {productRequest.status === "INACTIVE" && (
+              <span className="rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                EXPIRED (7+ DAYS)
+              </span>
+            )}
+
+            {productRequest.status === "CLOSED" && (
+              <span className="rounded-full border border-grey3 bg-grey2 px-2 py-0.5 text-[10px] font-bold text-grey7">
+                CLOSED
+              </span>
+            )}
+
+            <span className="ml-auto text-[10px] text-grey5">
+              {timeAgo(createdDate)}
+            </span>
+          </div>
+
+          {/* Minimal Chat Bubble */}
+          <div className="rounded-tl-xs inline-block w-full max-w-2xl rounded-2xl border border-grey2 bg-white p-3 text-xs text-grey9">
+            <p className="text-xs font-semibold text-grey10 sm:text-sm">
+              {productRequest.title}
+            </p>
+
+            {productRequest.description && (
+              <p className="mt-1 text-xs leading-relaxed text-grey7">
+                {productRequest.description}
+              </p>
+            )}
+
+            {/* Badges & Action */}
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-grey1 pt-2">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {productRequest.requesterType && (
+                  <span className="rounded-md border border-blue-200/60 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
+                    {productRequest.requesterType}
+                  </span>
+                )}
+
+                {productRequest.budget && (
+                  <span className="rounded-md border border-emerald-200/60 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
+                    {formatPrice(productRequest.budget)}
+                  </span>
+                )}
+
+                {productRequest.state && (
+                  <span className="flex items-center gap-1 rounded-md border border-grey2 bg-grey1 px-2 py-0.5 text-[11px] text-grey7">
+                    <MapPin className="h-3 w-3 text-grey5" />
+                    {productRequest.city ? `${productRequest.city}, ` : ""}
+                    {productRequest.state}
+                  </span>
+                )}
+              </div>
+
+              {isOwner ? (
+                <div className="ml-auto flex items-center gap-2">
+                  <span className="rounded-lg bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
+                    Posted by You
+                  </span>
+                  {productRequest.status === "OPEN" && (
+                    <button
+                      disabled={loadingClose}
+                      onClick={handleCloseRequest}
+                      className="flex items-center gap-1 rounded-lg border border-grey3 bg-grey1 px-2 py-1 text-xs font-medium text-grey8 transition-all hover:bg-grey2 hover:text-grey10 disabled:opacity-50"
+                      title="Close this request"
+                    >
+                      {loadingClose ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <>
+                          <XCircle className="h-3.5 w-3.5 text-red-500" />
+                          <span>Close Request</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="ml-auto flex flex-wrap items-center gap-1.5">
+                  {/* In-App Chat Button */}
                   <button
-                    disabled={loadingClose}
-                    onClick={handleCloseRequest}
-                    className="flex items-center gap-1 rounded-lg border border-grey3 bg-grey1 px-2 py-1 text-xs font-medium text-grey8 transition-all hover:bg-grey2 hover:text-grey10 disabled:opacity-50"
-                    title="Close this request"
+                    disabled={loadingChat}
+                    onClick={handleRespond}
+                    className="flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-white transition-all hover:bg-primary/90 disabled:opacity-50"
+                    title="Chat in Lata App"
                   >
-                    {loadingClose ? (
+                    {loadingChat ? (
                       <Loader2 className="h-3 w-3 animate-spin" />
                     ) : (
                       <>
-                        <XCircle className="h-3.5 w-3.5 text-red-500" />
-                        <span>Close Request</span>
+                        <MessageSquare className="h-3 w-3" />
+                        <span>In-App Chat</span>
                       </>
                     )}
                   </button>
-                )}
-              </div>
-            ) : canMessageBuyer ? (
-              <div className="ml-auto flex flex-wrap items-center gap-1.5">
-                {/* In-App Chat Button */}
-                <button
-                  disabled={loadingChat}
-                  onClick={handleRespond}
-                  className="flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-white transition-all hover:bg-primary/90 disabled:opacity-50"
-                  title="Chat in Lata App"
-                >
-                  {loadingChat ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  ) : (
-                    <>
-                      <MessageSquare className="h-3 w-3" />
-                      <span>In-App Chat</span>
-                    </>
-                  )}
-                </button>
 
-                {/* WhatsApp Button */}
-                <button
-                  onClick={handleWhatsApp}
-                  className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white transition-all hover:bg-emerald-700"
-                  title="Text Buyer via WhatsApp"
-                >
-                  <MessageCircle className="h-3.5 w-3.5" />
-                  <span>WhatsApp</span>
-                </button>
-              </div>
-            ) : (
-              <span className="ml-auto rounded-lg border border-grey2 bg-grey1 px-2.5 py-1 text-[11px] font-medium text-grey6">
-                Subscribe to respond
-              </span>
-            )}
+                  {/* WhatsApp Button */}
+                  <button
+                    onClick={handleWhatsApp}
+                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white transition-all hover:bg-emerald-700"
+                    title="Text Buyer via WhatsApp"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    <span>WhatsApp</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Subscription Required Modal */}
+      <Dialog open={showSubModal} onOpenChange={setShowSubModal}>
+        <DialogContent title="Subscription Required" className="sm:max-w-md rounded-2xl p-6">
+          <DialogHeader className="flex flex-col items-center text-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-1">
+              <Crown className="w-6 h-6 text-primary" />
+            </div>
+            <DialogTitle className="text-lg font-bold text-grey10">
+              Subscription Required
+            </DialogTitle>
+            <DialogDescription className="text-sm text-grey7 leading-relaxed mt-1">
+              Only subscribed users can message buyers. Please subscribe to an active plan to text and chat with buyers.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="mt-5 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+            <button
+              onClick={() => setShowSubModal(false)}
+              className="w-full sm:w-auto px-4 py-2 text-xs font-semibold text-grey7 bg-grey1 hover:bg-grey2 rounded-xl transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setShowSubModal(false);
+                router.push("/subscriptions");
+              }}
+              className="w-full sm:w-auto px-5 py-2 text-xs font-bold text-white bg-primary hover:bg-primary/90 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-1.5"
+            >
+              <Crown className="w-3.5 h-3.5" />
+              <span>Subscribe</span>
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
