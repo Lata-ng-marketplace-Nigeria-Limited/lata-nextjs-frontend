@@ -97,7 +97,7 @@ export const DashboardSelectCategories = () => {
 
         <Link
           href="/requests"
-          className="min-w-[120px] px-4 py-2 text-xs xs:text-sm font-semibold xms:min-w-[130px] xls:min-w-[140px] sm:min-w-[160px] text-center border-2 border-primary text-primary hover:bg-purp2 bg-white rounded-[12px] transition-all shadow-xs"
+          className="min-w-[120px] px-4 py-2 text-xs xs:text-sm font-bold xms:min-w-[130px] xls:min-w-[140px] sm:min-w-[160px] text-center border-2 border-red-500 text-red-600 hover:bg-red-50 hover:border-red-600 bg-white rounded-[12px] transition-all shadow-xs shrink-0"
         >
           BUYER REQUESTS
         </Link>

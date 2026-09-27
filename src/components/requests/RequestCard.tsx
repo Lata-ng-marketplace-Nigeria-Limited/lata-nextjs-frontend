@@ -62,15 +62,11 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
   );
 
   const isSubscribed = Boolean(
-    user &&
-      (user.subscriptionStatus === "ACTIVE" ||
-        Boolean(user.planId) ||
-        Boolean(user.subscriptionId) ||
-        Boolean(user.plan)),
+    user && user.subscriptionStatus === "ACTIVE"
   );
 
   const canMessageBuyer = Boolean(
-    !user || isSubscribed || user.role === "SELLER" || user.role === "ADMIN",
+    !user || isSubscribed || user.role === "ADMIN"
   );
 
   const checkSubscription = () => {
@@ -91,11 +87,11 @@ export const RequestCard: React.FC<Props> = ({ productRequest, onClosed }) => {
       return false;
     }
 
-    if (!isSubscribed && user.role !== "SELLER" && user.role !== "ADMIN") {
+    if (!isSubscribed && user.role !== "ADMIN") {
       toast({
         title: "Subscription Required",
         description:
-          "Please subscribe to a plan to text and chat with direct buyers.",
+          "Please subscribe to an active plan to text and chat with direct buyers.",
         variant: "info",
         action: (
           <ToastAction
