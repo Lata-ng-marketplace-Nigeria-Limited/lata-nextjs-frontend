@@ -17,3 +17,21 @@ export const createChatApi = async (payload: CreateChatInput) => {
     throw error.response || error;
   }
 };
+
+export const getChatsApi = async () => {
+  try {
+    const res = await $http.get(`chats`);
+    return res.data;
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
+
+export const getChatByIdApi = async (id: string) => {
+  try {
+    const res = await $http.get(`chats/${id}`);
+    return res.data;
+  } catch (error: any) {
+    throw error.response || error;
+  }
+};
