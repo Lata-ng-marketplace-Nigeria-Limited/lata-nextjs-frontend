@@ -3,30 +3,13 @@ import { deleteCookies, getCookies } from "@/utils";
 import { ApiErrorResponse } from "@/interface/general";
 import { auth } from "@/auth";
 import { signOut } from "next-auth/react";
-import { API_URL, API_URL_2 } from "@/constants/env";
+import { API_URL } from "@/constants/env";
 
 const noneAuthUrls = [""];
 
 export const $http = axios.create({
   baseURL: API_URL,
 });
-
-export const $httpFile = axios.create({
-  baseURL: API_URL_2,
-});
-
-$httpFile.interceptors.request.use(async (config: any) => {
-  return await handleConfig(config);
-});
-
-$httpFile.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  async (axiosResponse) => {
-    return await handleErrorResponse(axiosResponse);
-  },
-);
 
 $http.interceptors.request.use(async (config: any) => {
   return await handleConfig(config);

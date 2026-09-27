@@ -1,4 +1,4 @@
-import { $httpFile } from "@/service/axios";
+import { $http } from "@/service/axios";
 
 export interface CreateReelInput {
   title: string;
@@ -17,7 +17,7 @@ export const createReelApi = async (
     }
     formData.append("file", payload.file);
 
-    const res = await $httpFile.post("reels", formData, {
+    const res = await $http.post("reels", formData, {
       headers: {
         "X-Client-Platform": "web",
       },
@@ -35,7 +35,7 @@ export const deleteReelApi = async (id: string, deleteReason?: string): Promise<
     if (deleteReason) {
       params.delete_reason = deleteReason;
     }
-    const res = await $httpFile.delete(`reels/${id}`, { params });
+    const res = await $http.delete(`reels/${id}`, { params });
     return res.data;
   } catch (error: any) {
     console.error("Error deleting reel:", error?.response?.data);

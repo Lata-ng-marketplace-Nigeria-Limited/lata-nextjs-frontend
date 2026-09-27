@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@hooks/useUser";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useFastLocalStore } from "@/store/states/localStore";
 import { User } from "@/interface/user";
 
@@ -11,6 +11,7 @@ interface Props {
 export const SetUserData = ({ user }: Props) => {
   const { updateUser } = useUser();
   const { setSelectedRole } = useFastLocalStore();
+  const lastUserRef = useRef<string | null>(null);
 
   useEffect(() => {
     setSelectedRole(undefined);
@@ -18,6 +19,16 @@ export const SetUserData = ({ user }: Props) => {
 
   useEffect(() => {
     if (!user) return;
+    const userString = JSON.stringify({
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      balance: user.wallet?.balance,
+      isBlocked: user.isBlocked,
+    });
+    if (lastUserRef.current === userString) return;
+    lastUserRef.current = userString;
+
     (async () => {
       await updateUser(user);
     })();

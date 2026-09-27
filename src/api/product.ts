@@ -9,7 +9,7 @@ import { appendQueryParams, createFormData, getApiUrl } from "@/utils";
 import { FetchMeta, SearchQuery } from "@/interface/general";
 import { auth } from "@/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { $http, $httpFile } from "@/service/axios";
+import { $http } from "@/service/axios";
 import { User } from "@/interface/user";
 import { ADMIN_REVIEW_PRODUCTS_ROUTE } from "@/constants/routes";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
@@ -231,7 +231,7 @@ export const initializeFileUploadApi = async (): Promise<{
   isLive: boolean;
 }> => {
   try {
-    const res = await $httpFile.get("");
+    const res = await $http.get("");
     return res.data;
   } catch (error: any) {
     throw error.response || error;
@@ -266,7 +266,7 @@ export const createAProductApi = async (
   const params = appendQueryParams(queries || {});
 
   try {
-    const res = await $httpFile.post(`products?${params}`, payload);
+    const res = await $http.post(`products?${params}`, payload);
     revalidateTag("dashboard_products", "default");
     return res.data;
   } catch (error: any) {
@@ -287,7 +287,7 @@ export const updateAProductApi = async (
 
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.put(`products/${id}?${params}`, formData);
+    const res = await $http.put(`products/${id}?${params}`, formData);
     revalidateTag("dashboard_products", "default");
     return res.data;
   } catch (error: any) {

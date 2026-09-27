@@ -83,8 +83,30 @@ export default function PaymentOption({
   }, [setPreventOverlayClose, transfer]);
 
   const handlePaymentSuccess = useCallback(
-    (transaction: Transaction) => {
+    (transaction: Transaction, updatedUser?: User) => {
       setShowModal?.(false);
+      const prevBalance = Number(user?.wallet?.balance || 0);
+      const newBalance = updatedUser?.wallet?.balance !== undefined
+        ? Number(updatedUser.wallet.balance)
+        : undefined;
+
+      toast({
+        variant: "success",
+        title: "Payment Successful! You are now on " + plan?.name,
+        description: "You can now start using all the features of this plan",
+      });
+
+      if (newBalance !== undefined && newBalance > prevBalance) {
+        const cashbackEarned = newBalance - prevBalance;
+        setTimeout(() => {
+          toast({
+            variant: "success",
+            title: "Cashback Reward Earned",
+            description: `${formatPrice(cashbackEarned)} cashback has been credited to your wallet balance.`,
+          });
+        }, 800);
+      }
+
       nav(
         handleSearchSwitchUrl(
           TRANSACTION_ROUTE + "/" + transaction.id,
@@ -92,13 +114,8 @@ export default function PaymentOption({
           searchQuery,
         ),
       );
-      toast({
-        variant: "success",
-        title: "Payment Successful! You are now on " + plan?.name,
-        description: "You can now start using all the features of this plan",
-      });
     },
-    [nav, plan?.name, setShowModal, toast],
+    [nav, plan?.name, setShowModal, toast, user?.wallet?.balance, isSwitchingRole, searchQuery],
   );
 
   const onSuccess = useCallback(
@@ -115,12 +132,14 @@ export default function PaymentOption({
           response.reference!,
           queries,
         );
-        await updateUser(userData);
+        if (userData) {
+          await updateUser(userData);
+        }
         posthog.capture("subscription_payment_completed", {
           plan_name: plan?.name || "",
           plan_duration: plan?.duration,
         });
-        handlePaymentSuccess(transaction);
+        handlePaymentSuccess(transaction, userData);
         setShowModal?.(false);
       } catch (error) {
         toast({
@@ -132,7 +151,7 @@ export default function PaymentOption({
         setLoading(false);
       }
     },
-    [handlePaymentSuccess, plan, setShowModal, toast, updateUser],
+    [handlePaymentSuccess, plan, setShowModal, toast, updateUser, queries],
   );
 
   const onCancel = useCallback(() => {

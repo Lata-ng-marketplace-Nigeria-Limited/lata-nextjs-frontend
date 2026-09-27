@@ -5,14 +5,17 @@ import React from "react";
 interface Props extends React.InsHTMLAttributes<HTMLElement> { }
 
 const GoogleAdsUnit = ({ ...props }: Props) => {
-
-
+  const adRef = React.useRef<HTMLModElement>(null);
   const initialized = React.useRef(false);
 
   React.useEffect(() => {
     if (initialized.current) return;
     try {
-      if (typeof window !== "undefined") {
+      if (
+        typeof window !== "undefined" &&
+        adRef.current &&
+        !adRef.current.getAttribute("data-adsbygoogle-status")
+      ) {
         ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
           {}
         );
@@ -25,6 +28,7 @@ const GoogleAdsUnit = ({ ...props }: Props) => {
 
   return (
     <ins
+      ref={adRef}
       className="adsbygoogle"
       style={{ display: "block", width: "100%", minHeight: "250px" }}
       data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}

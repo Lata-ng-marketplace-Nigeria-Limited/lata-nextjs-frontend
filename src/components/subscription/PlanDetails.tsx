@@ -13,6 +13,7 @@ import PaymentOption from "@organism/PaymentOption";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
 import { User } from "@/interface/user";
 import { useRoleSwitchStore } from "@/store/states/localStore";
+import { PlanSwitchModal } from "@components/subscription/PlanSwitchModal";
 
 interface Props {
   months: number[];
@@ -34,20 +35,22 @@ export const PlanDetails = ({
   const [text, setText] = useState("");
   const [discount, setDiscount] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmSwitchModal, setShowConfirmSwitchModal] = useState(false);
   const [preventOverlayClose, setPreventOverlayClose] = useState(false);
   const [plan, setPlan] = useState<Plan>();
   const [disableClick, setDisableClick] = useState(false);
-  const { user } = useUser();
+  const { user, activePlan } = useUser();
   const [userData, setUserData] = useState<User | null>(null);
   const { sessionSwitched } = useGetSwitchedRolesQueries();
   const { sessionUser } = useRoleSwitchStore();
 
   useEffect(() => {
-    if (!sessionSwitched) {
+    if (sessionSwitched && sessionUser) {
+      setUserData(sessionUser as User);
+    } else if (user) {
       setUserData(user as User);
     }
-    setUserData(sessionUser as User);
-  }, [showModal]);
+  }, [sessionSwitched, sessionUser, user]);
 
   useEffect(() => {
     const feat = selectedPlans?.[0]?.features || [];
@@ -85,6 +88,21 @@ export const PlanDetails = ({
       }
     }
   }, [selectedPlans, selectedMonth, planName, userData]);
+
+  const handleActionClick = () => {
+    if (disableClick) return;
+
+    const isAlreadySubscribed =
+      userData?.subscriptionStatus === "ACTIVE" &&
+      userData?.planId &&
+      userData?.planId !== plan?.id;
+
+    if (isAlreadySubscribed) {
+      setShowConfirmSwitchModal(true);
+    } else {
+      setShowModal(true);
+    }
+  };
 
   return (
     <MobileBorderArea
@@ -152,7 +170,17 @@ export const PlanDetails = ({
         amount={price}
         discount={discount}
         text={text}
-        onClick={() => (!disableClick ? setShowModal(true) : null)}
+        onClick={handleActionClick}
+      />
+
+      <PlanSwitchModal
+        isShown={showConfirmSwitchModal}
+        onClose={() => setShowConfirmSwitchModal(false)}
+        onConfirm={() => setShowModal(true)}
+        selectedPlan={plan}
+        activePlan={activePlan}
+        userData={userData}
+        targetPrice={price}
       />
 
       <Modal

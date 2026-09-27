@@ -45,7 +45,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         signIn: "/auth/login",
     },
     callbacks: {
-        async jwt({ token, user }: any) {
+        async jwt({ token, user, trigger, session }: any) {
+            if (trigger === "update" && session) {
+                if (session.role) token.role = session.role;
+                if (session.token) token.token = session.token;
+                if (session.wallet) token.wallet = session.wallet;
+                if (session.user?.name) token.name = session.user.name;
+            }
             const userData = {
                 ...token,
                 ...user,
@@ -53,7 +59,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             return {
                 ...token,
                 id: userData?.id,
-                balance: user?.wallet?.balance,
+                balance: userData?.wallet?.balance,
                 wallet: userData?.wallet,
                 role: userData?.role,
                 token: userData?.token,
