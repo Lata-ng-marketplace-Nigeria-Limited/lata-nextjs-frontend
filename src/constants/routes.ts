@@ -59,3 +59,5 @@ export const UPLOAD_ID_ROUTE = "/upload-id";
 export const ADMIN_REVIEW_REELS_ROUTE = "/review-reels";
 export const DASHBOARD_REEL_CREATE_ROUTE = "/create-reel";
 export const DASHBOARD_REELS_ROUTE = "/reels";
+export const ADMIN_PROMO_CODES_ROUTE = "/admin/promo-codes";
+export const ADMIN_ALERTS_ROUTE = "/admin/alerts";

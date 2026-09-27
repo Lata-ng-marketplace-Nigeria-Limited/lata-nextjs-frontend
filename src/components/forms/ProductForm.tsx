@@ -12,6 +12,7 @@ import {
   convertBytesToMB,
   getFormErrorObject,
   handleSearchSwitchUrl,
+  safeParseJSON,
   showToast,
 } from "@/utils";
 import { useRouter } from "next/navigation";
@@ -40,6 +41,8 @@ import { State } from "@/interface/location";
 import { selectedCity, selectedState } from "@/utils/location";
 import { NumericFormat } from "react-number-format";
 import posthog from "posthog-js";
+import PromotePostModal from "@components/modals/PromotePostModal";
+import { Sparkles, CheckCircle2 } from "lucide-react";
 
 interface Props {
   product?: Product;
@@ -100,11 +103,29 @@ export default function ProductForm({
   const [hasSelectedState, setHasSelectedState] = useState(false);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
+  const [createdProductForPromote, setCreatedProductForPromote] = useState<{
+    id: string;
+    name?: string;
+    redirectUrl: string;
+    isAlreadyPromoted?: boolean;
+  } | null>(null);
   const { user } = useUser();
 
   const queries = useGetSwitchedRolesQueries();
 
   const { isSwitchingRole, sessionUser, searchQuery } = useRoleSwitchStore();
+
+  const isFormProductPromoted = Boolean(
+    product?.isPromoted ||
+    (product?.meta && (
+      typeof product.meta === "string"
+        ? safeParseJSON(product.meta)?.isPromoted
+        : product.meta?.isPromoted
+    )) ||
+    product?.promotionType === "MINI" ||
+    product?.promotionType === "Mini" ||
+    (product?.promotionExpiresAt && new Date(product.promotionExpiresAt) > new Date())
+  );
 
   useEffect(() => {
     if (!product) {
@@ -244,6 +265,15 @@ export default function ProductForm({
           category: values.categoryId,
           product_type: values.productType,
         });
+        setTimeout(() => {
+          nav(
+            handleSearchSwitchUrl(
+              DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id,
+              isSwitchingRole,
+              searchQuery,
+            ),
+          );
+        }, 800);
       } else {
         const res = await createAProductApi(payload, queries);
         productData = res.product;
@@ -261,16 +291,27 @@ export default function ProductForm({
             duration: 15000,
           });
         }
-      }
-      setTimeout(() => {
-        nav(
-          handleSearchSwitchUrl(
-            DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id,
-            isSwitchingRole,
-            searchQuery,
-          ),
+
+        const redirectUrl = handleSearchSwitchUrl(
+          DASHBOARD_PRODUCT_ROUTE + "/" + productData?.id,
+          isSwitchingRole,
+          searchQuery,
         );
-      }, 800);
+
+        if (productData?.id && !res?.savedInDraft) {
+          setCreatedProductForPromote({
+            id: productData.id,
+            name: productData.name,
+            redirectUrl,
+          });
+          setLoading(false);
+          return;
+        }
+
+        setTimeout(() => {
+          nav(redirectUrl);
+        }, 800);
+      }
     } catch (error: any) {
       setLoading(false);
       console.log(error);
@@ -729,7 +770,30 @@ export default function ProductForm({
           )}
         />
 
-        <div className={"flex justify-end gap-x-2 sm:gap-x-3.5"}>
+        <div className={"flex items-center justify-end gap-x-2 sm:gap-x-3.5"}>
+          {product && (
+            <Button
+              format={"secondary"}
+              disabled={loading}
+              type={"button"}
+              onClick={() => {
+                setCreatedProductForPromote({
+                  id: product.id,
+                  name: product.name,
+                  redirectUrl: handleSearchSwitchUrl(
+                    DASHBOARD_PRODUCT_ROUTE + "/" + product.id,
+                    isSwitchingRole,
+                    searchQuery,
+                  ),
+                  isAlreadyPromoted: isFormProductPromoted,
+                });
+              }}
+              className={`flex items-center gap-1.5 ${isFormProductPromoted ? "!bg-emerald-600 !text-white border-emerald-600 hover:!bg-emerald-700" : "border-primary/40 text-primary hover:bg-purple-50"}`}
+            >
+              {isFormProductPromoted ? <CheckCircle2 className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+              {isFormProductPromoted ? "Extend Promotion" : "Promote Post"}
+            </Button>
+          )}
           <Button
             format={"tertiary"}
             disabled={loading}
@@ -743,6 +807,19 @@ export default function ProductForm({
           </Button>
         </div>
       </form>
+
+      {createdProductForPromote && (
+        <PromotePostModal
+          isOpen={!!createdProductForPromote}
+          productId={createdProductForPromote.id}
+          productName={createdProductForPromote.name}
+          isAlreadyPromoted={createdProductForPromote.isAlreadyPromoted}
+          onClose={() => setCreatedProductForPromote(null)}
+          onSuccessRedirect={() => {
+            nav(createdProductForPromote.redirectUrl);
+          }}
+        />
+      )}
     </div>
   );
 }

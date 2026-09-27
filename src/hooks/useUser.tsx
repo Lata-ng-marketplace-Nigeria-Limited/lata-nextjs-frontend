@@ -20,20 +20,24 @@ export const useUser = () => {
   const { setUserIsBlocked } = useIsUserBlocked();
 
   useEffect(() => {
-
     if (user?.subscriptionStatus === "ACTIVE" && user?.plan) {
       setActivePlan(user.plan);
     }
 
     if (
       user &&
-      (new Date() > new Date(user?.expires_at) ||
-        user?.isBlocked ||
-        !user?.expires_at)
+      ((user?.expires_at && new Date() > new Date(user?.expires_at)) ||
+        user?.isBlocked)
     ) {
       logoutUser(clear, true);
     }
-  }, [user?.plan, user?.subscriptionStatus, user?.expires_at, user?.isBlocked, clear]);
+  }, [
+    user?.plan,
+    user?.subscriptionStatus,
+    user?.expires_at,
+    user?.isBlocked,
+    clear,
+  ]);
 
   const handleUpdate = useCallback(
     async (userData: User, token?: string) => {

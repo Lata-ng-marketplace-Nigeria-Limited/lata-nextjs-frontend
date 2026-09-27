@@ -11,7 +11,7 @@ import {
 import { deleteAProductApi } from "@/api/product";
 import ProductAsideArea from "@atom/ProductAsideArea";
 import MobileBorderArea from "@atom/MobileBorderArea";
-import { cn } from "@/utils";
+import { cn, safeParseJSON } from "@/utils";
 import Button from "@atom/Button";
 import HeaderText from "@atom/HeaderText";
 import Hr from "@atom/Hr";
@@ -21,14 +21,72 @@ import { SavedIcon } from "@atom/icons/Saved";
 import { ProfileIcon } from "@atom/icons/Profile";
 import { CallIcon } from "../atom/icons/Call";
 import useGetSwitchedRolesQueries from "@/hooks/useGetSwitchedRolesQueries";
+import { Sparkles, CheckCircle2 } from "lucide-react";
+import PromotePostModal from "@components/modals/PromotePostModal";
+import { DateTime } from "luxon";
 
 interface Props {
   product?: Product;
 }
 
+function getPromotionTimeDetails(
+  promotionExpiresAt?: string | null,
+  promotionStartedAt?: string | null,
+  createdAt?: string | null
+) {
+  const expiryRaw = promotionExpiresAt;
+  if (!expiryRaw) return null;
+
+  let expiryDt = DateTime.fromISO(expiryRaw);
+  if (!expiryDt.isValid) expiryDt = DateTime.fromSQL(expiryRaw);
+  if (!expiryDt.isValid) {
+    const jsDate = new Date(expiryRaw);
+    if (!isNaN(jsDate.getTime())) expiryDt = DateTime.fromJSDate(jsDate);
+  }
+  if (!expiryDt.isValid) return null;
+
+  const now = DateTime.now();
+  const diffDays = Math.ceil(expiryDt.diff(now, "days").days);
+  const diffHours = Math.ceil(expiryDt.diff(now, "hours").hours);
+
+  let remainingText = "";
+  if (diffDays > 1) {
+    remainingText = `${diffDays} days left`;
+  } else if (diffDays === 1) {
+    remainingText = "1 day left";
+  } else if (diffHours > 0) {
+    remainingText = `${diffHours} hour${diffHours > 1 ? "s" : ""} left`;
+  } else {
+    remainingText = "Expired";
+  }
+
+  const finishDateFormatted = expiryDt.toFormat("dd LLL yyyy, h:mm a");
+
+  let startDateFormatted: string | null = null;
+  const startRaw = promotionStartedAt || createdAt;
+  if (startRaw) {
+    let startDt = DateTime.fromISO(startRaw);
+    if (!startDt.isValid) startDt = DateTime.fromSQL(startRaw);
+    if (!startDt.isValid) {
+      const jsDate = new Date(startRaw);
+      if (!isNaN(jsDate.getTime())) startDt = DateTime.fromJSDate(jsDate);
+    }
+    if (startDt.isValid) {
+      startDateFormatted = startDt.toFormat("dd LLL yyyy, h:mm a");
+    }
+  }
+
+  return {
+    remainingText,
+    finishDateFormatted,
+    startDateFormatted,
+  };
+}
+
 export default function ProductInsights(props: Props) {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const [showPromoteModal, setShowPromoteModal] = useState(false);
   const { push: nav } = useRouter();
   const { toast } = useToast();
 
@@ -52,6 +110,20 @@ export default function ProductInsights(props: Props) {
       });
     }
   };
+
+  const metaObj = safeParseJSON(props.product?.meta || "{}");
+  const expiryRaw = props.product?.promotionExpiresAt || metaObj?.promotionExpiresAt;
+  const startRaw = metaObj?.promotionStartedAt || props.product?.createdAt;
+
+  const isPromoted = Boolean(
+    props.product?.isPromoted ||
+    metaObj?.isPromoted ||
+    props.product?.promotionType === "MINI" ||
+    props.product?.promotionType === "Mini" ||
+    (expiryRaw && new Date(expiryRaw) > new Date())
+  );
+
+  const promoTime = getPromotionTimeDetails(expiryRaw, startRaw, props.product?.createdAt);
 
   return (
     <ProductAsideArea>
@@ -102,12 +174,60 @@ export default function ProductInsights(props: Props) {
 
       {props.product?.status || user?.email.includes("rnwonder") ? (
         <MobileBorderArea
-          className={"flex h-fit flex-col px-2.5 py-6 sm:px-6"}
+          className={"flex h-fit flex-col gap-y-3 px-2.5 py-6 sm:px-6"}
           showBorderInDesktop
         >
+          {isPromoted && (
+            <div className="flex flex-col gap-2 rounded-xl bg-emerald-50 border border-emerald-200 p-3.5 text-left">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <div>
+                  <p className="text-xs font-bold text-emerald-900">
+                    Promotion Active ({props.product?.promotionType || metaObj?.promotionType || "Mini"})
+                  </p>
+                  <p className="text-[11px] text-emerald-700">
+                    Boosted Post Visibility
+                  </p>
+                </div>
+              </div>
+
+              {promoTime && (
+                <div className="mt-1 pt-2 border-t border-emerald-200/80 flex flex-col gap-1.5 text-[11px] text-emerald-900">
+                  {promoTime.startDateFormatted && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-emerald-700 font-medium">Started:</span>
+                      <span className="font-semibold">{promoTime.startDateFormatted}</span>
+                    </div>
+                  )}
+                  {promoTime.finishDateFormatted && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-emerald-700 font-medium">Finishing:</span>
+                      <span className="font-semibold">{promoTime.finishDateFormatted}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center pt-0.5">
+                    <span className="text-emerald-700 font-medium">Time Left:</span>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-200/80 text-emerald-900">
+                      {promoTime.remainingText}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          <Button
+            className={`w-full flex items-center justify-center gap-2 ${isPromoted ? "!bg-emerald-600 hover:!bg-emerald-700 !text-white" : ""}`}
+            format={isPromoted ? "secondary" : "primary"}
+            onClick={() => {
+              setShowPromoteModal(true);
+            }}
+          >
+            {isPromoted ? <CheckCircle2 className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+            {isPromoted ? "Extend Promotion" : "Promote Post"}
+          </Button>
           <Button
             className={"w-full"}
-            format={"primary"}
+            format={"secondary"}
             onClick={() => {
               nav(DASHBOARD_PRODUCT_EDIT_ROUTE + "/" + props.product?.id);
             }}
@@ -150,6 +270,16 @@ export default function ProductInsights(props: Props) {
           </p>
         </MobileBorderArea>
       ) : null}
+
+      {showPromoteModal && props.product?.id && (
+        <PromotePostModal
+          isOpen={showPromoteModal}
+          productId={props.product.id}
+          productName={props.product.name}
+          isAlreadyPromoted={isPromoted}
+          onClose={() => setShowPromoteModal(false)}
+        />
+      )}
     </ProductAsideArea>
   );
 }

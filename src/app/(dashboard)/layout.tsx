@@ -5,6 +5,7 @@ import SideMenu from "@/components/organism/SideMenu";
 import Footer from "@/components/organism/Footer";
 import { auth } from "@/auth";
 import { GetUser } from "@atom/GetUser";
+import { SystemAlertBanner } from "@/components/alerts/SystemAlertBanner";
 
 export default async function Dashboard({
   children,
@@ -18,6 +19,7 @@ export default async function Dashboard({
       <Suspense>
         <GetUser />
       </Suspense>
+      <SystemAlertBanner />
       <Header role={session?.role} />
       <div
         className={cn(`

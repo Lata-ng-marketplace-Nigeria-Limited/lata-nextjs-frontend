@@ -8,6 +8,7 @@ import {
   PaymentCredentials,
   verifyPaymentApi,
 } from "@/api/payment";
+import { validatePromoCodeApi } from "@/api/promo.client";
 import { useToast } from "@components/ui/use-toast";
 import {
   cn,
@@ -46,6 +47,19 @@ export default function PaymentOption({
   const [amount, setAmount] = useState("");
   const [amountErrorMsg, setAmountErrorMsg] = useState("");
   const [userDataInfo, setUserDataInfo] = useState<User | null>(null);
+
+  // Promo Code State
+  const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [appliedPromoCode, setAppliedPromoCode] = useState("");
+  const [appliedPromoDetails, setAppliedPromoDetails] = useState<{
+    code: string;
+    discountAmount: number;
+    finalAmount: number;
+    originalAmount: number;
+  } | null>(null);
+  const [validatingPromo, setValidatingPromo] = useState(false);
+  const [promoSuccessMsg, setPromoSuccessMsg] = useState("");
+  const [promoErrorMsg, setPromoErrorMsg] = useState("");
   const { push: nav } = useRouter();
   const { toast } = useToast();
   const { user, updateUser } = useUser();
@@ -69,8 +83,30 @@ export default function PaymentOption({
   }, [setPreventOverlayClose, transfer]);
 
   const handlePaymentSuccess = useCallback(
-    (transaction: Transaction) => {
+    (transaction: Transaction, updatedUser?: User) => {
       setShowModal?.(false);
+      const prevBalance = Number(user?.wallet?.balance || 0);
+      const newBalance = updatedUser?.wallet?.balance !== undefined
+        ? Number(updatedUser.wallet.balance)
+        : undefined;
+
+      toast({
+        variant: "success",
+        title: "Payment Successful! You are now on " + plan?.name,
+        description: "You can now start using all the features of this plan",
+      });
+
+      if (newBalance !== undefined && newBalance > prevBalance) {
+        const cashbackEarned = newBalance - prevBalance;
+        setTimeout(() => {
+          toast({
+            variant: "success",
+            title: "Cashback Reward Earned",
+            description: `${formatPrice(cashbackEarned)} cashback has been credited to your wallet balance.`,
+          });
+        }, 800);
+      }
+
       nav(
         handleSearchSwitchUrl(
           TRANSACTION_ROUTE + "/" + transaction.id,
@@ -78,13 +114,8 @@ export default function PaymentOption({
           searchQuery,
         ),
       );
-      toast({
-        variant: "success",
-        title: "Payment Successful! You are now on " + plan?.name,
-        description: "You can now start using all the features of this plan",
-      });
     },
-    [nav, plan?.name, setShowModal, toast],
+    [nav, plan?.name, setShowModal, toast, user?.wallet?.balance, isSwitchingRole, searchQuery],
   );
 
   const onSuccess = useCallback(
@@ -101,12 +132,14 @@ export default function PaymentOption({
           response.reference!,
           queries,
         );
-        await updateUser(userData);
+        if (userData) {
+          await updateUser(userData);
+        }
         posthog.capture("subscription_payment_completed", {
           plan_name: plan?.name || "",
           plan_duration: plan?.duration,
         });
-        handlePaymentSuccess(transaction);
+        handlePaymentSuccess(transaction, userData);
         setShowModal?.(false);
       } catch (error) {
         toast({
@@ -118,7 +151,7 @@ export default function PaymentOption({
         setLoading(false);
       }
     },
-    [handlePaymentSuccess, plan, setShowModal, toast, updateUser],
+    [handlePaymentSuccess, plan, setShowModal, toast, updateUser, queries],
   );
 
   const onCancel = useCallback(() => {
@@ -142,6 +175,40 @@ export default function PaymentOption({
     });
   }, [toast]);
 
+  const handleApplyPromoCode = async () => {
+    if (!promoCodeInput.trim()) return;
+    setValidatingPromo(true);
+    setPromoErrorMsg("");
+    setPromoSuccessMsg("");
+    setAppliedPromoDetails(null);
+    try {
+      const res = await validatePromoCodeApi(
+        promoCodeInput.trim(),
+        undefined,
+        plan?.id,
+      );
+      if (res.valid) {
+        setAppliedPromoCode(res.code);
+        const originalAmount = res.finalAmount + res.discountAmount;
+        setAppliedPromoDetails({
+          code: res.code,
+          discountAmount: res.discountAmount,
+          finalAmount: res.finalAmount,
+          originalAmount,
+        });
+        setPromoSuccessMsg(
+          `Promo '${res.code}' applied! You save ${formatPrice(res.discountAmount)}`,
+        );
+      }
+    } catch (err: any) {
+      setAppliedPromoCode("");
+      setAppliedPromoDetails(null);
+      setPromoErrorMsg(err?.message || "Invalid promo code");
+    } finally {
+      setValidatingPromo(false);
+    }
+  };
+
   const subscriptionPayment = useCallback(
     async (isTransfer?: boolean) => {
       if (!plan) return;
@@ -152,11 +219,13 @@ export default function PaymentOption({
         payment_type: isTransfer ? "transfer" : "paystack",
         use_wallet: useWallet,
       });
+      const targetPromo = appliedPromoCode || (promoCodeInput.trim() || undefined);
       const { credentials } = await getSubscriptionPaymentCredentialsApi(
         {
           type: isTransfer ? "transfer" : "paystack",
           planId: plan.id,
           useWallet,
+          promoCode: targetPromo,
         },
         queries,
       );
@@ -179,10 +248,12 @@ export default function PaymentOption({
       openPaystackModal(paystackConfig);
     },
     [
+      appliedPromoCode,
       onBankTransferConfirmationPending,
       onCancel,
       onSuccess,
       plan,
+      promoCodeInput,
       setShowModal,
       useWallet,
     ],
@@ -301,6 +372,61 @@ export default function PaymentOption({
                 checked={useWallet}
                 setChecked={setUseWallet}
               />
+
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <label className="block text-xs font-semibold text-grey9 mb-1">
+                  Have a Promo Code?
+                </label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    placeholder="Enter code"
+                    value={promoCodeInput}
+                    onChange={(e) => {
+                      setPromoCodeInput(e.target.value.toUpperCase());
+                      setPromoErrorMsg("");
+                      setPromoSuccessMsg("");
+                      setAppliedPromoCode("");
+                      setAppliedPromoDetails(null);
+                    }}
+                    className="w-full border border-grey3 rounded px-2.5 py-1.5 text-xs text-grey9 focus:outline-none focus:border-primary uppercase"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyPromoCode}
+                    disabled={validatingPromo || !promoCodeInput.trim() || !!appliedPromoCode}
+                    className={cn(
+                      "text-xs px-3 py-1.5 rounded font-semibold shrink-0 transition",
+                      appliedPromoCode
+                        ? "bg-emerald-600 text-white"
+                        : "bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
+                    )}
+                  >
+                    {validatingPromo ? "..." : appliedPromoCode ? "Applied" : "Apply"}
+                  </button>
+                </div>
+                {promoSuccessMsg && (
+                  <div className="mt-1.5 space-y-1">
+                    <p className="text-[11px] text-emerald-600 font-medium">
+                      {promoSuccessMsg}
+                    </p>
+                    {appliedPromoDetails && (
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="text-grey7 font-medium">Adjusted Price:</span>
+                        <span className="text-grey6 line-through">
+                          {formatPrice(appliedPromoDetails.originalAmount)}
+                        </span>
+                        <span className="text-primary font-bold text-sm">
+                          {formatPrice(appliedPromoDetails.finalAmount)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {promoErrorMsg && (
+                  <p className="text-[11px] text-red-500 mt-1">{promoErrorMsg}</p>
+                )}
+              </div>
             </div>
           )}
           <div className={cn(`grid`)}>

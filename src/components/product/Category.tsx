@@ -55,7 +55,7 @@ const Category = ({
         <Modal
           isShown={showInnerModal}
           setIsShown={setShowInnerModal}
-          contentClass="max-h-[calc(100vh-20px)] w-screen max-w-lg !px-6"
+          contentClass="!w-[94vw] !max-w-[512px] max-h-[calc(100vh-20px)] bg-white p-4 sm:p-6 rounded-2xl border border-gray-150"
         >
           <Subcategory
             selectedSubcategory={selectedSubcategory}

@@ -85,7 +85,11 @@ export type PaymentProviders = "paystack" | "flutterwave";
 
 export type TransactionStatus = "PENDING" | "SUCCESS" | "FAIL" | "INITIALIZE";
 
-export type TransactionType = "subscription" | "wallet:credit" | "wallet:debit";
+export type TransactionType =
+  | "subscription"
+  | "wallet:credit"
+  | "wallet:debit"
+  | "single_product_promotion";
 
 export interface PaystackMetadata {
   type?: TransactionType;
@@ -113,6 +117,7 @@ interface PaystackCustomFields {
 }
 
 export interface PaystackConfig {
+  key?: string;
   publicKey: string;
   email: string;
   firstname?: string;
@@ -121,6 +126,8 @@ export interface PaystackConfig {
   amount: number;
   ref?: string;
   reference?: string;
+  paymentUrl?: string;
+  authorization_url?: string;
   metadata?: Partial<PaystackMetadata>;
   currency?: "NGN" | "GHS" | "USD" | "ZAR" | string;
   channels?: PaymentChannels[];

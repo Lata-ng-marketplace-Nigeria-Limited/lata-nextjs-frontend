@@ -39,6 +39,9 @@ export interface Product {
   discount?: string;
   productType: string;
   sellerRole?: string;
+  isPromoted?: boolean;
+  promotionType?: string;
+  promotionExpiresAt?: string;
 }
 
 export interface SubCategoryItems {

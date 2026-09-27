@@ -16,6 +16,7 @@ export interface GetSubscriptionPaymentCredentialsInput {
   planId: string;
   useWallet?: boolean;
   type: "transfer" | "paystack";
+  promoCode?: string;
 }
 
 
@@ -26,6 +27,8 @@ export interface PaymentCredentials {
   discountPercentage?: number;
   actualTotalAmount: number;
   paystackConfig: PaystackConfig;
+  paymentUrl?: string;
+  authorization_url?: string;
   reference?: string;
   expiresAt?: string | null;
   bankName?: string;

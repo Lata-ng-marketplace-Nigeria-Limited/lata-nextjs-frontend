@@ -1,6 +1,6 @@
 import { renameCategories } from "@/utils/categories";
 import React, { useState } from "react";
-import XCancelFillIcon from "../atom/icons/XCancelFill";
+import { Trash2 } from "lucide-react";
 import { Category, SubCategory } from "@/interface/products";
 import ResizableDialog from "./ResizableDialog";
 import AddSubCategory from "./AddSubCategory";
@@ -57,14 +57,18 @@ const Subcategory = (props: Props) => {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h3 className="font-semibold">
+      <div className="mb-6 flex items-center justify-between pr-8">
+        <h3 className="font-semibold text-lg">
           {renameCategories(props.selectedCategory)}
         </h3>
-        <XCancelFillIcon
-          className="ml-1 size-[24px] basis-[20%] cursor-pointer xls:ml-2"
+        <button
+          type="button"
+          title="Delete category"
+          className="flex size-8 cursor-pointer items-center justify-center rounded-lg text-red-500 hover:bg-red-50 transition-colors"
           onClick={() => setShowDeleteCategoryModal(true)}
-        />
+        >
+          <Trash2 className="size-5" />
+        </button>
       </div>
       {props.selectedCategory?.subcategories?.length > 0 ? (
         props.selectedCategory?.subcategories?.map((subcategory, index) => (
@@ -74,15 +78,17 @@ const Subcategory = (props: Props) => {
           >
             <p className="">{subcategory.name}</p>
 
-            <p
-              className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-purp2 p-2"
+            <button
+              type="button"
+              title="Delete subcategory"
+              className="flex size-7 cursor-pointer items-center justify-center rounded-lg text-red-500 hover:bg-red-50 transition-colors"
               onClick={() => {
                 setSelectedSubcategory(subcategory);
                 setShowDeleteSubcategoryModal(true);
               }}
             >
-              <span className="text-lg">×</span>
-            </p>
+              <Trash2 className="size-4" />
+            </button>
           </div>
         ))
       ) : (

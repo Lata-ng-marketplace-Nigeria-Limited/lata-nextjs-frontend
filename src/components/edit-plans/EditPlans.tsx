@@ -11,6 +11,7 @@ import Button from "@atom/Button";
 import { useToast } from "@components/ui/use-toast";
 import { updatePlanApi } from "@/api/subscription";
 import { ADMIN_EDIT_PLAN_ROUTE } from "@/constants/routes";
+import { EditSingleProductPromotion } from "@components/edit-plans/EditSingleProductPromotion";
 
 interface Props {
   subscriptions: Subscription[];
@@ -163,7 +164,8 @@ export const EditPlans = ({ subscriptions }: Props) => {
   };
 
   return (
-    <form onSubmit={handleUpdatePlan}>
+    <div className="w-full">
+      <form onSubmit={handleUpdatePlan}>
       <div
         className={cn(`
         flex
@@ -286,5 +288,8 @@ export const EditPlans = ({ subscriptions }: Props) => {
         Update
       </Button>
     </form>
+
+    <EditSingleProductPromotion />
+    </div>
   );
 };

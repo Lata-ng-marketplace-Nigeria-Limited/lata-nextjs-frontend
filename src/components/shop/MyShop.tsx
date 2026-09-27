@@ -14,6 +14,7 @@ import Button from "@atom/Button";
 import { Play, Trash2, VideoOff, Share2 } from "lucide-react";
 import { cn } from "@/utils";
 import { ReelViewerModal } from "../reels/ReelViewerModal";
+import ReelThumbnail from "../reels/ReelThumbnail";
 import Modal from "@molecule/Modal";
 import Prompt from "@molecule/Prompt";
 
@@ -251,13 +252,11 @@ export const MyShop = ({
                     >
                       {/* Thumbnail */}
                       <div className="relative w-full h-full">
-                        <Image
-                          src={thumbnail}
-                          alt={reel.title}
-                          fill
-                          sizes="(max-width: 640px) 150px, 200px"
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          unoptimized
+                        <ReelThumbnail
+                          videoUrl={reel.video_url}
+                          thumbnailUrl={reel.thumbnail_url}
+                          title={reel.title}
+                          imageClassName="transition-transform duration-500 group-hover:scale-105"
                         />
                         {/* Play overlay button */}
                         <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

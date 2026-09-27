@@ -40,7 +40,8 @@ export default function MessageSearchInput(props: Props) {
         className={cn(
           `
            bg-offwhite
-           h-[35px]
+           h-[40px]
+           min-h-[40px]
            sm:h-[50px]
            rounded-[10px]
            relative
@@ -48,6 +49,7 @@ export default function MessageSearchInput(props: Props) {
            px-2.5
            sm:px-4
            outline-none
+           text-base
            
            `,
           props.inputClass,

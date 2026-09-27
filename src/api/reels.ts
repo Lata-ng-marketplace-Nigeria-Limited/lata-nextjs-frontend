@@ -17,6 +17,7 @@ export interface Reel {
   title: string;
   description: string;
   video_url: string;
+  thumbnail_url?: string | null;
   cloudinary_public_id: string;
   created_at: string;
   status: "ACTIVE" | "INACTIVE" | "CANCELLED";

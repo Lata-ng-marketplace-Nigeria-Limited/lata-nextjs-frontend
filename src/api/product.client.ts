@@ -1,4 +1,4 @@
-import { $httpFile } from "@/service/axios";
+import { $http } from "@/service/axios";
 import { Product } from "@/interface/products";
 import { appendQueryParams, createFormData } from "@/utils";
 import { SwitchedRoleQueries } from "@/interface/switchedRole";
@@ -37,7 +37,7 @@ export const createAProductApi = async (
 
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.post(`products?${params}`, formData, {
+    const res = await $http.post(`products?${params}`, formData, {
       headers: {
         "X-Client-Platform": "web",
       },
@@ -61,7 +61,7 @@ export const updateAProductApi = async (
 
   try {
     const formData = createFormData(payload);
-    const res = await $httpFile.put(`products/${id}?${params}`, formData, {
+    const res = await $http.put(`products/${id}?${params}`, formData, {
       headers: {
         "X-Client-Platform": "web",
       },

@@ -10,16 +10,21 @@ import AboutSeller from "@components/seller-profile/AboutSeller";
 import { selectedCity, selectedState } from "@/utils/location";
 import { State } from "@/interface/location";
 
+import { GroupedReels } from "@/api/reels";
+import { ReelsRow } from "@components/reels/ReelsRow";
+
 interface Props {
   seller: User;
   productId?: string;
   statesInNigeria: State[];
+  reelsGrouped?: GroupedReels[];
 }
 
 export const SellerProfile = ({
   seller,
   productId,
   statesInNigeria,
+  reelsGrouped,
 }: Props) => {
   return (
     <>
@@ -53,6 +58,8 @@ export const SellerProfile = ({
           <SafetyTips />
         </div>
       </div>
+
+      <ReelsRow reelsGrouped={reelsGrouped || []} title="Seller’s reels" singleSellerMode={true} />
 
       <div className={"mt-6 sl:mt-8"}>
         <h2

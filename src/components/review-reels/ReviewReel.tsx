@@ -17,6 +17,7 @@ import { Table } from "@components/table/Table";
 import EmptyTable from "@components/table/EmptyTable";
 import Modal from "@molecule/Modal";
 import { Loader2 } from "lucide-react";
+import ReelsBackfillModal from "../reels/ReelsBackfillModal";
 
 interface Props {
   reels: (Reel & { user: ReelUser })[];
@@ -39,6 +40,7 @@ export const ReviewReel = ({ reels, meta, page, urlSearch, hideActions = false }
   const [deleteReason, setDeleteReason] = useState("");
   const [deletingReel, setDeletingReel] = useState<Reel | null>(null);
   const [previewReel, setPreviewReel] = useState<Reel | null>(null);
+  const [showBackfillModal, setShowBackfillModal] = useState(false);
   const { replace, refresh } = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -196,7 +198,20 @@ export const ReviewReel = ({ reels, meta, page, urlSearch, hideActions = false }
         >
           Search
         </Button>
+        <Button
+          type="button"
+          format="secondary"
+          className="whitespace-nowrap px-4 shrink-0 bg-slate-800 hover:bg-slate-900 text-white"
+          onClick={() => setShowBackfillModal(true)}
+        >
+          Backfill R2 Thumbnails
+        </Button>
       </form>
+
+      <ReelsBackfillModal
+        isOpen={showBackfillModal}
+        onClose={() => setShowBackfillModal(false)}
+      />
 
       {reels.length > 0 ? (
         <Table

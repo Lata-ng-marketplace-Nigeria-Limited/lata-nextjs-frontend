@@ -30,12 +30,11 @@ const SelectTrigger = React.forwardRef<
       className={cn(
         `
       flex 
-      min-h-[2rem] 
+      min-h-[40px] 
       sm:min-h-12
       px-4
       rounded-md
-      text-xs
-      sm:text-sm
+      text-base
       text-grey9
       placeholder:text-grey5
       border-solid
@@ -144,12 +143,11 @@ const SelectItem = React.forwardRef<
     className={cn(
       `
       px-2
-      py-4
-      text-xs
+      py-3
+      text-base
       text-grey7  
       sm:px-4
       sm:py-2.5
-      sm:text-sm
       hover:bg-purp1
       focus:bg-purp1
       rounded-md

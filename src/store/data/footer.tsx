@@ -5,7 +5,6 @@ import {
   LEGAL_COOKIES_RULES_ROUTE,
   LEGAL_BILLING_POLICY_ROUTE,
   LEGAL_COPYRIGHT_INFRINGEMENT_POLICY_ROUTE,
-  LEGAL_ROUTE,
   LEGAL_AGENT_ACQUISITION_EXPERT_ROUTE,
 } from "@/constants/routes";
 import { cn } from "@/utils";
@@ -14,9 +13,11 @@ import { TwitterLogo } from "@/components/atom/icons/TwitterLogo";
 import { LinkedinLogo } from "@/components/atom/icons/LinkedinLogo";
 import { FacebookLogo } from "@/components/atom/icons/FacebookLogo";
 import { YoutubeLogo } from "@/components/atom/icons/YoutubeLogo";
-import { PlayStoreIcon } from "@/components/atom/icons/PlayStoreIcon";
-import { AppleStoreIcon } from "@/components/atom/icons/AppleStore";
+import FooterDownloadButtons from "@/components/molecule/FooterDownloadButtons";
 import React from "react";
+
+export const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.anonymous.lataNg";
 
 export interface FooterLink {
   title: string;
@@ -55,16 +56,16 @@ export const footer: FooterLink[] = [
 ];
 
 export const footerContactUs: React.ReactNode[] = [
-  <p key={'a'}>N0 14, Police Estate, Off Karu, Abacha Road, FCT Abuja.</p>,
-  <p key={'d'}>Lata.ng@gmail.com</p>,
-  <p key={'s'}>+2349069394365</p>,
+  <p key={"a"}>N0 14, Police Estate, Off Karu, Abacha Road, FCT Abuja.</p>,
+  <p key={"d"}>Lata.ng@gmail.com</p>,
+  <p key={"s"}>+2349069394365</p>,
   <div
     className={cn(`
       flex
       gap-[0.4375rem]
       tablet:gap-[0.5rem]
     `)}
-    key={'k'}
+    key={"k"}
   >
     <a
       href="https://instagram.com/lata.ngonline?igshid=MzNlNGNkZWQ4Mg=="
@@ -115,8 +116,5 @@ export const footerContactUs: React.ReactNode[] = [
 ];
 
 export const footerDownloadApps: React.ReactNode[] = [
-  <div className={"flex flex-col gap-y-2"} key={"footerDownloadApps"}>
-    <PlayStoreIcon className={"cursor-pointer"} />
-    <AppleStoreIcon className={"cursor-pointer"} />
-  </div>,
+  <FooterDownloadButtons key={"footerDownloadApps"} />,
 ];

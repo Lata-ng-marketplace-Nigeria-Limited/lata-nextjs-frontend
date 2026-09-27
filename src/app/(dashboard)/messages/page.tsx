@@ -24,7 +24,9 @@ export default async function Page() {
       <Suspense>
         <GetUser />
       </Suspense>
-      <MessagesArea />
+      <Suspense>
+        <MessagesArea />
+      </Suspense>
     </div>
   );
 }

@@ -40,7 +40,12 @@ export const Balance = ({ balance }: Props) => {
               "text-base sm:text-[20px] text-grey10 mt-3 font-semibold"
             }
           >
-            {formatPrice(user?.wallet?.balance || balance || 0, "#")}
+            {formatPrice(
+              user?.wallet?.balance !== undefined
+                ? user.wallet.balance
+                : balance || 0,
+              "₦",
+            )}
           </p>
         </div>
 

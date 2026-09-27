@@ -33,7 +33,9 @@ export default function PlanSelect({
 
   useEffect(() => {
     if (!selectedSubscription || !activePlan) return;
-    if (selectedSubscription.id !== activePlan?.subscription?.id) return;
+    const targetSubId =
+      activePlan?.subscription?.id || (activePlan as any)?.subscriptionId;
+    if (targetSubId && selectedSubscription.id !== targetSubId) return;
     if (hasSetActivePlan) return;
 
     setPlanName(activePlan!.name);

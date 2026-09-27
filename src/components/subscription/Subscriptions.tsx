@@ -15,13 +15,6 @@ export const Subscriptions = ({ subscriptions }: Props) => {
   const [hasSetActiveSub, setHasSetActiveSub] = useState(false);
   const { activePlan, user } = useUser();
 
-  // useEffect(() => {
-  //   console.log({
-  //     activePlan,
-  //     user,
-  //   });
-  // }, [activePlan, user]);
-
   useEffect(() => {
     if (selectedSubscription) {
       setNotSelectedSubs(
@@ -31,16 +24,26 @@ export const Subscriptions = ({ subscriptions }: Props) => {
   }, [selectedSubscription, subscriptions]);
 
   useEffect(() => {
+    // console.log(
+    //   "hasSetActiveSub",
+    //   hasSetActiveSub,
+    //   "activePlan",
+    //   activePlan,
+    //   "subscriptions",
+    //   subscriptions,
+    // );
     if (!hasSetActiveSub && activePlan && subscriptions) {
-      const activeSub = subscriptions.find(
-        (sub) => sub.id === activePlan?.subscription?.id,
-      );
+      const targetSubId =
+        activePlan?.subscription?.id ||
+        (activePlan as any)?.subscriptionId ||
+        user?.subscriptionId;
+      const activeSub = subscriptions.find((sub) => sub.id === targetSubId);
       if (activeSub) {
         setSelectedSubscription(activeSub);
         setHasSetActiveSub(true);
       }
     }
-  }, [activePlan, hasSetActiveSub, subscriptions]);
+  }, [activePlan, user?.subscriptionId, hasSetActiveSub, subscriptions]);
 
   return (
     <div>

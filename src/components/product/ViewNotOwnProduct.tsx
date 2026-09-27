@@ -13,7 +13,6 @@ import ViewProductContainer from "@atom/ViewProductContainer";
 import ProductDetails from "@components/product/ProductDetails";
 import ProductAsideArea from "@atom/ProductAsideArea";
 import SafetyTips from "@components/product/SafetyTips";
-import SellerContact from "@components/product/SellerContact";
 import ProductGridList from "@atom/ProductGridList";
 import Modal from "@molecule/Modal";
 import Button from "@atom/Button";
@@ -185,14 +184,6 @@ export default function ViewNotOwnProduct(props: Props) {
         />
 
         <ProductAsideArea>
-          <SellerContact
-            productName={props.product?.name}
-            sellerInfo={props.product?.user}
-            productId={props.product?.id}
-            productOwnerId={props.product?.userId}
-            type={"compact"}
-            sellerRole={props.product?.sellerRole}
-          />
           <SafetyTips />
 
           {user?.role !== "ADMIN" && props?.product ? (

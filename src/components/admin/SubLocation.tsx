@@ -1,6 +1,6 @@
 import { City, State } from "@/interface/location";
 import React, { useState } from "react";
-import XCancelFillIcon from "../atom/icons/XCancelFill";
+import { Trash2 } from "lucide-react";
 import AddCity from "./AddCity";
 import ResizableDialog from "./ResizableDialog";
 import { showToast } from "@/utils";
@@ -47,12 +47,16 @@ const SubLocation = (props: Props) => {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h3 className="font-semibold">{props.selectedState?.name}</h3>
-        <XCancelFillIcon
-          className="ml-1 size-[24px] basis-[20%] cursor-pointer xls:ml-2"
+      <div className="mb-6 flex items-center justify-between pr-8">
+        <h3 className="font-semibold text-lg">{props.selectedState?.name}</h3>
+        <button
+          type="button"
+          title="Delete state"
+          className="flex size-8 cursor-pointer items-center justify-center rounded-lg text-red-500 hover:bg-red-50 transition-colors"
           onClick={() => props.setShowDeleteStateModal(true)}
-        />
+        >
+          <Trash2 className="size-5" />
+        </button>
       </div>
       {props.selectedState?.cities?.length > 0 ? (
         props.selectedState?.cities?.map((city, index) => (
@@ -62,15 +66,17 @@ const SubLocation = (props: Props) => {
           >
             <p className="">{city.name}</p>
 
-            <p
-              className="flex size-6 cursor-pointer items-center justify-center rounded-full bg-purp2 p-2"
+            <button
+              type="button"
+              title="Delete city"
+              className="flex size-7 cursor-pointer items-center justify-center rounded-lg text-red-500 hover:bg-red-50 transition-colors"
               onClick={() => {
                 setSelectedCity(city);
                 setShowDeleteCityModal(true);
               }}
             >
-              <span className="text-lg">×</span>
-            </p>
+              <Trash2 className="size-4" />
+            </button>
           </div>
         ))
       ) : (

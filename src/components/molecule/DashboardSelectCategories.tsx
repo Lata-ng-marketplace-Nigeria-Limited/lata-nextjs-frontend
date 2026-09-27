@@ -6,6 +6,7 @@ import { cn } from "@/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
 import Button from "@atom/Button";
 import Category from "@components/product/Category";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -85,13 +86,22 @@ export const DashboardSelectCategories = () => {
         defaultValue={searchParams.get("category")?.toString()}
       />
 
-      <Button
-        format="primary"
-        className="min-w-[120px] px-4 py-1 text-base font-normal xms:min-w-[140px] xls:min-w-[150px] xs:text-base xs:font-semibold sm:min-w-[174px]"
-        onClick={handleShowModal}
-      >
-        BUY HERE
-      </Button>
+      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <Button
+          format="primary"
+          className="min-w-[120px] px-4 py-2 text-xs xs:text-sm font-semibold xms:min-w-[130px] xls:min-w-[140px] sm:min-w-[160px] rounded-[12px]"
+          onClick={handleShowModal}
+        >
+          BUY HERE
+        </Button>
+
+        <Link
+          href="/requests"
+          className="min-w-[120px] px-4 py-2 text-xs xs:text-sm font-semibold xms:min-w-[130px] xls:min-w-[140px] sm:min-w-[160px] text-center border-2 border-primary text-primary hover:bg-purp2 bg-white rounded-[12px] transition-all shadow-xs"
+        >
+          BUYER REQUESTS
+        </Link>
+      </div>
 
       <Dialog open={showModal} modal={true}>
         <DialogContent

@@ -38,6 +38,8 @@ import {
   VIEW_SELLERS_ROUTE,
   ADMIN_EDIT_KPI_ROUTE,
   DASHBOARD_REELS_ROUTE,
+  ADMIN_PROMO_CODES_ROUTE,
+  ADMIN_ALERTS_ROUTE,
 } from "@/constants/routes";
 import { NewProductIcon } from "@/components/atom/icons/Admin";
 import { EditIcon } from "@/components/atom/icons/Edit";
@@ -54,6 +56,8 @@ import {
   Play,
   HandCoins,
   History,
+  ShoppingBag,
+  Megaphone,
 } from "lucide-react";
 import AnalyticsIcon from "@/components/atom/icons/Analytics";
 import { FeedbackIcon } from "@/components/atom/icons/Feedback";
@@ -102,6 +106,20 @@ export const sideMenu: {
     hideFromBuyer: false,
     fill: false,
     href: DASHBOARD_REELS_ROUTE,
+  },
+  {
+    title: "Buyer Requests",
+    icon: <ShoppingBag className="w-5 h-5 text-grey6" />,
+    isSeller: false,
+    isAdmin: false,
+    isAuth: false,
+    isStaff: false,
+    hideFromAdmin: true,
+    hideFromStaff: true,
+    hideFromSeller: true,
+    hideFromBuyer: true,
+    fill: false,
+    href: "/requests",
   },
   {
     title: "Sellers",
@@ -270,6 +288,34 @@ export const sideMenu: {
     fill: false,
     isAuth: true,
     href: ADMIN_EDIT_PLAN_ROUTE,
+  },
+  {
+    title: "Promo Codes",
+    icon: <HandCoins className={"w-4 h-4"} />,
+    isSeller: false,
+    isAdmin: true,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: true,
+    hideFromSeller: true,
+    hideFromBuyer: true,
+    fill: false,
+    isAuth: true,
+    href: ADMIN_PROMO_CODES_ROUTE,
+  },
+  {
+    title: "System Alerts",
+    icon: <Megaphone className={"w-4 h-4"} />,
+    isSeller: false,
+    isAdmin: true,
+    isStaff: false,
+    hideFromAdmin: false,
+    hideFromStaff: true,
+    hideFromSeller: true,
+    hideFromBuyer: true,
+    fill: false,
+    isAuth: true,
+    href: ADMIN_ALERTS_ROUTE,
   },
   {
     title: "Edit KPI",
