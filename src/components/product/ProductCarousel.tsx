@@ -95,7 +95,7 @@ export default function ProductCarousel(props: Props) {
               style={{
                 objectFit: "contain",
               }}
-              unoptimized
+              unoptimized={process.env.NODE_ENV !== "production"}
 
             />
           </CarouselItem>
